@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import Profile
 from .data_validator import *
 
 
@@ -36,7 +37,10 @@ class UserSignUpForm(forms.Form):
 	email = forms.CharField(max_length=150)
 	first_name = forms.CharField(max_length=150)
 	last_name = forms.CharField(max_length=150)
+	idnumber  = forms.CharField(max_length=13)
+	phone = forms.CharField(max_length=10)
 	password = forms.CharField(max_length=128)
+
 
 	def validate_names(self,name):
      
@@ -82,14 +86,22 @@ class UserSignUpForm(forms.Form):
 		return email
 
 	def clean_password(self):
+		print("tessdgdfrgdfhgdfhfdhh")
 		password = self.cleaned_data.get('password')
 		password2 = self.cleaned_data.get('password2')
 		pattern = r"[~`+=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, password)
+		print("tessdgdfrgdfhgdfhfdhh")
 		if matches:
+			print("tessdgdfrgdfhgdfhfdhh")
 			raise forms.ValidationError("Password Format is not allowed")
-		if password != password2:
-			raise forms.ValidationError("Password Does not Match")
 		return password
 
-	
+	def clean_idnumber(self):
+		idnumber = self.cleaned_data.get('id_number')
+		
+		#the id logic goes here 
+		
+		#TODO : check if the citizenship of the id is south south african 
+		#
+		return idnumber

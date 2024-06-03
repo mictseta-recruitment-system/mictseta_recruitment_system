@@ -76,14 +76,19 @@ WSGI_APPLICATION = 'mictseta_recruitment_system.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME':'database',
+    #     'USER' : 'root',
+    #     'PASSWORD' : 'kali',
+    #     'HOST' : "127.0.0.1",
+    #     "PORT" : "3306",
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'database',
-        'USER' : 'root',
-        'PASSWORD' : 'kali',
-        'HOST' : "127.0.0.1",
-        "PORT" : "3306",
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+
 }
 
 
@@ -117,7 +122,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -127,3 +131,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AUTH_USER_MODEL ='authenticate.Users'

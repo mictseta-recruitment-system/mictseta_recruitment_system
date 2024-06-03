@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import UserProfile
 from .forms import UserSignInForm, UserSignUpForm
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, authenticate, logout
@@ -23,12 +22,14 @@ def sign_in(request):
 		
 		form = UserSignInForm(data)
 		if form.is_valid() :
-			user = authenticate(request, email=email, password=password)
+			user = User.objects.get(email=email)
+			user = authenticate(request, username=user.username, password=password)
+			print(user)
 			if user is not None:
-				user = login(request, user)
+				login(request, user)
 				return JsonResponse({'message':f"Logged in as : {user.username} " , 'status':'success'}, status=200)
 			else:
-				return JsonResponse({'message':'User profile does not exists', 'status':'error'}, status=400)
+				return JsonResponse({'message':'Password is incorrect', 'status':'error'}, status=400)
 		else:
 			return JsonResponse({'errors': form.errors, 'status':'error'}, status=400)
 
@@ -46,13 +47,20 @@ def sign_up(request):
 		'first_name' : json_data.get('first_name'),
 		'last_name' : json_data.get('last_name'),
 		'email' : json_data.get('email'),
+		'phone' : json_data.get('phone'),
+		'idnumber': json_data.get('idnumber'),
 		'password' : json_data.get('password'),
 		'password2' : json_data.get('password2')
 
 		}
-
+		print("serdaherhrehaerdherdhedh")
 		form = UserSignUpForm(data)
+		print("serdaherhrehaerdherdhedh")
 		if form.is_valid():
+			print("serdaherhrehaerdherdhedh")
+			if data['password'] != data['password2']:
+				print("serdaherhrehaerdherdhedh")
+				return JsonResponse({'errors':'password no match ', 'status':'error'})
 			user = authenticate(request, email=data['email'], password=data['password'])
 			if user is None:
 				new_user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'])
