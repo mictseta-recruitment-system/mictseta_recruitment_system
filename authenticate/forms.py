@@ -7,6 +7,7 @@ from .data_validator import *
 class UserSignInForm(forms.Form):
 	email = forms.EmailField(max_length=254)
 	password = forms.CharField(max_length=100)
+ 
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')

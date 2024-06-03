@@ -78,5 +78,5 @@ def log_out(request):
 	logout(request)
 	return redirect('sign_in')
 
-def landing(request):
-	return render(request,'landing.html')
+def Home(request):
+	return render(request,'index.html')
