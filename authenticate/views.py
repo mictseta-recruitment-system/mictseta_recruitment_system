@@ -12,7 +12,10 @@ from django.contrib.auth.models import User
 def sign_in(request):
 
 	if request.method == "POST":
-		data = json.loads(request.body)
+		try:
+			json_data = json.loads(request.body)
+		except Exception :
+			return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 		email = data.get('email')
 		password = data.get('password')
 		data = {

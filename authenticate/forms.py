@@ -96,6 +96,13 @@ class UserSignUpForm(forms.Form):
 		if matches:
 			print("tessdgdfrgdfhgdfhfdhh")
 			raise forms.ValidationError("Password Format is not allowed")
+		if len(password) < 6:
+			raise forms.ValidationError("Password is too short")
+		char = [char for char in password if char.isdigit()]
+		if len(char) < 1:
+			raise forms.ValidationError("Password must contain at least one Number")
+		if self.cleaned_data.get('first_name') in password or self.cleaned_data.get('username') in password:
+			raise forms.ValidationError("Password cannot contain username of first name")  
 		return password
 
 	def clean_idnumber(self):
