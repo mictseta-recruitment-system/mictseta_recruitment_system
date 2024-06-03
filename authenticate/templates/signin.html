@@ -9,15 +9,28 @@
 <link rel="stylesheet" href="{% static 'authenticate/css/style.css' %}">
 </head>
 <body>
-	<h1>log in page goes here</h1>
-	<!--Here will be all the codes for login-->
-
-
-
-
-
-	<!--Please don't mind this codes they are for bootstrap and the js file-->
-
+	
+	<div class="wrapper">
+		<form action="">
+	<h1>Login</h1>
+	<div class="input-box">
+		<input type="text" placeholder="Email Address" required>
+		<i class='bx bxs-envelope'></i>
+	</div>
+	<div class="input-box">
+		<input type="password" placeholder="Password" required>
+		<i class='bx bxs-lock-alt' ></i>
+	</div>
+	<div class="remember-forgot">
+		<label><input type="checkbox">Remember Me</label>
+		<a href="#">Forgot Password?</a>
+	</div>
+	<button type="submit" class="btn">Login</button>
+	<div class="register-link">
+		<p>Don't have an account? <a href="#">Sign Up</a></p>
+	</div>
+</body>
+</html>
  
 	<script src="{% static 'authenticate/javascripts/index.js'%}"></script>
 
