@@ -9,22 +9,112 @@
 <link rel="stylesheet" href="{% static 'authenticate/css/style.css' %}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<style>
-		body{
-
-		}
+		
 	</style>
 </head>
 <body>
 	<h1>Welcome : {{user.username}}</h1> <br>
 	<!--FROM Here will be all the codes for home page-->
+	
+	<div class="navbar">
+		<div class="logo"><img src="{% static 'authenticate/images/mict_logo.png' %}" alt="Logo"></div>
+        <nav>
+
+
+
 	<p>your are logged in </p>
 	<br>
 	<ul>
+		<li><a href="index.html">Home</a></li>
+		<li><a href="signup.html">Sign Up</a></li>
+		<li><a href="signin.html">Log In</a></li>
+		<li><a href="reset_link.html">Log Out</a></li>
 		<!-- <li>landing page: <a href="">http://127.0.0.1:8000/</a></li>
 		<li>sign in page: <a href="">http://127.0.0.1:8000/auth/sign_in</a></li>
 		<li>sign up  page: <a href="">http://127.0.0.1:8000/auth/sign_up</a></li> -->
 		<li><a href="http://127.0.0.1:8000/auth/log_out">LOG OUT HERE</a></li>
+
 	</ul>
+		</nav>
+	</div>
+    <div class="filterbar">
+        <ul>
+            <li>
+                <label for="salary">Salary:</label>
+                <select id="salary">
+                    <option value="any">Any</option>
+                    <option value="10000">Less than R10,000</option>
+                    <option value="20000">R10,000 - R20,000</option>
+                    <option value="30000">R20,000 - R30,000</option>
+                    <option value="40000">R30,000 - R40,000</option>
+                    <option value="50000">R40,000 - R50,000</option>
+                    <option value="60000">More than R50,000</option>
+                </select>
+            </li>
+            <li>
+                <label for="location">Location:</label>
+                <select id="location">
+                    <option value="any">Any</option>
+                    <option value="Western Cape">Western Cape</option>
+                    <option value="Northern Cape">Northern Cape</option>
+                    <option value="Eastern Cape">Eastern Cape</option>
+                    <option value="Free State">Free State</option>
+                    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                    <option value="North West">North West</option>
+                    <option value="Gauteng">Gauteng</option>
+                    <option value="Mpumalanga">Mpumalanga</option>
+                    <option value="Limpopo">Limpopo</option>
+
+
+
+
+                </select>
+            </li>
+            <li>
+                <label for="job-type">Job Type:</label>
+                <select id="job-type">
+                    <option value="any">Any</option>
+                    <option value="full-time">Full Time</option>
+                    <option value="part-time">Part Time</option>
+                    <option value="Partially remote">Partially remote</option>
+                </select>
+            </li>
+        </ul>
+        <input type="text" placeholder="Search...">
+    
+    </div>
+    <div class="social-sidebar">
+        <ul>
+            <li><a href="https://www.facebook.com/people/MICT-SETA/100064473800888/" target="_blank"><img src="{% static 'authenticate/images/facebook.png' %}" alt="Facebook"></a></li>
+            <li><a href="https://x.com/MictSeta?ref_src=twsrcgoogletwcampserptwgrauthor" target="_blank"><img src="{% static 'authenticate/images/twitter.png' %}" alt="Twitter"></a></li>
+            <li><a href="https://www.linkedin.com/company/mict-seta" target="_blank"><img src="{% static 'authenticate/images/linkedin.png' %}" alt="LinkedIn"></a></li>
+            <li><a href="https://www.instagram.com/mictseta/?hl=en" target="_blank"><img src="{% static 'authenticate/images/instagram.png' %}" alt="Instagram"></a></li>
+        </ul>
+    </div>
+    <div class="content-area">
+        <h2>Job Occupations</h2>
+        <div class="job-images">
+            <div class="job">
+                <img src="{% static 'authenticate/images/programmer-analyst.jpg' %}" alt="Job 1">
+                <p>A Programmer-Analyst combines programming skills with systems analysis to develop and maintain software applications while assessing and meeting business needs.</p>
+            </div>
+            <div class="job">
+                <img src="{% static 'authenticate/images/internal-Audit.jpeg' %}" alt="Job 2">
+                <p>An Internal Auditor examines and evaluates an organization's internal controls, processes, and systems to ensure accuracy, efficiency, and regulatory compliance.</p>
+            </div>
+            <div class="job">
+                <img src="{% static 'authenticate/images/Application-engineer.jpeg' %}" alt="Job 3">
+                <p>An Application Engineer designs, develops, and maintains software applications, focusing on improving functionality and user experience through technical expertise.</p>
+            </div>
+            <footer class="footer">
+                <p>© 2024 All rights reserved | The Media, Information and Communication Technologies Sector Education and Training Authority</p>
+            </footer>
+        </div>
+
+
+
+    </div>
+
 
 
 
