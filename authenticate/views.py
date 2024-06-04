@@ -101,7 +101,7 @@ def log_out(request):
 	logout(request)
 	return redirect('sign_in')
 
-@login_required(login_url='/auth/sign_in')
+
 def home(request):
 	return render(request,'index.html')
 
