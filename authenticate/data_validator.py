@@ -8,7 +8,12 @@ def validate_email(value):
     return True
 
 
-
+def validate_south_african_phone_number(phone_number):
+    pattern = re.compile(r"^(\+27|0)(\d{2})-?(\d{7})$")
+    if pattern.match(phone_number):
+        return True
+    else:
+        return False
 
 class ValidateIdNumber:
 

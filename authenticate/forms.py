@@ -112,10 +112,16 @@ class UserSignUpForm(forms.Form):
 			raise forms.ValidationError("Password cannot contain username of first name")  
 		return password
 
+	def clean_phone(self):
+		phone = self.cleaned_data.get('phone')
+		if not validate_south_african_phone_number(phone):
+			raise forms.ValidationError("Phone number is not a valid south african number")
+		return phone
+
 	def clean_idnumber(self):
 		idnumber = self.cleaned_data.get('idnumber')
 		validate = ValidateIdNumber(idnumber)
 		is_valid = validate.validateSAID()
 		if not is_valid:
-			raise forms.ValidationError(f"Provide ID Number is not a valid South African ID Number")
+			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
