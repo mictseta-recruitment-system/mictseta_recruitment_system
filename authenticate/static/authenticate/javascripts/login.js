@@ -1,72 +1,75 @@
-document.getElementById('login-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+document
+  .getElementById("login-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
 
-            const data = {
-                email: email,
-                password: password
-            };
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-            fetch('http://127.0.0.1:8000/auth/sign_in/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'error') {
-                    if (data.errors) {
-                        handleErrors(data.errors);
-                    } else {
-                        showFlashMessage('An unknown error occurred', 'danger');
-                    }
-                } else {
-                    showFlashMessage(data.message, 'success');
-                }
-            })
-            .catch(error => {
-                showFlashMessage('An unexpected error occurred', 'danger');
-                console.error('Error:', error);
-            });
-        });
+    const data = {
+      email: email,
+      password: password,
+    };
+
+    fetch("http://127.0.0.1:8000/auth/sign_in/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "error") {
+          if (data.errors) {
+            handleErrors(data.errors);
+          } else {
+            showFlashMessage("An unknown error occurred", "danger");
+          }
+        } else {
+          showFlashMessage(data.message, "success");
+        }
+      })
+      .catch((error) => {
+        showFlashMessage("An unexpected error occurred", "danger");
+        console.error("Error:", error);
+      });
+  });
 
 function handleErrors(errors) {
-            for (const key in errors) {
-                if (errors.hasOwnProperty(key)) {
-                    const error = errors[key];
-                    if (Array.isArray(error)) {
-                        error.forEach(errorMessage => {
-                            showFlashMessage(`${errorMessage}`, 'danger');
-                        });
-                    } else {
-                        showFlashMessage(`${key}: ${error}`, 'danger');
-                    }
-                }
-            }
-        }
+  for (const key in errors) {
+    //to ensure it makes the container Empty before displaying the next error 
+document.getElementById('flash-message-container').innerHTML=``;
+//the next error
+    if (errors.hasOwnProperty(key)) {
+      const error = errors[key];
+      if (Array.isArray(error)) {
+        error.forEach((errorMessage) => {
+          showFlashMessage(`${errorMessage}`, "danger");
+        });
+      } else {
+        showFlashMessage(`${key}: ${error}`, "danger");
+      }
+    }
+  }
+}
 
+var btnSignUp = document.getElementById("btn-sign-up");
+var frmSignUp = document.getElementById("wrapper-sign-up");
+var frmSignIn = document.getElementById("wrapper-sign-in");
+var btnSignIn = document.getElementById("btn-sign-in");
 
-        var btnSignUp = document.getElementById('btn-sign-up');
-        var frmSignUp = document.getElementById('wrapper-sign-up');
-        var frmSignIn = document.getElementById('wrapper-sign-in');
-        var btnSignIn = document.getElementById('btn-sign-in');
-        
-        btnSignUp.addEventListener('click', funcDisplaySignUp);
-        btnSignIn.addEventListener('click', funcDisplaySignIn);
-        
-        function funcDisplaySignUp(event){
-            event.preventDefault();
-            frmSignUp.style.display = 'block';
-            frmSignIn.style.display = 'none';
-        }
-        
-        function funcDisplaySignIn(event){
-            event.preventDefault();
-            frmSignUp.style.display = 'none';
-            frmSignIn.style.display = 'block';
-        }
-        
+btnSignUp.addEventListener("click", funcDisplaySignUp);
+btnSignIn.addEventListener("click", funcDisplaySignIn);
+
+function funcDisplaySignUp(event) {
+  event.preventDefault();
+  frmSignUp.style.display = "block";
+  frmSignIn.style.display = "none";
+}
+
+function funcDisplaySignIn(event) {
+  event.preventDefault();
+  frmSignUp.style.display = "none";
+  frmSignIn.style.display = "block";
+}
