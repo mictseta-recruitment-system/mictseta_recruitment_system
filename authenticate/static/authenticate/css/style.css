@@ -5,11 +5,7 @@
     font-family: "poppins",sans-serif;
 }
 
-body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+body{   
     background: url('../images/TR3-PomWriz70Pl6.jpg') no-repeat;
     background-size: cover;
     background-position: center;
@@ -17,6 +13,7 @@ body{
 
 }
 .wrapper{
+    margin: 100px auto ;
     width: 420px;
     background: white;
     color: blue;
@@ -114,6 +111,7 @@ Please style this form
 
 */
 .wrapper-sign-up{
+    margin: 100px auto;
     display: none;
     width: 420px;
     background: white;
@@ -124,4 +122,173 @@ Please style this form
 .wrapper-sign-up h1{
    font-size: 36px;
    text-align: center; 
+}
+
+/* form to index
+*/
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: white;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+}
+
+nav ul li {
+    align-items:center ;
+    margin-right: 10px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+}
+
+.filterbar {
+    background-color: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 20px;
+}
+
+.filterbar ul {
+    list-style-type: none;
+    display: flex;
+}
+
+.filterbar ul li {
+    margin-right: 10px;
+}
+
+.filterbar a {
+    text-decoration: none;
+    color: white;
+}
+
+input[type="text"] {
+    padding: 5px;
+    border: none;
+}
+
+select {
+    padding: 5px;
+    border: none;
+}
+
+
+.content-area {
+    background-color: #ccc;
+    padding: 30px;
+    width: 70%;
+    margin: 30px auto;
+    
+    
+}
+
+.sidebar {
+    background-color: #e0e0e0;
+    padding: 20px;
+    width: 20%;
+    position: fixed;
+    top: 100px;
+    right: 0;
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #333;
+}
+
+.sidebar a:hover {
+    text-decoration: underline;
+}
+
+.social-sidebar {
+    position: fixed;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background-color: #e0e0e0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.social-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.social-sidebar li {
+    margin: 10px 0;
+}
+
+.social-sidebar a {
+    display: block;
+}
+
+.social-sidebar img {
+    width: 30px;
+    height: 30px;
+}
+.content-area {
+    text-align: center;
+    margin: 20px;
+}
+
+.job-images {
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+}
+
+.job {
+    margin-top: 20px;
+}
+
+.job img {
+    width: 200px;
+    height: 150px;
+    align-items: center;
+}
+
+.job p {
+    margin-top: 10px;
+}
+
+.footer {
+    background-color: #003366;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    width: 150%;
+    position:fixed;
+    bottom: 0;
 }
