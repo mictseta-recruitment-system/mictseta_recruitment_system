@@ -113,10 +113,9 @@ class UserSignUpForm(forms.Form):
 		return password
 
 	def clean_idnumber(self):
-		idnumber = self.cleaned_data.get('id_number')
-		
-		#the id logic goes here 
-		
-		#TODO : check if the citizenship of the id is south south african 
-		#
+		idnumber = self.cleaned_data.get('idnumber')
+		validate = ValidateIdNumber(idnumber)
+		is_valid = validate.validateSAID()
+		if not is_valid:
+			raise forms.ValidationError(f"Provide ID Number is not a valid South African ID Number")
 		return idnumber
