@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title> log in </title>
+	<title>MICSETA | Login</title>
 	{% load static %}
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="{% static 'authenticate/css/style.css' %}">
@@ -12,7 +12,7 @@
 	
 
 	
-	<div class="wrapper">
+	<div class="wrapper" id="wrapper-sign-in">
 			<div id="flash-message-container"></div>
 		<form action="" id="login-form" method="POST">
 	<h1>Login</h1>
@@ -30,8 +30,42 @@
 	</div>
 	<button type="submit" class="btn">Login</button>
 	<div class="register-link">
-		<p>Don't have an account? <a href="#">Sign Up</a></p>
+		<p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
 	</div>
+</form>
+</div>
+
+<div class="wrapper-sign-up" id="wrapper-sign-up">
+	<div id="flash-message-container"></div>
+<form action="" id="login-form" method="POST">
+<h1>Create an Account</h1>
+<div class="input-box">
+<input type="email" name="email" id="email" placeholder="Email Address" required>
+<i class='bx bxs-envelope'></i>
+</div>
+<div class="input-box">
+	<input type="text" name="name" id="name" placeholder="Name" required>
+	<i class='bx bxs-envelope'></i>
+	</div>
+	<div class="input-box">
+		<input type="text" name="surname" id="surname" placeholder="Surname" required>
+		<i class='bx bxs-envelope'></i>
+		</div>
+<div class="input-box">
+<input type="password" name="password" id="password" placeholder="Password" required>
+<i class='bx bxs-lock-alt' ></i>
+</div>
+<div class="input-box">
+	<input type="password" name="confirm-password" id="password" placeholder="Confirm Password" required>
+	<i class='bx bxs-lock-alt' ></i>
+	</div>
+<div class="remember-forgot">
+<label><input type="checkbox">Remember Me</label>
+</div>
+<button type="submit" class="btn">Sign Up</button>
+<div class="register-link">
+<p>Have an account? <a href="" id="btn-sign-in">Sign in</a></p>
+</div>
 </form>
 </div>
 </body>

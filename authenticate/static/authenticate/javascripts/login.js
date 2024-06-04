@@ -48,3 +48,25 @@ function handleErrors(errors) {
                 }
             }
         }
+
+
+        var btnSignUp = document.getElementById('btn-sign-up');
+        var frmSignUp = document.getElementById('wrapper-sign-up');
+        var frmSignIn = document.getElementById('wrapper-sign-in');
+        var btnSignIn = document.getElementById('btn-sign-in');
+        
+        btnSignUp.addEventListener('click', funcDisplaySignUp);
+        btnSignIn.addEventListener('click', funcDisplaySignIn);
+        
+        function funcDisplaySignUp(event){
+            event.preventDefault();
+            frmSignUp.style.display = 'block';
+            frmSignIn.style.display = 'none';
+        }
+        
+        function funcDisplaySignIn(event){
+            event.preventDefault();
+            frmSignUp.style.display = 'none';
+            frmSignIn.style.display = 'block';
+        }
+        

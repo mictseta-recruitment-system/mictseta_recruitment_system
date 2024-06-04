@@ -101,3 +101,27 @@ body{
 .register-link p a:hover{
     text-decoration: underline;
 }
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins",sans-serif;
+}
+
+
+/*Form to signup
+Please style this form  
+
+*/
+.wrapper-sign-up{
+    display: none;
+    width: 420px;
+    background: white;
+    color: blue;
+    border-radius: 12px;
+    padding: 30px 40px;
+}
+.wrapper-sign-up h1{
+   font-size: 36px;
+   text-align: center; 
+}
