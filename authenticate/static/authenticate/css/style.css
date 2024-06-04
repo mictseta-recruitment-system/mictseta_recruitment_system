@@ -5,11 +5,7 @@
     font-family: "poppins",sans-serif;
 }
 
-body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+body{   
     background: url('../images/TR3-PomWriz70Pl6.jpg') no-repeat;
     background-size: cover;
     background-position: center;
@@ -17,6 +13,7 @@ body{
 
 }
 .wrapper{
+    margin: 100px auto ;
     width: 420px;
     background: white;
     color: blue;
@@ -114,6 +111,7 @@ Please style this form
 
 */
 .wrapper-sign-up{
+    margin: 100px auto;
     display: none;
     width: 420px;
     background: white;
