@@ -18,6 +18,7 @@ class Profile(models.Model):
     phone = models.CharField(max_length=10, unique=True)
     gender = models.CharField(max_length=6, null=True)
     age = models.CharField(max_length=6, null=True)
+    is_verified = models.BooleanField(default=False, null=False)
 
 
     def __str__(self):

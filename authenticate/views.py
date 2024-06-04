@@ -6,6 +6,8 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import Profile
+from .data_validator import ValidateIdNumber
 
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -86,8 +88,11 @@ def sign_up(request):
 			
 			user = authenticate(request, email=data['email'], password=data['password'])
 			if user is None:
-				new_user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'])
+				new_user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
 				new_user.save()
+
+				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], phone=data['phone'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() )
+				profile.save()
 				return JsonResponse({'message':f'User profile for {new_user.username} is created successfuly', 'status':'success'}, status=201)
 		else:
 			return JsonResponse({'errors': form.errors, 'status': 'error'}, status=403)
