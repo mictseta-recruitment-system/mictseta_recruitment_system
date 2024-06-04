@@ -20,7 +20,7 @@ class UserSignInForm(forms.Form):
 			raise forms.ValidationError("Email length is Invalid") 
 		exist = User.objects.filter(email=email).exists()
 		if not exist:
-			raise forms.ValidationError("Email is not registerd")
+			raise forms.ValidationError("Email is not registerd, try to Create Account")
 		return email
 	
 	def clean_password(self):
@@ -87,21 +87,28 @@ class UserSignUpForm(forms.Form):
 		return email
 
 	def clean_password(self):
-		print("tessdgdfrgdfhgdfhfdhh")
+		
 		password = self.cleaned_data.get('password')
 		password2 = self.cleaned_data.get('password2')
+		first_name = self.cleaned_data.get('first_name') 
+		# username = self.cleaned_data.get('username')
+		
+		
 		pattern = r"[~`+=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, password)
-		print("tessdgdfrgdfhgdfhfdhh")
+
 		if matches:
-			print("tessdgdfrgdfhgdfhfdhh")
+			
 			raise forms.ValidationError("Password Format is not allowed")
+		
 		if len(password) < 6:
 			raise forms.ValidationError("Password is too short")
+
 		char = [char for char in password if char.isdigit()]
 		if len(char) < 1:
 			raise forms.ValidationError("Password must contain at least one Number")
-		if self.cleaned_data.get('first_name') in password or self.cleaned_data.get('username') in password:
+		
+		if first_name in password: #or username in password:
 			raise forms.ValidationError("Password cannot contain username of first name")  
 		return password
 

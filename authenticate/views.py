@@ -7,17 +7,27 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 #  Create your views here.
+from django.core.mail import send_mail
+from django.conf import settings
+def send_welcome_email(user_email):
+    subject = 'Welcome to Our Website'
+    message = 'Thank you for signing up for our website. We are excited to have you!'
+    email_from = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user_email]
+    
+    send_mail(subject, message, email_from, recipient_list)
 
 @csrf_exempt
 def sign_in(request):
-
+	if request.user.is_authenticated:
+		return redirect('home')
 	if request.method == "POST":
 		try:
 			json_data = json.loads(request.body)
 		except Exception :
 			return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-		email = data.get('email')
-		password = data.get('password')
+		email = json_data.get('email')
+		password = json_data.get('password')
 		data = {
 			'email':email,
 			'password': password
@@ -30,9 +40,10 @@ def sign_in(request):
 			print(user)
 			if user is not None:
 				login(request, user)
-				return JsonResponse({'message':f"Logged in as : {user.username} " , 'status':'success'}, status=200)
+				return redirect('home')
+				#return JsonResponse({'message':f"Logged in as : {user.username} " , 'status':'success'}, status=200)
 			else:
-				return JsonResponse({'message':'Password is incorrect', 'status':'error'}, status=400)
+				return JsonResponse({'errors':{'password':['Password is incorrect']}, 'status':'error'}, status=400)
 		else:
 			return JsonResponse({'errors': form.errors, 'status':'error'}, status=400)
 
@@ -40,6 +51,8 @@ def sign_in(request):
 
 @csrf_exempt
 def sign_up(request):
+	if request.user.is_authenticated:
+		return redirect('home')
 	if request.method == 'POST':
 		try:
 			json_data = json.loads(request.body)
@@ -56,14 +69,13 @@ def sign_up(request):
 		'password2' : json_data.get('password2')
 
 		}
-		print("serdaherhrehaerdherdhedh")
+
 		form = UserSignUpForm(data)
-		print("serdaherhrehaerdherdhedh")
+		
 		if form.is_valid():
-			print("serdaherhrehaerdherdhedh")
 			if data['password'] != data['password2']:
-				print("serdaherhrehaerdherdhedh")
-				return JsonResponse({'errors':'password no match ', 'status':'error'})
+				return JsonResponse({'errors':{'password':['password no match ']}, 'status':'error'}, status=400)
+			
 			user = authenticate(request, email=data['email'], password=data['password'])
 			if user is None:
 				new_user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'])
@@ -81,5 +93,6 @@ def log_out(request):
 	logout(request)
 	return redirect('sign_in')
 
-def Home(request):
+@login_required(login_url='/auth/sign_in')
+def home(request):
 	return render(request,'index.html')
