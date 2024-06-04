@@ -6,16 +6,24 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.contrib.auth.tokens import default_token_generator
+
 #  Create your views here.
-from django.core.mail import send_mail
-from django.conf import settings
-def send_welcome_email(user_email):
-    subject = 'Welcome to Our Website'
-    message = 'Thank you for signing up for our website. We are excited to have you!'
-    email_from = settings.DEFAULT_FROM_EMAIL
-    recipient_list = [user_email]
+# from django.core
+# .mail import send_mail
+# from django.conf import settings
+# def send_welcome_email(user_email):
+#     subject = 'Welcome to Our Website'
+#     message = 'Thank you for signing up for our website. We are excited to have you!'
+#     email_from = settings.DEFAULT_FROM_EMAIL
+#     recipient_list = [user_email]
     
-    send_mail(subject, message, email_from, recipient_list)
+#     send_mail(subject, message, email_from, recipient_list)
 
 @csrf_exempt
 def sign_in(request):
@@ -96,3 +104,42 @@ def log_out(request):
 @login_required(login_url='/auth/sign_in')
 def home(request):
 	return render(request,'index.html')
+
+@csrf_exempt
+def reset_password_link(request):
+	if request.method == "POST":
+		data = request.POST
+		email = data['email']
+		user = User.objects.get(email=email)
+		
+		if user:
+			token = default_token_generator.make_token(user)
+			reset_link = f"http://127.0.0.1:8000/auth/reset_password/{user.id}/{token}/"
+			return render(request, 'reset_link.html', {'link':reset_link})
+		else:
+			return HttpResponse("you dont have an acciunt with us")
+	return render(request, 'reset_password_link.html')
+
+
+@csrf_exempt
+def reset_password(request, uidb64, token):
+	try:
+		uid = int(uidb64)
+		user = User.objects.get(pk=uid)
+	
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+
+	if user is not None and default_token_generator.check_token(user, token):
+		if request.method == 'POST':
+			data = request.POST
+			password = data['password']
+			re_password = data['re-password']
+			print(re_password)
+			if password != re_password:
+				return render(request, 'reset_password.html')
+			else:	
+				user.password = password
+				user.save()
+				return render(request,'complete_reset.html')
+	return render(request, 'reset_password.html')
