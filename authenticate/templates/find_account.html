@@ -1,0 +1,28 @@
+{% extends 'base1.html' %}
+
+{% block title %} find account {% endblock %}
+	
+{% block content %}
+	
+<div class="container justify-content-center">
+	<div class= "col-6" style="margin-top: 50px; ">
+		<h1>Enter Email to reset password</h1>
+		<form method="POST">
+			<div class="input-group mb-3">
+			  <span class="input-group-text" id="basic-addon1">@</span>
+			  <input type="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="email" id="femail">
+			</div>
+			<input type="button" name="submit" value="get link" class="btn btn-primary" id='btn-forgot'/>
+		</form>	
+		
+	</div>
+
+</div>
+<input type="text" id="btn-signup" style="display: none;">
+
+<input type="text" id="btn-signin" style="display: none;">
+<input type="text" id="btn-sign-up" style="display: none;">
+<input type="text" id="btn-sign-in" style="display: none;">
+
+{% endblock %}
+	

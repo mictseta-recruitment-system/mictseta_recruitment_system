@@ -30,12 +30,12 @@ from django.contrib.auth.tokens import default_token_generator
 @csrf_exempt
 def sign_in(request):
 	if request.user.is_authenticated:
-		return redirect('home')
+		return JsonResponse({'message':f"Already logged in as {request.user.username}",'status':'warning'}, status=200)
 	if request.method == "POST":
 		try:
 			json_data = json.loads(request.body)
 		except Exception :
-			return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+			return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'},status=400)
 		email = json_data.get('email')
 		password = json_data.get('password')
 		data = {
@@ -46,18 +46,27 @@ def sign_in(request):
 		form = UserSignInForm(data)
 		if form.is_valid() :
 			user = User.objects.get(email=email)
+			print(user)
+			print(password)
+			print(user.password)
 			user = authenticate(request, username=user.username, password=password)
 			print(user)
 			if user is not None:
 				login(request, user)
-				return redirect('home')
+				return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success'}, status=200)
 				#return JsonResponse({'message':f"Logged in as : {user.username} " , 'status':'success'}, status=200)
 			else:
 				return JsonResponse({'errors':{'password':['Password is incorrect']}, 'status':'error'}, status=400)
 		else:
 			return JsonResponse({'errors': form.errors, 'status':'error'}, status=400)
+	else:
+		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
 
-	return render(request, "signin.html")
+@csrf_exempt
+def render_auth_page(request):
+	if request.user.is_authenticated:
+		return redirect('home')
+	return render(request, "auth.html")
 
 @csrf_exempt
 def sign_up(request):
@@ -94,6 +103,7 @@ def sign_up(request):
 				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], phone=data['phone'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() )
 				profile.save()
 				return JsonResponse({'message':f'User profile for {new_user.username} is created successfuly', 'status':'success'}, status=201)
+
 		else:
 			return JsonResponse({'errors': form.errors, 'status': 'error'}, status=403)
 	return render(request, "signup.html")
@@ -101,10 +111,10 @@ def sign_up(request):
 
 
 @csrf_exempt
-@login_required(login_url='/auth/sign_in')
+@login_required(login_url='render_auth_page')
 def log_out(request):
 	logout(request)
-	return redirect('sign_in')
+	return redirect('render_auth_page')
 
 
 def home(request):
@@ -113,17 +123,28 @@ def home(request):
 @csrf_exempt
 def reset_password_link(request):
 	if request.method == "POST":
-		data = request.POST
+		data = json.loads(request.body)
 		email = data['email']
-		user = User.objects.get(email=email)
-		
+		try:
+			user = User.objects.get(email=email)
+		except Exception :
+			user = False
 		if user:
 			token = default_token_generator.make_token(user)
 			reset_link = f"http://127.0.0.1:8000/auth/reset_password/{user.id}/{token}/"
-			return render(request, 'reset_link.html', {'link':reset_link})
+			
+			return JsonResponse({"message":"link generated successfuly","link":reset_link, "status":"success"}, status=201)
 		else:
-			return HttpResponse("you dont have an acciunt with us")
-	return render(request, 'reset_password_link.html')
+			return JsonResponse({"errors":{"email":["Not Found"]}, "status":"error"}, status=404)
+	else:
+		return JsonResponse({'errors':"Forbidden 403" , "status":"error"}, status=403)
+
+@csrf_exempt
+def find_account(request):
+	return render(request, 'find_account.html')
+@csrf_exempt
+def reset_link(request):
+	return render(request, 'reset_link.html')
 
 
 @csrf_exempt

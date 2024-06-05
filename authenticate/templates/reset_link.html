@@ -1,30 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>reset password link</title>
-	   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends 'base1.html' %}
 
-
+{% block title %} reset password link {% endblock %}
+	
+{% block content %}
+	
 	<h1>Your forgot your password</h1>
 	<h3>CLick on the buttton bellow to reset your password</h3>
-	{% if link %}
-		<a href="{{link}}" type="btn" class="btn btn-secondary">
+	
+		<a href="" type="btn" class="btn btn-secondary" id='links'>
 			Reset Password now
 		</a>
-	{% else %}
-		<p>Something went wrong </p>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the value from localStorage
+        let passedValue = localStorage.getItem('value');
+        
+        // Get the anchor element by its ID
+        let item = document.getElementById('links');
+        
+        // Check if the value exists in localStorage
+        if (passedValue) {
+            // Assign the value to the href attribute
+            item.href = passedValue;
+        } else {
+            console.log("No value found in localStorage for 'value'");
+        }
+        
+        console.log(passedValue); // Outputs: exampleValue (if it exists in localStorage)
+    });
+</script>
+{% endblock %}
 
-	{% endif%}
-
-
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>

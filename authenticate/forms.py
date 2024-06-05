@@ -122,6 +122,9 @@ class UserSignUpForm(forms.Form):
 		idnumber = self.cleaned_data.get('idnumber')
 		validate = ValidateIdNumber(idnumber)
 		is_valid = validate.validateSAID()
+		exist = User.objects.filter(idnumber=idnumber).exists
+		if exist:
+			raise forms.ValidationError("Id Number Already taken")
 		if not is_valid:
 			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
