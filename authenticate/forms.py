@@ -122,9 +122,97 @@ class UserSignUpForm(forms.Form):
 		idnumber = self.cleaned_data.get('idnumber')
 		validate = ValidateIdNumber(idnumber)
 		is_valid = validate.validateSAID()
-		exist = User.objects.filter(idnumber=idnumber).exists
+		exist = User.objects.filter(profile__idnumber=idnumber)
 		if exist:
 			raise forms.ValidationError("Id Number Already taken")
 		if not is_valid:
 			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
+
+class PersonalInformationForm(forms.Form):
+	linkedin_profile = forms.CharField(max_length=225)
+	personal_website = forms.CharField(max_length=225)
+	job_title = forms.CharField(max_length=225) 
+	current_employer =  forms.CharField(max_length=225)
+	years_of_expreince = forms.CharField(max_length=6)
+	industry = forms.CharField(max_length=225)
+	carear_level = forms.CharField(max_length=20)
+	desired_job = forms.CharField(max_length=225)
+	job_location = forms.CharField(max_length=225)
+
+
+	def validate_names(self,name):
+     
+		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 3:
+			raise forms.ValidationError(f"Name:{name} is too short")
+		try:
+			str(name)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return name
+
+	def clean_linkedin_profile(self):
+		linkedin_profile = self.cleaned_data.get('linkedin_profile')
+		pattern = re.compile(r'^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub|company)\/[A-Za-z0-9_-]+\/?$')
+		if not bool(pattern.match(Linkedin_profile)) :
+		 	raise forms.ValidationError("linkedin url is invalid")
+		return Linkedin_profile
+
+	def clean_personal_website(self):
+		personal_website = self.cleaned_data.get('personal_website')
+		if personal_website == "":
+			return personal_website
+		pattern = re.compile(r'^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9-]*)*\/?$')
+		if not bool(pattern.match(url)):
+			raise forms.ValidationError('your personal website url is invalid')
+		return personal_website
+ 	
+	def clean_job_title(self):
+ 		job_title = self.cleaned_data.get('job_title')
+ 		if job_title == "":
+ 			raise forms.ValidationError('Job Title cannot be empty ')
+ 		return self.validate_names(job_title)
+
+	def clean_current_employer(self):
+ 		current_employer = self.cleaned_data.get('current_employer')
+ 		if current_employer == "":
+ 			return current_employer
+ 		return self.validate_names(current_employer)
+
+	def clean_years_of_expreince(self):
+ 		years_of_expreince = self.cleaned_data.get('years_of_expreince')
+ 		if years_of_expreince == "":
+ 			raise forms.ValidationError("Years of expreince cannot be empty")
+ 		try:
+ 			int(years_of_expreince)
+ 			return str(years_of_expreince)
+ 		except Exception as e:
+ 			raise forms.ValidationError('years of expreince must be Numbers only')
+
+	def clean_industry(self):
+ 		industry = self.cleaned_data.get('industry')
+ 		if industry == "":
+ 			raise forms.ValidationError("industry cannot be empty")
+ 		return self.validate_names(industry)
+
+	def clean_carear_level(self):
+ 		carear_level = self.cleaned_data.get('carear_level')
+ 		if industry == "":
+ 			raise forms.ValidationError("industry cannot be empty")
+ 		return self.validate_names(carear_level)
+
+	def clean_desired_Job(self):
+ 		desired_job = self.cleaned_data.get('desired_Job')
+ 		if desired_job == "":
+ 			return desired_job
+ 		return self.validate_names(desired_job)
+
+	def clean_job_location(self):
+ 		job_location = self.cleaned_data.get('job_location')
+ 		if job_location == "":
+ 			return job_location
+ 		return self.validate_names(job_location)

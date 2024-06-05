@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .forms import UserSignInForm, UserSignUpForm
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Profile
+from .forms import UserSignInForm, UserSignUpForm, PersonalInformationForm
+from .models import Profile, PersonalInformation
 from .data_validator import ValidateIdNumber
 
 from django.utils.http import urlsafe_base64_encode
@@ -85,13 +85,25 @@ def sign_up(request):
 		'phone' : json_data.get('phone'),
 		'idnumber': json_data.get('idnumber'),
 		'password' : json_data.get('password'),
-		'password2' : json_data.get('password2')
+		'password2' : json_data.get('password2'),
+		}
 
+		personal_data = {
+		'linkedin_profile' : json_data.get('linkedin_profile'),
+		'personal_website' : json_data.get('personal_website'),
+		'job_title'  : json_data.get('job_title'),
+		'current_employer' : json_data.get('current_employer'),
+		'years_of_expreince' : json_data.get('years_of_expreince'),
+		'industry' : json_data.get('industry'),
+		'carear_level' : json_data.get('carear_level'),
+		'desired_job' : json_data.get('desired_job'),
+		'job_location' : json_data.get('job_location')
 		}
 
 		form = UserSignUpForm(data)
-		
-		if form.is_valid():
+		personal_data_form =  PersonalInformationForm(personal_data)
+
+		if form.is_valid() and personal_data_form.validate() :
 			if data['password'] != data['password2']:
 				return JsonResponse({'errors':{'password':['password no match ']}, 'status':'error'}, status=400)
 			
@@ -102,10 +114,18 @@ def sign_up(request):
 
 				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], phone=data['phone'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() )
 				profile.save()
+				personal_info = PersonalInformation.objects.create(user=user, linkedin_profile=personal_data['linkedin_profile'],personal_website=personal_data['personal_website'],job_title=personal_data['job_title'], current_employer=personal_data['current_employer'], years_of_expreince=personal_data['years_of_expreince'], industry=personal_data['industry'], carear_level=personal_data['carear_level'], desired_job=personal_data['desired_job'], job_location=personal_data['job_location'] )
 				return JsonResponse({'message':f'User profile for {new_user.username} is created successfuly', 'status':'success'}, status=201)
 
 		else:
-			return JsonResponse({'errors': form.errors, 'status': 'error'}, status=403)
+			if forms.errors:
+				return JsonResponse({'errors': form.errors, 'status': 'error'}, status=403)
+			elif personal_data_form.errors:
+				return JsonResponse({'errors': personal_data_form.errors, 'status': 'error'}, status=403)
+			# elif personal_data_form.errors:
+			# 	return JsonResponse({'errors': personal_data_form.errors, 'status': 'error'}, status=403)
+
+		
 	return render(request, "signup.html")
 
 
