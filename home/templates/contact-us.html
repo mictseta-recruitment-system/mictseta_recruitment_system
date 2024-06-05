@@ -3,9 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Contact Us</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Contact Us</h1>
+    </header>
+    <main class="container my-5">
+        <section id="addresses" class="mb-5">
+            <h2 class="text-primary">Addresses</h2>
+            <ul class="list-group">
+                <li class="list-group-item">Head Office, Midrand</li>
+                <li class="list-group-item">Regional Office, Durban</li>
+                <li class="list-group-item">Satellite Office, Klerksdorp</li>
+                <li class="list-group-item">Regional Office, Cape Town</li>
+                <li class="list-group-item">Regional Office, East London</li>
+                <li class="list-group-item">Regional Office, Free State</li>
+            </ul>
+        </section>
+        <section id="contact-form" class="mb-5">
+            <h2 class="text-primary">Contact Form</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="surname">Surname</label>
+                    <input type="text" class="form-control" id="surname" name="surname" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactNo">Contact No.</label>
+                    <input type="tel" class="form-control" id="contactNo" name="contactNo" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" class="form-control" id="company" name="company">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="division">Select a Division</label>
+                    <select class="form-control" id="division" name="division">
+                        <option value="division1">Division 1</option>
+                        <option value="division2">Division 2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment">Comment</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </section>
+        <section id="key-contacts" class="mb-5">
+            <h2 class="text-primary">MICT SETA Key Contacts List</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Designation</th>
+                            <th>Contact number</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1.</td>
+                            <td>Bontle Mokoena</td>
+                            <td>Senior Manager: Sector Skills Planning</td>
+                            <td>073 204 1514</td>
+                            <td>bontle.mokoena@mict.org.za</td>
+                        </tr>
+                        <tr>
+                            <td>2.</td>
+                            <td>Rochelle Vetman</td>
+                            <td>Office of the CEO</td>
+                            <td>064 908 2906</td>
+                            <td>rochelle.vetman@mict.org.za</td>
+                        </tr>
+                        <tr>
+                            <td>3.</td>
+                            <td>Ernest Nemugavhini</td>
+                            <td>Senior Manager Learning Programmes</td>
+                            <td>061 583 7742</td>
+                            <td>ernest.nemugavhini@mict.org.za</td>
+                        </tr>
+                        <tr>
+                            <td>4.</td>
+                            <td>Cikizwa Roto</td>
+                            <td>Regional Manager: Western Cape</td>
+                            <td>082 837 4471</td>
+                            <td>cikizwa.roto@mict.org.za</td>
+                        </tr>
+                        <tr>
+                            <td>5.</td>
+                            <td>Andile Nene</td>
+                            <td>Regional Manager: Eastern Cape</td>
+                            <td>082 773 4735</td>
+                            <td>andile.nene@mict.org.za</td>
+                        </tr>
+                        <tr>
+                            <td>6.</td>
+                            <td>Helvy Ndlovu</td>
+                            <td>Regional Manager: KwaZulu-Natal</td>
+                            <td></td>
+                            <td>helvy.ndlovu@mict.org.za</td>
+                        </tr>
+                        <tr>
+                            <td>7.</td>
+                            <td>Natalie Nelson</td>
+                            <td>Senior Manager: ETQA</td>
+                            <td>083 239 6952</td>
+                            <td>natalie.nelson@mict.org.za</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="queries">
+            <h2 class="text-primary">ETQA Related Queries</h2>
+            <ul class="list-group">
+                <li class="list-group-item">Accreditation queries: <a href="mailto:accreditation@mict.org.za">accreditation@mict.org.za</a></li>
+                <li class="list-group-item">Re-accreditation queries: <a href="mailto:reaccreditation@mict.org.za">reaccreditation@mict.org.za</a></li>
+                <li class="list-group-item">Assessor queries: <a href="mailto:assessor@mict.org.za">assessor@mict.org.za</a></li>
+                <li class="list-group-item">Moderator queries: <a href="mailto:moderator@mict.org.za">moderator@mict.org.za</a></li>
+                <li class="list-group-item">Certification queries: <a href="mailto:certification@mict.org.za">certification@mict.org.za</a></li>
+                <li class="list-group-item">Statement of results: <a href="mailto:sors@mict.org.za">sors@mict.org.za</a></li>
+                <li class="list-group-item">Extension of scope: <a href="mailto:eos@mict.org.za">eos@mict.org.za</a></li>
+                <li class="list-group-item">Verification: <a href="mailto:verification@mict.org.za">verification@mict.org.za</a></li>
+                <li class="list-group-item">Discretionary Grants Related Queries: <a href="mailto:dgqueries@mict.org.za">dgqueries@mict.org.za</a></li>
+                <li class="list-group-item">Discretionary Grants Invoices: <a href="mailto:dginvoices@mict.org.za">dginvoices@mict.org.za</a></li>
+            </ul>
+        </section>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
