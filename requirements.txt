@@ -1,2 +1,2 @@
 django==4.2.11
-pymysql==1.1.0
+pymysql==1.1.1
