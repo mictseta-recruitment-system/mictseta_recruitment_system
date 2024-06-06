@@ -71,15 +71,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
         const data2 = {
-            first_name: first_name,
-            last_name : last_name,
-            email: email,
             username : username,
+            first_name : first_name,
+            last_name : last_name,
+            email : email,
+            phone :  phone ,  
+            idnumber : idnumber,
             password : password,
-            password2 :password2,
-            idnumber:idnumber,
-            phone :phone
+            linkedin_profile : linkedin,
+            password2 : password2,
+            personal_website : website,
+            job_title : job_title, 
+            current_employer : employer, 
+            years_of_expreince : year_expereince, 
+            industry :  industry, 
+            carear_level : carear_level,
+            desired_job : desired_job,
+            job_location : job_location,
         };
+        console.log(idnumber)
+
         fetch("http://127.0.0.1:8000/auth/sign_up/", {
           method: "POST",
           headers: {
@@ -90,6 +101,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "error") {
+             console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
               } else {
