@@ -177,7 +177,7 @@ def reset_password_link(request):
 
 @csrf_exempt
 def find_account(request):
-	return render(request, 'find_account.html')
+	return render(request, 'reset_password.html')
 @csrf_exempt
 def reset_link(request):
 	return render(request, 'reset_link.html')

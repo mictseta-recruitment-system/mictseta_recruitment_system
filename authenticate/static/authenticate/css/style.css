@@ -308,3 +308,23 @@ select {
   padding: 10px;
   width: 100%;
 } 
+
+
+/* Custom styles for flash message */
+#flashMessage {
+  display: none;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+/* Make input boxes narrower */
+#resetPasswordForm .form-control-sm {
+  width: 50%; /* Adjust the width as needed */
+  margin: 0 auto; /* Center align the input boxes */
+}
+
+/* Optionally adjust the container width for better appearance */
+#resetPasswordContainer {
+  max-width: 400px;
+  margin: 0 auto;
+}
