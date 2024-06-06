@@ -114,6 +114,10 @@ class UserSignUpForm(forms.Form):
 
 	def clean_phone(self):
 		phone = self.cleaned_data.get('phone')
+		exist = User.objects.filter(profile__phone=phone).exists()
+		if exist:
+			 raise forms.ValidationError("phone Number Already taken")
+		
 		if not validate_south_african_phone_number(phone):
 			raise forms.ValidationError("Phone number is not a valid south african number")
 		return phone
@@ -122,9 +126,10 @@ class UserSignUpForm(forms.Form):
 		idnumber = self.cleaned_data.get('idnumber')
 		validate = ValidateIdNumber(idnumber)
 		is_valid = validate.validateSAID()
-		exist = User.objects.filter(profile__idnumber=idnumber)
+		exist = User.objects.filter(profile__idnumber=idnumber).exists()
 		if exist:
 			raise forms.ValidationError("Id Number Already taken")
+			
 		if not is_valid:
 			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
@@ -157,6 +162,8 @@ class PersonalInformationForm(forms.Form):
 
 	def clean_linkedin_profile(self):
 		linkedin_profile = self.cleaned_data.get('linkedin_profile')
+		if linkedin_profile == "none":
+			return linkedin_profile
 		pattern = re.compile(r'^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub|company)\/[A-Za-z0-9_-]+\/?$')
 		if not bool(pattern.match(Linkedin_profile)) :
 		 	raise forms.ValidationError("linkedin url is invalid")
@@ -164,7 +171,7 @@ class PersonalInformationForm(forms.Form):
 
 	def clean_personal_website(self):
 		personal_website = self.cleaned_data.get('personal_website')
-		if personal_website == "":
+		if personal_website == "none":
 			return personal_website
 		pattern = re.compile(r'^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9-]*)*\/?$')
 		if not bool(pattern.match(url)):
@@ -201,8 +208,8 @@ class PersonalInformationForm(forms.Form):
 
 	def clean_carear_level(self):
  		carear_level = self.cleaned_data.get('carear_level')
- 		if industry == "":
- 			raise forms.ValidationError("industry cannot be empty")
+ 		if carear_level == "":
+ 			raise forms.ValidationError("carear_level cannot be empty")
  		return self.validate_names(carear_level)
 
 	def clean_desired_Job(self):
