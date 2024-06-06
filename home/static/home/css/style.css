@@ -115,3 +115,36 @@ body {
     background: #0056b3;
     color: #fff;
 }
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 15px 0;
+}
+
+h1, h2 {
+  color: #007bff;
+}
+
+ul.list-group-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+ul.list-group-item a:hover {
+  text-decoration: underline;
+}
+
+.form-group label {
+  color: #333;
+}
+
+.table thead th {
+  background-color: #343a40;
+  color: white;
+}
