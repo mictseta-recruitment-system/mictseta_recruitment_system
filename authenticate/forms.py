@@ -223,3 +223,46 @@ class PersonalInformationForm(forms.Form):
  		if job_location == "":
  			return job_location
  		return self.validate_names(job_location)
+
+class AddressInformationForm(forms.Form):
+
+	street_address_line = forms.CharField(max_length=225)
+	street_address_line1 = forms.CharField(max_length=225)
+	city = forms.CharField(max_length=225)
+	province = forms.CharField(max_length=225)
+	postal_code = forms.CharField(max_length=6)
+
+	def validate_names(self,name):
+     
+		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 3:
+			raise forms.ValidationError(f" Address :{name} is too short")
+		return name
+
+	def clean_street_address_line(self):
+		street_address_line = self.cleaned_data.get('street_address_line')
+		return self.validate_names(street_address_line)
+
+	def clean_street_address_line1(self):
+		street_address_line = self.cleaned_data.get('street_address_line')
+		return self.validate_names(street_address_line)
+
+	def clean_city(self):
+		city = self.cleaned_data.get('city')
+		return self.validate_names(city)
+
+	def clean_province(self):
+		province = self.cleaned_data.get('province')
+		return self.validate_names(province)
+
+	def clean_postal_code(self):
+		postal_code = self.cleaned_data.get('postal_code')
+		if len(postal_code) < 3 :
+			raise forms.ValidationError("Postal code is too short")
+		try:
+			int(postal_code)
+		except:
+			raise forms.ValidationError("Postal code must integers")
