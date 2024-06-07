@@ -8,7 +8,7 @@ This guide provides step-by-step instructions to set up and run a Django project
 1. [Clone the Repository](#clone-the-repository)
 2. [Install Dependencies](#install-dependencies)
 3. [Running the Development Server](#running-the-development-server)
-4. [Using the Routes signin & signup](#Using-the-routes-signin-&-signup)
+4. [Authentication APIs Documentation](#Authentication-APIs-Documentation)
 
 ## Clone the Repository
 
@@ -43,53 +43,167 @@ python manage.py runserver
 
 The server will start at http://127.0.0.1:8000/. Open this URL in your web browser to view the project.
 
-## Using the Routes
 
-To use the routes signin and signup , you need to send a Post request and the paylaod must be in json format.
-- For signin json payload example 
-	```sh
-	url       :https://127.0.0.1:8000/auth/signin
-	method    : POST
-	data-type : json-format 
-	{
-		"email": "your email here",
-		"password": "your password here"
-	}
 
-	```
-- For registering json payload example 
-	```sh
-	url       :https://127.0.0.1:8000/auth/signup
-	method    : POST
-	data-type : json-format 
-	{
-		"username" : "username here", 
-		"first_name" : "first name here",
-		"last_name" : "last name here",
-		"email" : "email here",
-		"password" : "password here",
-		"password2" : "confirm password here"
-	}
+# Authentication APIs Documentation
 
-	```
+This document provides detailed information on how to use the authentication APIs provided by the system. These APIs facilitate user sign-in, sign-up, password reset, and related functionalities.
 
-After Each Request
-The Server willl return a respones data in json formart 
+## 1. Signing In
 
--  if the request is not successfull or something went wrong the server will return the follwing structure
-```sh
-	{
-		"errors" : {
-					"field_name": ['error message'],
-				},
-		"status" : "error"
-	}
+### Endpoint
+`POST /sign_in`
+
+### Description
+
+Allows existing users to sign in to their accounts.
+
+### Request Body
+```json
+{
+  "email": "user@example.com",
+  "password": "password"
+}
 ```
-- if the request is successful, the server will return the following structure
-```ssh
-	{
-		"message" : " success message here" , 
+### Response
 
-		"status" : "success"
-	}
+   - Success (200 OK)
+
+```json
+
+{
+  "message": "Welcome back <username>",
+  "status": "success"
+}
 ```
+   - Error (400 Bad Request)
+
+```json
+
+{
+  "errors": {
+    "password": ["Password is incorrect"]
+  },
+  "status": "error"
+}
+```
+# 2. Signing Up
+
+### Endpoint
+
+`POST /auth/sign_up`
+
+### Description
+
+Allows new users to create an account.
+
+#### Request Body
+
+```json
+
+{
+  "username": "newuser",
+  "email": "newuser@example.com",
+  "idnumber": "1234567890123",
+  "password": "password",
+  "password2": "password"
+}
+```
+#### Response
+
+   - Success (201 Created)
+
+```json
+
+{
+  "message": "User profile for <username> is created successfully",
+  "status": "success"
+}
+```
+   - Error (400 Bad Request)
+
+```json
+
+{
+  "errors": {
+    "password": ["Password no match"]
+  },
+  "status": "error"
+}
+```
+# 3. Logging Out
+
+### Endpoint
+
+`POST /auth/log_out`
+
+### Description
+
+- Logs out the currently authenticated user.
+Response
+
+- Redirects to the authentication page.
+
+# 4. Reset Password Link
+
+### Endpoint
+
+`POST /auth/reset_password_link`
+
+### Description
+
+Generates a reset password link for the user.
+
+#### Request Body
+
+```json
+
+{
+  "email": "user@example.com"
+}
+```
+#### Response
+
+  -  Success (201 Created)
+
+```json
+
+{
+  "message": "Link generated successfully",
+  "link": "http://127.0.0.1:8000/auth/reset_password/<uid>/<token>/",
+  "status": "success"
+}
+```
+  - Error (404 Not Found)
+
+```json
+
+{
+  "errors": {
+    "email": ["Not Found"]
+  },
+  "status": "error"
+}
+```
+# 5. Reset Password
+
+### Endpoint
+
+`POST /reset_password/<uid>/<token>/`
+
+### Description
+
+Resets the user's password using the provided token.
+
+#### Request Body
+
+```json
+
+{
+  "password": "newpassword",
+  "re-password": "newpassword"
+}
+```
+#### Response
+
+- Redirects to the password reset completion page.
