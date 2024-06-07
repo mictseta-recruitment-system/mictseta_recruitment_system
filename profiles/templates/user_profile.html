@@ -1,0 +1,133 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="container">
+    
+    <div>  
+        <h1>Profile Information of {{user.username}}</h1>
+        <form method="POST">
+            <div class="profile-item">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{user.username}}">
+            </div>
+            
+            <div class="profile-item">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" value="{{user.first_name}}">
+            </div>
+            
+            <div class="profile-item">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" value="{{user.last_name}}">
+            </div>
+            
+            <div class="profile-item">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="j{{user.email}}">
+            </div>
+            
+            <div class="profile-item">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" value="{{user.profile.phone}}">
+            </div>
+            
+            <div class="profile-item">
+                <label for="idnumber">ID Number</label>
+                <input type="text" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}">
+            </div>
+             
+
+            <div>
+                <input type="button" name="update_profile_info" class="btn btn-ptimary" id="update_profile_info" value="Update" >
+            </div>
+        </form>
+    </div>
+
+    <div>  
+        <h1>Personal Information</h1>
+        <form method="POST">
+            <div class="profile-item">
+                <label for="linkedin_profile">LinkedIn Profile</label>
+                <input type="url" id="linkedin" name="linkedin_profile" value="https://linkedin.com/in/johndoe">
+            </div>
+   
+            <div class="profile-item">
+                <label for="personal_website">Personal Website</label>
+                <input type="url" id="website" name="personal_website" value="https://www.johndoe.com">
+            </div>
+            
+            <div class="profile-item">
+                <label for="job_title">Job Title</label>
+                <input type="text" id="job_title" name="job_title" value="Software Engineer">
+            </div>
+            
+            <div class="profile-item">
+                <label for="current_employer">Current Employer</label>
+                <input type="text" id="employer" name="current_employer" value="Tech Company Inc.">
+            </div>
+            
+            <div class="profile-item">
+                <label for="years_of_experience">Years of Experience</label>
+                <input type="number" id="year_expereince" name="year_expereince" value="5">
+            </div>
+            
+            <div class="profile-item">
+                <label for="industry">Industry</label>
+                <input type="text" id="industry" name="industry" value="Information Technology">
+            </div>
+            
+            <div class="profile-item">
+                <label for="career_level">Career Level</label>
+                <input type="text" id="carear_level" name="carear_level" value="Mid-level">
+            </div>
+            
+            <div class="profile-item">
+                <label for="desired_job">Desired Job</label>
+                <input type="text" id="desired_job" name="desired_job" value="Senior Software Engineer">
+            </div>
+            
+            <div class="profile-item">
+                <label for="job_location">Job Location</label>
+                <input type="text" id="job_location" name="job_location" value="San Francisco, CA">
+            </div>
+             <div>
+                <input type="button" name="update_personal_info" id="update_personal_info" class="btn btn-outline-primary" >
+            </div>
+        </form>
+
+    </div>
+    <div>  
+        <h1>Address Information</h1>
+        <form method="POST">
+            
+            <div class="profile-item">
+                <label for="street_address_line">Street line</label>
+                <input type="url" id="street_address_line" name="street_address_line" value="34 fortuna">
+            </div>
+            
+            <div class="profile-item">
+                <label for="street_address_line2"> Street line 2 </label>
+                <input type="text" id="street_address_line2" name="street_address_line2" value="">
+            </div>
+            
+            <div class="profile-item">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" value="vereeniging">
+            </div>
+            
+            <div class="profile-item">
+                <label for="province">Province</label>
+                <input type="number" id="province" name="province" value="vaal">
+            </div>
+            
+            <div class="profile-item">
+                <label for="postal_code">Postal Code</label>
+                <input type="text" id="postal_code" name="postal_code" value="1983">
+            </div>
+             <div>
+                <input type="button" name="update_address" id="update_address" >
+            </div>
+        </form>
+</div>
+
+{% endblock %}

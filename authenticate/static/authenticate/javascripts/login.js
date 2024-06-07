@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
               }
             } else if (data.status === "success") {
                 showFlashMessage(data.message, "success");
-                window.location.href = "/auth/";
+                window.location.href = "/profile/";
 
             } else if (data.status === "warning") {
                 showFlashMessage(data.message, "warning");
-                window.location.href = "/auth/";
+                window.location.href = "/profile/";
                 showFlashMessage(data.message, "warning");
             }
           })
@@ -42,9 +42,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
           });
     }
    
+
+       /*===================================================================================*/
    const sign_up = document.getElementById('btn-signup');
 
-    
     function handle_sign_up_button_click() {
         const first_name = document.getElementById("first_name").value;
         const last_name = document.getElementById("last_name").value;
@@ -52,22 +53,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const password2 = document.getElementById("password2").value;
-        const linkedin = document.getElementById("linkedin").value;
-        const website = document.getElementById("website").value;
-        const job_title = document.getElementById("job_title").value;
-        const employer = document.getElementById("employer").value;
-        const year_expereince = document.getElementById("year_expereince").value;
-        const industry = document.getElementById("industry").value;
-        const carear_level = document.getElementById("carear_level").value;
-        const desired_job = document.getElementById("desired_job").value;
-        const job_location = document.getElementById("job_location").value;
         const idnumber = document.getElementById("idnumber").value;
         const phone = document.getElementById("phone").value;
-        const address1 = document.getElementById("address1").value;
-        const address2 = document.getElementById("address2").value;
-        const city = document.getElementById("city").value;
-        const province = document.getElementById("province").value;
-        const postal_code = document.getElementById("postal_code").value;
 
 
         const data2 = {
@@ -78,16 +65,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             phone :  phone ,  
             idnumber : idnumber,
             password : password,
-            linkedin_profile : linkedin,
-            password2 : password2,
-            personal_website : website,
-            job_title : job_title, 
-            current_employer : employer, 
-            years_of_expreince : year_expereince, 
-            industry :  industry, 
-            carear_level : carear_level,
-            desired_job : desired_job,
-            job_location : job_location,
+            password2 : password2
         };
         console.log(idnumber)
 
@@ -108,11 +86,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 showFlashMessage("An unknown error occurred", "danger");
               }
             } else if (data.status === "success") {
-                window.location.href = "/authenticates/";
+                window.location.href = "/auth/authenticates/";
                 showFlashMessage(data.message, "success");
 
             } else if (data.status === "warning") {
-                window.location.href = "/authenticates/";
+                window.location.href = "/auth/authenticates/";
                 showFlashMessage(data.message, "warning");
             }
           })
@@ -122,9 +100,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
           });
     }
 
+    /*===================================================================================*/ 
+
+     
+    /*===================================================================================*/ 
+
     const forgot_pass = document.getElementById('btn-forgot');
 
-    
+
     function handle_forgot_button_click() {
         const femail = document.getElementById("femail").value;
         
@@ -132,7 +115,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const data1 = {
           email: femail,
         };
-        fetch("http://127.0.0.1:8000/auth/reset_password_link/", {
+        fetch("http://d121-102-129-61-161.ngrok-free.app/auth/reset_password_link/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -150,11 +133,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
             } else if (data.status === "success") {
                 showFlashMessage(data.message, "success");
                 localStorage.setItem('value', data.link);
-                window.location.href = "/auth/reset_link";
+                window.location.href = "";
 
             } else if (data.status === "warning") {
                 showFlashMessage(data.message, "warning");
-                window.location.href = "/auth/";
+                window.location.href = "";
                 showFlashMessage(data.message, "warning");
             }
           })
@@ -168,7 +151,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     sign_up.addEventListener('click', handle_sign_up_button_click)
     sign_in.addEventListener('click', handle_sign_in_button_click)
     forgot_pass.addEventListener('click', handle_forgot_button_click)
-
+    update_personal_info.addEventListener('click',handle_update_profile_button_click)
 
 
  });
@@ -189,7 +172,7 @@ document.getElementById('flash-message-container').innerHTML=``;
       const error = errors[key];
       if (Array.isArray(error)) {
         error.forEach((errorMessage) => {
-          showFlashMessage(`${errorMessage}`, "danger");
+          showFlashMessage(`${key}:${errorMessage}`, "danger");
         });
       } else {
         showFlashMessage(`${key}: ${error}`, "danger");
