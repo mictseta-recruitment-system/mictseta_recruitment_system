@@ -34,20 +34,10 @@ class UpdateProfileInformationForm(forms.Form):
 
 	def clean_username(self):
 		username = self.cleaned_data.get('username')
-		r_username = self.cleaned_data.get('r_username')
-		exist = User.objects.filter(username=username).exists()
-		if exist:
-			user = User.objects.get(username=username)
-			print(user.username, r_username)
-			if user.username == r_username:
-				pass
-			else:
-				raise forms.ValidationError(f"Username:{username} is already taken")
 		return self.validate_names(username)
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')
-		r_email = self.cleaned_data.get('r_email')
 		if ' ' in email :
 			raise forms.ValidationError("Spaces not allowed in email")
 		if not validate_email(email):
@@ -55,13 +45,7 @@ class UpdateProfileInformationForm(forms.Form):
 		new_email = email.split('@')
 		if len(new_email[0]) < 3:
 			raise forms.ValidationError("Email length is Invalid") 
-		exist = User.objects.filter(email=email).exists()
-		if exist:
-			user = User.objects.get(email=email)
-			if user.email == r_email:
-				pass
-			else:
-				raise forms.ValidationError(f"Email: {email} is already taken")
+		
 		return email
 
 	# def clean_password(self):
@@ -104,7 +88,7 @@ class UpdateProfileInformationForm(forms.Form):
 				raise forms.ValidationError("phone Number Already taken")
 		
 		if not validate_south_african_phone_number(phone):
-			raise forms.ValidationError("Phone number is not a valid south african number")
+			raise forms.ValidationError("Phone number is not a valid south african number or its empty")
 		return phone
 
 	def clean_idnumber(self):

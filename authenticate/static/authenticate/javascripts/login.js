@@ -47,22 +47,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
    const sign_up = document.getElementById('btn-signup');
 
     function handle_sign_up_button_click() {
-        const first_name = document.getElementById("first_name").value;
-        const last_name = document.getElementById("last_name").value;
+      /*  const first_name = document.getElementById("first_name").value;
+        const last_name = document.getElementById("last_name").value;*/
         const username = document.getElementById("username").value;
         const email = document.getElementById("email").value;
+        const idnumber = document.getElementById("idnumber").value;
         const password = document.getElementById("password").value;
         const password2 = document.getElementById("password2").value;
-        const idnumber = document.getElementById("idnumber").value;
-        const phone = document.getElementById("phone").value;
+      /*  const phone = document.getElementById("phone").value;*/
 
 
         const data2 = {
-            username : username,
-            first_name : first_name,
-            last_name : last_name,
+            /*first_name : first_name,
+            last_name : last_name,*/
+           /* phone :  phone , */ 
             email : email,
-            phone :  phone ,  
+            username : username,
             idnumber : idnumber,
             password : password,
             password2 : password2

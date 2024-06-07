@@ -46,6 +46,21 @@ def update_user_profile(request):
                     return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
             form = UpdateProfileInformationForm(data)
             if form.is_valid() : 
+                exist = User.objects.filter(email=data['email']).exists()
+                if exist:
+                    user = User.objects.get(email=data['email'])
+                    if user.email == request.user.email:
+                        pass
+                    else:
+                        raise forms.ValidationError(f"Email: {email} is already taken")
+
+                exist = User.objects.filter(username=data['username']).exists()
+                if exist:
+                    user = User.objects.get(username=data['username'])
+                    if user.username == request.user.username:
+                        pass
+                    else:
+                        raise forms.ValidationError(f"Username:{username} is already taken")
                 try :
                     user = User.objects.get(id=request.user.id)
                     print(user)
@@ -53,7 +68,7 @@ def update_user_profile(request):
                     user.first_name = data['first_name']
                     user.last_name = data['last_name']
                     user.email = data['email']
-                    user.password = data['password']
+                    # user.password = data['password']
                     user.profile.idnumber = data['idnumber']
                     user.profile.phone = data['phone']
                     user.profile.age = ValidateIdNumber(data['idnumber']).get_age()
@@ -61,7 +76,7 @@ def update_user_profile(request):
                     user.save()
                     return JsonResponse({'message':f'User profile for {user.username} is updated successfuly', 'status':'success'}, status=201) 
                 except Exception as e:
-                    return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
+                    return JsonResponse({'errors': f'jhgfg {e}', 'status':'error'}, status=404)
             else:
                 return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
         else:

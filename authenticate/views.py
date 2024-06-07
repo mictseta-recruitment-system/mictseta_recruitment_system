@@ -81,38 +81,36 @@ def sign_up(request):
 		print(json_data)
 		data = {
 		'username' : json_data.get('username'),
-		'first_name' : json_data.get('first_name'),
-		'last_name' : json_data.get('last_name'),
+		# 'first_name' : json_data.get('first_name'),
+		# 'last_name' : json_data.get('last_name'),
+		# 'phone' : json_data.get('phone'),
 		'email' : json_data.get('email'),
-		'phone' : json_data.get('phone'),
 		'idnumber': json_data.get('idnumber'),
 		'password' : json_data.get('password'),
 		'password2' : json_data.get('password2'),
 		}
 
 
-		address_data = {
-		'street_address_line' : json_data.get('street_address_line'),
-		'street_address_line1' : json_data.get('street_address_line1'),
-		'city'  : json_data.get('city'),
-		'province' : json_data.get('province'),
-		'postal_code' : json_data.get('postal_code')
-		}
+		# address_data = {
+		# 'street_address_line' : json_data.get('street_address_line'),
+		# 'street_address_line1' : json_data.get('street_address_line1'),
+		# 'city'  : json_data.get('city'),
+		# 'province' : json_data.get('province'),
+		# 'postal_code' : json_data.get('postal_code')
+		# }
 
 
 		form = UserSignUpForm(data)
-		# personal_data_form =  PersonalInformationForm(personal_data)
-		# address_data_form = AddressInformationForm(address_data)
 
-		if form.is_valid() : #and personal_data_form.is_valid() and address_data_form.is_valid():
+		if form.is_valid() : 
 			if data['password'] != data['password2']:
 				return JsonResponse({'errors':{'password':['password no match ']}, 'status':'error'}, status=400)
 			
 			user = authenticate(request, email=data['email'], password=data['password'])
 			if user is None:
-				new_user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
+				new_user = User.objects.create_user( email=data['email'], password=data['password'], username=data['username'])
 				new_user.save()
-				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], phone=data['phone'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() )
+				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() )
 				profile.save()
 				return JsonResponse({'message':f'User profile for {new_user.username} is created successfuly', 'status':'success'}, status=201)
 

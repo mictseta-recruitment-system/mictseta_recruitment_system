@@ -34,12 +34,12 @@ class UserSignInForm(forms.Form):
 
 
 class UserSignUpForm(forms.Form):
+	# first_name = forms.CharField(max_length=150)
+	# last_name = forms.CharField(max_length=150)
+	# phone = forms.CharField(max_length=10)
 	username = forms.CharField(max_length=150)
 	email = forms.CharField(max_length=150)
-	first_name = forms.CharField(max_length=150)
-	last_name = forms.CharField(max_length=150)
 	idnumber  = forms.CharField(max_length=13)
-	phone = forms.CharField(max_length=10)
 	password = forms.CharField(max_length=128)
 
 
@@ -57,14 +57,24 @@ class UserSignUpForm(forms.Form):
 			raise forms.ValidationError(e)
 		return name
 
-	def clean_first_name(self):
-		first_name = self.cleaned_data.get('first_name')
-		return self.validate_names(first_name)
+	# def clean_first_name(self):
+	# 	first_name = self.cleaned_data.get('first_name')
+	# 	return self.validate_names(first_name)
 
-	def clean_last_name(self):
-		last_name = self.cleaned_data.get('last_name')
-		return self.validate_names(last_name)
+	# def clean_last_name(self):
+	# 	last_name = self.cleaned_data.get('last_name')
+	# 	return self.validate_names(last_name)
 
+
+	# def clean_phone(self):
+	# 	phone = self.cleaned_data.get('phone')
+	# 	exist = User.objects.filter(profile__phone=phone).exists()
+	# 	if exist:
+	# 		 raise forms.ValidationError("phone Number Already taken")
+		
+	# 	if not validate_south_african_phone_number(phone):
+	# 		raise forms.ValidationError("Phone number is not a valid south african number")
+	# 	return phone
 	def clean_username(self):
 		username = self.cleaned_data.get('username')
 		exist = User.objects.filter(username=username).exists()
@@ -91,7 +101,7 @@ class UserSignUpForm(forms.Form):
 		password = self.cleaned_data.get('password')
 		password2 = self.cleaned_data.get('password2')
 		first_name = self.cleaned_data.get('first_name') 
-		# username = self.cleaned_data.get('username')
+		username = self.cleaned_data.get('username')
 		
 		
 		pattern = r"[~`+=\-/\*\\|}{\[\];'\?.,]"
@@ -108,19 +118,10 @@ class UserSignUpForm(forms.Form):
 		if len(char) < 1:
 			raise forms.ValidationError("Password must contain at least one Number")
 		
-		if first_name in password: #or username in password:
-			raise forms.ValidationError("Password cannot contain username of first name")  
+		if username in password: #or username in password:
+			raise forms.ValidationError("Password cannot contain username ")  
 		return password
 
-	def clean_phone(self):
-		phone = self.cleaned_data.get('phone')
-		exist = User.objects.filter(profile__phone=phone).exists()
-		if exist:
-			 raise forms.ValidationError("phone Number Already taken")
-		
-		if not validate_south_african_phone_number(phone):
-			raise forms.ValidationError("Phone number is not a valid south african number")
-		return phone
 
 	def clean_idnumber(self):
 		idnumber = self.cleaned_data.get('idnumber')
