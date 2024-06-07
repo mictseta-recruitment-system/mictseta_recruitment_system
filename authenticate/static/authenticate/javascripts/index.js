@@ -43,19 +43,4 @@ function showFlashMessage(message, type) {
     return true;
 }
 
-function showFlashMessage(message, type) {
-    const flashMessage = document.getElementById('flashMessage');
-    flashMessage.style.display = 'block';
-    flashMessage.innerHTML = message;
 
-    // Setting the color based on the message type
-    if (type === "danger") {
-        flashMessage.style.backgroundColor = "red";
-    } else if (type === "success") {
-        flashMessage.style.backgroundColor = "green";
-    }
-}
-
-function showResetEmailForm() {
-    // Implement the logic for showing the email reset form
-}
