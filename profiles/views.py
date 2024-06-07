@@ -73,7 +73,10 @@ def update_user_profile(request):
                     user.profile.phone = data['phone']
                     user.profile.age = ValidateIdNumber(data['idnumber']).get_age()
                     user.profile.gender = ValidateIdNumber(data['idnumber']).get_gender()
+                    user.profile.save()
                     user.save()
+                    print("======================")
+                    print(user.profile.phone)
                     return JsonResponse({'message':f'User profile for {user.username} is updated successfuly', 'status':'success'}, status=201) 
                 except Exception as e:
                     return JsonResponse({'errors': f'jhgfg {e}', 'status':'error'}, status=404)
