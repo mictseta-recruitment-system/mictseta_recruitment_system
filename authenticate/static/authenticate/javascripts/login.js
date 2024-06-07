@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const data1 = {
           email: femail,
         };
-        fetch("http://d121-102-129-61-161.ngrok-free.app/auth/reset_password_link/", {
+        fetch("http://127.0.0.1:8000/auth/reset_password_link/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
