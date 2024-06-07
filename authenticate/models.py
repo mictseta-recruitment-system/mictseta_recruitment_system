@@ -12,14 +12,4 @@ from django.contrib.auth.models import User
 # 	def __str__(self):
 # 		return f' {self.first_name} {self.last_name} '
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    idnumber = models.CharField(max_length=13, unique=True)
-    phone = models.CharField(max_length=10, unique=True)
-    gender = models.CharField(max_length=6, null=True)
-    age = models.CharField(max_length=6, null=True)
-    is_verified = models.BooleanField(default=False, null=False)
 
-
-    def __str__(self):
-        return f'{self.user.username} Profile'

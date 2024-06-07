@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from profiles.models import Profile
 from .data_validator import *
 
 
@@ -114,6 +114,10 @@ class UserSignUpForm(forms.Form):
 
 	def clean_phone(self):
 		phone = self.cleaned_data.get('phone')
+		exist = User.objects.filter(profile__phone=phone).exists()
+		if exist:
+			 raise forms.ValidationError("phone Number Already taken")
+		
 		if not validate_south_african_phone_number(phone):
 			raise forms.ValidationError("Phone number is not a valid south african number")
 		return phone
@@ -122,9 +126,11 @@ class UserSignUpForm(forms.Form):
 		idnumber = self.cleaned_data.get('idnumber')
 		validate = ValidateIdNumber(idnumber)
 		is_valid = validate.validateSAID()
-		exist = User.objects.filter(idnumber=idnumber).exists
+		exist = User.objects.filter(profile__idnumber=idnumber).exists()
 		if exist:
 			raise forms.ValidationError("Id Number Already taken")
+			
 		if not is_valid:
 			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
+

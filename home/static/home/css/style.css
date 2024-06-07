@@ -1,6 +1,18 @@
 /*Form to about-us
 
 */
+@media only screen and (max-width: 375px) {
+  .nav-logo {
+      width: 100px;
+      height: 50px;
+  }
+}
+@media only screen and (max-width: 750px) {
+  .nav-logo {
+      width: 200px;
+      height: 100px;
+  }
+}
 .navbar {
     background-color: #0693e3;
     color: white;
@@ -114,4 +126,72 @@ body {
     padding: 10px;
     background: #0056b3;
     color: #fff;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 15px 0;
+}
+
+h1, h2 {
+  color: #007bff;
+}
+
+ul.list-group-item a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+ul.list-group-item a:hover {
+  text-decoration: underline;
+}
+
+.form-group label {
+  color: #333;
+}
+
+.table thead th {
+  background-color: #343a40;
+  color: white;
+}
+
+.infographic-section {
+  padding: 20px;
+  background-color: #007BFF;
+  color: white;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.infographic-section h2 {
+  font-size: 2.5rem;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+.stat {
+  font-size: 1.5rem;
+  margin: 20px 0;
+}
+.stat h3 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.stat p {
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+.category-stat {
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+.category-stat img {
+  max-width: 50px;
+  margin-bottom: 10px;
 }

@@ -6,97 +6,148 @@
     <title>MICTSETA | About</title>
     {% load static %}
     
-<link rel="stylesheet" href="{% static 'home/css/style.css' %}">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'home/css/custom.css' %}">
 </head>
 <body>
      
   <nav id="navbar" class="navbar navbar-expand-lg bg-body-primary">
     <div class="container-fluid">
-<div class="logo" id="logo">
-    <img class="nav-logo" height="70" width="300" src="{% static 'authenticate/images/mict_logo.png' %}" alt="Logo">
-</div>
+      <div class="logo" id="logo">
+          <img class="nav-logo" src="{% static 'authenticate/images/mict_logo.png' %}" alt="Logo">
+      </div>
       
-     <div class="nav-items">
+      <div class="nav-items">
         <button id="navbar-toggler" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+          <span class="navbar-toggler-icon"></span>
+        </button>
           <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-             
-              </li>
-             
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'about_us' %}">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
-              </li>
-              {% if user.is_authenticated %}
-              <li class="nav-item">
-               <a class="nav-link"  href="{% url 'log_out' %}">Logout</a>
-             </li>
-             {% else %}
-                <li class="nav-item">
-               <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
-             </li>
-             {% endif %}
-            </ul>
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'about_us' %}">About</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
+                  </li>
+                  {% if user.is_authenticated %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'log_out' %}">Logout</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
+                  </li>
+                  {% endif %}
+              </ul>
           </div>
-     </div>
+      </div>
     </div>
   </nav>
- 
-      
-        <div class="container">
-            <h1>About Us</h1>
-            
-            <div class="section">
-                <h2>Our Vision</h2>
-                <p>Cutting edge future skills.</p>
-            </div>
-            
-            <div class="section">
-                <h2>Our Mission</h2>
-                <p>To strategically lead the MICT sector skills development system in support of meaningful economic participation of our beneficiaries, for improved socio-economic conditions.</p>
-            </div>
-            
-            <div class="section">
-                <h2>Our Values</h2>
-                <ul>
-                    <li>Customer Centricity</li>
-                    <li>Ethical</li>
-                    <li>Innovative</li>
-                    <li>Committed</li>
-                    <li>Meritocracy</li>
-                    <li>Collaborative</li>
-                </ul>
-            </div>
-    
-            <hr>
-    
-            <div class="section">
-                <h2>Our Mandate</h2>
-                <p>The Media, Information and Communication Technologies Sector Education and Training Authority (MICT SETA) is a public entity established in terms of the Skills Development Act, 1998 (Act No. 97 of 1998). The MICT SETA plays a pivotal role in achieving South Africa’s skills development and economic growth within the sub-sectors it operates namely; Advertising, Film and Electronic Media, Electronics, Information Technology and Telecommunications.</p>
-            </div>
-        </div>
+  
+  <div class="container">
+      <h1>About Us</h1>
+      <div class="row">
+          <div class="col-lg-6">
+              <div class="section">
+                  <h2>Our Vision</h2>
+                  <p>Cutting edge future skills.</p>
+              </div>
+              <div class="section">
+                  <h2>Our Mission</h2>
+                  <p>To strategically lead the MICT sector skills development system in support of meaningful economic participation of our beneficiaries, for improved socio-economic conditions.</p>
 
-        <div class="social-media-icons">
-     
-          <ul>
-                 <h2>Follow us on:</h2>
-              <li><a href="https://www.facebook.com/people/MICT-SETA/100064473800888/" target="_blank"><i class="fab fa-facebook"></i></a></li>
-              <li><a href="https://x.com/MictSeta?ref_src=twsrcgoogletwcampserptwgrauthor" target="_blank"><i class="fab fa-twitter"></i></a></li>
-              <li><a href="https://www.linkedin.com/company/mict-seta" target="_blank"><i class="fab fa-linkedin"></i></a></li>
-              <li><a href="https://www.instagram.com/mictseta/?hl=en" target="_blank"><i class="fab fa-instagram"></i></a></li>
-          </ul>
-    </div>
-  <footer class="footer">
-                <p>© 2024 All rights reserved | The Media, Information and Communication Technologies Sector Education and Training Authority</p>
-            </footer>
-    
+              </div>
+             
+                <div class="logo" id="logo">
+                        <img class="head-logo" height="90" width="570" src="{% static 'home/images/CompanyHead.png' %}" alt="Logo">
+                    </div>
+              <div class="infographic-section">
+                  <div class="row">
+                      <div class="col-md-4 stat">
+                          <h3>404</h3>
+                          <p>Large Companies</p>
+                      </div>
+                      <div class="col-md-4 stat">
+                          <h3>878</h3>
+                          <p>Medium Companies</p>
+                      </div>
+                      <div class="col-md-4 stat">
+                          <h3>28,653</h3>
+                          <p>Small Companies</p>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <h2>2,285,983 Employees</h2>
+                          <p>In the MICT sector in 2019</p>
+                          <p class="text-muted">The Electronic Media and Film, Electronics, and Information Technology subsectors indicate that the personnel they will require will need to have degrees, diplomas, or certificates to be of the required standard for their businesses.</p>
+                      </div>
+                  </div>
+                  <div class="row d-flex justify-content-start p-2">
+                      <div class="col-3 category-stat mx-4">
+                          <img src="{% static 'home/images/megaphone.png' %}" alt="Advertising">
+                          <p>15,934 Advertising</p>
+                      </div>
+                      <div class="col-3 category-stat mx-4">
+                          <img src="{% static 'home/images/camera.png' %}" alt="Film and Electronic Media">
+                          <p>40,481 Film and Electronic Media</p>
+                      </div>
+                      <div class="col-3 category-stat mx-4">
+                          <img src="{% static 'home/images/broadcast.png' %}" alt="Telecommunications">
+                          <p class="d-flex justify-content-start text-wrap">67,717 Telecoms</p>
+                      </div>
+                      <div class="col-3 category-stat mx-4">
+                          <img src="{% static 'home/images/cpu.png' %}" alt= "Electronics">
+                          <p>205,267 Electronics</p>
+                      </div>
+                      <div class="col-3 category-stat mx-4">
+                          <img src="{% static 'home/images/consultant.png' %}" alt="Information Technology">
+                          <p>1,956,584 Information Technology</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-lg-6">
+              <div class="section">
+                  <h2>Our Values</h2>
+                  <ul>
+                      <li>Customer Centricity</li>
+                      <li>Ethical</li>
+                      <li>Innovative</li>
+                      <li>Committed</li>
+                      <li>Meritocracy</li>
+                      <li>Collaborative</li>
+                  </ul>
+              </div>
+              <div class="section">
+                  <h2>Our Mandate</h2>
+                  <p>The Media, Information and Communication Technologies Sector Education and Training Authority (MICT SETA) is a public entity established in terms of the Skills Development Act, 1998 (Act No. 97 of 1998). The MICT SETA plays a pivotal role in achieving South Africa’s skills development and economic growth within the sub-sectors it operates namely; Advertising, Film and Electronic Media, Electronics, Information Technology and Telecommunications.</p>
+              </div>
+          </div>
+      </div>
+  </div>
+  
+  <div class="social-media-icons text-center mt-4">
+      <ul class="list-inline">
+          <h2>Follow us on:</h2>
+          <li class="list-inline-item"><a href="https://www.facebook.com/people/MICT-SETA/100064473800888/" target="_blank"><i class="fab fa-facebook"></i></a></li>
+          <li class="list-inline-item"><a href="https://x.com/MictSeta?ref_src=twsrcgoogletwcampserptwgrauthor" target="_blank"><i class="fab fa-twitter"></i></a></li>
+          <li class="list-inline-item"><a href="https://www.linkedin.com/company/mict-seta" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+          <li class="list-inline-item"><a href="https://www.instagram.com/mictseta/?hl=en" target="_blank"><i class="fab fa-instagram"></i></a></li>
+      </ul>
+  </div>
+
+  <footer class="footer text-center mt-4">
+      <p>© 2024 All rights reserved | The Media, Information and Communication Technologies Sector Education and Training Authority</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"></script>
+  
 </body>
 </html>

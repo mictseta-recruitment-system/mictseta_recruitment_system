@@ -11,9 +11,11 @@
 	<div class="wrapper" id="wrapper-sign-in">
 		<form action="" id="login-form" method="POST">
 	<h1>Login</h1>
-	<div class="input-box">
-		<input type="text" name="email" id="lemail" placeholder="Email Address" required>
-		<i class='bx bxs-envelope'></i>
+	<div class="input-group mb-3">
+		<div class="input-group-prepend">
+			<span class="input-group-text" id="basic-addon1">@</span>
+		</div>
+		<input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
 	</div>
 	<div class="input-box">
 		<input type="password" name="password" id="lpassword" placeholder="Password" required>
@@ -73,61 +75,6 @@
 					<input type="password" name="password2" id="password2" placeholder="Confirm Password" required>
 					<i class='bx bxs-envelope'></i>
 				</div>
-			</div>
-		</div>
-
-		<div class="col-sm-12 col-6 bg-dark m-2">
-			<h4> Personal Information</h4>
-
-			<div class="d-flex justify-content-between flex-wrap">
-				<div class="input-box col-6">
-					<p>Linkedin profile</p>
-					<input type="text" name="linkedin" id="linkedin" placeholder="linkedin Profile" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Personal website/portfolio </p>
-					<input type="text" name="website" id="website" placeholder="Personal website/portfolio" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>job title <span style="color: red;">*</span></p>
-					<input type="text" name="job_title" id="job_title" placeholder="Current job title" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Current employer </p>
-					<input type="text" name="employer" id="employer" placeholder="Current employer" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Years of expreince <span style="color: red;">*</span></p>
-					<input type="text" name="year_expereince" id="year_expereince" placeholder="Years of expereince" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Industry <span style="color: red;">*</span></p>
-					<input type="text" name="industry" id="industry" placeholder="Industry" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				
-				<div class="input-box">
-					<p>Carear level <span style="color: red;">*</span></p>
-					<input type="text" name="carear_level" id="carear_level" placeholder="eg. (entry level, mid level, senior level, executive)" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box">
-					<p>Desired Job<span style="color: red;">*</span></p>
-					<input type="text" name="desired_job" id="desired_job" placeholder="Desired job" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-
-				<div class="input-box">
-					<p>job location </p>
-					<input type="text" name="job_location" id="job_location" placeholder="remote" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-
 				<div class="input-box">
 					<p>ID number <span style="color: red;">*</span></p>
 					<input type="text" name="idnumber" id="idnumber" placeholder="ID Number" required>
@@ -140,45 +87,14 @@
 				</div>
 			</div>
 		</div>
-		
-		<div class="col-sm-12 col-6 bg-dark m-2">
-			<h4> Address </h4>
 
-			<div class="d-flex justify-content-between flex-wrap">
-				<div class="input-box">
-					<p>Street address line<span style="color: red;">*</span></p>
-					<input type="text" name="address1" id="address1" placeholder="Address line " required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box">
-					<p>Street address line 2 </p>
-					<input type="text" name="address2" id="address2" placeholder="Address line" >
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box">
-					<p>City <span style="color: red;">*</span></p>
-					<input type="text" name="city" id="city" placeholder="City" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box">
-					<p>Province<span style="color: red;">*</span></p>
-					<input type="text" name="province" id="province" placeholder="Province" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box">
-					<p>Postal Code <span style="color: red;">*</span></p>
-					<input type="text" name="postal_code" id="postal_code" placeholder="Postal Code" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-			</div>
-		</div>
+
 	</div>
+		
+		
+
 
 	<div class="row bg-dark  d-flex justify-content-between">
-		
-		<div class="remember-forgot col-6">
-			<label><input type="checkbox">Remember Me</label>
-		</div>
 
 		<div class="col-6">
 

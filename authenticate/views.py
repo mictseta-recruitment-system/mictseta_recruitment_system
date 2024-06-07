@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .forms import UserSignInForm, UserSignUpForm
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Profile
+from .forms import UserSignInForm, UserSignUpForm
+from profiles.forms import UpdatePersonalInformationForm
+from profiles.models import Profile, PersonalInformation,  AddressInformation
 from .data_validator import ValidateIdNumber
 
 from django.utils.http import urlsafe_base64_encode
@@ -77,6 +78,7 @@ def sign_up(request):
 			json_data = json.loads(request.body)
 		except Exception :
 			return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+		print(json_data)
 		data = {
 		'username' : json_data.get('username'),
 		'first_name' : json_data.get('first_name'),
@@ -85,13 +87,24 @@ def sign_up(request):
 		'phone' : json_data.get('phone'),
 		'idnumber': json_data.get('idnumber'),
 		'password' : json_data.get('password'),
-		'password2' : json_data.get('password2')
-
+		'password2' : json_data.get('password2'),
 		}
 
+
+		address_data = {
+		'street_address_line' : json_data.get('street_address_line'),
+		'street_address_line1' : json_data.get('street_address_line1'),
+		'city'  : json_data.get('city'),
+		'province' : json_data.get('province'),
+		'postal_code' : json_data.get('postal_code')
+		}
+
+
 		form = UserSignUpForm(data)
-		
-		if form.is_valid():
+		# personal_data_form =  PersonalInformationForm(personal_data)
+		# address_data_form = AddressInformationForm(address_data)
+
+		if form.is_valid() : #and personal_data_form.is_valid() and address_data_form.is_valid():
 			if data['password'] != data['password2']:
 				return JsonResponse({'errors':{'password':['password no match ']}, 'status':'error'}, status=400)
 			
@@ -99,14 +112,21 @@ def sign_up(request):
 			if user is None:
 				new_user = User.objects.create_user(username=data['username'], email=data['email'], password=data['password'], first_name=data['first_name'], last_name=data['last_name'])
 				new_user.save()
-
 				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], phone=data['phone'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() )
 				profile.save()
 				return JsonResponse({'message':f'User profile for {new_user.username} is created successfuly', 'status':'success'}, status=201)
 
 		else:
-			return JsonResponse({'errors': form.errors, 'status': 'error'}, status=403)
-	return render(request, "signup.html")
+			if form.errors:
+				return JsonResponse({'errors': form.errors, 'status': 'error'}, status=403)
+			elif personal_data_form.errors:
+				return JsonResponse({'errors': personal_data_form.errors, 'status': 'error'}, status=403)
+			# elif personal_data_form.errors:
+			# 	return JsonResponse({'errors': personal_data_form.errors, 'status': 'error'}, status=403)
+	else:
+		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+		
+	
 
 
 
@@ -116,9 +136,6 @@ def log_out(request):
 	logout(request)
 	return redirect('render_auth_page')
 
-
-def home(request):
-	return render(request,'index.html')
 
 @csrf_exempt
 def reset_password_link(request):
@@ -141,7 +158,7 @@ def reset_password_link(request):
 
 @csrf_exempt
 def find_account(request):
-	return render(request, 'find_account.html')
+	return render(request, 'reset_password.html')
 @csrf_exempt
 def reset_link(request):
 	return render(request, 'reset_link.html')
