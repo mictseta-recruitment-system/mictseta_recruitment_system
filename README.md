@@ -52,7 +52,7 @@ This document provides detailed information on how to use the authentication API
 ## 1. Signing In
 
 ### Endpoint
-`POST /sign_in`
+`POST /auth/sign_in`
 
 ### Description
 
@@ -189,7 +189,7 @@ Generates a reset password link for the user.
 
 ### Endpoint
 
-`POST /reset_password/<uid>/<token>/`
+`POST /auth/reset_password/<uid>/<token>/`
 
 ### Description
 
