@@ -99,16 +99,12 @@ class UserSignUpForm(forms.Form):
 	def clean_password(self):
 		
 		password = self.cleaned_data.get('password')
-		password2 = self.cleaned_data.get('password2')
-		first_name = self.cleaned_data.get('first_name') 
+		password2 = self.cleaned_data.get('password2') 
 		username = self.cleaned_data.get('username')
-		
-		
 		pattern = r"[~`+=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, password)
 
-		if matches:
-			
+		if matches:		
 			raise forms.ValidationError("Password Format is not allowed")
 		
 		if len(password) < 6:

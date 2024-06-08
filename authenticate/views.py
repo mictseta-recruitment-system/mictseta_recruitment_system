@@ -43,7 +43,9 @@ def sign_in(request):
 			'email':email,
 			'password': password
 		}
-		
+		for key, value in data.items():
+			if key == None or value == None:
+				return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
 		form = UserSignInForm(data)
 		if form.is_valid() :
 			user = User.objects.get(email=email)
@@ -99,7 +101,9 @@ def sign_up(request):
 		# 'postal_code' : json_data.get('postal_code')
 		# }
 
-
+		for key, value in data.items():
+			if key == None or value == None:
+				return JsonResponse({'errors': {f"{key}":[f'{key} is required ']}, 'status':'error'}, status=404)
 		form = UserSignUpForm(data)
 
 		if form.is_valid() : 

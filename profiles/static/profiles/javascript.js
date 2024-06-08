@@ -1,5 +1,66 @@
 
 document.addEventListener('DOMContentLoaded', (event) => {
+  const update_address_info = document.getElementById('update_address_info');
+
+    console.log("statrted")
+    function handle_update_address_info_button_click() {
+        console.log("statrted")
+       
+        const street_address_line = document.getElementById("street_address_line").value;
+       console.log(street_address_line)
+
+        const street_address_line1 = document.getElementById("street_address_line1").value;
+        console.log(street_address_line1)
+        const city = document.getElementById("city").value;
+        console.log(city)
+        const province = document.getElementById("province").value;
+        console.log(province)
+        const postal_code = document.getElementById("postal_code").value;
+
+        console.log(postal_code)
+        const address_info = {
+
+            street_address_line : street_address_line,
+            street_address_line1 : street_address_line1,
+            city : city, 
+            province  : province, 
+            postal_code : postal_code,
+           
+        };
+        console.log(address_info)
+
+        fetch("http://127.0.0.1:8000/profile/update/address_information/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(address_info),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+                
+                showFlashMessage(data.message, "success");
+
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
+    
+   
     
        /*===================================================================================*/
    const update_profile_info = document.getElementById('update_profile_info');
@@ -117,14 +178,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
           });
     }
     /*===================================================================================*/ 
+      
 
     
-   
-
-    update_profile_info.addEventListener('click', handle_update_profile_info_button_click)
+    update_profile_info.addEventListener('click', handle_update_profile_info_button_click);
 
     
-    update_personal_info.addEventListener('click',handle_update_personal_info_button_click)
+    update_personal_info.addEventListener('click',handle_update_personal_info_button_click);
+    update_address_info.addEventListener('click', handle_update_address_info_button_click);
 
 
  });

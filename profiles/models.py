@@ -33,11 +33,11 @@ class PersonalInformation(models.Model):
 
 class AddressInformation(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	street_address_line = models.CharField(max_length=225,null=False )
+	street_address_line = models.CharField(max_length=225,null=True )
 	street_address_line1 = models.CharField(max_length=225,null=True )
-	city = models.CharField(max_length=225,null=False )
-	province = models.CharField(max_length=225,null=False)
-	postal_code = models.CharField(max_length=6,null=False )
+	city = models.CharField(max_length=225,null=True )
+	province = models.CharField(max_length=225,null=True)
+	postal_code = models.CharField(max_length=6,null=True )
 	
 	def __str__(self):
 		return f"{self.user.username} Address Information"

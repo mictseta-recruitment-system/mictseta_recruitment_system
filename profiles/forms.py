@@ -233,6 +233,7 @@ class UpdateAddressInformationForm(forms.Form):
 
 	def clean_province(self):
 		province = self.cleaned_data.get('province')
+		print(province)
 		return self.validate_names(province)
 
 	def clean_postal_code(self):
