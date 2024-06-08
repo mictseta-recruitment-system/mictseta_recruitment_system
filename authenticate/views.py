@@ -16,6 +16,8 @@ from django.utils.http import urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 
+from django.contrib.auth.hashers import make_password
+
 #  Create your views here.
 # from django.core
 # .mail import send_mail
@@ -151,7 +153,7 @@ def reset_password_link(request):
 		if user:
 			token = default_token_generator.make_token(user)
 			reset_link = f"http://127.0.0.1:8000/auth/reset_password/{user.id}/{token}/"
-			
+			print(reset_link)
 			return JsonResponse({"message":"link generated successfuly","link":reset_link, "status":"success"}, status=201)
 		else:
 			return JsonResponse({"errors":{"email":["Not Found"]}, "status":"error"}, status=404)
@@ -160,7 +162,7 @@ def reset_password_link(request):
 
 @csrf_exempt
 def find_account(request):
-	return render(request, 'reset_password.html')
+	return render(request, 'find_account.html')
 @csrf_exempt
 def reset_link(request):
 	return render(request, 'reset_link.html')
@@ -178,13 +180,15 @@ def reset_password(request, uidb64, token):
 	if user is not None and default_token_generator.check_token(user, token):
 		if request.method == 'POST':
 			data = request.POST
-			password = data['password']
-			re_password = data['re-password']
+			password = data['new_password']
+			re_password = data['new_password2']
 			print(re_password)
 			if password != re_password:
 				return render(request, 'reset_password.html')
 			else:	
-				user.password = password
+				user.password = make_password(password)
 				user.save()
+				print(user)
 				return render(request,'complete_reset.html')
+		
 	return render(request, 'reset_password.html')
