@@ -35,22 +35,14 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
                   </li>
-                  {% if user.is_authenticated %}
-                  <li class="nav-item">
-                   <a class="nav-link"  href="{% url 'log_out' %}">Logout</a>
-                 </li>
-                 {% else %}
-                    <li class="nav-item">
-                   <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
-                 </li>
-                 {% endif %}
+                 
                 </ul>
               </div>
          </div>
         </div>
       </nav>
-     
-    <header class="bg-primary text-white text-center py-3">
+  
+    <header class="bg-dark text-white text-center py-3">
       <h1>Contact Us</h1>
   </header>
   <main class="container my-5">

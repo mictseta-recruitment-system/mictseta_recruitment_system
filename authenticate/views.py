@@ -138,7 +138,7 @@ def sign_up(request):
 @login_required(login_url='render_auth_page')
 def log_out(request):
 	logout(request)
-	return redirect('render_auth_page')
+	return redirect('home')
 
 
 @csrf_exempt

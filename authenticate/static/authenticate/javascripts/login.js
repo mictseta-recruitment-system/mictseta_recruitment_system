@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
               }
             } else if (data.status === "success") {
                 showFlashMessage(data.message, "success");
-                window.location.href = "/profile/";
+                window.location.href = "/";
 
             } else if (data.status === "warning") {
                 showFlashMessage(data.message, "warning");

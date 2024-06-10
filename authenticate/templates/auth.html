@@ -1,117 +1,57 @@
 {% extends 'base1.html' %}
 
-
 {% block title %} MICSETA | Authenticate {% endblock %}
-
-
 
 {% block content %}
 
-	<div class="spinner">
-		
-	</div>
-	<div id="flash-message-container"></div>
+<div class="main-form">
+
 	<div class="wrapper" id="wrapper-sign-in">
-		<form action="" id="login-form" method="POST">
-	<h1>Login</h1>
-	<div class="input-group mb-3">
-		<div class="input-group-prepend">
-			<span class="input-group-text" id="basic-addon1">@</span>
-		</div>
-		<input type="email" class="form-control" placeholder="Email" id="lemail" aria-label="Email" aria-describedby="basic-addon1">
-	</div>
-	<div class="input-box">
-		<input type="password" name="password" id="lpassword" placeholder="Password" required>
-		<i class='bx bxs-lock-alt' ></i>
-	</div>
-	<div class="remember-forgot">
-		<label><input type="checkbox">Remember Me</label>
-		<a href="{% url 'find_account' %}">Forgot Password?</a>
-	</div>
-	<button type="button" class="btn" id="btn-signin">Login</button>
-	<div class="register-link">
-		<p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
-	</div>
-</form>
-</div>
-	
- 
-<div class="wrapper-sign-up" id="wrapper-sign-up">
-	
-<form action="" id="login-form" method="POST">
-	<h1>Create an Account</h1>
-	
-	<div class="row d-felx justify-content-between text-white">
-		
-		<div class="col-sm-12 col-6 bg-dark m-2 ">
-			<br>
-			<h4 > Basic Personal Information</h4>
-			
-			<div class="d-flex justify-content-between flex-wrap">
-				<!-- <div class="input-box col-6">
-					<p>First name<span style="color: red;">*</span></p>
-					<input type="text" name="first_name" id="first_name" placeholder="First name" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Last name<span style="color: red;">*</span></p>
-					<input type="text" name="last_name" id="last_name" placeholder="Last name" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				 -->
-				<!-- <div class="input-box">
-					<p>Phone number<span style="color: red;">*</span></p>
-					<input type="text" name="phone" id="phone" placeholder="Phone number" required>
-					<i class='bx bxs-envelope'></i>
-				</div> -->
-				<div class="input-box col-6">
-					<p>Username<span style="color: red;">*</span></p>
-					<input type="text" name="username" id="username" placeholder="Username" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Email<span style="color: red;">*</span></p>
-					<input type="email" name="email" id="email" placeholder="Email" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box">
-					<p>ID number <span style="color: red;">*</span></p>
-					<input type="text" name="idnumber" id="idnumber" placeholder="ID Number" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Password<span style="color: red;">*</span></p>
-					<input type="text" name="password" id="password" placeholder="Password" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-				<div class="input-box col-6">
-					<p>Confirm Password<span style="color: red;">*</span></p>
-					<input type="password" name="password2" id="password2" placeholder="Confirm Password" required>
-					<i class='bx bxs-envelope'></i>
-				</div>
-			</div>
-		</div>
-
-
-	</div>
-		
-		
-
-
-	<div class="row bg-dark  d-flex justify-content-between">
-
-		<div class="col-6">
-
-			<button type="button" class="btn btn-success w-100" id="btn-signup">Sign Up</button>
-		</div>
-
-		<div class="register-link col-12">
-			<p>Have an account? <a href="" id="btn-sign-in">Sign in</a></p>
-		</div>
-	</div>
-</form>
+    <form action="" id="login-form" method="POST">
+        <h1>Login</h1>
+        <div class="spinner"></div>
+        <div class="input-group mb-3">
+            <input type="email" class="form-control" placeholder="Email" id="lemail" aria-label="Email" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
+        </div>
+        <div class="remember-forgot">
+            <label><input type="checkbox">Remember Me</label>
+            <a href="{% url 'find_account' %}">Forgot Password?</a>
+        </div>
+        <button type="button" class="btn" id="btn-signin" style="background-color: blue;color: white;">Login</button>
+        <div class="register-link">
+            <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
+        </div>
+    </form>
 </div>
 
+<div class="wrapper" id="wrapper-sign-up">
+    <form action="" id="signup-form" method="POST">
+        <h1>Sign Up</h1>
+        <div class="input-group mb-3">
+            <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
+        </div>
+        <div class="input-group mb-3">
+            <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
+        </div>
+        <div class="input-group mb-3">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+        </div>
+        <div class="input-group mb-3">
+            <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
+        </div>
+        <button type="button" class="btn" id="btn-signup" style="background-color: blue;color: white;">Sign Up</button>
+        <div class="register-link">
+            <p>Have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
+        </div>
+    </form>
+</div>
 
+</div>
 
 {% endblock %}

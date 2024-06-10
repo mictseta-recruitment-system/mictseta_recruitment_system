@@ -6,37 +6,7 @@
 	<title>{% block title %}MICSETA | Profile {% endblock %}</title>
 		{% load static %}
      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-        }
-        .profile-item {
-            margin-bottom: 15px;
-        }
-        .profile-item label {
-            display: block;
-            font-weight: bold;
-        }
-        .profile-item input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            box-sizing: border-box;
-        }
-</style>
+ <link rel="stylesheet" href="{% static 'profiles/css/style.css' %}">
 </head>
 <body>
 <div id="flash-message-container"></div>
