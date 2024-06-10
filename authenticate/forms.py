@@ -7,20 +7,19 @@ from .data_validator import *
 class UserSignInForm(forms.Form):
 	email = forms.EmailField(max_length=254)
 	password = forms.CharField(max_length=100)
- 
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')
 		if ' ' in email :
 			raise forms.ValidationError("Spaces not allowed in email")
 		if not validate_email(email):
-			raise forms.ValidationError("Email in Invalid")
+			raise forms.ValidationError(" in Invalid")
 		new_email = email.split('@')
 		if len(new_email[0]) < 3:
-			raise forms.ValidationError("Email length is Invalid") 
+			raise forms.ValidationError(" length is Invalid") 
 		exist = User.objects.filter(email=email).exists()
 		if not exist:
-			raise forms.ValidationError("Email is not registerd, try to Create Account")
+			raise forms.ValidationError("is not registerd, try to Create Account")
 		return email
 	
 	def clean_password(self):
@@ -29,22 +28,17 @@ class UserSignInForm(forms.Form):
 		pattern = r"[~`+=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, password)
 		if matches:
-			raise forms.ValidationError("Password Format is not allowed")
+			raise forms.ValidationError(" Format is not allowed")
 		return password
 
 
 class UserSignUpForm(forms.Form):
-	# first_name = forms.CharField(max_length=150)
-	# last_name = forms.CharField(max_length=150)
-	# phone = forms.CharField(max_length=10)
 	username = forms.CharField(max_length=150)
 	email = forms.CharField(max_length=150)
 	idnumber  = forms.CharField(max_length=13)
 	password = forms.CharField(max_length=128)
 
-
 	def validate_names(self,name):
-     
 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, name)
 		if matches:
@@ -57,47 +51,30 @@ class UserSignUpForm(forms.Form):
 			raise forms.ValidationError(e)
 		return name
 
-	# def clean_first_name(self):
-	# 	first_name = self.cleaned_data.get('first_name')
-	# 	return self.validate_names(first_name)
-
-	# def clean_last_name(self):
-	# 	last_name = self.cleaned_data.get('last_name')
-	# 	return self.validate_names(last_name)
-
-
-	# def clean_phone(self):
-	# 	phone = self.cleaned_data.get('phone')
-	# 	exist = User.objects.filter(profile__phone=phone).exists()
-	# 	if exist:
-	# 		 raise forms.ValidationError("phone Number Already taken")
-		
-	# 	if not validate_south_african_phone_number(phone):
-	# 		raise forms.ValidationError("Phone number is not a valid south african number")
-	# 	return phone
 	def clean_username(self):
 		username = self.cleaned_data.get('username')
+		if ' ' in username :
+			raise forms.ValidationError("Spaces not allowed ")
 		exist = User.objects.filter(username=username).exists()
 		if exist:
-			raise forms.ValidationError(f"Username:{username} is already taken")
+			raise forms.ValidationError(f" {username} is already taken")
 		return self.validate_names(username)
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')
 		if ' ' in email :
-			raise forms.ValidationError("Spaces not allowed in email")
+			raise forms.ValidationError("Spaces not allowed ")
 		if not validate_email(email):
-			raise forms.ValidationError(f"Email: {email} in Invalid")
+			raise forms.ValidationError(f": {email} in Invalid")
 		new_email = email.split('@')
 		if len(new_email[0]) < 3:
-			raise forms.ValidationError("Email length is Invalid") 
+			raise forms.ValidationError(" length is Invalid") 
 		exist = User.objects.filter(email=email).exists()
 		if exist:
 			raise forms.ValidationError(f"Email: {email} is already taken")
 		return email
 
 	def clean_password(self):
-		
 		password = self.cleaned_data.get('password')
 		password2 = self.cleaned_data.get('password2') 
 		username = self.cleaned_data.get('username')
@@ -105,17 +82,20 @@ class UserSignUpForm(forms.Form):
 		matches = re.findall(pattern, password)
 
 		if matches:		
-			raise forms.ValidationError("Password Format is not allowed")
-		
+			raise forms.ValidationError(" Format is not allowed")
+
+		if ' ' in password :
+			raise forms.ValidationError("Spaces not allowed ")
+
 		if len(password) < 6:
-			raise forms.ValidationError("Password is too short")
+			raise forms.ValidationError(" is too short")
 
 		char = [char for char in password if char.isdigit()]
 		if len(char) < 1:
-			raise forms.ValidationError("Password must contain at least one Number")
+			raise forms.ValidationError(" must contain at least one Number")
 		
 		if username in password: #or username in password:
-			raise forms.ValidationError("Password cannot contain username ")  
+			raise forms.ValidationError(" cannot contain username ")  
 		return password
 
 
@@ -126,7 +106,10 @@ class UserSignUpForm(forms.Form):
 		exist = User.objects.filter(profile__idnumber=idnumber).exists()
 		if exist:
 			raise forms.ValidationError("Id Number Already taken")
-			
+		
+		if ' ' in idnumber :
+			raise forms.ValidationError("Spaces not allowed ")
+
 		if not is_valid:
 			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
