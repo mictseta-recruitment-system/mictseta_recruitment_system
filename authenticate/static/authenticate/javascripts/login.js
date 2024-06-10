@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken') 
           },
           body: JSON.stringify(data1),
         })
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken') 
           },
           body: JSON.stringify(data2),
         })
@@ -119,6 +121,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
           },
           body: JSON.stringify(data1),
         })
@@ -133,7 +136,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             } else if (data.status === "success") {
                 showFlashMessage(data.message, "success");
                 localStorage.setItem('value', data.link);
-                window.location.href = "/auth/reset_password_link/";
+                window.location.href = "/auth/reset_link/";
 
             } else if (data.status === "warning") {
                 showFlashMessage(data.message, "warning");
@@ -159,10 +162,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 
-
-
-
-
 function handleErrors(errors) {
   for (const key in errors) {
     //to ensure it makes the container Empty before displaying the next error 
@@ -179,6 +178,21 @@ document.getElementById('flash-message-container').innerHTML=``;
       }
     }
   }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 var btnSignUp = document.getElementById("btn-sign-up");

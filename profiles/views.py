@@ -38,9 +38,10 @@ def update_user_profile(request):
                 'idnumber': json_data.get('idnumber'),
                 'r_username' : f'{request.user.username}',
                 'r_email' : f'{request.user.email}',
-                'r_phone' : f'{request.user.profile.phone}',
+                'r_phone' : 'False',
                 'r_idnum' : f'{request.user.profile.idnumber}'
             }
+       
             for key, value in data.items():
                 if key == None or value == None:
                     return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)

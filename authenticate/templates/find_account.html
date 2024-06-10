@@ -8,6 +8,7 @@
 	<div class= "col-6" style="margin-top: 50px; ">
 		<h1>Enter Email to reset password</h1>
 		<form method="POST">
+			{% csrf_token %}
 			<div class="input-group mb-3">
 			  <span class="input-group-text" id="basic-addon1">@</span>
 			  <input type="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="email" id="femail">
