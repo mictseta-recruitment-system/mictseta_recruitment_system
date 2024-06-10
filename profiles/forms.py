@@ -10,6 +10,8 @@ class UpdateProfileInformationForm(forms.Form):
 	last_name = forms.CharField(max_length=150)
 	idnumber  = forms.CharField(max_length=13)
 	phone = forms.CharField(max_length=10)
+	r_phone = forms.CharField(max_length=10)
+	
 	def validate_names(self,name):
      
 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?]"
@@ -26,14 +28,20 @@ class UpdateProfileInformationForm(forms.Form):
 
 	def clean_first_name(self):
 		first_name = self.cleaned_data.get('first_name')
+		if ' ' in first_name :
+			raise forms.ValidationError("Spaces not allowed in email")
 		return self.validate_names(first_name)
 
 	def clean_last_name(self):
 		last_name = self.cleaned_data.get('last_name')
+		if ' ' in last_name :
+			raise forms.ValidationError("Spaces not allowed in email")
 		return self.validate_names(last_name)
 
 	def clean_username(self):
 		username = self.cleaned_data.get('username')
+		if ' ' in username :
+			raise forms.ValidationError("Spaces not allowed in email")
 		return self.validate_names(username)
 
 	def clean_email(self):
@@ -77,7 +85,8 @@ class UpdateProfileInformationForm(forms.Form):
 	def clean_phone(self):
 		phone = self.cleaned_data.get('phone')
 		r_phone = self.cleaned_data.get('r_phone')
-
+		if ' ' in phone :
+			raise forms.ValidationError("Spaces not allowed in email")
 		exist = User.objects.filter(profile__phone=phone).exists()
 		if exist:
 			user = User.objects.get(profile__phone=phone)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 # Create your models here.
 
@@ -11,7 +12,7 @@ class Profile(models.Model):
     gender = models.CharField(max_length=6, null=True)
     age = models.CharField(max_length=6, null=True)
     is_verified = models.BooleanField(default=False, null=False)
-
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     def __str__(self):
 
         return f'{self.user.username} Profile Information'
