@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie, csrf_exempt
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import login, authenticate, logout
@@ -11,12 +11,13 @@ from profiles.models import Profile, PersonalInformation,  AddressInformation
 from .data_validator import ValidateIdNumber
 
 from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 
 from django.contrib.auth.hashers import make_password
+
 
 #  Create your views here.
 # from django.core
@@ -29,8 +30,13 @@ from django.contrib.auth.hashers import make_password
 #     recipient_list = [user_email]
     
 #     send_mail(subject, message, email_from, recipient_list)
+@ensure_csrf_cookie
+def render_auth_page(request):
+	if request.user.is_authenticated:
+		return redirect('home')
+	return render(request, "auth.html")
 
-@csrf_exempt
+@csrf_protect
 def sign_in(request):
 	if request.user.is_authenticated:
 		return JsonResponse({'message':f"Already logged in as {request.user.username}",'status':'warning'}, status=200)
@@ -59,21 +65,16 @@ def sign_in(request):
 			if user is not None:
 				login(request, user)
 				return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success'}, status=200)
-				#return JsonResponse({'message':f"Logged in as : {user.username} " , 'status':'success'}, status=200)
+				
 			else:
-				return JsonResponse({'errors':{'password':['Password is incorrect']}, 'status':'error'}, status=400)
+				return JsonResponse({'errors':{'password':[' is incorrect']}, 'status':'error'}, status=400)
 		else:
 			return JsonResponse({'errors': form.errors, 'status':'error'}, status=400)
 	else:
 		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
 
-@csrf_exempt
-def render_auth_page(request):
-	if request.user.is_authenticated:
-		return redirect('home')
-	return render(request, "auth.html")
 
-@csrf_exempt
+@csrf_protect
 def sign_up(request):
 	if request.user.is_authenticated:
 		return redirect('home')
@@ -85,23 +86,11 @@ def sign_up(request):
 		print(json_data)
 		data = {
 		'username' : json_data.get('username'),
-		# 'first_name' : json_data.get('first_name'),
-		# 'last_name' : json_data.get('last_name'),
-		# 'phone' : json_data.get('phone'),
 		'email' : json_data.get('email'),
 		'idnumber': json_data.get('idnumber'),
 		'password' : json_data.get('password'),
 		'password2' : json_data.get('password2'),
 		}
-
-
-		# address_data = {
-		# 'street_address_line' : json_data.get('street_address_line'),
-		# 'street_address_line1' : json_data.get('street_address_line1'),
-		# 'city'  : json_data.get('city'),
-		# 'province' : json_data.get('province'),
-		# 'postal_code' : json_data.get('postal_code')
-		# }
 
 		for key, value in data.items():
 			if key == None or value == None:
@@ -110,7 +99,7 @@ def sign_up(request):
 
 		if form.is_valid() : 
 			if data['password'] != data['password2']:
-				return JsonResponse({'errors':{'password':['password no match ']}, 'status':'error'}, status=400)
+				return JsonResponse({'errors':{'password':[' does not match ']}, 'status':'error'}, status=400)
 			
 			user = authenticate(request, email=data['email'], password=data['password'])
 			if user is None:
@@ -125,11 +114,10 @@ def sign_up(request):
 				return JsonResponse({'errors': form.errors, 'status': 'error'}, status=403)
 			elif personal_data_form.errors:
 				return JsonResponse({'errors': personal_data_form.errors, 'status': 'error'}, status=403)
-			# elif personal_data_form.errors:
-			# 	return JsonResponse({'errors': personal_data_form.errors, 'status': 'error'}, status=403)
 	else:
 		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
 		
+<<<<<<< Updated upstream
 	
 
 
@@ -142,6 +130,9 @@ def log_out(request):
 
 
 @csrf_exempt
+=======
+@csrf_protect
+>>>>>>> Stashed changes
 def reset_password_link(request):
 	if request.method == "POST":
 		data = json.loads(request.body)
@@ -152,7 +143,8 @@ def reset_password_link(request):
 			user = False
 		if user:
 			token = default_token_generator.make_token(user)
-			reset_link = f"http://127.0.0.1:8000/auth/reset_password/{user.id}/{token}/"
+			uid = urlsafe_base64_encode(force_bytes(user.profile.uuid))
+			reset_link = f"http://127.0.0.1:8000/auth/reset_password/{uid}/{token}/"
 			print(reset_link)
 			return JsonResponse({"message":"link generated successfuly","link":reset_link, "status":"success"}, status=201)
 		else:
@@ -160,10 +152,17 @@ def reset_password_link(request):
 	else:
 		return JsonResponse({'errors':"Forbidden 403" , "status":"error"}, status=403)
 
-@csrf_exempt
+
+@login_required(login_url='render_auth_page')
+def log_out(request):
+	logout(request)
+	return redirect('render_auth_page')
+
+@csrf_protect
 def find_account(request):
 	return render(request, 'find_account.html')
-@csrf_exempt
+
+@csrf_protect
 def reset_link(request):
 	return render(request, 'reset_link.html')
 
@@ -171,9 +170,8 @@ def reset_link(request):
 @csrf_exempt
 def reset_password(request, uidb64, token):
 	try:
-		uid = int(uidb64)
-		user = User.objects.get(pk=uid)
-	
+		uid = force_str(urlsafe_base64_decode(uidb64))
+		user = User.objects.get(profile__uuid=uid)	
 	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
 		user = None
 
