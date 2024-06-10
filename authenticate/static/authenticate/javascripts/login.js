@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             } else if (data.status === "success") {
                 showFlashMessage(data.message, "success");
                 localStorage.setItem('value', data.link);
-                window.location.href = "/auth/reset_password_link/";
+                window.location.href = "/auth/reset_link/";
 
             } else if (data.status === "warning") {
                 showFlashMessage(data.message, "warning");
