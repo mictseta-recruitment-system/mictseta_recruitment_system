@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, ProfileImage
 from authenticate.data_validator import *
 
 class UpdateProfileInformationForm(forms.Form):
@@ -252,3 +252,8 @@ class UpdateAddressInformationForm(forms.Form):
 			int(postal_code)
 		except:
 			raise forms.ValidationError("Postal code must integers")
+
+class ImageUploadForm(forms.ModelForm):
+	class Meta:
+		model = ProfileImage
+		fields = ['image']

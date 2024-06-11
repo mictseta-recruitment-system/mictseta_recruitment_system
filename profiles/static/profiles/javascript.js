@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
           },
           body: JSON.stringify(address_info),
         })
@@ -87,6 +88,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
           },
           body: JSON.stringify(data2),
         })
@@ -151,6 +153,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
           },
           body: JSON.stringify(personal_information),
         })
@@ -190,6 +193,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
  });
 
+function uploadImage() {
+    const form = document.getElementById('image-upload-form');
+    const formData = new FormData(form);
+
+    fetch('http://127.0.0.1:8000/profile/update/upload_profile_image/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if needed
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showFlashMessage('Image uploaded successfully ', "danger");
+        } else {
+          
+            showFlashMessage('Error uploading image: ' + JSON.stringify(data.errors), "danger");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFlashMessage(error, "danger");
+    });
+}
 
 
 function handleErrors(errors) {
@@ -221,4 +249,17 @@ triggerTabList.forEach(triggerEl => {
 
 
 
-
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

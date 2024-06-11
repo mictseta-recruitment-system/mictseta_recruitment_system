@@ -93,9 +93,11 @@ class UserSignUpForm(forms.Form):
 		char = [char for char in password if char.isdigit()]
 		if len(char) < 1:
 			raise forms.ValidationError(" must contain at least one Number")
-		
-		if username in password: #or username in password:
-			raise forms.ValidationError(" cannot contain username ")  
+		try:
+			if username in password: #or username in password:
+				raise forms.ValidationError(" cannot contain username ")  
+		except:
+			pass
 		return password
 
 

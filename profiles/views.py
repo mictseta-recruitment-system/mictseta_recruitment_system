@@ -1,17 +1,19 @@
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, UpdateProfileInformationForm
+from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, PersonalInformation, AddressInformation
+from .models import Profile, PersonalInformation, AddressInformation, ProfileImage
 from django.db.utils import IntegrityError
+from PIL import Image as PilImage
+import os
 # Create your views here.
 
-
+@ensure_csrf_cookie
 def render_profile_page(request):
     if request.user.is_authenticated:
         return render(request,'user_profile.html')
@@ -19,9 +21,10 @@ def render_profile_page(request):
         return redirect('render_auth_page')
 
 
-@csrf_exempt
+@csrf_protect
 def update_user_profile(request):
     if request.user.is_authenticated:
+
         pr = Profile.objects.all()
         if request.method == 'POST':
             try:
@@ -89,7 +92,7 @@ def update_user_profile(request):
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
 
-@csrf_exempt
+@csrf_protect
 def update_personal_info(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -143,7 +146,7 @@ def update_personal_info(request):
 
 
 
-@csrf_exempt
+@csrf_protect
 def update_address_info(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -187,3 +190,60 @@ def update_address_info(request):
             return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
     else:       
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@csrf_protect
+def upload_profile_image(request):
+    if request.method == 'POST':
+
+        try:
+            image = request.FILES['image']
+            # return JsonResponse({'errors': {'file' :['Bad Request']}, 'status': 'error'}, status=400)
+        except Exception as e:
+            return JsonResponse({'errors': f'{e}', 'status': 'error'}, status=400)
+        try:
+            if not image or image.name == '':
+                return JsonResponse({'errors':'No selected file', 'status': 'error'}, status=400)
+            if not image and not allowed_file(image.filename):
+                return JsonResponse({'errors':'File type not allowed', 'status': 'error'}, status=400)
+            img = PilImage.open(image)
+            img.verify()  # Verify that this is a valid image
+            # If user does not select a file, the browser submits an empty file without a filename
+            try:
+                profile_image = ProfileImage.objects.create(user=request.user,image=image) 
+                profile_image.save()
+                return JsonResponse({'message': 'Image uploaded successfully', 'status': 'success'}, status=201)
+            except:
+                user_profile_image = ProfileImage.objects.get(user=request.user)
+
+                if user_profile_image:
+                    ext= user_profile_image.image.path.split('/')[-1].split('_')[-1].split('.')[-1]
+                    name = user_profile_image.image.path.split('/')[-1].split('_')[0:-1]
+                    if type(name) is type(list('jeff')):
+                        name = '_'.join(name)
+                    filename = name+'.'+ext
+                    files = user_profile_image.image.path.split('/')
+                    files[-1] = filename
+                    file_to_delete = '/'.join(files)
+                    print(file_to_delete)
+                    if os.path.isfile(file_to_delete):
+                        os.remove(file_to_delete)
+
+                    user_profile_image.image.delete()
+                    user_profile_image.image = image
+                    user_profile_image.save()
+                    return JsonResponse({'message': 'Image uploaded successfully', 'status': 'success'}, status=201)
+                else:
+                    return JsonResponse({'errors': 'NOT FOUND', 'status': 'error'}, status=400)
+
+        except (IOError, SyntaxError):
+            return JsonResponse({'errors': 'Invalid image file', 'status': 'error'}, status=400)
+        else:
+            return JsonResponse({'errors': form.errors, 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)

@@ -18,7 +18,7 @@ class Profile(models.Model):
         return f'{self.user.username} Profile Information'
 
 class PersonalInformation(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
 	linkedin_profile = models.CharField(max_length=225)
 	personal_website = models.CharField(max_length=225)
 	job_title = models.CharField(max_length=225) 
@@ -43,3 +43,8 @@ class AddressInformation(models.Model):
 	def __str__(self):
 		return f"{self.user.username} Address Information"
 
+
+class ProfileImage(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	image = models.ImageField(upload_to='static/profiles/images/')
+	uploaded_at = models.DateTimeField(auto_now_add=True)

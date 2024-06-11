@@ -1,5 +1,5 @@
 {% extends 'base2.html' %}
-
+{% load static %}
 {% block content %}
 <header class="bg-dark text-white text-center py-3">
     <h1>My Dashboard</h1>
@@ -23,6 +23,13 @@
             <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
                 <div>
                     <h3>Personal information</h3>
+                    <img src="{{user.profileimage.image.url}}" alt="" style="width: 50px;height: 50px;">
+                     <form id="image-upload-form" method="post" enctype="multipart/form-data">
+                        
+                        <input type="file" name="image" id="profile-image">
+                        <button type="button" onclick="uploadImage()">Upload</button>
+                    </form>
+                    
                     <form method="POST">
                         <div class="profile-item">
                             <label for="username">Username</label>
@@ -103,6 +110,10 @@
             <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
                 <div>
                     <h3>Personal Information</h3>
+                     <form id="upload-form" method="post" enctype="multipart/form-data">
+                        <input type="file" name="image" id="image">
+                        <button type="button" onclick="uploadImage()">Upload</button>
+                    </form>
                     <form method="POST">
                         <div class="profile-item">
                             <label for="linkedin_profile">LinkedIn Profile</label>
