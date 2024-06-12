@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'authenticate',
     'home',
     'profiles',
-    'users'
+    'users',
+    'jobs'
     
 ]
 
