@@ -48,6 +48,8 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                               Dashboard
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark">
+                              
+                               <li><a class="dropdown-item" href="{% url 'get_all_users_page' %}">View Users</a></li>
                               <li><a class="dropdown-item" href="{% url 'render_profile_page' %}">View Profile</a></li>
                               <li>
                                 <a class="dropdown-item" data-bs-toggle="modal" 

@@ -11,6 +11,8 @@ from .models import Profile, PersonalInformation, AddressInformation, ProfileIma
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
+import re
+from authenticate.data_validator import ValidateIdNumber
 # Create your views here.
 
 @ensure_csrf_cookie
@@ -41,8 +43,8 @@ def update_user_profile(request):
                 'idnumber': json_data.get('idnumber'),
                 'r_username' : f'{request.user.username}',
                 'r_email' : f'{request.user.email}',
-                'r_phone' : 'False',
-                'r_idnum' : f'{request.user.profile.idnumber}'
+                'r_phone' : 'False'
+                # 'r_idnum' : f'{request.user.profile.idnumber}'
             }
        
             for key, value in data.items():
@@ -73,6 +75,7 @@ def update_user_profile(request):
                     user.last_name = data['last_name']
                     user.email = data['email']
                     # user.password = data['password']
+                   
                     user.profile.idnumber = data['idnumber']
                     user.profile.phone = data['phone']
                     user.profile.age = ValidateIdNumber(data['idnumber']).get_age()
@@ -83,7 +86,7 @@ def update_user_profile(request):
                     print(user.profile.phone)
                     return JsonResponse({'message':f'User profile for {user.username} is updated successfuly', 'status':'success'}, status=201) 
                 except Exception as e:
-                    return JsonResponse({'errors': f'jhgfg {e}', 'status':'error'}, status=404)
+                    return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
             else:
                 return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
         else:
@@ -247,3 +250,6 @@ def upload_profile_image(request):
         else:
             return JsonResponse({'errors': form.errors, 'status': 'error'}, status=400)
     return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+#==================================================================================================================================
+
