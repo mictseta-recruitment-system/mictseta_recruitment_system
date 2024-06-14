@@ -18,17 +18,31 @@
     </tr>
   </thead>
   <tbody>
-  	{% for user in users %}
-    <tr>
-      <th scope="row">{{user.id}}</th>
-      <td>{{user.username}}</td>
-      <td>{{user.email}}</td>
-      <td>{{user.profile.idnumber}}</td>
-      <td>{{user.profile.phone}}</td>
-      <td>{{user.is_staff}}</td>
-      <td><a href="{% url 'get_user' user.username %}" class="btn btn-primary">view</a></td>
-      <td ><button onclick="deleteUser('{{user.username}}')" class="btn btn-danger">Delete</button><button class="btn btn-warning mx-1">Edit</button> </td>
-    </tr>
+  	{% for User in users %}
+    {% if user.is_staff %}
+        <tr>
+          <th scope="row">{{User.id}}</th>
+          <td>{{User.username}}</td>
+          <td>{{User.email}}</td>
+          <td>{{User.profile.idnumber}}</td>
+          <td>{{User.profile.phone}}</td>
+          <td>{{User.is_staff}}</td>
+          <td><a href="{% url 'get_user' User.username %}" class="btn btn-primary">view</a></td>
+          <td ><button onclick="deleteUser('{{User.username}}')" class="btn btn-danger">Delete</button><button class="btn btn-warning mx-1">Edit</button> </td>
+        </tr>
+        {% else %}
+        {% if not User.is_staff %}
+        <tr>
+          <th scope="row">{{User.id}}</th>
+          <td>{{User.username}}</td>
+          <td>{{User.email}}</td>
+          <td>{{User.profile.idnumber}}</td>
+          <td>{{User.profile.phone}}</td>
+          <td>{{User.is_staff}}</td>
+          <td><a href="{% url 'get_user' User.username %}" class="btn btn-primary">view</a></td>
+        </tr>
+        {% endif %}
+    {% endif %}
     {% endfor %}
 
    <!--  <tr>

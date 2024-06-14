@@ -8,11 +8,11 @@
     <div class="col-4" id="side-bar">
         <div class="list-group" id="list-tab" role="tablist">
             <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list"
-                href="#list-home" role="tab" aria-controls="list-home">Personal Information</a>
+                href="#list-home" role="tab" aria-controls="list-home">Profile Information</a>
             <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                href="#list-messages" role="tab" aria-controls="list-messages">Experience information</a>
+                href="#list-messages" role="tab" aria-controls="list-messages">Address information</a>
             <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list"
-                href="#list-profile" role="tab" aria-controls="list-profile">Address Information</a>
+                href="#list-profile" role="tab" aria-controls="list-profile">Personal Information</a>
             <a class="list-group-item list-group-item-action" href="{% url 'home'  %}" aria-controls="list-profile">Go
                 to home Page</a>
 
@@ -245,7 +245,7 @@
                 <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
                     <div>
                         <h3>Personal Information</h3>
-                         <form id="upload-form" method="post" enctype="multipart/form-data">
+                         <form id="image-upload-form" method="post" enctype="multipart/form-data">
                             <input type="file" name="image" id="image">
                             <button type="button" onclick="uploadImage()">Upload</button>
                         </form>
