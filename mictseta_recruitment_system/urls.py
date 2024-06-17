@@ -23,5 +23,6 @@ urlpatterns = [
     path('auth/', include("authenticate.urls")),
     path('profile/', include("profiles.urls")),
     path('user/', include("users.urls")),
-    path('job/', include("jobs.urls"))
+    path('job/', include("jobs.urls")),
+    path('dashboard/', include("dashboard.urls"))
 ]

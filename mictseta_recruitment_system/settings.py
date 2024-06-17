@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'home',
     'profiles',
     'users',
-    'jobs'
+    'jobs',
+    'dashboard'
     
 ]
 

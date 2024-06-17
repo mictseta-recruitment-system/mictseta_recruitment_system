@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %} {% endblock %}</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .content {
+      flex: 1;
+    }
+    .sidebar {
+      width: 250px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      padding: 20px;
+      background-color: #343a40;
+    }
+    .sidebar a {
+      color: #ffffff;
+      text-decoration: none;
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .sidebar a:hover {
+      background-color: #495057;
+    }
+    .sidebar .collapse {
+      background-color: #3d4147;
+    }
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+    }
+    .footer {
+      background-color: #343a40;
+      color: #ffffff;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+    .table-container, .form-container {
+      margin-top: 20px;
+    }
+    .navbar .dropdown-menu {
+      left: auto;
+      right: 0;
+    }
+    .form-group label {
+      font-weight: bold;
+    }
+    #flash-message-container {
+    position: fixed;
+    top: 0;
+    left: -1;
+    width: inherit; /* Semi-transparent black background */
+    z-index: 9999; /* Ensure this is higher than other elements */
+    margin: 10px;
+}
+  .min-icon:hover{
+    color:darkred;
+    font-size: 20px;
+  
+  }
+  .modal-body #spinner{
+    position: fixed;
+    top: 0%;
+    right:0%;
+    height: 100%;
+    /*color: lightslategray;*/
+    /*background-color: lightslategray;*/
+    width:100%; /* Semi-transparent black background */
+    z-index: 9999;
+  }
+
+    {% load static %}
+  
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2 class="text-white">Dashboard</h2>
+    <a href="#" data-toggle="collapse" data-target="#dashboardMenu" aria-expanded="false" aria-controls="dashboardMenu">
+      Dashboard
+    </a>
+    <div class="collapse" id="dashboardMenu">
+      <a href="{% url 'dashboard.panel' %}" class="pl-4">Panel</a>
+      <a href="#" class="pl-4">Submenu 2</a>
+    </div>
+    <a href="#" data-toggle="collapse" data-target="#usersMenu" aria-expanded="false" aria-controls="usersMenu">
+      Employees
+    </a>
+    <div class="collapse" id="usersMenu">
+      <a href="{% url 'dashboard.view_users' %}" class="pl-4">All Employee</a>
+      <a href="#" class="pl-4">Add Employee</a>
+    </div>
+    <a href="#" data-toggle="collapse" data-target="#jobsMenu" aria-expanded="false" aria-controls="jobsMenu">
+      Manage Jobs
+    </a>
+    <div class="collapse" id="jobsMenu">
+      <a href="{% url 'dashboard.add_job' %}" class="pl-4" >Add Job Ad</a>
+     <!--  <a href="{% url 'dashboard.update_job' %}" class="pl-4">Update Job Ad</a> -->
+      <a href="{% url 'dashboard.view_jobs' %}" class="pl-4" >Manage Job</a>
+    </div>
+    <a href="#" data-toggle="collapse" data-target="#settingsMenu" aria-expanded="false" aria-controls="settingsMenu">
+      Settings
+    </a>
+    <div class="collapse" id="settingsMenu">
+      <a href="#" class="pl-4">General</a>
+      <a href="#" class="pl-4">Security</a>
+    </div>
+    <a href="#" data-toggle="collapse" data-target="#reportsMenu" aria-expanded="false" aria-controls="reportsMenu">
+      Reports
+    </a>
+    <div class="collapse" id="reportsMenu">
+      <a href="#" class="pl-4">Daily</a>
+      <a href="#" class="pl-4">Monthly</a>
+    </div>
+    <a href="#" data-toggle="collapse" data-target="#notificationsMenu" aria-expanded="false" aria-controls="notificationsMenu">
+      Notifications
+    </a>
+    <div class="collapse" id="notificationsMenu">
+      <a href="#" class="pl-4">All Notifications</a>
+      <a href="#" class="pl-4">Settings</a>
+    </div>
+    
+  </div>
+
+  <div class="main-content">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      {% if user.is_superuser %}
+      <a class="navbar-brand" href="#">Admin</a>
+      {% else %}
+      <a class="navbar-brand" href="#">Employee</a>
+      {% endif %}
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span class="badge badge-pill badge-danger">3</span>
+              <i class="fas fa-bell fa-2x"></i>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img src="{{user.profileimage.image.url}}" class="rounded-circle" alt="Profile Image">
+              <span>{{user.username}}</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'render_profile_page'%}">Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'log_out' %}">Logout</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="content">
+      <div id="defaultPage">
+        <div id="flash-message-container" style="position: ;"></div>
+        <h1>{% block head %} {% endblock%} </h1>
+        <p>{% block description %} {% endblock %}</p>
+
+        {% block content %}
+
+        {% endblock %}
+
+        
+
+      
+
+    </div>
+  </div>
+
+
+  <script src="{% static 'dashboard/js/javascript.js' %}"></script>
+<script src="{% static 'users/js/flash.js' %}"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script>
+    var ctxSales = document.getElementById('salesChart').getContext('2d');
+    var salesChart = new Chart(ctxSales, {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'Sales',
+          data: [65, 59, 80, 81, 56, 55, 40],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    var ctxUserGrowth = document.getElementById('userGrowthChart').getContext('2d');
+    var userGrowthChart = new Chart(ctxUserGrowth, {
+      type: 'bar',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+
+          label: 'User Growth',
+          data: [28, 48, 40, 19, 86, 27, 90],
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
+          borderColor: 'rgba(153, 102, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Task Manager JavaScript
+    document.getElementById('taskForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      var taskInput = document.getElementById('taskInput');
+      var taskList = document.getElementById('taskList');
+
+      if (taskInput.value) {
+        var newTask = document.createElement('li');
+        newTask.className = 'list-group-item';
+        newTask.textContent = taskInput.value;
+        taskList.appendChild(newTask);
+        taskInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>

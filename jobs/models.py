@@ -12,12 +12,17 @@ class JobPost(models.Model):
     job_type = models.CharField(max_length=50, null=False, default='Full-time')  # Added field for job type
     industry = models.CharField(max_length=100, null=True)  # Added field for industry
     company_name = models.CharField(max_length=225, null=True)  # Added field for company name
+    status = models.CharField(max_length=20, null=False, default="waiting")
+    is_complete = models.BooleanField(null=False, default=False)
+    is_approved = models.BooleanField(null=False, default=False)
+    
+   
     def __str__(self):
         return f'{self.title} Job Post'
 
 
 class Academic(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='educations')
     level = models.CharField(max_length=225, unique=False, null=False)
     qualification = models.CharField(max_length=225, unique=False, null=False)
 
@@ -26,7 +31,7 @@ class Academic(models.Model):
 
 
 class Skill(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE,  related_name='skills')
     name = models.CharField(max_length=225, unique=False, null=False)
     LEVEL_CHOICES = [
         ('Beginner', 'Beginner'),
@@ -40,16 +45,16 @@ class Skill(models.Model):
 
 
 class Experience(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='experiences')
     name = models.CharField(max_length=225, unique=False, null=False)
-    duration = models.CharField(max_length=10, unique=False, null=False)
+    duration = models.CharField(max_length=40, unique=False, null=False)
 
     def __str__(self):
         return f'{self.name} Experience for {self.job_post.title} Job Post'
 
 class Requirement(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
-    description = models.CharField(max_length=10, unique=False, null=False)
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='requirements')
+    description = models.CharField(max_length=225, unique=False, null=False)
 
     def __str__(self):
         return f'Requirements for {self.job_post.title} Job Post'

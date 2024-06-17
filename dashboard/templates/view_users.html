@@ -1,0 +1,50 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title%}
+Manage Users
+{% endblock %}
+
+{% load static %}
+{% block head %} View all users {% endblock %}
+
+{% block description %} here you can manage all users {% endblock %}
+
+
+{% block content %}
+
+
+<!-- User Table Section -->
+        <div class="table-container">
+          <h3>Users</h3>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>John Doe</td>
+                <td>john.doe@example.com</td>
+                <td>Admin</td>
+                <td>Active</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Jane Smith</td>
+                <td>jane.smith@example.com</td>
+                <td>User</td>
+                <td>Inactive</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+{% endblock %}

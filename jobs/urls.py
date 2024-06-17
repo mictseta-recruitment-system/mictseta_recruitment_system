@@ -20,6 +20,8 @@ urlpatterns = [
     path('delete_job_acedemic/', views.delete_job_acedemic, name='delete_job_acedemic'),
     path('delete_job_expereince/', views.delete_job_expereince, name='delete_job_expereince'),
     path('delete_job_requirements/', views.delete_job_requirements, name='delete_job_requirements'),
+    path('complete_job/', views.complete_job, name='complete_job'),
+    path('approve_job/', views.approve_job, name='approve_job'),
 
 
     path('get_jobs/', views.get_jobs, name='get_jobs'),

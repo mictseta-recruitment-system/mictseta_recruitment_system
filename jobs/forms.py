@@ -14,7 +14,7 @@ class AddJobForm(forms.Form):
 	salary_range = forms.CharField(max_length=100)
 	
 	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];\?]"
+		pattern = r"[~`!@#$%^*()=\/\*\\|}{\[\];\?]"
 		matches = re.findall(pattern, name)
 		if matches:
 			raise forms.ValidationError("No special characters allowed")
@@ -62,7 +62,7 @@ class AddJobSkillForm(forms.Form):
 	name = forms.CharField()
 
 	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];\?]"
+		pattern = r"[~`!@#$%^*()=\/\*\\|}{\[\];\?]"
 		matches = re.findall(pattern, name)
 		if matches:
 			raise forms.ValidationError("No special characters allowed")
@@ -89,7 +89,7 @@ class AddJobAcademicForm(forms.Form):
 	qualification = forms.CharField()
 
 	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];\?]"
+		pattern = r"[~`!@#$%^*()=\/\*\\|}{\[\];\?]"
 		matches = re.findall(pattern, name)
 		if matches:
 			raise forms.ValidationError("No special characters allowed")
@@ -116,7 +116,7 @@ class AddJobExperienceForm(forms.Form):
 	duration = forms.CharField()
 
 	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];\?]"
+		pattern = r"[~`!@#$%^*()=\/\*\\|}{\[\];\?]"
 		matches = re.findall(pattern, name)
 		if matches:
 			raise forms.ValidationError("No special characters allowed")
@@ -148,7 +148,7 @@ class AddJobRequirementForm(forms.Form):
 	description = forms.CharField(max_length=150)
 
 	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];\?]"
+		pattern = r"[~`!@#$%^*()=\/\*\\|}{\[\];\?]"
 		matches = re.findall(pattern, name)
 		if matches:
 			raise forms.ValidationError("No special characters allowed")

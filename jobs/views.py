@@ -31,6 +31,59 @@ def serialize_job_post(Jobs):
 	return jobs
 
 
+def serialize_job_skills(Skills):
+	skills = []
+	for Skill in Skills:
+		skill= {
+			'name'		:	Skill.name,
+			'level'		:	Skill.level,
+			'id'		:	Skill.id
+			
+				# 'application_deadline' :	json_data.get('application_deadline')            
+		}
+		skills.append(skill)
+	return skills
+
+def serialize_job_academics(Academics):
+	academics = []
+	for Academic_ in Academics:
+		academic= {
+			'level'		:	Academic_.level,
+			'qualification'		:	Academic_.qualification,
+			'id'		:	Academic_.id
+			
+				# 'application_deadline' :	json_data.get('application_deadline')            
+		}
+		academics.append(academic)
+	return academics
+
+def serialize_job_experience(Experiences):
+	experiences = []
+	for Experience_ in Experiences:
+		experience= {
+			'name'		:	Experience_.name,
+			'duration'		:	Experience_.duration,
+			'id'		:	Experience_.id
+			
+				# 'application_deadline' :	json_data.get('application_deadline')            
+		}
+		experiences.append(experience)
+	return experiences
+
+def serialize_job_requirements(Requirements):
+	requirements = []
+	for Requirement_ in Requirements:
+		requirement= {
+			'description'		:	Requirement_.description,
+			'id'		:	Requirement_.id
+			
+				# 'application_deadline' :	json_data.get('application_deadline')            
+		}
+		requirements.append(requirement)
+	return requirements
+
+
+
 @ensure_csrf_cookie
 def jobs_home(request):
 
@@ -66,10 +119,11 @@ def add_job(request):
 					if " " in value:
 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
 			try:
-				date_format = "%d:%b:%Y"
+				print(type(data['end_date']) , data['end_date'])
+				date_format = "%Y-%m-%d"
 				end_date = datetime.strptime(data['end_date'], date_format)
 			except:
-				return JsonResponse({'errors': 'Iconccerct data format try - DD:MMM:YYYY', 'status':'error'}, status=404)
+				return JsonResponse({'errors': {'Date':'Iconccerct data format try - DD:MMM:YYYY'}, 'status':'error'}, status=404)
    
 			form = AddJobForm(data)
 			if form.is_valid():
@@ -179,7 +233,8 @@ def add_job_skill(request):
 					job_post = JobPost.objects.get(id=int(data['job_post_id']))
 					add_job_academic_post = Skill.objects.create(job_post=job_post, level=data['level'], name=data['name'])
 					add_job_academic_post.save()
-					return JsonResponse({'message': 'Job skills updated Successfully', 'status': 'success'}, status=201)
+					skills = Skill.objects.filter(job_post=job_post)
+					return JsonResponse({'message': 'Job skills updated Successfully','skills':serialize_job_skills(skills), 'status': 'success'}, status=201)
 				except Exception as e:
 					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			else:
@@ -218,7 +273,8 @@ def add_job_acedemic(request):
 					job_post = JobPost.objects.get(id=int(data['job_post_id']))
 					add_job_academic_post = Academic.objects.create(job_post=job_post, level=data['level'], qualification=data['qualification'])
 					add_job_academic_post.save()
-					return JsonResponse({'message': 'Job academic transcript updated Successfully', 'status': 'success'}, status=201)
+					educations = Academic.objects.filter(job_post=job_post)
+					return JsonResponse({'message': 'Job academic transcript updated Successfully','educations':serialize_job_academics(educations), 'status': 'success'}, status=201)
 				except Exception as e:
 					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			else:
@@ -255,7 +311,8 @@ def add_job_expereince(request):
 					job_post = JobPost.objects.get(id=int(data['job_post_id']))
 					add_job_experience_post = Experience.objects.create(job_post=job_post, name=data["name"], duration=data["duration"])
 					add_job_experience_post.save()
-					return JsonResponse({'message': 'Job experience updated Successfully', 'status': 'success'}, status=201)
+					experiences = Experience.objects.filter(job_post=job_post)
+					return JsonResponse({'message': 'Job experience updated Successfully','experiences':serialize_job_experience(experiences), 'status': 'success'}, status=201)
 				except Exception as e:
 					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			else:
@@ -290,7 +347,8 @@ def add_job_requirements(request):
 					job_post = JobPost.objects.get(id=int(data['job_post_id']))
 					add_job_reqiurements_post = Requirement.objects.create(job_post=job_post, description=data['description'])
 					add_job_reqiurements_post.save()
-					return JsonResponse({'message': 'Job requirements updated Successfully', 'status': 'success'}, status=201)
+					requirements = Requirement.objects.filter(job_post=job_post)
+					return JsonResponse({'message': 'Job requirements updated Successfully','requirements':serialize_job_requirements(requirements), 'status': 'success'}, status=201)
 				except Exception as e:
 					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			else:
@@ -328,10 +386,10 @@ def update_job(request):
 					if " " in value:
 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
 			try:
-				date_format = "%d:%b:%Y"
+				date_format = "%Y-%m-%d"
 				end_date = datetime.strptime(data['end_date'], date_format)
 			except:
-				return JsonResponse({'errors': 'Iconccerct data format try - DD:MMM:YYYY', 'status':'error'}, status=404)
+				return JsonResponse({'errors': {'Date':['Iconccerct data format try - MM:DD:YYYY']}, 'status':'error'}, status=404)
    
 			form = AddJobForm(data)
 			if form.is_valid():
@@ -530,7 +588,7 @@ def delete_job(request):
 				if key in ['end_date']:
 					if " " in value:
 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
-   
+   	
 			
 			exists = JobPost.objects.filter(id=int(data['job_id'])).exists()
 			if not exists:
@@ -538,7 +596,7 @@ def delete_job(request):
 			try:
 				update_job_post = JobPost.objects.get(id=int(data['job_id']))
 				update_job_post.delete()
-				update_job_post.save()
+				
 				return JsonResponse({'message': 'Job Post removed Successfully', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -556,7 +614,8 @@ def delete_job_skill(request):
 			except Exception:
 				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
 			data = {
-				'job_skill_id'	:	json_data.get('job_skill_id')	
+				'job_skill_id'	:	json_data.get('job_skill_id'),
+				'job_post_id'	:	json_data.get('job_post_id')	
 			}
 			for key, value in data.items():
 				if key == None or value == None:
@@ -569,8 +628,10 @@ def delete_job_skill(request):
 			try:
 				job_skill = Skill.objects.get(id=int(data['job_skill_id']))
 				job_skill.delete()
-				job_skill.save()
-				return JsonResponse({'message': 'Job skills remved Successfully', 'status': 'success'}, status=201)
+				print(job_skill)
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				skills = Skill.objects.filter(job_post=job_post)
+				return JsonResponse({'message': 'Job skills remved Successfully','skills':serialize_job_skills(skills), 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			
@@ -588,7 +649,8 @@ def delete_job_acedemic(request):
 			except Exception:
 				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
 			data = {
-				'job_academic_id'	:	json_data.get('job_academic_id')
+				'job_academic_id'	:	json_data.get('job_academic_id'),
+				'job_post_id'		: json_data.get('job_post_id')
 			}
 			for key, value in data.items():
 				if key == None or value == None:
@@ -598,10 +660,11 @@ def delete_job_acedemic(request):
 			if not exists:
 				return JsonResponse({'errors': {'job post':['Job Adademic transcrript does not exist']}, 'status': 'error'}, status=400)
 			try:
-				job_academic = JobPost.objects.get(id=int(data['job_academic_id']))
+				job_academic = Academic.objects.get(id=int(data['job_academic_id']))
 				job_academic.delete()
-				job_academic.save()
-				return JsonResponse({'message': 'Job academic transcript updated Successfully', 'status': 'success'}, status=201)
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				educations = Academic.objects.filter(job_post=job_post)
+				return JsonResponse({'message': 'Job academic transcript updated Successfully','educations':serialize_job_academics(educations), 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			
@@ -619,7 +682,8 @@ def delete_job_expereince(request):
 			except Exception:
 				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
 			data = {
-				'job_experience_id'	:	json_data.get('job_experience_id')
+				'job_experience_id'	:	json_data.get('job_experience_id'),
+				'job_post_id' : json_data.get('job_post_id')
 			}
 			for key, value in data.items():
 				if key == None or value == None:
@@ -631,8 +695,9 @@ def delete_job_expereince(request):
 			try:
 				experience_post = Experience.objects.get(id=int(data['job_experience_id']))
 				experience_post.delete()
-				add_job_experience_post.save()
-				return JsonResponse({'message': 'Job experience updated Successfully', 'status': 'success'}, status=201)
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				experiences = Experience.objects.filter(job_post=job_post)
+				return JsonResponse({'message': 'Job experience updated Successfully','experiences':serialize_job_experiences(experiences), 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			
@@ -650,7 +715,8 @@ def delete_job_requirements(request):
 			except Exception:
 				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
 			data = {
-				'job_requirement_id'	:	json_data.get('job_requirement_id')
+				'job_requirement_id'	:	json_data.get('job_requirement_id'),
+				'job_post_id' : json_data.get('job_post_id')
 			}
 			for key, value in data.items():
 				if key == None or value == None:
@@ -661,9 +727,77 @@ def delete_job_requirements(request):
 				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
 			try:
 				requirements_post = Requirement.objects.get(id=int(data['job_requirement_id']))
-				requirements_post.description = data['description']
-				requirements_post.save()
-				return JsonResponse({'message': 'Job requirements updated Successfully', 'status': 'success'}, status=201)
+				requirements_post.delete()
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				requirements = Requirement.objects.filter(job_post=job_post)
+
+				return JsonResponse({'message': 'Job requirements updated Successfully','requirements':serialize_job_requirements(requirements), 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+			
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@csrf_protect	
+def complete_job(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			data = {
+				'job_post_id' : json_data.get('job_post_id')
+			}
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+	
+			exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			try:
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				job_post.is_complete = True
+				job_post.status = "pending" 
+				job_post.save()
+				return JsonResponse({'message': 'Job Post submitted. waiting approval by Land Mananger', 'status': 'success'}, status=200)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+			
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@csrf_protect	
+def approve_job(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			data = {
+				'job_post_id' : json_data.get('job_post_id')
+			}
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+	
+			exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			try:
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				job_post.is_approved = True
+				job_post.status = "Approved"
+				job_post.save()
+				return JsonResponse({'message': 'Job Post approved successfully', 'status': 'success'}, status=200)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			
