@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, Skill, Experience, Requirement
+from .models import JobPost, Academic, Skill, Experience, Requirement, Notification
 import re
 from datetime import datetime
 
@@ -133,6 +133,8 @@ def add_job(request):
 				try:
 					add_job_post = JobPost.objects.create(user=request.user, title=data['title'],description=data['description'],location=data['location'], salary_range=data['salary_range'], job_type=data['job_type'], industry=data['industry'], company_name=data['company_name'], end_date=end_date)
 					add_job_post.save()
+					noty = Notification.objects.create(user=request.user, action="Created New Job ad", job_title=add_job_post.title, status=add_job_post.status)
+					noty.save()
 					return JsonResponse({'message': 'Job Post Created Successfully', 'status': 'success'}, status=201)
 				except Exception as e:
 					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -596,7 +598,8 @@ def delete_job(request):
 			try:
 				update_job_post = JobPost.objects.get(id=int(data['job_id']))
 				update_job_post.delete()
-				
+				noty = Notification.objects.create(user=request.user, action="Delete Job Post", job_title=update_job_post.title, status="Deleted")
+				noty.save()
 				return JsonResponse({'message': 'Job Post removed Successfully', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -764,6 +767,8 @@ def complete_job(request):
 				job_post.is_complete = True
 				job_post.status = "pending" 
 				job_post.save()
+				noty = Notification.objects.create(user=request.user, action="Submitted Job for Approval", job_title=job_post.title, status=job_post.status)
+				noty.save()
 				return JsonResponse({'message': 'Job Post submitted. waiting approval by Land Mananger', 'status': 'success'}, status=200)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -797,6 +802,8 @@ def approve_job(request):
 				job_post.is_approved = True
 				job_post.status = "Approved"
 				job_post.save()
+				noty = Notification.objects.create(user=request.user, action="Job Approval", job_title=job_post.title, status=job_post.status)
+				noty.save()
 				return JsonResponse({'message': 'Job Post approved successfully', 'status': 'success'}, status=200)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)

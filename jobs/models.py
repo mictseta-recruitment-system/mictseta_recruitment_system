@@ -59,6 +59,15 @@ class Requirement(models.Model):
     def __str__(self):
         return f'Requirements for {self.job_post.title} Job Post'
 
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    action = models.CharField(max_length=225, unique=False, null=False)
+    job_title = models.CharField(max_length=225, unique=False, null=False)
+    status = models.CharField(max_length=225, unique=False, null=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_seen = models.BooleanField(null=False, default=False)
+
 # class Requirement(models.Model):
 #     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
 #     cv = models.BooleanField(default=False, null=False)

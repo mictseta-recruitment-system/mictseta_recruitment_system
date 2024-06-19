@@ -5,11 +5,12 @@ View jobs
 {% endblock %}
 {% load static %}
 
-{% block head %}View all job ads {% endblock %}
+{% block head %}Manage jobs{% endblock %}
 
 {% block description %} you can manage job ads from this page {% endblock %}
 {% block content %}
 
+{% if user.is_staff %}
 
 <!-- View Job Page -->
       <div id="viewJobPage" class="table-container" style="display: block;">
@@ -18,7 +19,7 @@ View jobs
             <tr>
               <th>ID</th>
               <th>Job title</th>
-              <th>Uploaded date</th>
+              <th>Issued By</th>
               <th>Date of expiry</th>
               
               <th>Status</th>
@@ -28,10 +29,11 @@ View jobs
           </thead>
           <tbody>
           {% for job in jobs %}
+          {% if job.user == user or user.is_superuser %}
             <tr>
               <td>{{job.id}}</td>
               <td><a href="{% url 'dashboard.job_details' job.id %}">{{job.title}}</a></td>
-              <td>{{job.start_date}}</td>
+              <td>{{job.user.email}}</td>
               <td>{{job.end_date}}</td>
 
             
@@ -45,18 +47,18 @@ View jobs
                   <td><button class="btn btn-warning" disabled>{{job.status}}</button></td>
                   {% endif %}
                  <td><button class="btn btn-success" disabled>Yes</button></td>
-                      {% if user.is_staff  or user.is_superuser %}
+                      {% if user.is_superuser %}
                       <td>
                         {% if not job.is_approved %}
-                        <a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button">Edit</a>
-                        <a class="btn btn-success m-1" type="button" onclick="ApproveJob({{job.id}})" role="button">Approve</a>
+                        <a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
+                        <a class="btn btn-success m-1" type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-check" aria-hidden="true" style="font-size: 12px;"></i> Approve</a>
 
                         {% endif %}
-                        <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button">Delete</a>
+                        <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                       </td>
                       {% else %}
                           {% if not job.is_approved %}
-                            <td><a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button">Edit</a></td>
+                            <td><a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</a></td>
                           {% endif %}
                       {% endif %}
 
@@ -67,11 +69,13 @@ View jobs
               
 
               <td>
-                <button class="btn btn-success" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button">Complete</button> 
-                <a class="btn btn-danger m-1"   type="button" onclick="deleteJob({{job.id}})" role="button">Delete</a>
+                <button class="btn btn-success" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true"></i> Complete</button> 
+                <a class="btn btn-danger m-1"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"style="font-size: 12px;">  <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
               </td>
               {% endif %}
             </tr>
+            {% else %}
+            {% endif %}
            {% endfor %}
            <!--  <tr>
               <td>2</td>
@@ -240,7 +244,7 @@ View jobs
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
           <div>
             <button class="btn btn-secondary" data-bs-target="#JobToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
-            <button class="btn btn-primary" data-bs-target="#EducationToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Save & Continue</button>
+            <button class="btn btn-primary" data-bs-target="#EducationToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Continue</button>
           </div>  
       </div>
     </div>
@@ -286,11 +290,11 @@ View jobs
           <form class="d-flex justify-content-between">
             <div class="form-group ">
               <label for="level">Level</label>
-              <input type="text" class="form-control" id="Elevel{{job.id}}" placeholder="level">
+              <input type="text" class="form-control" id="Elevel{{job.id}}" placeholder="eg. grade 12 or Information Technology">
             </div>
              <div class="form-group mx-2">
               <label for="qualification">qualification</label>
-              <input type="text" class="form-control" id="qualification{{job.id}}" placeholder="qualification">
+              <input type="text" class="form-control" id="qualification{{job.id}}" placeholder="eg. Matric or Diploma">
             </div>
             
             
@@ -305,7 +309,7 @@ View jobs
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
           <div>
             <button class="btn btn-secondary" data-bs-target="#skillToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
-            <button class="btn btn-primary" data-bs-target="#experienceToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Save & Continue</button>
+            <button class="btn btn-primary" data-bs-target="#experienceToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Continue</button>
           </div>  
       </div>
     </div>
@@ -352,11 +356,11 @@ View jobs
           <form class="d-flex justify-content-between">
             <div class="form-group ">
               <label for="name">Experience</label>
-              <input type="text" class="form-control" id="Ename{{job.id}}" placeholder="Expereince">
+              <input type="text" class="form-control" id="Ename{{job.id}}" placeholder="Expereince in what?">
             </div>
              <div class="form-group mx-2">
               <label for="duration">duration</label>
-              <input type="text" class="form-control" id="Eduration{{job.id}}" placeholder="duration">
+              <input type="text" class="form-control" id="Eduration{{job.id}}" placeholder="for how long">
             </div>
             
             
@@ -371,7 +375,7 @@ View jobs
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
           <div>
             <button class="btn btn-secondary" data-bs-target="#EducationToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
-            <button class="btn btn-primary" data-bs-target="#requirementsToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Save & Continue</button>
+            <button class="btn btn-primary" data-bs-target="#requirementsToggle{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Continue</button>
           </div>  
       </div>
     </div>
@@ -383,7 +387,7 @@ View jobs
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="requirementsToggleToggleLabel2">Requirements </h5>
+        <h5 class="modal-title" id="requirementsToggleToggleLabel2">Requirements and Responsibilties</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -422,7 +426,7 @@ View jobs
             <div class="form-group m-1" style="width: 90%;">
               <label for="description">Requirements</label>
               <!-- <input type="text" class="form-control"  placeholder="description"> -->
-              <textarea class="form-control" id="Rdescription{{job.id}}" rows="2" placeholder="Job Description"></textarea>
+              <textarea class="form-control" id="Rdescription{{job.id}}" rows="2" placeholder="job requirements and responsibilties "></textarea>
             </div>
             
     
@@ -442,7 +446,7 @@ View jobs
             <button class="btn btn-success" data-bs-dismiss="modal">Save & Close</button>
 
             {% else %}
-            <button class="btn btn-success" data-bs-target="#complete{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Save & Complete</button>
+            <button class="btn btn-success" data-bs-target="#complete{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Complete</button>
             {% endif %}
           </div>  
       </div>
@@ -478,5 +482,19 @@ View jobs
  {% endfor %}
 
 
-<a class="btn btn-primary" >Open first modal</a>
+{% else %}
+
+    <div style="margin-top: 20%;">
+      
+      <div class="d-flex justify-content-center ">
+        
+        <i class="fa fa-eye-slash fa-5x text-danger" aria-hidden="true"></i>
+        
+      </div>
+      <div class="d-flex justify-content-center mt-5">
+        <h5><b>Hold up</b>, You dont have <b class="text-danger">permision</b> to view the contents of this page </h5>
+      </div>
+    </div>
+
+    {% endif %}
 {% endblock %}

@@ -48,3 +48,20 @@ class ProfileImage(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	image = models.ImageField(upload_to='static/profiles/images/')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+	
+# =======================================================================================
+
+class StaffProfile(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	job_title = models.CharField(max_length=100,null=True )
+	department = models.CharField(max_length=6,null=True )
+	salary = models.CharField(max_length=225,null=True )
+	hire_date = models.DateTimeField(auto_now_add=True)
+	phone = models.CharField(max_length=6,null=True )
+	idnumber =  models.CharField(max_length=13,null=False )
+	gender = models.CharField(max_length=6,null=False )
+	age = models.CharField(max_length=6,null=False )
+	dob = models.CharField(max_length=6,null=False )
+	

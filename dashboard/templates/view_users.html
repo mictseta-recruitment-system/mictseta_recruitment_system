@@ -24,23 +24,43 @@ Manage Users
                 <th>Email</th>
                 <th>Role</th>
                 <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
+
+            {% for staff in users %}
               <tr>
-                <td>1</td>
-                <td>John Doe</td>
-                <td>john.doe@example.com</td>
-                <td>Admin</td>
-                <td>Active</td>
+                <td>EMP{{staff.id}}</td>
+                <td>{{staff.first_name}} {{staff.last_name}}</td>
+                <td>{{staff.email}}</td>
+                {% if staff.is_staff %}
+               
+                <td>{{staff.staffprofile.department}}</td>
+                {% else %}
+                <td>Applicant</td>
+                {% endif %}
+                {% if staff.is_active %}
+                <td>Yes</td>
+                {% else %}
+                <td>Yes</td>
+                {% endif %}
+                  {% if staff.staffprofile.department == "ADMINISTRATOR" %}
+
+                  {% else %}
+                  {% if user.is_superuser %}
+                  <td ><button class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</button> 
+                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i>  Delete</button></td>
+                  {% else %}
+                    <td > 
+                  <button class="btn btn-info" type="button" role="button"  style="font-size: 12px;" > <i class="fa fa-eye" aria-hidden="true"></i>  View</button>
+                </td>
+                  {% endif %}
+                  {% endif %}
+
+
               </tr>
-              <tr>
-                <td>2</td>
-                <td>Jane Smith</td>
-                <td>jane.smith@example.com</td>
-                <td>User</td>
-                <td>Inactive</td>
-              </tr>
+            {% endfor %}
             </tbody>
           </table>
         </div>

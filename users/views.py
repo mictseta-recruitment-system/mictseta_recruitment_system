@@ -156,6 +156,7 @@ def delete_user(request):
                 return JsonResponse({'errors':'username does not exist', 'status':'error'}, status=400)
             user = User.objects.get(username=username)
             user.delete()
+            
             return JsonResponse({'message': 'User deleted successfuly', 'status': 'success'}, status=200)
         else:
             return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)

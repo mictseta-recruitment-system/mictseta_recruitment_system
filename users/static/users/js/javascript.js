@@ -17,6 +17,7 @@ function deleteUser(username) {
     .then(response => response.json())
     .then(result => {
         if (result.status === 'success') {
+            location.reload();
             showFlashMessage(result.message, "success");
            
         } else {
