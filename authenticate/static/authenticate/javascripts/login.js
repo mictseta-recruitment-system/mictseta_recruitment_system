@@ -6,16 +6,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
     function handle_sign_in_button_click() {
         const lemail = document.getElementById("lemail").value;
         const lpassword = document.getElementById("lpassword").value;
-
+        
+       /* const forms = document.getElementById("login-form");
+        csrftoken = forms.getElementsByTagName("input")[0].value;
+        console.log(csrftoken)*/
         const data1 = {
           email: lemail,
           password: lpassword,
+          csrfmiddlewaretoken:getCookie('csrftoken') ,
+          /*csrftoken:csrftoken,
+          jeff:"jeff"*/
         };
         fetch("http://127.0.0.1:8000/auth/sign_in/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'X-CSRFToken': getCookie('csrftoken') 
+            'X-CSRFToken':getCookie('csrftoken') ,
+            'csrfmiddlewaretoken':getCookie('csrftoken') ,
+            'csrftoken':getCookie('csrftoken')
           },
           body: JSON.stringify(data1),
         })

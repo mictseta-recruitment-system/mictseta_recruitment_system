@@ -1,0 +1,70 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title%}
+Manage Users
+{% endblock %}
+
+{% load static %}
+{% block head %} View all users {% endblock %}
+
+{% block description %} here you can manage all users {% endblock %}
+
+
+{% block content %}
+
+
+<!-- User Table Section -->
+        <div class="table-container">
+          <h3>Users</h3>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            {% for staff in users %}
+              <tr>
+                <td>EMP{{staff.id}}</td>
+                <td>{{staff.first_name}} {{staff.last_name}}</td>
+                <td>{{staff.email}}</td>
+                {% if staff.is_staff %}
+               
+                <td>{{staff.staffprofile.department}}</td>
+                {% else %}
+                <td>Applicant</td>
+                {% endif %}
+                {% if staff.is_active %}
+                <td>Yes</td>
+                {% else %}
+                <td>Yes</td>
+                {% endif %}
+                  {% if staff.staffprofile.department == "ADMINISTRATOR" %}
+
+                  {% else %}
+                  {% if user.is_superuser %}
+                  <td ><button class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</button> 
+                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i>  Delete</button></td>
+                  {% else %}
+                    <td > 
+                  <button class="btn btn-info" type="button" role="button"  style="font-size: 12px;" > <i class="fa fa-eye" aria-hidden="true"></i>  View</button>
+                </td>
+                  {% endif %}
+                  {% endif %}
+
+
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title%}
+Manage Users
+{% endblock %}
+
+{% load static %}
+{% block head %} Notifications {% endblock %}
+
+{% block description %} Manage all Notifications here  {% endblock %}
+
+
+{% block content %}
+
+
+<!-- User Table Section -->
+      
+      
+     <div class="container m-4 ">
+    	{% if notifications %}
+	     {% for notific in notifications %}
+	     	{% if notific.is_seen %}
+	     	{% else %}
+	     	<div class="card mb-3 card-notification" style="width: 100%;">
+			  <div class="card-header back-for" ><span>{{notific.user.username}} - {{notific.user.email }}</span> <span></span> </div>
+			  <div class="card-body text-dark">
+			    <h5 class="card-title">{{notific.action}}</h5>	    
+			    <div>
+			    	<p class="card-text"> Job Title : {{notific.job_title}}</p>
+			    	<p class="card-text" > Status : {{notific.status}}</p>
+			    </div>
+			    <p class="card-text d-flex justify-content-between" > {{notific.timestamp}}  <button type="button" role="button" class="btn back-for">close</button> </p>
+			   
+			  </div>
+			</div>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<div style="margin-top: 20%;">
+      
+      <div class="d-flex justify-content-center ">
+        
+        <i class="fa fa-bell-slash fa-5x text-danger" aria-hidden="true"></i>
+        
+      </div>
+      <div class="d-flex justify-content-center mt-5">
+        <h5><b>Oops</b>, You dont have <b class="text-danger">Notifications</b> yet </h5>
+      </div>
+    </div>
+	{% endif %}
+     </div>
+	
+
+
+{% endblock %}

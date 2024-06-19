@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+5d78i2gower*d@*0r3cl-q^r&@n=y8(m!kau8-4)q0-rw073$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['058a-102-64-32-230.ngrok-free.app','127.0.0.1']
 
 
 # Application definition
@@ -38,24 +38,73 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'authenticate',
     'home',
     'profiles',
-    'users'
+    'users',
+    'jobs',
+    'dashboard',
     
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # 'mictseta_recruitment_system.middleware.CsrfCookieMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'mictseta_recruitment_system.urls'
+# CORS_ALLOW_HEADERS = [
+#     'authorization',
+#     'content-type',
+#     'x-csrftoken',
+#     'x-requested-with',
+#     'csrfmiddlewaretoken',
+#     'csrftoken',
+# ]
+
+# CORS_ALLOW_METHODS = [
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+# ]
+# # Ensure CSRF_COOKIE_HTTPONLY is True for enhanced security
+# CSRF_COOKIE_HTTPONLY = False
+
+# # Ensure CSRF_COOKIE_SECURE is True if using HTTPS
+# CSRF_COOKIE_SECURE = True
+
+# # Set CSRF_TRUSTED_ORIGINS if you have specific trusted origins
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://058a-102-64-32-230.ngrok-free.app',
+#     # Add more trusted origins if necessary
+# ]
+
+# # Ensure CSRF_USE_SESSIONS is True to use CSRF tokens stored in session
+# CSRF_USE_SESSIONS = True
+
+# # Ensure CSRF_FAILURE_VIEW is set to handle CSRF failures
+# # CSRF_FAILURE_VIEW = 'your_app.views.csrf_failure'  # Replace with your actual view name
+
+# # Ensure CSRF_COOKIE_SAMESITE is 'Strict' or 'Lax' based on your requirements
+# CSRF_COOKIE_SAMESITE = 'Strict'
+
+# CORS_ORIGIN_ALLOW_ALL = True
+# # CSRF_TRUSTED_ORIGINS = ['https://058a-102-64-32-230.ngrok-free.app']
+
+# # settings.py
+
+
 
 TEMPLATES = [
     {
@@ -117,6 +166,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
+
 
 LANGUAGE_CODE = 'en-us'
 

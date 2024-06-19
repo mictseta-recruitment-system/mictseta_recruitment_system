@@ -1,0 +1,125 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title%}
+Add Job Ad
+{% endblock %}
+{% load static %}
+
+
+
+    {% block head %}Add Job Ad {% endblock %}
+
+    {% block description %} on this page you can a new job add {% endblock %}
+
+
+{% block content %}
+
+  {% if user.is_staff %}
+
+      <div class="container" id="addJobPageComplete" style="display: none;">
+
+        <div class="d-flex justify-content-center mt-5">
+            <div>
+              
+              <i class="fa fa-tasks fa-5x text-success" aria-hidden="true" style="margin-left: 90px;"></i>
+              <br>
+
+            <h4 class="mt-3"> Job Post Submited Successfuly</h4>
+           <!--  <a herf="{% url 'dashboard.view_jobs' %}" class="bg-warning" > View Jobs </a> -->
+            </div>
+        </div>
+        
+      </div>
+
+    <!-- Add Job Page -->
+      <div id="addJobPage" class="form-container" style="display: block;">
+        <!-- <h3>Add Job Ad</h3> -->
+        <form>
+           <div class="d-flex justify-content-between p-3 m-2 back-for"> 
+              <div class="form-group w-100">
+                <label for="jobTitle">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="Job Title">
+              </div>
+            </div>
+          <div class="d-flex justify-content-between p-3 m-2 back-for"> 
+              <div class="form-group w-100">
+                <label for="jobDescription">Description</label>
+                <textarea class="form-control" id="description" rows="5" placeholder="Job Description"></textarea>
+              </div>
+          </div>
+
+          <div class="d-flex justify-content-between p-3 m-2 back-for">
+            
+            <div class="form-group w-100">
+              <label for="industry">Industry</label>
+              <input type="text" class="form-control" id="industry" placeholder="Industry">
+            </div>
+            <div class="form-group w-100 ml-4">
+              <label for="companyName">Company Name</label>
+              <input type="text" class="form-control" id="company_name" placeholder="Company Name">
+            </div>
+        </div>
+          
+          <div class="d-flex justify-content-between p-3 m-2 back-for"> 
+              <div class="form-group w-100">
+                <label for="location">Location</label>
+                <select class="form-control" id="location">
+                  <option>Johannesburg</option>
+                  <option>Cape Town</option>
+                  <option>Durban</option>
+                  <option>Pretoria</option>
+                  <option>Port Elizabeth</option>
+                </select>
+              </div>
+              <div class="form-group w-100 ml-4">
+                <label for="salaryRange">Salary Range</label>
+                <select class="form-control" id="salary_range">
+                   <option>R0,000 - R10,000</option>
+                    <option>R10,000 - R20,000</option>
+                  <option>R20,000 - R30,000</option>
+                  <option>R30,000 - R40,000</option>
+                  <option>R40,000 - R50,000</option>
+                  <option>R50,000 - R60,000</option>
+                  <option>R60,000+</option>
+                </select>
+              </div>
+          </div>
+
+          <div class="d-flex justify-content-between p-3 m-2 back-for"> 
+              <div class="form-group w-100">
+                <label for="endDate">End Date</label>
+                <input type="date" class="form-control" id="end_date">
+              </div>
+              <div class="form-group w-100 ml-4">
+                <label for="jobType">Job Type</label>
+                <select class="form-control" id="job_type">
+                  <option>Remote</option>
+                  <option>Permanent</option>
+                  <option>Contract</option>
+                  <option>Internship</option>
+                  <option>Temporary</option>
+                </select>
+              </div>
+          </div>
+          <div class="d-flex justify-content-center p-3 m-2"> 
+          <button type="button" class="btn btn-primary" onclick="addJob()">Submit Job</button>
+        </div>
+        </form>
+      </div>
+
+    {% else %}
+
+    <div style="margin-top: 20%;">
+      
+      <div class="d-flex justify-content-center ">
+        
+        <i class="fa fa-eye-slash fa-5x text-danger" aria-hidden="true"></i>
+        
+      </div>
+      <div class="d-flex justify-content-center mt-5">
+        <h5><b>Hold up</b>, You dont have <b class="text-danger">permision</b> to view the contents of this page </h5>
+      </div>
+    </div>
+
+    {% endif %}
+{% endblock %}

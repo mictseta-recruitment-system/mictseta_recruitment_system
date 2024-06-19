@@ -1,0 +1,146 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Add Staff{% endblock %}
+
+{% block head %} Add Staff Member {% endblock %}
+
+{% block content %}
+
+{% if user.is_superuser %} 
+	{% if user.staffprofile.department == "ADMINISTRATOR" or  user.is_superuser and user.staffprofile.department == "MANAGER" %}
+	<div class="container" id="addStaffPageComplete" style="display: none;">
+
+        <div class="d-flex justify-content-center mt-5">
+            <div>
+              
+              <i class="fa fa-user-plus fa-5x text-success" aria-hidden="true" style="margin-left: 90px;"></i>
+              <br>
+
+            <h4 class="mt-3">Staff User Created Successfuly</h4>
+            <a herf="{% url 'dashboard.view_users' %}" class="btn-warning" > View All </a>
+            </div>
+        </div>
+        
+      </div>
+
+    <div id="addStaffPage" class="form-container">
+        <div id="addUserForm" class="d-flex justify-content-between justify-content-sm-center">
+        <div class=" w-100 m-2">
+            <div class="form-group  w-100 m-1">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="first_name">First Name:</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" >
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="last_name">Last Name:</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" >
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="phone">Phone:</label>
+                <input type="text" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="idnumber">ID Number:</label>
+                <input type="text" class="form-control" id="idnumber" name="idnumber" required>
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+              <div class="form-group w-100 m-1">
+                <label for="password">Confirm Password:</label>
+                <input type="password" class="form-control" id="password2" name="password2" required>
+            </div>
+        </div>
+         <div class="w-100 m-2">
+            <div class="form-group w-100 m-1">
+                <label for="job_title">Job Title:</label>
+                <select class="form-control" id="job_title" name="job_title" required>
+                    <option value="Executive">Executive</option>
+                    <option value="CEO">CEO</option>
+                    <option value="Director">Director</option>
+                	<option value="Manager">Manager</option>
+                </select>
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="department">Department:</label>
+               
+                <select class="form-control" id="department" name="department" required>
+                    <option value="HR">HR Team</option>
+                    <option value="IT">IT Staff</option>
+                    <option value="MANAGER">Manager</option>
+                    <option value="ADMINISTRATOR">Admin</option>
+                </select>
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="super">Assign Admin previllages:</label>
+                <select class="form-control" id="super" name="super" required>
+                    <option value="False">No</option>
+                    <option value="True">Yes</option>
+                </select>
+            </div>
+            <div class="form-group w-100 m-1">
+                <label for="staff">Is Staff:</label>
+                <select class="form-control" id="staff" name="staff" required>
+                    <option value="True" selected>Yes</option>
+                    <option value="False">No</option>
+                </select>
+            </div>
+             <div class="form-group w-100 m-1">
+                <label for="salary">Salary:</label>
+                <select class="form-control" id="salary" name="salary" required>
+                    <option selected>R0,0 - R10,000</option>
+                    <option >R10,000 - R20,000</option>
+                    <option >R20,000 - R30,000</option>
+                    <option >R30,000 - R40,000</option>
+                    <option >R40,000 - R50,000</option>
+                    <option >R50,000 - R60,000</option>
+                	<option >R60,000 + </option>
+                </select>
+            </div>
+
+            <button type="button" role="button" onclick="addStaff()" class="btn btn-success m-5 ">Add User</button>
+         	
+         </div>
+        </div>
+    </div>
+    {% else %}
+    	<div style="margin-top: 20%;">
+      
+      <div class="d-flex justify-content-center ">
+        
+        <i class="fa fa-eye-slash fa-5x text-danger" aria-hidden="true"></i>
+        
+      </div>
+      <div class="d-flex justify-content-center mt-5">
+        <h5><b>Hold up</b>, You dont have <b class="text-danger">permision</b> to view the contents of this page </h5>
+      </div>
+    </div>
+
+
+    {% endif %}
+{% else %}
+
+    <div style="margin-top: 20%;">
+      
+      <div class="d-flex justify-content-center ">
+        
+        <i class="fa fa-eye-slash fa-5x text-danger" aria-hidden="true"></i>
+        
+      </div>
+      <div class="d-flex justify-content-center mt-5">
+        <h5><b>Hold up</b>, You dont have <b class="text-danger">permision</b> to view the contents of this page </h5>
+      </div>
+    </div>
+
+    {% endif %}
+    
+{% endblock %}
+

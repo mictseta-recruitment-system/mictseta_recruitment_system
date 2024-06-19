@@ -193,7 +193,7 @@
 
                             <div class="profile-item">
                                 <label for="idnumber">ID Number</label>
-                                <input type="text" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}">
+                                <input type="text" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}" disabled>
                             </div>
 
 
@@ -232,7 +232,7 @@
 
                             <div class="profile-item">
                                 <label for="postal_code">Postal Code</label>
-                                <input type="text" id="postal_code" name="postal_code" value="user.addressinformation.postal_code">
+                                <input type="text" id="postal_code" name="postal_code" value="{{user.addressinformation.postal_code}}">
                             </div>
                             <div>
                                 <input type="button" name="update_address_info" id="update_address_info"

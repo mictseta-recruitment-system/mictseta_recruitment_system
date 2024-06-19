@@ -1,0 +1,34 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title%}
+Admin Panel
+{% endblock %}
+{% load static %}
+{% block head %} Panel {% endblock %}
+
+{% block description %} on this page, view all stats and activities {% endblock %}
+
+{% block content %}
+
+<!-- Charts Section -->
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="card-title">Job vs Applicant</h5>
+                <canvas id="salesChart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="card-title">User Growth Chart</h5>
+                <canvas id="userGrowthChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+{% endblock %}
