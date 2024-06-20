@@ -16,11 +16,11 @@ def panel(request):
 		return redirect('render_auth_page')
 
 @csrf_protect
-def view_users(request):
+def view_staff(request):
 	if request.user.is_authenticated:
-		users = User.objects.all()
+		staff = User.objects.filter(is_staff=True)
 
-		return render(request,'view_users.html',{'users':users})
+		return render(request,'view_staff.html',{'staffs':staff})
 	else:
 		return redirect('render_auth_page')
 
@@ -69,21 +69,45 @@ def get_notifications(request):
 				notification = Notification.objects.filter(user=request.user)
 			return render(request,'notification.html',{'notifications':notification.reverse()})
 		except Exception as e:
-			return HttpResponse(f"<h1> Sever Error : Job not Found : {e}</h1>")
+			return HttpResponse(f"<h1> Sever Error : Notification: {e}</h1>")
 	else:
 		return redirect('render_auth_page')
 
-
-def add_staff_page(request):
+@csrf_protect
+def delete_notifications(request, notID):
 	if request.user.is_authenticated:
 		try:
 			if request.user.is_superuser:
-				return render(request,'add_staff.html')
-			else:
-				return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
-				
+				notification = Notification.objects.get(id=notID)
+				notification.delete()
+				notifications = Notification.objects.all()
+				return render(request,'notification.html',{'notifications':notifications.reverse()})
+			elif request.user.is_staff:
+				notification = Notification.objects.get(id=notID)
+				notification.delete()
+				notifications = Notification.objects.filter(user=request.user)
+			return render(request,'notification.html',{'notifications':notifications.reverse()})
 		except Exception as e:
-			return HttpResponse(f"<h1> Sever Error : Job not Found : {e}</h1>")
+			return HttpResponse(f"<h1> Delete notification : Job not Found : {e}</h1>")
+	else:
+		return redirect('render_auth_page')
+
+def add_staff_page(request):
+	if request.user.is_authenticated:
+		
+		if request.user.is_superuser:
+			return render(request,'add_staff.html')
+		else:
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+				
+		
 	else:
 		return redirect('render_auth_page')
 	
+@csrf_protect
+def update_staff(request, staffID):
+	if request.user.is_authenticated:
+		staff = User.objects.get(id=int(staffID))
+		return render(request,'update_staff.html', {'staff':staff})
+	else:
+		return redirect('render_auth_page')

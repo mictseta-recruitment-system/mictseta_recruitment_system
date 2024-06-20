@@ -857,6 +857,55 @@ function deleteJob(jobID) {
         }
 
 
+function UpdateStaff(){
+             const url = 'http://127.0.0.1:8000/profile/update/update_staff/';
+
+            let formData = {
+                username: document.getElementById('username').value,
+                first_name: document.getElementById('first_name').value,
+                last_name: document.getElementById('last_name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                idnumber: document.getElementById('idnumber').value,
+                job_title: document.getElementById('job_title').value,
+                department: document.getElementById('department').value,
+                super: document.getElementById('super').value,
+                staff: document.getElementById('staff').value,
+                salary: document.getElementById('salary').value
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify(formData)
+              })
+              .then(response => {
+                return response.json();
+              })
+              .then(data => {
+                if (data.status === "error") {
+                  handleErrors(data.errors);
+                } else if (data.status === "success") {
+                  document.getElementById('UpdateStaffPage').style.display = 'none';
+                  document.getElementById('UpdateStaffPageComplete').style.display = 'block';
+                  showFlashMessage(data.message, "success");
+                
+                  /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+                  
+                } else if (data.status === "warning") {
+                  showFlashMessage(data.message, "warning");
+              
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                showFlashMessage(error.message, "danger");
+              });
+        }
+
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {
     let cookieValue = null;

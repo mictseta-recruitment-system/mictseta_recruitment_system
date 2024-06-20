@@ -5,7 +5,7 @@ Manage Users
 {% endblock %}
 
 {% load static %}
-{% block head %} View all users {% endblock %}
+{% block head %} Manage all Employees {% endblock %}
 
 {% block description %} here you can manage all users {% endblock %}
 
@@ -15,7 +15,7 @@ Manage Users
 
 <!-- User Table Section -->
         <div class="table-container">
-          <h3>Users</h3>
+          <h3>Staff List</h3>
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -29,7 +29,7 @@ Manage Users
             </thead>
             <tbody>
 
-            {% for staff in users %}
+            {% for staff in staffs %}
               <tr>
                 <td>EMP{{staff.id}}</td>
                 <td>{{staff.first_name}} {{staff.last_name}}</td>
@@ -49,8 +49,8 @@ Manage Users
 
                   {% else %}
                   {% if user.is_superuser %}
-                  <td ><button class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</button> 
-                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i>  Delete</button></td>
+                  <td ><a href="{% url 'dashboard.update_staff' staff.id %}" class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i></a> 
+                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i></button></td>
                   {% else %}
                     <td > 
                   <button class="btn btn-info" type="button" role="button"  style="font-size: 12px;" > <i class="fa fa-eye" aria-hidden="true"></i>  View</button>

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+5d78i2gower*d@*0r3cl-q^r&@n=y8(m!kau8-4)q0-rw073$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['058a-102-64-32-230.ngrok-free.app','127.0.0.1']
+ALLOWED_HOSTS = ['058a-102-64-32-230.ngrok-free.app','127.0.0.1', '192.168.1.195']
 
 
 # Application definition
@@ -61,23 +61,23 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mictseta_recruitment_system.urls'
-# CORS_ALLOW_HEADERS = [
-#     'authorization',
-#     'content-type',
-#     'x-csrftoken',
-#     'x-requested-with',
-#     'csrfmiddlewaretoken',
-#     'csrftoken',
-# ]
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'x-csrftoken',
+    'x-requested-with',
+    'csrfmiddlewaretoken',
+    'csrftoken',
+]
 
-# CORS_ALLOW_METHODS = [
-#     'DELETE',
-#     'GET',
-#     'OPTIONS',
-#     'PATCH',
-#     'POST',
-#     'PUT',
-# ]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 # # Ensure CSRF_COOKIE_HTTPONLY is True for enhanced security
 # CSRF_COOKIE_HTTPONLY = False
 
@@ -85,10 +85,12 @@ ROOT_URLCONF = 'mictseta_recruitment_system.urls'
 # CSRF_COOKIE_SECURE = True
 
 # # Set CSRF_TRUSTED_ORIGINS if you have specific trusted origins
-# CSRF_TRUSTED_ORIGINS = [
-#     'https://058a-102-64-32-230.ngrok-free.app',
-#     # Add more trusted origins if necessary
-# ]
+CSRF_TRUSTED_ORIGINS = [
+    'https://058a-102-64-32-230.ngrok-free.app',
+    'http://192.168.1.195:8000',
+     'http://127.0.0.1:8000'
+
+ ]
 
 # # Ensure CSRF_USE_SESSIONS is True to use CSRF tokens stored in session
 # CSRF_USE_SESSIONS = True
@@ -99,7 +101,7 @@ ROOT_URLCONF = 'mictseta_recruitment_system.urls'
 # # Ensure CSRF_COOKIE_SAMESITE is 'Strict' or 'Lax' based on your requirements
 # CSRF_COOKIE_SAMESITE = 'Strict'
 
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 # # CSRF_TRUSTED_ORIGINS = ['https://058a-102-64-32-230.ngrok-free.app']
 
 # # settings.py

@@ -29,7 +29,7 @@ Manage Users
 			    	<p class="card-text"> Job Title : {{notific.job_title}}</p>
 			    	<p class="card-text" > Status : {{notific.status}}</p>
 			    </div>
-			    <p class="card-text d-flex justify-content-between" > {{notific.timestamp}}  <button type="button" role="button" class="btn back-for">close</button> </p>
+			    <p class="card-text d-flex justify-content-between" > {{notific.timestamp}}  <a href="{% url 'dashboard.delete_notifications' notific.id %}" class="btn back-for">close</a> </p>
 			   
 			  </div>
 			</div>

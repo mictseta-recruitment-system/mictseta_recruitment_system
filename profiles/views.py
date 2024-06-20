@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm
+from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
@@ -315,6 +315,120 @@ def add_staff(request):
                         staff = StaffProfile.objects.create(user=user,job_title=data['job_title'],department=data['department'],salary=data['salary'],phone=data['phone'], idnumber=data['idnumber'], gender=ValidateIdNumber(data['idnumber']).get_gender(),age=ValidateIdNumber(data['idnumber']).get_age(), dob=ValidateIdNumber(data['idnumber']).get_birthdate())
                         staff.save()
                         
+                        return JsonResponse({'message':f'Staff profile for {user.first_name} {user.last_name} is updated successfuly', 'status':'success'}, status=201) 
+                    except Exception as e:
+                        return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
+                else:
+                    return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+            else:
+                return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+        else:       
+            return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    else:
+        return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
+
+
+@csrf_protect
+def update_staff(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+ 
+            if request.method == 'POST':
+                try:
+                    json_data = json.loads(request.body)
+                except Exception :
+                    return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+                print(json_data)
+                data = {
+                    'username' : json_data.get('username'),
+                    'first_name' : json_data.get('first_name'),
+                    'last_name' : json_data.get('last_name'),
+                    'email' : json_data.get('email'),
+                    'phone' : json_data.get('phone'),
+                    'idnumber': json_data.get('idnumber'),
+                    'job_title' : json_data.get('job_title'),
+                    'department' : json_data.get('department'),
+                    'is_superuser' : json_data.get('super'),
+                    'is_staff' : json_data.get('staff'),
+                    'salary' : json_data.get('salary'),
+                    'password' : 'default1',
+                    'password2' : 'default1',
+                   
+                    # 'r_idnum' : f'{request.user.profile.idnumber}'
+                }
+                for key, value in data.items():
+                    if key == None or value == None:
+                        return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
+                
+                if data['is_superuser'] == 'True':
+                    is_user_superuser = True
+                else:
+                    is_user_superuser = False
+                
+                if data['is_staff'] == 'True':
+                    is_user_staff = True
+                else:
+                     is_user_staff = False
+
+
+                form = UpdateStaffForm(data)
+                if form.is_valid() : 
+                    exist = User.objects.filter(staffprofile__idnumber=data['idnumber']).exists()
+                    if exist:
+                        user = User.objects.get(staffprofile__idnumber=data['idnumber'])
+                        
+                        try:
+                            exist = User.objects.get(email=data['email']) 
+                            if user != exist:
+                                exist = None
+                        except:
+                            exist = None
+                        if exist is not None:
+                            pass
+                        else:
+                            return JsonResponse({"errors":f"phone:{data['email']} is already taken", "status":"error"}, status=400)
+
+                        try:
+                            exist = User.objects.get(username=data['username']) 
+                        except:
+                            exist = None
+                        if exist is not None:
+                            pass
+                        else:
+                            return JsonResponse({"errors":f"phone:{data['username']} is already taken", "status":"error"}, status=400)
+                        
+                        try:
+                            exist = User.objects.filter(staffprofile__phone=data['phone'], id=data['idnumber']).exists()
+                            if not exist:
+                                pass
+                            else: 
+                                exist = User.objects.get(staffprofile__phone=data['phone'])
+                                if user == exist:
+                                    pass
+                                else: 
+                                    return JsonResponse({"errors":f"phone:{data['phone']} is already taken", "status":"error"}, status=400)
+                        except Exception as e:
+                            return JsonResponse({"errors":f'{e}', "status":"error"}, status=400)
+                        
+                    else:
+                        return JsonResponse({"errors":f'User:staff Uer does not exist', "status":"error"}, status=400)
+
+                    try :
+
+    
+                        user = User.objects.get(staffprofile__idnumber=data['idnumber'])
+                        user.first_name = data['first_name']
+                        user.last_name = data['last_name']
+                        user.email = data['email']
+                        # user.password = data['password']
+                       
+                        user.staffprofile.job_title = data['job_title']
+                        user.staffprofile.phone = data['phone']
+                        user.staffprofile.department = data['department']
+                        user.staffprofile.salary = data['salary']
+                        
+                        user.staffprofile.save()
+                        user.save()
                         return JsonResponse({'message':f'Staff profile for {user.first_name} {user.last_name} is updated successfuly', 'status':'success'}, status=201) 
                     except Exception as e:
                         return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
