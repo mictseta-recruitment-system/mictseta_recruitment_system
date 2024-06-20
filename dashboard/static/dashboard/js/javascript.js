@@ -943,3 +943,24 @@ function handleErrors(errors, jobID, spinner) {
     }
   }
 }
+
+
+function toggleVisibility(divId) {
+            // Hide all divs
+            const divs = ['profileinformation', 'companyinformation','infopage', 'vacanciesc'];
+            divs.forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
+
+
+            
+            // Show the selected div
+            const div = document.getElementById(divId);
+            console.log()
+            div.style.display = 'block';
+        }
+
+      /*  // Initialize: hide all divs
+        window.onload = function() {
+            toggleVisibility(null);
+        };*/

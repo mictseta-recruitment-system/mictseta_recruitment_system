@@ -46,11 +46,12 @@ Manage Users
                 <td>Yes</td>
                 {% endif %}
                   {% if staff.staffprofile.department == "ADMINISTRATOR" %}
-
+                  <td><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a></td>
                   {% else %}
                   {% if user.is_superuser %}
                   <td ><a href="{% url 'dashboard.update_staff' staff.id %}" class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i></a> 
-                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i></button></td>
+                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i></button><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a> </td>
+                  
                   {% else %}
                     <td > 
                   <button class="btn btn-info" type="button" role="button"  style="font-size: 12px;" > <i class="fa fa-eye" aria-hidden="true"></i>  View</button>

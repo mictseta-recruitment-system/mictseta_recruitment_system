@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from jobs.models import JobPost, Notification
 from datetime import datetime
 from django.http import HttpResponse
-# Create your views here.
 
 
 @ensure_csrf_cookie
@@ -99,8 +98,6 @@ def add_staff_page(request):
 			return render(request,'add_staff.html')
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
-				
-		
 	else:
 		return redirect('render_auth_page')
 	
@@ -109,5 +106,18 @@ def update_staff(request, staffID):
 	if request.user.is_authenticated:
 		staff = User.objects.get(id=int(staffID))
 		return render(request,'update_staff.html', {'staff':staff})
+	else:
+		return redirect('render_auth_page')
+
+
+
+def employee_details(request, empID):
+	if request.user.is_authenticated:
+		
+		if request.user.is_superuser:
+			emp = User.objects.get(id=empID)
+			return render(request, 'employee_details.html',{'emp':emp})
+		else:
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
 		return redirect('render_auth_page')

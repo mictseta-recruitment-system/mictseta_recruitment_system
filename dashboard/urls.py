@@ -14,4 +14,7 @@ urlpatterns = [
     path('delete_notifications/<notID>/', views.delete_notifications, name="dashboard.delete_notifications"),
     path('add_staff_page/', views.add_staff_page, name="dashboard.add_staff_page"),
     path('update_staff/<staffID>/', views.update_staff, name="dashboard.update_staff"),
+    path('employee_details/<empID>/', views.employee_details, name="dashboard.employee_details"),
+
+    
 ]

@@ -186,12 +186,20 @@
       #sidebarCollapse {
         display: block;
       }
+      .emp-profile a{
+          text-decoration: none;
+          color:black;
+      }
+      .emp-profile:hover{
+          background-color:#bbe4fc ;
+      }
+
     }
   </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark ">
-    <button class="btn btn-dark" id="sidebarCollapse">Toggle Sidebar</button>
+    <button class="btn btn-outeline-primary text-white" id="sidebarCollapse">{{user.first_name}} {{user.last_surname}}</button>
    
     <a class="navbar-brand" href="#">{{user.staffprofile.department}}</a>
     
