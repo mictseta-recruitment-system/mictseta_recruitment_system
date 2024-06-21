@@ -821,7 +821,10 @@ function deleteJob(jobID) {
                 password2: document.getElementById('password2').value,
                 super: document.getElementById('super').value,
                 staff: document.getElementById('staff').value,
-                salary: document.getElementById('salary').value
+                salary: document.getElementById('salary').value,
+                rate: document.getElementById('rate').value,
+                start_time: document.getElementById('datetime1').value,
+                end_time: document.getElementById('datetime').value
             };
 
             fetch(url, {
@@ -871,7 +874,10 @@ function UpdateStaff(){
                 department: document.getElementById('department').value,
                 super: document.getElementById('super').value,
                 staff: document.getElementById('staff').value,
-                salary: document.getElementById('salary').value
+                salary: document.getElementById('salary').value,
+                rate: document.getElementById('rate').value,
+                start_time: document.getElementById('datetime1').value,
+                end_time: document.getElementById('datetime').value
             };
 
             fetch(url, {

@@ -106,6 +106,37 @@
                 	<option >R60,000 + </option>
                 </select>
             </div>
+            <div class="form-group w-100 m-1">
+                <label for="rate">Rate per hour</label>
+                <input type="text" class="form-control" id="rate" name="rate" value="{{staff.shift.rate}}">
+            </div>
+            <div class="form-group w-100 m-1" style="position:relative;">
+                <label for="start_time">Start Time:</label>
+               <input class="form-control" type="text" id="datetime1" class="times" value="{{staff.shift.start_time}}" />
+                   <script>
+ 
+                        // Below code sets format to the 
+                        // datetimepicker having id as 
+                        // datetime
+                        $('#datetime1').datetimepicker({
+                            format: 'HH:mm:ss'
+                        });
+                    </script>
+            </div>
+          
+              <div class="form-group w-100 m-1 " style="position:relative;">
+                <label for="end_time">End Time:</label>
+                <input class="form-control" type="text" id="datetime" value="{{staff.shift.end_time}}"/>
+                   <script>
+ 
+                        // Below code sets format to the 
+                        // datetimepicker having id as 
+                        // datetime
+                        $('#datetime').datetimepicker({
+                            format: 'HH:mm:ss'
+                        });
+                    </script>
+            </div>
 
             <button type="button" onclick="UpdateStaff()" class="btn btn-success m-5 ">Update Staff</button>
          	

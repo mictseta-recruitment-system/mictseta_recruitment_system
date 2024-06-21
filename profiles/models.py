@@ -64,4 +64,35 @@ class StaffProfile(models.Model):
 	gender = models.CharField(max_length=6,null=False )
 	age = models.CharField(max_length=6,null=False )
 	dob = models.CharField(max_length=6,null=False )
+
+class Shift(models.Model):
+	employee = models.OneToOneField(User, on_delete=models.CASCADE)
+	rate = models.CharField(max_length=100,null=True )
+	start_time = models.CharField(max_length=225,null=False)
+	end_time = models.CharField(max_length=225,null=False)
 	
+	
+	
+class Attendance(models.Model):
+	employee = models.ForeignKey(User, on_delete=models.CASCADE)
+	shift = models.ForeignKey(Shift, on_delete=models.CASCADE)
+	late = models.CharField(max_length=225,null=True )
+	status = models.CharField(max_length=225,null=False )
+	date = models.DateTimeField(auto_now_add=True)
+
+class Leave(models.Model):
+	employee = models.ForeignKey(User, on_delete=models.CASCADE)
+	lave_type = models.CharField(max_length=225,null=False )
+	message = models.CharField(max_length=225,null=False)
+	start_date = models.DateTimeField(null=False)
+	end_date = models.DateTimeField(null=False)
+	date = models.DateTimeField(auto_now_add=True)
+	status = models.CharField(max_length=225,null=False )
+
+
+class Raise(models.Model):
+	employee = models.ForeignKey(User, on_delete=models.CASCADE)
+	message = models.CharField(max_length=225,null=False)
+	amount = models.CharField(max_length=225,null=False)
+	date = models.DateTimeField(auto_now_add=True)
+	status = models.CharField(max_length=225,null=False )

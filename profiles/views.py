@@ -7,7 +7,7 @@ from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, 
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, PersonalInformation, AddressInformation, ProfileImage, StaffProfile
+from .models import Profile, PersonalInformation, AddressInformation, ProfileImage, StaffProfile, Shift
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -280,6 +280,9 @@ def add_staff(request):
                     'is_superuser' : json_data.get('super'),
                     'is_staff' : json_data.get('staff'),
                     'salary' : json_data.get('salary'),
+                    'rate' : json_data.get('rate'),
+                    'start_time' : json_data.get('start_time'),
+                    'end_time' : json_data.get('end_time'),
                    
                     # 'r_idnum' : f'{request.user.profile.idnumber}'
                 }
@@ -310,11 +313,13 @@ def add_staff(request):
                     try :
 
                         user = User.objects.create(username=data['username'], email=data['email'], first_name=data['first_name'], last_name=data['last_name'],password=make_password(data['password']), is_superuser=is_user_superuser, is_staff=is_user_staff)
-                        user.save()
 
                         staff = StaffProfile.objects.create(user=user,job_title=data['job_title'],department=data['department'],salary=data['salary'],phone=data['phone'], idnumber=data['idnumber'], gender=ValidateIdNumber(data['idnumber']).get_gender(),age=ValidateIdNumber(data['idnumber']).get_age(), dob=ValidateIdNumber(data['idnumber']).get_birthdate())
+                        shift = Shift.objects.create(employee=user,rate=data['rate'],start_time=data['start_time'],end_time=data['end_time'])
+
+                        user.save()
                         staff.save()
-                        
+                        shift.save()
                         return JsonResponse({'message':f'Staff profile for {user.first_name} {user.last_name} is updated successfuly', 'status':'success'}, status=201) 
                     except Exception as e:
                         return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
@@ -353,6 +358,9 @@ def update_staff(request):
                     'salary' : json_data.get('salary'),
                     'password' : 'default1',
                     'password2' : 'default1',
+                    'rate' : json_data.get('rate'),
+                    'start_time' : json_data.get('start_time'),
+                    'end_time' : json_data.get('end_time'),
                    
                     # 'r_idnum' : f'{request.user.profile.idnumber}'
                 }
@@ -426,8 +434,12 @@ def update_staff(request):
                         user.staffprofile.phone = data['phone']
                         user.staffprofile.department = data['department']
                         user.staffprofile.salary = data['salary']
+                        user.shift.rate = data['rate']
+                        user.shift.start_time = data['start_time']
+                        user.shift.end_time = data['end_time']
                         
                         user.staffprofile.save()
+                        user.shift.save()
                         user.save()
                         return JsonResponse({'message':f'Staff profile for {user.first_name} {user.last_name} is updated successfuly', 'status':'success'}, status=201) 
                     except Exception as e:

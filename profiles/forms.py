@@ -270,6 +270,10 @@ class AddStaffForm(forms.Form):
 	idnumber = forms.CharField(max_length=225)
 	password = forms.CharField(max_length=225)
 
+	rate = forms.CharField(max_length=225)
+	start_time = forms.CharField(max_length=225)
+	end_time = forms.CharField(max_length=225)
+
 	def validate_names(self,name):
      
 		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
@@ -408,8 +412,11 @@ class UpdateStaffForm(forms.Form):
 	phone = forms.CharField(max_length=225)
 	idnumber = forms.CharField(max_length=225)
 
-	def validate_names(self,name):
-     
+	rate = forms.CharField(max_length=225)
+	start_time = forms.CharField(max_length=225)
+	end_time = forms.CharField(max_length=225)
+
+	def validate_names(self,name): 
 		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, name)
 		if matches:
@@ -426,11 +433,9 @@ class UpdateStaffForm(forms.Form):
 		idnumber = self.cleaned_data.get('idnumber')
 		validate = ValidateIdNumber(idnumber)
 		is_valid = validate.validateSAID()
-		exist = User.objects.filter(profile__idnumber=idnumber).exists()
-		
+		exist = User.objects.filter(profile__idnumber=idnumber).exists()	
 		if ' ' in idnumber :
 			raise forms.ValidationError("Spaces not allowed ")
-
 		if not is_valid:
 			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
@@ -441,10 +446,7 @@ class UpdateStaffForm(forms.Form):
  			raise forms.ValidationError('Job Title cannot be empty ')
  		if department not in ["HR","IT","MANAGER","FINANCE", "ADMINISTRATOR"] :
  			raise forms.ValidationError('department is invalid ')
-
  		return self.validate_names(department)
-
-
 
 	def clean_job_title(self):
  		job_title = self.cleaned_data.get('job_title')
@@ -470,8 +472,6 @@ class UpdateStaffForm(forms.Form):
 		if ' ' in phone :
 			raise forms.ValidationError("Spaces not allowed in phone number")
 		exist = User.objects.filter(profile__phone=phone).exists()
-	
-		
 		if not validate_south_african_phone_number(phone):
 			raise forms.ValidationError("Phone number is not a valid south african number or its empty")
 		return phone
@@ -482,9 +482,7 @@ class UpdateStaffForm(forms.Form):
 		self.first_name()
 		self.last_name()
 		if ' ' in username :
-			raise forms.ValidationError("Spaces not allowed ")
-		
-		
+			raise forms.ValidationError("Spaces not allowed ")	
 		return self.validate_names(username)
 
 	def clean_email(self):
@@ -496,8 +494,6 @@ class UpdateStaffForm(forms.Form):
 		new_email = email.split('@')
 		if len(new_email[0]) < 3:
 			raise forms.ValidationError(" length is Invalid") 
-	
-	
 		return email
 
 	def clean_password(self):
@@ -525,3 +521,47 @@ class UpdateStaffForm(forms.Form):
 		except:
 			pass
 		return password
+
+	def validate_rate(self,rate): 
+		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, rate)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		try:
+			float(rate)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return rate
+	
+	def validate_time(self, time_str):
+    		# Regular expression for hh:mm format
+		pattern = r"^(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+		if re.match(pattern, time_str):
+			return time_str
+		else:
+			raise forms.ValidationError("Error: Time must be in hh:mm format within the 24-hour range (00:00 to 23:59).")
+		return time_str
+
+	def clean_rate(self):
+		rate = self.cleaned_data.get('rate')
+		if ' ' in rate :
+			raise forms.ValidationError("Spaces not allowed ")
+		return self.validate_rate(rate)
+
+	def clean_start_time(self):
+		start_time = self.cleaned_data.get('start_time')
+		if ' ' in start_time :
+			raise forms.ValidationError("Spaces not allowed ")
+		return self.validate_time(start_time)
+
+	def clean_end_time(self):
+		end_time = self.cleaned_data.get('end_time')
+		if ' ' in end_time :
+			raise forms.ValidationError("Spaces not allowed ")
+		return self.validate_time(end_time)
+
+
+	
+	
+
+	
