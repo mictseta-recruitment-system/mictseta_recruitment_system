@@ -7,7 +7,7 @@
 {% block content %}
 
 {% if user.is_superuser %} 
-	{% if user.staffprofile.department == "ADMINISTRATOR" or  user.is_superuser and user.staffprofile.department == "MANAGER" %}
+	{% if user.staffprofile.department == "ADMINISTRATOR" or  user.is_superuser and user.staffprofile.department == "MANAGER" or user.is_superuser  %}
 	<div class="container" id="UpdateStaffPageComplete" style="display: none;">
 
         <div class="d-flex justify-content-center mt-5">
@@ -48,7 +48,7 @@
             </div>
             <div class="form-group w-100 m-1">
                 <label for="idnumber">ID Number:</label>
-                <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{staff.staffprofile.idnumber}}" disabled>
+                <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{staff.staffprofile.idnumber}}" >
             </div>
             <div class="form-group  m-1">
                 

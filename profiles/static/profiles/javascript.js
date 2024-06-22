@@ -207,7 +207,8 @@ function uploadImage() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            showFlashMessage('Image uploaded successfully ', "danger");
+            showFlashMessage('Image uploaded successfully ', "success");
+            location.reload()
         } else {
           
             showFlashMessage('Error uploading image: ' + JSON.stringify(data.errors), "danger");

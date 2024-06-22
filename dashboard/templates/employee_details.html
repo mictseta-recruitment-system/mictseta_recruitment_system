@@ -12,8 +12,25 @@
 
 	<div class="col-sm-10 col-md-4 d-flex justify-content-center p-3 ">
 		<div class="card shadow p-3 mb-5 bg-body rounded" s>
-		  <img src="{% static 'dashboard/images/default_user.jpg' %}" class="card-img-top h-50 " alt="...">
+		 
+		 {% if emp.profileimage.image %}
+
+ 			<img src="{{user.profileimage.image.url}}" class="card-img-top" alt="..." style="height: 290px;">
+		  {% else %}
+		  <img src="{% static 'dashboard/images/default_user.jpg' %}" class="card-img-top" alt="...">
+
+		 {% endif %}
 		  <div class="card-body">
+		  	 {% if emp.id == user.is or user.is_superuser %}
+		  	 <form id="image-upload-form" method="post" enctype="multipart/form-data">
+
+              <div class="mb-3">
+							  <input class="form-control form-control-sm text-info" name="image" id="image" type="file" >
+             	 <button type="button" class="form-control emp-profile" onclick="uploadImage()">Upload image</button>
+							</div>
+          </form>
+          {% else %}
+          {% endif %}
 		    <h5 class="card-title">{{emp.first_name}} {{emp.last_name}}</h5>
 
 		    <p class="card-text d-flex justify-content-between mt-3"><span><b>Gender:</b> {{emp.staffprofile.gender}}</span>  <span><b>Age:</b> {{emp.staffprofile.age}}</span> </p>
