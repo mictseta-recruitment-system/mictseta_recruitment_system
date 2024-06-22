@@ -1,313 +1,347 @@
 {% extends 'base2.html' %}
 {% load static %}
 {% block content %}
-<header class="bg-dark text-white text-center py-3">
-    <h1>My Dashboard</h1>
-</header>
-<div class="row" >
-    <div class="col-4" id="side-bar">
-        <div class="list-group" id="list-tab" role="tablist">
-            <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list"
-                href="#list-home" role="tab" aria-controls="list-home">Profile Information</a>
-            <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
-                href="#list-messages" role="tab" aria-controls="list-messages">Address information</a>
-            <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list"
-                href="#list-profile" role="tab" aria-controls="list-profile">Personal Information</a>
-            <a class="list-group-item list-group-item-action" href="{% url 'home'  %}" aria-controls="list-profile">Go
-                to home Page</a>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        header {
+            background-color: #343a40;
+            color: white;
+        }
+        .list-group-item.active {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .profile-item {
+            margin-bottom: 1rem;
+        }
+        .profile-item label {
+            font-weight: bold;
+        }
+        .profile-item input[type="text"], 
+        .profile-item input[type="email"], 
+        .profile-item input[type="tel"], 
+        .profile-item input[type="url"], 
+        .profile-item input[type="number"], 
+        .profile-item input[type="file"] {
+            width: 100%;
+        }
+        #side-bar {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: .25rem;
+        }
+        #content {
+            background-color: white;
+            padding: 1rem;
+            border-radius: .25rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            margin-top: 1rem;
+        }
+        .btn-update {
+            background-color: #007bff;
+            border: none;
+            color: white;
+        }
+        .btn-update:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header class="text-center py-3">
+        <h1>My Dashboard</h1>
+    </header>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4" id="side-bar">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list"
+                        href="#list-home" role="tab" aria-controls="list-home">Profile Information</a>
+                    <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
+                        href="#list-messages" role="tab" aria-controls="list-messages">Address Information</a>
+                    <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list"
+                        href="#list-profile" role="tab" aria-controls="list-profile">Personal Information</a>
+                    <a class="list-group-item list-group-item-action" href="{% url 'home' %}" aria-controls="list-profile">Go to Home Page</a>
+                </div>
+            </div>
+            {% if get_user %}
+                <div class="col-md-8" id="content">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                            <div>
+                                <h3>Profile Information</h3>
+                                <img src="{{get_user.profileimage.image.url}}" alt="Profile Image" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="profile-item">
+                                        <label for="username">Username</label>
+                                        <input type="text" id="username" name="username" value="{{get_user.username}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" id="first_name" name="first_name" value="{{get_user.first_name}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" id="last_name" name="last_name" value="{{get_user.last_name}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="email">Email</label>
+                                        <input type="email" id="email" name="email" value="{{get_user.email}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="phone">Phone</label>
+                                        <input type="tel" id="phone" name="phone" value="{{get_user.profile.phone}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="idnumber">ID Number</label>
+                                        <input type="text" id="idnumber" name="idnumber" value="{{get_user.profile.idnumber}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="id_file">Upload ID</label>
+                                        <input type="file" id="id_file" name="id_file" class="form-control" disabled>
+                                        {% if get_user.profile.id_file %}
+                                            <small>Current file: <a href="{{ get_user.profile.id_file.url }}">View ID</a></small>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+                            <div>
+                                <h3>Address Information</h3>
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="profile-item">
+                                        <label for="street_address_line">Street line</label>
+                                        <input type="url" id="street_address_line" name="street_address_line" value="{{get_user.addressinformation.street_address_line}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="street_address_line2">Street line 2</label>
+                                        <input type="text" id="street_address_line2" name="street_address_line2" value="{{get_user.addressinformation.street_address_line2}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" name="city" value="{{get_user.addressinformation.city}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="province">Province</label>
+                                        <input type="text" id="province" name="province" value="{{get_user.addressinformation.province}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="postal_code">Postal Code</label>
+                                        <input type="text" id="postal_code" name="postal_code" value="{{get_user.addressinformation.postal_code}}" class="form-control" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                            <div>
+                                <h3>Personal Information</h3>
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="profile-item">
+                                        <label for="linkedin_profile">LinkedIn Profile</label>
+                                        <input type="url" id="linkedin" name="linkedin_profile" value="{{get_user.personalinformation.linkedin_profile}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="personal_website">Personal Website</label>
+                                        <input type="url" id="website" name="personal_website" value="{{get_user.personalinformation.personal_website}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="job_title">Job Title</label>
+                                        <input type="text" id="job_title" name="job_title" value="{{get_user.personalinformation.job_title}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="current_employer">Current Employer</label>
+                                        <input type="text" id="employer" name="current_employer" value="{{get_user.personalinformation.current_employer}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="years_of_experience">Years of Experience</label>
+                                        <input type="number" id="years_of_experience" name="years_of_experience" value="{{get_user.personalinformation.years_of_experience}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="industry">Industry</label>
+                                        <input type="text" id="industry" name="industry" value="{{get_user.personalinformation.industry}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="career_level">Career Level</label>
+                                        <input type="text" id="career_level" name="career_level" value="{{get_user.personalinformation.career_level}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="desired_job">Desired Job</label>
+                                        <input type="text" id="desired_job" name="desired_job" value="{{get_user.personalinformation.desired_job}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="job_location">Job Location</label>
+                                        <input type="text" id="job_location" name="job_location" value="{{get_user.personalinformation.job_location}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="academic_transcript">Academic Transcript</label>
+                                        <input type="file" id="academic_transcript" name="academic_transcript" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="cv">CV</label>
+                                        <input type="file" id="cv" name="cv" class="form-control" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-md-8" id="content">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                            <div>
+                                <h3>Profile Information</h3>
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="profile-item">
+                                        <label for="username">Username</label>
+                                        <input type="text" id="username" name="username" value="{{user.username}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" id="first_name" name="first_name" value="{{user.first_name}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" id="last_name" name="last_name" value="{{user.last_name}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="email">Email</label>
+                                        <input type="email" id="email" name="email" value="{{user.email}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="phone">Phone</label>
+                                        <input type="tel" id="phone" name="phone" value="{{user.profile.phone}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="idnumber">ID Number</label>
+                                        <input type="text" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}" class="form-control" disabled>
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="id_file">Upload ID</label>
+                                        <input type="file" id="id_file" name="id_file" class="form-control">
+                                        {% if user.profile.id_file %}
+                                            <small>Current file: <a href="{{ user.profile.id_file.url }}">View ID</a></small>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <input type="submit" name="update_profile_info" class="btn btn-primary btn-update" id="update_profile_info" value="Update">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+                            <div>
+                                <h3>Address Information</h3>
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="profile-item">
+                                        <label for="street_address_line">Street line</label>
+                                        <input type="url" id="street_address_line" name="street_address_line" value="{{user.addressinformation.street_address_line}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="street_address_line2">Street line 2</label>
+                                        <input type="text" id="street_address_line2" name="street_address_line2" value="{{user.addressinformation.street_address_line2}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" name="city" value="{{user.addressinformation.city}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="province">Province</label>
+                                        <input type="text" id="province" name="province" value="{{user.addressinformation.province}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="postal_code">Postal Code</label>
+                                        <input type="text" id="postal_code" name="postal_code" value="{{user.addressinformation.postal_code}}" class="form-control">
+                                    </div>
+                                    <div>
+                                        <input type="submit" name="update_address_info" id="update_address_info" class="btn btn-success btn-update" value="Update">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                            <div>
+                                <h3>Personal Information</h3>
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="profile-item">
+                                        <label for="linkedin_profile">LinkedIn Profile</label>
+                                        <input type="url" id="linkedin" name="linkedin_profile" value="{{user.personalinformation.linkedin_profile}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="personal_website">Personal Website</label>
+                                        <input type="url" id="website" name="personal_website" value="{{user.personalinformation.personal_website}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="job_title">Job Title</label>
+                                        <input type="text" id="job_title" name="job_title" value="{{user.personalinformation.job_title}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="current_employer">Current Employer</label>
+                                        <input type="text" id="employer" name="current_employer" value="{{user.personalinformation.current_employer}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="years_of_experience">Years of Experience</label>
+                                        <input type="number" id="years_of_experience" name="years_of_experience" value="{{user.personalinformation.years_of_experience}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="industry">Industry</label>
+                                        <input type="text" id="industry" name="industry" value="{{user.personalinformation.industry}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="career_level">Career Level</label>
+                                        <input type="text" id="career_level" name="career_level" value="{{user.personalinformation.career_level}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="desired_job">Desired Job</label>
+                                        <input type="text" id="desired_job" name="desired_job" value="{{user.personalinformation.desired_job}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="job_location">Job Location</label>
+                                        <input type="text" id="job_location" name="job_location" value="{{user.personalinformation.job_location}}" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="academic_transcript">Academic Transcript</label>
+                                        <input type="file" id="academic_transcript" name="academic_transcript" class="form-control">
+                                    </div>
+                                    <div class="profile-item">
+                                        <label for="cv">CV</label>
+                                        <input type="file" id="cv" name="cv" class="form-control">
+                                    </div>
+                                    <div>
+                                        <input type="submit" name="update_personal_info" id="update_personal_info" class="btn btn-success btn-update" value="Update">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
-    {% if get_user %}
-        <div class="col-8" id="content">
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                    <div>
-                        <h3>Profile information</h3>
-                        <img src="{{get_user.profileimage.image.url}}" alt="" style="width: 50px;height: 50px;">
-                        
-                        
-                        <form method="POST">
-                            <div class="profile-item">
-                                <label for="username">Username</label>
-                                <input type="text" id="username" name="username" value="{{get_user.username}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="first_name">First Name</label>
-                                <input type="text" id="first_name" name="first_name" value="{{get_user.first_name}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="last_name">Last Name</label>
-                                <input type="text" id="last_name" name="last_name" value="{{get_user.last_name}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" value="{{get_user.email}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="phone">Phone</label>
-                                <input type="tel" id="phone" name="phone" value="{{get_user.profile.phone}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="idnumber">ID Number</label>
-                                <input type="text" id="idnumber" name="idnumber" value="{{get_user.profile.idnumber}}" disabled>
-                            </div>
-
-
-                        
-                        </form>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                    <div>
-
-                        <h3>Address Information</h3>
-                        <form method="POST">
-
-                            <div class="profile-item">
-                                <label for="street_address_line">Street line</label>
-                                <input type="url" id="street_address_line" name="street_address_line" value="{{get_user.addressinformation.street_address_line}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="street_address_line2"> Street line 2 </label>
-                                <input type="text" id="street_address_line1" name="street_address_line2" value="{{get_user.addressinformation.street_address_line1}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="city">City</label>
-                                <input type="text" id="city" name="city" value="{{get_user.addressinformation.city}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="province">Province</label>
-                                <input type="text" id="province" name="province" value="{{get_user.addressinformation.province}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="postal_code">Postal Code</label>
-                                <input type="text" id="postal_code" name="postal_code" value="user.addressinformation.postal_code" disabled>
-                            </div>
-                            
-                        </form>
-
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                    <div>
-                        <h3>Personal Information</h3>
-                         
-                        <form method="POST">
-                            <div class="profile-item">
-                                <label for="linkedin_profile">LinkedIn Profile</label>
-                                <input type="url" id="linkedin" name="linkedin_profile"
-                                    value="{{get_user.personalinformation.linkedin_profile}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="personal_website">Personal Website</label>
-                                <input type="url" id="website" name="personal_website" value="{{get_user.personalinformation.linkedin_profile}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="job_title">Job Title</label>
-                                <input type="text" id="job_title" name="job_title" value="{{get_user.personalinformation.job_title}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="current_employer">Current Employer</label>
-                                <input type="text" id="employer" name="current_employer" value="{{get_user.personalinformation.current_employer}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="years_of_experience">Years of Experience</label>
-                                <input type="number" id="year_expereince" name="year_expereince" value="{{get_user.personalinformation.years_of_expreince}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="industry">Industry</label>
-                                <input type="text" id="industry" name="industry" value="{{get_user.personalinformation.industry}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="career_level">Career Level</label>
-                                <input type="text" id="carear_level" name="carear_level" value="{{get_user.personalinformation.carear_level}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="desired_job">Desired Job</label>
-                                <input type="text" id="desired_job" name="desired_job" value="{{get_user.personalinformation.desired_job}}" disabled>
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="job_location">Job Location</label>
-                                <input type="text" id="job_location" name="job_location" value="{{get_user.personalinformation.job_location}}" disabled>
-                            </div>
-                            
-                        </form>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    {% else %}
-        <div class="col-8" id="content">
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                    <div>
-                        <h3>Profile information</h3>
-                        <img src="{{user.profileimage.image.url}}" alt="" style="width: 50px;height: 50px;">
-                         
-                        <form method="POST">
-                            <div class="profile-item">
-                                <label for="username">Username</label>
-                                <input type="text" id="username" name="username" value="{{user.username}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="first_name">First Name</label>
-                                <input type="text" id="first_name" name="first_name" value="{{user.first_name}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="last_name">Last Name</label>
-                                <input type="text" id="last_name" name="last_name" value="{{user.last_name}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" value="{{user.email}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="phone">Phone</label>
-                                <input type="tel" id="phone" name="phone" value="{{user.profile.phone}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="idnumber">ID Number</label>
-                                <input type="text" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}" disabled>
-                            </div>
-
-
-                            <div>
-                                <input type="button" name="update_profile_info" class="btn btn-primary"
-                                    id="update_profile_info" value="Update">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                    <div>
-
-                        <h3>Address Information</h3>
-                        <form method="POST">
-
-                            <div class="profile-item">
-                                <label for="street_address_line">Street line</label>
-                                <input type="url" id="street_address_line" name="street_address_line" value="{{user.addressinformation.street_address_line}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="street_address_line2"> Street line 2 </label>
-                                <input type="text" id="street_address_line1" name="street_address_line2" value="{{user.addressinformation.street_address_line1}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="city">City</label>
-                                <input type="text" id="city" name="city" value="{{user.addressinformation.city}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="province">Province</label>
-                                <input type="text" id="province" name="province" value="{{user.addressinformation.province}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="postal_code">Postal Code</label>
-                                <input type="text" id="postal_code" name="postal_code" value="{{user.addressinformation.postal_code}}">
-                            </div>
-                            <div>
-                                <input type="button" name="update_address_info" id="update_address_info"
-                                    class="btn btn-success" value="Update">
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                    <div>
-                        <h3>Personal Information</h3>
-                         <form id="image-upload-form" method="post" enctype="multipart/form-data">
-                            <input type="file" name="image" id="image">
-                            <button type="button" onclick="uploadImage()">Upload</button>
-                        </form>
-                        <form method="POST">
-                            <div class="profile-item">
-                                <label for="linkedin_profile">LinkedIn Profile</label>
-                                <input type="url" id="linkedin" name="linkedin_profile"
-                                    value="{{user.personalinformation.linkedin_profile}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="personal_website">Personal Website</label>
-                                <input type="url" id="website" name="personal_website" value="{{user.personalinformation.linkedin_profile}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="job_title">Job Title</label>
-                                <input type="text" id="job_title" name="job_title" value="{{user.personalinformation.job_title}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="current_employer">Current Employer</label>
-                                <input type="text" id="employer" name="current_employer" value="{{user.personalinformation.current_employer}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="years_of_experience">Years of Experience</label>
-                                <input type="number" id="year_expereince" name="year_expereince" value="{{user.personalinformation.years_of_expreince}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="industry">Industry</label>
-                                <input type="text" id="industry" name="industry" value="{{user.personalinformation.industry}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="career_level">Career Level</label>
-                                <input type="text" id="carear_level" name="carear_level" value="{{user.personalinformation.carear_level}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="desired_job">Desired Job</label>
-                                <input type="text" id="desired_job" name="desired_job" value="{{user.personalinformation.desired_job}}">
-                            </div>
-
-                            <div class="profile-item">
-                                <label for="job_location">Job Location</label>
-                                <input type="text" id="job_location" name="job_location" value="{{user.personalinformation.job_location}}">
-                            </div>
-                            <div>
-                                <input type="button" name="update_personal_info" id="update_personal_info"
-                                    class="btn btn-success" value="Update">
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    {% endif %}
-</div>
-
+    <!-- Bootstrap JS and dependencies (e.g., Popper) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>
 {% endblock %}
