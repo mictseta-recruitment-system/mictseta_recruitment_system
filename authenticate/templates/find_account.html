@@ -1,29 +1,112 @@
 {% extends 'base1.html' %}
 
-{% block title %} find account {% endblock %}
-	
+{% block title %} Find Account {% endblock %}
+    
 {% block content %}
-	
+    
 <div class="container justify-content-center">
-	<div class= "col-6" style="margin-top: 50px; ">
-		<h1>Enter Email to reset password</h1>
-		<form method="POST">
-			{% csrf_token %}
-			<div class="input-group mb-3">
-			  <span class="input-group-text" id="basic-addon1">@</span>
-			  <input type="email" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" name="email" id="femail">
-			</div>
-			<input type="button" name="submit" value="get link" class="btn btn-primary" id='btn-forgot'/>
-		</form>	
-		
-	</div>
-
+    <div class="col-md-6 mx-auto" style="margin-top: 50px;">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title text-center">Reset Password</h1>
+                <p class="card-text text-center">Enter your email to send a link to your email. Please check and verify if your email was provided before account creation. You will have a link in your inbox. Click the link to set your new password.</p>
+                <form action="" class="mt-4">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="email" class="label-title">Enter your Email</label>
+                        <div class="input-group input-wrapper">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text icon">&#9993;</span>
+                            </div>
+                            <input type="email" id="email" name="Email" class="form-control input-full" placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary btn-block submit-btn btn-full" type="submit">Send Reset Email</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-<input type="text" id="btn-signup" style="display: none;">
 
+<input type="text" id="btn-signup" style="display: none;">
 <input type="text" id="btn-signin" style="display: none;">
 <input type="text" id="btn-sign-up" style="display: none;">
 <input type="text" id="btn-sign-in" style="display: none;">
 
 {% endblock %}
-	
+
+<!-- Include Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    .card {
+        border-radius: 15px; /* Rounded corners */
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 16px;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+    }
+
+    .input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    .icon {
+        font-size: 20px; /* Slightly smaller icon */
+    }
+
+    .form-control {
+        border-radius: 10px; /* Rounded corners */
+        font-size: 16px;
+        padding: 10px; /* Adequate padding */
+    }
+
+    .input-full {
+        width: 100%; /* Full width */
+        height: 40px; /* Height */
+        transition: transform 0.1s ease;
+    }
+
+    .input-full:active {
+        transform: scale(0.98); /* Pop effect on press */
+    }
+
+    .btn-block {
+        display: block;
+        width: 100%;
+    }
+
+    .btn-full {
+        width: 100%; /* Full width */
+        height: 40px; /* Adequate height */
+        font-size: 16px; /* Adequate font size */
+        padding: 10px; /* Adequate padding */
+        transition: background-color 0.3s ease, transform 0.1s ease;
+    }
+
+    .btn-full:active {
+        transform: scale(1.98); /* Pop effect on press */
+    }
+
+    .btn-full:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+
+    .btn-full:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Bootstrap focus shadow */
+    }
+</style>

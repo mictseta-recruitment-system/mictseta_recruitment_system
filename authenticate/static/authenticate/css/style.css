@@ -328,3 +328,30 @@ input[type="text"], select {
   max-width: 400px;
   margin: 0 auto;
 }
+
+
+
+
+<!-- Visual Example -->
+<style>
+    .input-wrapper {
+        border: 1px solid #ced4da;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+    }
+    .input-wrapper .icon {
+        font-size: 24px;
+        margin-right: 8px;
+    }
+    .input-wrapper input {
+        border: none;
+        outline: none;
+        width: 100%;
+    }
+</style>
+<div class="input-wrapper">
+    <span class="icon">&#9993;</span>
+    <input type="email" placeholder="Enter your email">
+</div>
