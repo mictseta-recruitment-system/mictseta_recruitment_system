@@ -5,7 +5,10 @@
   font-family: "Poppins", sans-serif;
 }
 
+body {
+=======
 .body {
+
   background: white;
   background-size: cover;
   background-position: center;

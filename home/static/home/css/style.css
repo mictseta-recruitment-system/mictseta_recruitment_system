@@ -195,3 +195,25 @@ ul.list-group-item a:hover {
   max-width: 50px;
   margin-bottom: 10px;
 }
+
+.container {
+    text-align: left;
+}
+
+.image img {
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.text {
+    font-size: 24px;
+}
+
+.blue {
+    color: #4c91ce;
+}
+
+.blue-bold {
+    color: #4c91ce;
+    font-weight: bold;
+}
