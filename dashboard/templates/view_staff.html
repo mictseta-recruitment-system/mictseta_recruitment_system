@@ -32,7 +32,7 @@ Manage Users
             {% for staff in staffs %}
               <tr>
                 <td>EMP{{staff.id}}</td>
-                <td>{{staff.first_name}} {{staff.last_name}}</td>
+                <td><img src="{{staff.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;">{{staff.first_name}} {{staff.last_name}}</td>
                 <td>{{staff.email}}</td>
                 {% if staff.is_staff %}
                
@@ -54,7 +54,7 @@ Manage Users
                   
                   {% else %}
                     <td > 
-                  <button class="btn btn-info" type="button" role="button"  style="font-size: 12px;" > <i class="fa fa-eye" aria-hidden="true"></i>  View</button>
+                  <a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a>
                 </td>
                   {% endif %}
                   {% endif %}

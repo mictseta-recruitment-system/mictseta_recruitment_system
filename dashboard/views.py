@@ -114,9 +114,20 @@ def update_staff(request, staffID):
 def employee_details(request, empID):
 	if request.user.is_authenticated:
 		
-		if request.user.is_superuser:
-			emp = User.objects.get(id=empID)
+		emp = User.objects.get(id=empID)
+		if request.user.is_superuser or request.user.id == emp.id:
 			return render(request, 'employee_details.html',{'emp':emp})
+		else:
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
+
+def employee_details(request, empID):
+	if request.user.is_authenticated:
+		
+		
+		if request.user.is_staff:
+			return render(request, 'employee_details.html')
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:

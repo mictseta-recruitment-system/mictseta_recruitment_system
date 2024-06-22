@@ -70,7 +70,7 @@ class Shift(models.Model):
 	rate = models.CharField(max_length=100,null=True )
 	start_time = models.CharField(max_length=225,null=False)
 	end_time = models.CharField(max_length=225,null=False)
-	
+	working_hours = models.CharField(max_length=225,null=False)
 	
 	
 class Attendance(models.Model):

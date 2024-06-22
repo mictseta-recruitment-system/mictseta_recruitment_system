@@ -271,7 +271,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{% url 'home' %}">Home</a>
-            <a class="dropdown-item" href="{% url 'render_profile_page' %}">Profile</a>
+            <a class="dropdown-item" href="{% url 'dashboard.employee_details' user.id %}">Profile</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'log_out' %}">Logout</a>
           </div>
@@ -310,11 +310,11 @@
     </div>
     <hr>
     <a href="#" data-toggle="collapse" data-target="#settingsMenu" aria-expanded="false" aria-controls="settingsMenu">
-      Settings
+     <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+ Leave
     </a>
     <div class="collapse" id="settingsMenu">
-      <a href="#" class="pl-4">General</a>
-      <a href="#" class="pl-4">Security</a>
+      <a href="#" class="pl-4"><i class="fa fa-cog" aria-hidden="true"></i> Manage</a>
     </div>
     <hr>
     <a href="#" data-toggle="collapse" data-target="#reportsMenu" aria-expanded="false" aria-controls="reportsMenu">

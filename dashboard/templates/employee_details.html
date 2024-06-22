@@ -15,17 +15,19 @@
 		 
 		 {% if emp.profileimage.image %}
 
- 			<img src="{{user.profileimage.image.url}}" class="card-img-top" alt="..." style="height: 290px;">
+ 			<img src="{{emp.profileimage.image.url}}" class="card-img-top" alt="..." style="height: 290px;">
 		  {% else %}
 		  <img src="{% static 'dashboard/images/default_user.jpg' %}" class="card-img-top" alt="...">
 
 		 {% endif %}
 		  <div class="card-body">
-		  	 {% if emp.id == user.is or user.is_superuser %}
+		  	 {% if emp.id == user.id or user.is_superuser %}
 		  	 <form id="image-upload-form" method="post" enctype="multipart/form-data">
 
               <div class="mb-3">
 							  <input class="form-control form-control-sm text-info" name="image" id="image" type="file" >
+							  <input class="form-control form-control-sm text-info" name="empID" id="empID" type="text" value="{{emp.id}}" style="display: none;">
+
              	 <button type="button" class="form-control emp-profile" onclick="uploadImage()">Upload image</button>
 							</div>
           </form>
@@ -42,10 +44,10 @@
 
 		  </ul>
 
-		  <div class="card-body">
+		  <!-- <div class="card-body">
 		    <a href="#" class="card-link">Download CV</a>
 		    <a href="#" class="card-link">Download ID</a>
-		  </div>
+		  </div> -->
 		</div>
 	</div>
 
@@ -108,10 +110,10 @@
 				<div class="col-6 shadow-sm p-3 rounded">
 					<h5>Profile</h5>
 					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>Has Admin Previlages :</b> <span>{% if emp.is_superuser %} YES{% else %} NO {% endif %}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Admin Previlages :</b> <span>{% if emp.is_superuser %} YES{% else %} NO {% endif %}</span> </p>
 					<p class="mx-3 d-flex justify-content-between"><b>Is Staff:</b> <span>{% if emp.is_staff %} YES{% else %} NO {% endif %}</span> </p>
 					<p class="mx-3 d-flex justify-content-between"><b>Hire Date :</b> <span>{{emp.staffprofile.hire_date}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Salary :</b> <span>{{emp.staffprofile.salary}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Salary :</b> <span>R {{emp.staffprofile.salary}}</span> </p>
 				</div>
 				<div class="col-6 shadow-sm p-3 rounded">
 					<h5>Work Details</h5>
@@ -119,6 +121,7 @@
 					<p class="mx-3 d-flex justify-content-between"><b>Rate per hour:</b> <span>R {{emp.shift.rate}}</span> </p>
 					<p class="mx-3 d-flex justify-content-between"><b>Work time (start):</b> <span>{{emp.shift.start_time}}</span> </p>
 					<p class="mx-3 d-flex justify-content-between"><b>Work Time (end): </b> <span>{{emp.shift.end_time}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Working hours: </b> <span>{{emp.shift.working_hours}}</span> </p>
 					
 				</div>
 				

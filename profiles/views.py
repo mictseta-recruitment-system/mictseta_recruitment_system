@@ -15,6 +15,7 @@ import re
 from authenticate.data_validator import ValidateIdNumber
 
 from django.contrib.auth.hashers import make_password
+from datetime import datetime
 # Create your views here.
 
 @ensure_csrf_cookie
@@ -209,6 +210,9 @@ def upload_profile_image(request):
 
         try:
             image = request.FILES['image']
+            empID = empID = request.POST['empID']
+            print(request.POST)
+            print(empID)
             # return JsonResponse({'errors': {'file' :['Bad Request']}, 'status': 'error'}, status=400)
         except Exception as e:
             return JsonResponse({'errors': f'{e}', 'status': 'error'}, status=400)
@@ -221,7 +225,8 @@ def upload_profile_image(request):
             img.verify()  # Verify that this is a valid image
             # If user does not select a file, the browser submits an empty file without a filename
             try:
-                profile_image = ProfileImage.objects.create(user=request.user,image=image) 
+                user = User.objects.get(id=int(empID))
+                profile_image = ProfileImage.objects.create(user=user,image=image) 
                 profile_image.save()
                 return JsonResponse({'message': 'Image uploaded successfully', 'status': 'success'}, status=201)
             except:
@@ -254,6 +259,27 @@ def upload_profile_image(request):
     return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
 
 #==================================================================================================================================
+
+
+def calculate_working_hours(start_time, end_time): 
+    time_format = "%H:%M:%S"
+    try:
+        start = datetime.strptime(start_time, time_format)
+        end = datetime.strptime(end_time, time_format)
+    except ValueError:
+        
+        return JsonResponse({'errors':{'time' :["Time format should be HH:mm:ss"]}, 'status':'error'})
+    
+    if end <= start:
+        return JsonResponse({'errors':{'time' :["End time must be greater than start time"]}, 'status':'error'})
+    delta = end - start
+    working_hours = delta.total_seconds() / 3600.0  # Convert seconds to hours
+
+    return working_hours
+
+def calculate_salary(rate, working_hours):
+    salary = rate * working_hours * 20
+    return salary
 
 @csrf_protect
 def add_staff(request):
@@ -314,8 +340,8 @@ def add_staff(request):
 
                         user = User.objects.create(username=data['username'], email=data['email'], first_name=data['first_name'], last_name=data['last_name'],password=make_password(data['password']), is_superuser=is_user_superuser, is_staff=is_user_staff)
 
-                        staff = StaffProfile.objects.create(user=user,job_title=data['job_title'],department=data['department'],salary=data['salary'],phone=data['phone'], idnumber=data['idnumber'], gender=ValidateIdNumber(data['idnumber']).get_gender(),age=ValidateIdNumber(data['idnumber']).get_age(), dob=ValidateIdNumber(data['idnumber']).get_birthdate())
-                        shift = Shift.objects.create(employee=user,rate=data['rate'],start_time=data['start_time'],end_time=data['end_time'])
+                        staff = StaffProfile.objects.create(user=user,job_title=data['job_title'],department=data['department'],salary=calculate_salary(int(data['rate']), calculate_working_hours(data['start_time'], data['end_time'])),phone=data['phone'], idnumber=data['idnumber'], gender=ValidateIdNumber(data['idnumber']).get_gender(),age=ValidateIdNumber(data['idnumber']).get_age(), dob=ValidateIdNumber(data['idnumber']).get_birthdate())
+                        shift = Shift.objects.create(employee=user,rate=data['rate'],start_time=data['start_time'],end_time=data['end_time'], working_hours=calculate_working_hours(data['start_time'], data['end_time']))
 
                         user.save()
                         staff.save()
@@ -433,11 +459,11 @@ def update_staff(request):
                         user.staffprofile.job_title = data['job_title']
                         user.staffprofile.phone = data['phone']
                         user.staffprofile.department = data['department']
-                        user.staffprofile.salary = data['salary']
+                        user.staffprofile.salary = calculate_salary(int(data['rate']), calculate_working_hours(data['start_time'], data['end_time']))
                         user.shift.rate = data['rate']
                         user.shift.start_time = data['start_time']
                         user.shift.end_time = data['end_time']
-                        
+                        user.shift.working_hours = calculate_working_hours(data['start_time'], data['end_time'])
                         user.staffprofile.save()
                         user.shift.save()
                         user.save()
