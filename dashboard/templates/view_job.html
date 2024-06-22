@@ -50,15 +50,15 @@ View jobs
                       {% if user.is_superuser %}
                       <td>
                         {% if not job.is_approved %}
-                        <a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
-                        <a class="btn btn-success m-1" type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-check" aria-hidden="true" style="font-size: 12px;"></i> Approve</a>
+                        <a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a>
+                        <a class="btn btn-success m-1" type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true" style="font-size: 12px;"></i> </a>
 
                         {% endif %}
-                        <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                        <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
                       </td>
                       {% else %}
                           {% if not job.is_approved %}
-                            <td><a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</a></td>
+                            <td><a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a></td>
                           {% endif %}
                       {% endif %}
 
@@ -69,8 +69,8 @@ View jobs
               
 
               <td>
-                <button class="btn btn-success" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true"></i> Complete</button> 
-                <a class="btn btn-danger m-1"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"style="font-size: 12px;">  <i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+                <button class="btn btn-success" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true"></i> </button> 
+                <a class="btn btn-danger m-1"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"style="font-size: 12px;">  <i class="fa fa-trash" aria-hidden="true"></i> </a>
               </td>
               {% endif %}
             </tr>

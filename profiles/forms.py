@@ -270,6 +270,10 @@ class AddStaffForm(forms.Form):
 	idnumber = forms.CharField(max_length=225)
 	password = forms.CharField(max_length=225)
 
+	rate = forms.CharField(max_length=225)
+	start_time = forms.CharField(max_length=225)
+	end_time = forms.CharField(max_length=225)
+
 	def validate_names(self,name):
      
 		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
@@ -289,8 +293,8 @@ class AddStaffForm(forms.Form):
 		validate = ValidateIdNumber(idnumber)
 		is_valid = validate.validateSAID()
 		exist = User.objects.filter(profile__idnumber=idnumber).exists()
-		if exist:
-			raise forms.ValidationError("Id Number Already taken")
+		# if exist:
+		# 	raise forms.ValidationError("Id Number Already taken")
 		
 		if ' ' in idnumber :
 			raise forms.ValidationError("Spaces not allowed ")
@@ -332,7 +336,7 @@ class AddStaffForm(forms.Form):
 		phone = self.cleaned_data.get('phone')
 		r_phone = self.cleaned_data.get('r_phone')
 		if ' ' in phone :
-			raise forms.ValidationError("Spaces not allowed in email")
+			raise forms.ValidationError("Spaces not allowed in phone number")
 		exist = User.objects.filter(profile__phone=phone).exists()
 		if exist:
 			user = User.objects.get(profile__phone=phone)
@@ -397,3 +401,167 @@ class AddStaffForm(forms.Form):
 		except:
 			pass
 		return password
+
+
+class UpdateStaffForm(forms.Form):
+	
+	username = forms.CharField(max_length=225)
+	email = forms.CharField(max_length=225)
+	job_title = forms.CharField(max_length=225)
+	department = forms.CharField(max_length=225)
+	phone = forms.CharField(max_length=225)
+	idnumber = forms.CharField(max_length=225)
+
+	rate = forms.CharField(max_length=225)
+	start_time = forms.CharField(max_length=225)
+	end_time = forms.CharField(max_length=225)
+
+	def validate_names(self,name): 
+		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 2:
+			raise forms.ValidationError(f"Name:{name} is too short")
+		try:
+			str(name)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return name
+	
+	def clean_idnumber(self):
+		idnumber = self.cleaned_data.get('idnumber')
+		validate = ValidateIdNumber(idnumber)
+		is_valid = validate.validateSAID()
+		exist = User.objects.filter(profile__idnumber=idnumber).exists()	
+		if ' ' in idnumber :
+			raise forms.ValidationError("Spaces not allowed ")
+		if not is_valid:
+			raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
+		return idnumber
+
+	def clean_department(self):
+ 		department = self.cleaned_data.get('department')
+ 		if department == "":
+ 			raise forms.ValidationError('Job Title cannot be empty ')
+ 		if department not in ["HR","IT","MANAGER","FINANCE", "ADMINISTRATOR"] :
+ 			raise forms.ValidationError('department is invalid ')
+ 		return self.validate_names(department)
+
+	def clean_job_title(self):
+ 		job_title = self.cleaned_data.get('job_title')
+ 		if job_title == "":
+ 			raise forms.ValidationError('Job Title cannot be empty ')
+ 		return self.validate_names(job_title)
+ 	
+	def first_name(self):
+ 		first_name = self.cleaned_data.get('first_name')
+ 		if first_name == "" or first_name == None:
+ 			return first_name
+ 		return self.validate_names(first_name)
+ 	
+	def last_name(self):
+ 		last_name = self.cleaned_data.get('last_name')
+ 		if last_name == "" or last_name == None:
+ 			return last_name
+ 		return self.validate_names(last_name)
+
+	def clean_phone(self):
+		phone = self.cleaned_data.get('phone')
+		r_phone = self.cleaned_data.get('r_phone')
+		if ' ' in phone :
+			raise forms.ValidationError("Spaces not allowed in phone number")
+		exist = User.objects.filter(profile__phone=phone).exists()
+		if not validate_south_african_phone_number(phone):
+			raise forms.ValidationError("Phone number is not a valid south african number or its empty")
+		return phone
+
+
+	def clean_username(self):
+		username = self.cleaned_data.get('username')
+		self.first_name()
+		self.last_name()
+		if ' ' in username :
+			raise forms.ValidationError("Spaces not allowed ")	
+		return self.validate_names(username)
+
+	def clean_email(self):
+		email = self.cleaned_data.get('email')
+		if ' ' in email :
+			raise forms.ValidationError("Spaces not allowed ")
+		if not validate_email(email):
+			raise forms.ValidationError(f": {email} in Invalid")
+		new_email = email.split('@')
+		if len(new_email[0]) < 3:
+			raise forms.ValidationError(" length is Invalid") 
+		return email
+
+	def clean_password(self):
+		password = self.cleaned_data.get('password')
+		password2 = self.cleaned_data.get('password2') 
+		username = self.cleaned_data.get('username')
+		pattern = r"[~`+=\-/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, password)
+
+		if matches:		
+			raise forms.ValidationError(" Format is not allowed")
+
+		if ' ' in password :
+			raise forms.ValidationError("Spaces not allowed ")
+
+		if len(password) < 6:
+			raise forms.ValidationError(" is too short")
+
+		char = [char for char in password if char.isdigit()]
+		if len(char) < 1:
+			raise forms.ValidationError(" must contain at least one Number")
+		try:
+			if username in password: #or username in password:
+				raise forms.ValidationError(" cannot contain username ")  
+		except:
+			pass
+		return password
+
+	def validate_rate(self,rate): 
+		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, rate)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		try:
+			float(rate)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return rate
+	
+	def validate_time(self, time_str):
+    		# Regular expression for hh:mm format
+		pattern = r"^(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+		if re.match(pattern, time_str):
+			return time_str
+		else:
+			raise forms.ValidationError("Error: Time must be in hh:mm format within the 24-hour range (00:00 to 23:59).")
+		return time_str
+
+	def clean_rate(self):
+		rate = self.cleaned_data.get('rate')
+		if ' ' in rate :
+			raise forms.ValidationError("Spaces not allowed ")
+		return self.validate_rate(rate)
+
+	def clean_start_time(self):
+		start_time = self.cleaned_data.get('start_time')
+		if ' ' in start_time :
+			raise forms.ValidationError("Spaces not allowed ")
+		return self.validate_time(start_time)
+
+	def clean_end_time(self):
+		end_time = self.cleaned_data.get('end_time')
+		if ' ' in end_time :
+			raise forms.ValidationError("Spaces not allowed ")
+		return self.validate_time(end_time)
+
+
+	
+	
+
+	

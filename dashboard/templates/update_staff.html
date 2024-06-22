@@ -2,67 +2,64 @@
 
 {% block title %}Add Staff{% endblock %}
 
-{% block head %} Add Staff Member {% endblock %}
+{% block head %} Update Staff  {% endblock %}
 
 {% block content %}
 
 {% if user.is_superuser %} 
 	{% if user.staffprofile.department == "ADMINISTRATOR" or  user.is_superuser and user.staffprofile.department == "MANAGER" %}
-	<div class="container" id="addStaffPageComplete" style="display: none;">
+	<div class="container" id="UpdateStaffPageComplete" style="display: none;">
 
         <div class="d-flex justify-content-center mt-5">
             <div>
               
-              <i class="fa fa-user-plus fa-5x text-success" aria-hidden="true" style="margin-left: 90px;"></i>
+              <i class="fa fa-user-cog fa-5x text-success" aria-hidden="true" style="margin-left: 90px;"></i>
               <br>
 
-            <h4 class="mt-3">Staff User Created Successfuly</h4>
-            <a herf="{% url 'dashboard.view_staff' %}" class="btn-warning" > View All </a>
+            <h4 class="mt-3">Staff User Updated Successfuly</h4>
+            <a herf="{% url 'dashboard.view_staff' %}"> View All </a>
             </div>
         </div>
         
       </div>
 
-    <div id="addStaffPage" class="form-container">
+    <div id="UpdateStaffPage" class="form-container">
         <div id="addUserForm" class="d-flex justify-content-between justify-content-sm-center">
         <div class=" w-100 m-2 back-for p-2">
             <div class="form-group  w-100 m-1">
                 <label for="username">Username:</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <input type="text" class="form-control" id="username" name="username" value="{{staff.username}}" required>
             </div>
             <div class="form-group w-100 m-1">
                 <label for="first_name">First Name:</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" >
+                <input type="text" class="form-control" id="first_name" name="first_name" value="{{staff.first_name}}" required>
             </div>
             <div class="form-group w-100 m-1">
                 <label for="last_name">Last Name:</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" >
+                <input type="text" class="form-control" id="last_name" name="last_name" value="{{staff.last_name}}">
             </div>
             <div class="form-group w-100 m-1">
                 <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <input type="email" class="form-control" id="email" name="email" value="{{staff.email}}" required>
             </div>
             <div class="form-group w-100 m-1">
                 <label for="phone">Phone:</label>
-                <input type="text" class="form-control" id="phone" name="phone" required>
+                <input type="text" class="form-control" id="phone" name="phone" value="{{staff.staffprofile.phone}}" required>
             </div>
             <div class="form-group w-100 m-1">
                 <label for="idnumber">ID Number:</label>
-                <input type="text" class="form-control" id="idnumber" name="idnumber" required>
+                <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{staff.staffprofile.idnumber}}" disabled>
             </div>
-            <div class="form-group w-100 m-1">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+            <div class="form-group  m-1">
+                
             </div>
-              <div class="form-group w-100 m-1">
-                <label for="password">Confirm Password:</label>
-                <input type="password" class="form-control" id="password2" name="password2" required>
-            </div>
+              
         </div>
          <div class="w-100 m-2 back-for p-2">
             <div class="form-group w-100 m-1">
                 <label for="job_title">Job Title:</label>
-                <select class="form-control" id="job_title" name="job_title" required>
+                <select class="form-control" id="job_title" name="job_title" value="{{staff.staffprofile.job_title}}" required>
+                    <option value="Executive" selected>{{staff.staffprofile.job_title}}</option>
                     <option value="Executive">Executive</option>
                     <option value="CEO">CEO</option>
                     <option value="Director">Director</option>
@@ -72,7 +69,8 @@
             <div class="form-group w-100 m-1">
                 <label for="department">Department:</label>
                
-                <select class="form-control" id="department" name="department" required>
+                <select class="form-control" id="department" name="department" value="{{staff.staffprofile.department}}" required>
+                     <option value="HR" selected>{{staff.staffprofile.department}}</option>
                     <option value="HR">HR Team</option>
                     <option value="IT">IT Staff</option>
                     <option value="MANAGER">Manager</option>
@@ -81,22 +79,25 @@
             </div>
             <div class="form-group w-100 m-1">
                 <label for="super">Assign Admin previllages:</label>
-                <select class="form-control" id="super" name="super" required>
+                <select class="form-control" id="super" name="super" value="{{staff.is_superuser}}" disabled>
+                    <option value="False" selected>{{staff.is_superuser}}</option>
                     <option value="False">No</option>
                     <option value="True">Yes</option>
                 </select>
             </div>
             <div class="form-group w-100 m-1">
                 <label for="staff">Is Staff:</label>
-                <select class="form-control" id="staff" name="staff" disabled>
-                    <option value="True" selected>Yes</option>
+                <select class="form-control" id="staff" name="staff" value="{{staff.is_staff}}" disabled>
+                	<option value="True" selected>{{staff.is_staff}}</option>
+                    <option value="True">Yes</option>
                     <option value="False">No</option>
                 </select>
             </div>
              <div class="form-group w-100 m-1">
                 <label for="salary">Salary:</label>
-                <select class="form-control" id="salary" name="salary" required>
-                    <option selected>R0,0 - R10,000</option>
+                <select class="form-control" id="salary" name="salary" value="{{staff.staffprofile.salary}}" required>
+                     <option selected>{{staff.staffprofile.salary}}</option>
+                    <option >R0,0 - R10,000</option>
                     <option >R10,000 - R20,000</option>
                     <option >R20,000 - R30,000</option>
                     <option >R30,000 - R40,000</option>
@@ -107,11 +108,11 @@
             </div>
             <div class="form-group w-100 m-1">
                 <label for="rate">Rate per hour</label>
-                <input type="text" class="form-control" id="rate" name="rate" >
+                <input type="text" class="form-control" id="rate" name="rate" value="{{staff.shift.rate}}">
             </div>
             <div class="form-group w-100 m-1" style="position:relative;">
                 <label for="start_time">Start Time:</label>
-               <input class="form-control" type="text" id="datetime1" class="times" />
+               <input class="form-control" type="text" id="datetime1" class="times" value="{{staff.shift.start_time}}" />
                    <script>
  
                         // Below code sets format to the 
@@ -125,8 +126,7 @@
           
               <div class="form-group w-100 m-1 " style="position:relative;">
                 <label for="end_time">End Time:</label>
-                <input class="form-control"
-                type="text" id="datetime" />
+                <input class="form-control" type="text" id="datetime" value="{{staff.shift.end_time}}"/>
                    <script>
  
                         // Below code sets format to the 
@@ -138,8 +138,7 @@
                     </script>
             </div>
 
-            
-            <button type="button" role="button" onclick="addStaff()" class="btn btn-success m-5 ">Add User</button>
+            <button type="button" onclick="UpdateStaff()" class="btn btn-success m-5 ">Update Staff</button>
          	
          </div>
         </div>

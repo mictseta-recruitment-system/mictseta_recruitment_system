@@ -1,0 +1,186 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+{% block head %}Employee Details {% endblock %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="row p-2 ">
+
+	<div class="col-sm-10 col-md-4 d-flex justify-content-center p-3 ">
+		<div class="card shadow p-3 mb-5 bg-body rounded" s>
+		  <img src="{% static 'dashboard/images/default_user.jpg' %}" class="card-img-top h-50 " alt="...">
+		  <div class="card-body">
+		    <h5 class="card-title">{{emp.first_name}} {{emp.last_name}}</h5>
+
+		    <p class="card-text d-flex justify-content-between mt-3"><span><b>Gender:</b> {{emp.staffprofile.gender}}</span>  <span><b>Age:</b> {{emp.staffprofile.age}}</span> </p>
+		  </div>
+		  <ul class="list-group list-group-flush " style="cursor: pointer;">
+		    <li class="list-group-item emp-profile" onclick="toggleVisibility('profileinformation')">Profile Informaton </li>
+		    <li class="list-group-item emp-profile" onclick="toggleVisibility('companyinformation')">Company Information</li>
+		    <li class="list-group-item emp-profile" onclick="toggleVisibility('vacanciesc')">Vacancies created</li>
+
+		  </ul>
+
+		  <div class="card-body">
+		    <a href="#" class="card-link">Download CV</a>
+		    <a href="#" class="card-link">Download ID</a>
+		  </div>
+		</div>
+	</div>
+
+	<div class="col-sm-12 col-md-8 shadow p-3 mb-5 bg-body rounded" >
+
+		<div class="container" id="infopage" style="display: block;">
+		
+	        <div class="d-flex justify-content-center mt-5">
+	            <div>
+	              <i class="fa fa-eye fa-5x text-info mt-5 pt-5" aria-hidden="true" style="margin-left: 90px;"></i>
+	              <br>
+	            <h4 class="mt-3">Click Something To View</h4>
+	            </div>
+	        </div>
+        </div>
+      
+		<div id="profileinformation" style="display:none;">
+			<h4 class="">Profile Information</h4>
+			<hr>
+			<div class="row d-flex justify-content-between ">
+				<div class="col-6 shadow-sm p-3 rounded">
+
+					<h5>Names</h5>
+					<hr style="width:25%;">
+					<p class="mx-3 d-flex justify-content-between"><b>First Name:</b> <span>{{emp.first_name}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Last Name:</b> <span>{{emp.last_name}}</span> </p>
+				</div>
+
+				<div class="col-6 shadow-sm p-3 rounded">
+					<h5>Personal</h5>
+					<hr style="width:25%;">
+					<p class="mx-3 d-flex justify-content-between"><b>Date of Birth:</b> <span>{{emp.staffprofile.dob}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Gender :</b> <span>{{emp.staffprofile.gender}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Age :</b> <span>{{emp.staffprofile.age}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>ID number :</b> <span>{{emp.staffprofile.idnumber}}</span> </p>
+				</div>
+				<div class="col-6 shadow-sm p-3 rounded">
+					<h5>Contact</h5>
+					<hr style="width:25%;">
+					<p class="mx-3 d-flex justify-content-between"><b>Email:</b> <span>{{emp.email}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Phone:</b> <span>{{emp.staffprofile.phone}}</span> </p>
+				</div>
+					
+
+			</div>
+		</div>
+
+		<div id="companyinformation" style="display:none;">
+			<h4 class="">Company Information</h4>
+			<hr>
+			<div class="row d-flex justify-content-between ">
+				<div class="col-6 shadow-sm p-3 rounded">
+
+					<h5>Position</h5>
+					<hr style="width:25%;">
+					<p class="mx-3 d-flex justify-content-between"><b>Job Title:</b> <span>{{emp.staffprofile.job_title}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Department:</b> <span>{{emp.staffprofile.department}}</span> </p>
+				</div>
+
+				<div class="col-6 shadow-sm p-3 rounded">
+					<h5>Profile</h5>
+					<hr style="width:25%;">
+					<p class="mx-3 d-flex justify-content-between"><b>Has Admin Previlages :</b> <span>{% if emp.is_superuser %} YES{% else %} NO {% endif %}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Is Staff:</b> <span>{% if emp.is_staff %} YES{% else %} NO {% endif %}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Hire Date :</b> <span>{{emp.staffprofile.hire_date}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Salary :</b> <span>{{emp.staffprofile.salary}}</span> </p>
+				</div>
+				<div class="col-6 shadow-sm p-3 rounded">
+					<h5>Work Details</h5>
+					<hr style="width:25%;">
+					<p class="mx-3 d-flex justify-content-between"><b>Rate per hour:</b> <span>R {{emp.shift.rate}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Work time (start):</b> <span>{{emp.shift.start_time}}</span> </p>
+					<p class="mx-3 d-flex justify-content-between"><b>Work Time (end): </b> <span>{{emp.shift.end_time}}</span> </p>
+					
+				</div>
+				
+			</div>
+		</div>
+
+		<div id="vacanciesc" style="display:none;">
+			<h4 class="">Vacancies created</h4>
+			<hr>
+			<div class="row d-flex justify-content-center ">
+				
+				<table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Job title</th>
+              <th>Posted Date</th>
+              <th>Date of expiry</th>
+              
+              <th>Status</th>
+              <th>completed</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for job in emp.jobs.all %}
+ 
+            <tr>
+              <td>{{job.id}}</td>
+              <td><a href="{% url 'dashboard.job_details' job.id %}">{{job.title}}</a></td>
+              <td>{{job.start_date}}</td>
+              <td>{{job.end_date}}</td>
+
+            
+
+             
+              
+              {% if job.is_complete %}
+                  {% if job.is_approved %}
+                  <td><button class="btn btn-success" disabled>{{job.status}}</button></td>
+                  {% else %}
+                  <td><button class="btn btn-warning" disabled>{{job.status}}</button></td>
+                  {% endif %}
+                 <td><button class="btn btn-success" disabled>Yes</button></td>
+                      {% if emp.is_superemp %}
+                      <td>
+                        {% if not job.is_approved %}
+                        <a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a>
+                        <a class="btn btn-success m-1" type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true" style="font-size: 12px;"></i> </a>
+
+                        {% endif %}
+                        <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
+                      </td>
+                      {% else %}
+                          {% if not job.is_approved %}
+                            <td><a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a></td>
+                          {% endif %}
+                      {% endif %}
+
+              {% else %}
+              <td><button class="btn btn-info" disabled>{{job.status}}</b></td>
+              
+              <td><button class="btn btn-danger" disabled>No</button></td>
+              
+
+              <td>
+                <button class="btn btn-success" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true"></i> </button> 
+                <a class="btn btn-danger m-1"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"style="font-size: 12px;">  <i class="fa fa-trash" aria-hidden="true"></i> </a>
+              </td>
+              {% endif %}
+            </tr>
+        
+           {% endfor %}
+    
+          </tbody>
+        </table>
+
+		</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
