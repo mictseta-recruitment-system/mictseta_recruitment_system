@@ -163,7 +163,7 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                 <span>Closing Date : {{ job.end_date}}</span>
             </div>
             <p>{{job.description}}</p>
-            <a href="#" class="btn btn-link">more</a>
+            <a href="{% url 'job_details' %}" class="btn btn-link">more</a>
         </div>
         {% endfor %}
 {% else %}
