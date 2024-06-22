@@ -12,3 +12,8 @@ def home(request):
     jobs = JobPost.objects.filter(is_approved=True)
 
     return render(request,'index.html', {'jobs':jobs})
+
+
+def job_details(request):
+    jobs = JobPost.objects.filter(is_approved=True)
+    return render(request,'job_details.html')
