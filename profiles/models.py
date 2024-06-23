@@ -88,6 +88,7 @@ class Leave(models.Model):
 	end_date = models.DateTimeField(null=False)
 	date = models.DateTimeField(auto_now_add=True)
 	status = models.CharField(max_length=225,null=False )
+	seen = models.BooleanField(null=False, default=False)
 
 
 class Raise(models.Model):

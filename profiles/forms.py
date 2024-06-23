@@ -564,4 +564,64 @@ class UpdateStaffForm(forms.Form):
 	
 	
 
+class AtendanceForm(forms.Form):
+	status = forms.CharField(max_length=225)
 	
+	def validate_names(self,name): 
+		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 2:
+			raise forms.ValidationError(f"Name:{name} is too short")
+		try:
+			str(name)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return name
+
+	def clean_status(self):
+		status = self.cleaned_data.get('status')
+		if " " in status:
+			raise forms.ValidationError("Spaces not allowed ")
+		if status not in ['pending', 'rejected', 'approved']:
+			raise forms.ValidationError("Invalid status name")
+		return self.validate_names(status)   
+
+
+class LeaveForm(forms.Form):
+	# status = forms.CharField(max_length=225)
+	leave_type = forms.CharField(max_length=225)
+	message = forms.CharField(max_length=225)
+
+	
+	def validate_names(self,name): 
+		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 2:
+			raise forms.ValidationError(f"Name:{name} is too short")
+		try:
+			str(name)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return name
+
+	def clean_leave_type(self):
+		leave_type = self.cleaned_data.get('leave_type')
+		if leave_type not in ['Martenity Leave', 'Holiday Leave', 'Sick Leave', 'Religious Leave', 'Family and Medical Leave']:
+			raise forms.ValidationError("Invalid leave type ") 
+		return self.validate_names(leave_type)
+	# def clean_status(self):
+	# 	status = self.cleaned_data.get('status')
+	# 	if status not in ['Pending', 'Rejected', 'Approved']:
+	# 		raise forms.ValidationError("Invalid leave type ") 
+	# 	return self.validate_names(status)
+	
+	def clean_message(self):
+		message = self.cleaned_data.get('message')
+		return self.validate_names(message)
+
+
+

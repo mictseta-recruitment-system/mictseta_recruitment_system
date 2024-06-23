@@ -15,6 +15,10 @@ urlpatterns = [
     path('add_staff_page/', views.add_staff_page, name="dashboard.add_staff_page"),
     path('update_staff/<staffID>/', views.update_staff, name="dashboard.update_staff"),
     path('employee_details/<empID>/', views.employee_details, name="dashboard.employee_details"),
+    path('manage_leave/', views.manage_leave, name="dashboard.manage_leave"),
+    path('view_leave/', views.view_leave, name="dashboard.view_leave"),
+
+    
 
     
 ]

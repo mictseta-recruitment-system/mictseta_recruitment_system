@@ -1,0 +1,202 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Leave{% endblock %}
+
+{% block head %}Manage Leave{% endblock %}
+{% load static %}
+
+
+{% block content %}
+
+
+	<div class="">
+
+	{% if user.is_superuser %}
+	<div class="container mt-5 table-container ">
+        <h6>Employee Leave List</h6>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name & Surname</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for emp in emps %}
+                <tr>
+                    <td><img src="{{emp.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"> {{emp.first_name}} {{emp.last_name}}</td>
+                    <td>{{emp.email}}</td>
+                    <td>{{emp.staffprofile.department}}</td>
+                    <td><a class="btn btn-primary" data-toggle="collapse" href="#collapse{{emp.id}}" role="button" aria-expanded="false" aria-controls="collapse{{emp.id}}">Expand</a></td>
+                </tr>
+                <tr class="collapse bg-dark" id="collapse{{emp.id}}">
+                    <td colspan="4">
+                        <table class="table table-bordered table-striped">
+                            <thead class="bg-info">
+                                <tr class="text-white">
+                                    
+                                    <th>Leave Type</th>
+                                    <th>Message</th>
+                                    <th>Start Date</th>
+                                    <th>End date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	{% for leave in emp.leave_set.all %}
+                                {% if leave.seen == False %}
+                                <tr class="text-white">
+                                   
+                                    <td>{{leave.lave_type}}</td>
+                                    <td>{{leave.message}}</td>
+                                    <td>{{leave.start_date}}</td>
+                                    <td>{{leave.end_date}}</td>
+                                    <td>
+                                    	{% if leave.status == "Pending" %}
+                                    	<button class="btn btn-warning" disabled>{{leave.status}}</button>
+                                    	{% elif leave.status == "Rejected" %}
+                                    	<button class="btn btn-danger" disabled>{{leave.status}}</button>
+                                    	{% elif leave.status == "Closed" %}
+                                    	<button class="btn btn-info" disabled>{{leave.status}}</button>
+                                    	{% else %}
+                                    	<button class="btn btn-success" disabled>{{leave.status}}</button>
+                                    	{% endif %}
+
+                                    </td>
+                                    {% if leave.status == 'Pending' %}
+                                    <td><a href="{% url 'approve_leave' leave.id %}" class="btn btn-success" style="font-size: 12px;"> <i class="fa fa-check" aria-hidden="true"></i> Approve</a>
+                                    	<a href="{% url 'reject_leave' leave.id %}" class="btn btn-danger m-1" style="font-size: 12px;"> <i class="fa fa-cross" aria-hidden="true"></i> Reject</a>
+                                    </td>
+                                    {% else %}
+                                    <td><a href="{% url 'seen_leave' leave.id %}" class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i> Seen</a>
+                                    	
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+             {% endfor %}
+               
+            </tbody>
+        </table>
+    </div>
+
+
+			
+
+	      
+
+
+
+
+
+	{% elif user.is_staff %}
+		<div class="table-container">
+          <span class="d-flex justify-content-between">
+          	<h3>Staff List </h3> 
+          	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			 <i class="fa fa-plus" aria-hidden="true"></i>  Request a leave
+			</button>
+
+          </span>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+               <th>Leave Type</th>
+                <th>Message</th>
+                <th>Start Date</th>
+                <th>End date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            {% for leave in user.leave_set.all %}
+             <tr class="text-dark">
+                                   
+                <td>{{leave.lave_type}}</td>
+                <td>{{leave.message}}</td>
+                <td>{{leave.start_date}}</td>
+                <td>{{leave.end_date}}</td>
+                <td>
+                	{% if leave.status == "Pending" %}
+                	<button class="btn btn-warning" disabled>{{leave.status}}</button>
+                	{% elif leave.status == "Rejected" %}
+                	<button class="btn btn-danger" disabled>{{leave.status}}</button>
+                	{% elif leave.status == "Closed" %}
+                	<button class="btn btn-info" disabled>{{leave.status}}</button>
+                	{% else %}
+                	<button class="btn btn-success" disabled>{{leave.status}}</button>
+                	{% endif %}
+
+                 </td>
+                 <td>
+                 	{% if leave.status == "Pending" %}
+                  	<a href="{% url 'close_leave' leave.id %}" class="btn btn-danger m-1" style="font-size: 12px;"> <i class="fa fa-cross" aria-hidden="true"></i> Close</a>
+                  	{% endif %}
+                  </td>
+               </tr>
+            {% endfor %}
+              
+            </tbody>
+          </table>
+        </div>
+       {% else %}
+
+
+
+     {% endif %}
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header bg-info">
+		        <h5 class="modal-title text-dark" id="exampleModalLabel">Reqauest a Leave</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		      	<form>
+			        <div class="mb-3">
+					  <label for="exampleFormControlTextarea1" class="form-label">Message</label>
+					  <textarea class="form-control" id="message" rows="3"></textarea>
+					</div>
+					<div class="d-flex justify-content-between">
+						 <div class="form-group w-100 m-1">
+			                <label for="endDate">Start Date</label>
+			                <input type="date" class="form-control" id="start_date">
+			              </div>
+			               <div class="form-group w-100 m-1">
+			                <label for="endDate">End Date</label>
+			                <input type="date" class="form-control" id="end_date">
+			              </div>
+
+					</div>
+					<label for="leave_type" class="form-label">Leave Type</label>
+					<select class="form-select" aria-label="Default select example" id="leave_type">
+					  <option>Holiday Leave</option>
+					  <option >Sick Leave</option>
+					  <option >Religious Leave</option>
+					  <option >Family and Medical Leave</option>
+					</select>
+
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-success" onclick="sendLeave()">Submit</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+      
+		
+
+	</div>
+{% endblock %}

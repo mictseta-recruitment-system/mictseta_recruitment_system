@@ -229,6 +229,19 @@
      .emp-profile:hover{
           background-color:#bbe4fc ;
       }
+      .leave-dropdown{
+        padding:20px;
+        margin-left: 40px;
+        margin-right: 40px;
+        margin-top: -18px;
+        background-color: #016e8c;
+        color: white;
+      }
+
+      .leave-dropdown thead{
+        height: 5px;
+      }
+     
   </style>
 </head>
 <body>
@@ -314,7 +327,11 @@
  Leave
     </a>
     <div class="collapse" id="settingsMenu">
-      <a href="#" class="pl-4"><i class="fa fa-cog" aria-hidden="true"></i> Manage</a>
+      <a href="{% url 'dashboard.manage_leave' %}" class="pl-4"><i class="fa fa-cog" aria-hidden="true"></i> Manage</a>
+     
+      {% if user.is_superuser%}
+        <a href="{% url 'dashboard.view_leave' %}" class="pl-4"><i class="fa fa-eye" aria-hidden="true"></i> View all</a>
+      {% endif %}
     </div>
     <hr>
     <a href="#" data-toggle="collapse" data-target="#reportsMenu" aria-expanded="false" aria-controls="reportsMenu">

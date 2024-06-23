@@ -3,11 +3,11 @@ from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm
+from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, PersonalInformation, AddressInformation, ProfileImage, StaffProfile, Shift
+from .models import Profile, PersonalInformation, AddressInformation, ProfileImage, StaffProfile, Shift, Leave
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -16,6 +16,7 @@ from authenticate.data_validator import ValidateIdNumber
 
 from django.contrib.auth.hashers import make_password
 from datetime import datetime
+from django.utils.timezone import now
 # Create your views here.
 
 @ensure_csrf_cookie
@@ -284,6 +285,10 @@ def calculate_salary(rate, working_hours):
 @csrf_protect
 def add_staff(request):
     if request.user.is_authenticated:
+        current_time = now()
+        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+            if leave.start_date <= current_time <= leave.end_date:
+                return HttpResponse("Request denied: you are on leave")
         if request.user.is_superuser:
  
             if request.method == 'POST':
@@ -363,7 +368,10 @@ def add_staff(request):
 def update_staff(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
- 
+            current_time = now()
+            for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+                if leave.start_date <= current_time <= leave.end_date:
+                    return HttpResponse("Request denied: you are on leave")
             if request.method == 'POST':
                 try:
                     json_data = json.loads(request.body)
@@ -478,3 +486,158 @@ def update_staff(request):
             return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
     else:
         return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
+
+
+def mark_attendence(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+ 
+            if request.method == 'POST':
+                try:
+                    json_data = json.loads(request.body)
+                except Exception :
+                    return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+                data = {
+                    'status' : json_data.get('attend-status'),
+
+                }
+                for key, value in data.items():
+                    if key == None or value == None:
+                        return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
+
+                return JsonResponse({'errors': { "leave" : ['not yet done']}, 'status':'error'}, status=403)
+            else:
+                return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+        else:       
+            return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    else:
+        return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
+
+
+def leave(request):
+    if request.user.is_authenticated:
+        current_time = now()
+        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+                return HttpResponse("Request denied: you are on leave")
+        if request.user.is_staff:
+ 
+            if request.method == 'POST':
+                try:
+                    json_data = json.loads(request.body)
+                except Exception :
+                    return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+                data = {
+                    'leave_type' : json_data.get('leave_type'),
+                    'message' : json_data.get('message'),
+                    'start_date' : json_data.get('start_date'),
+                    'end_date' : json_data.get('end_date'),
+                }
+
+                for key, value in data.items():
+                    if key == None or value == None:
+                        return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
+
+                form = LeaveForm(data)
+                if form.is_valid() :
+                    leave_exists = Leave.objects.filter(employee=request.user, lave_type=data['leave_type'], message=data['message'], start_date=data['start_date'], end_date=data['end_date']).exists()
+                    if leave_exists:
+                        return JsonResponse({"errors":{'Leave':['It already Exists']}, "status":"error"}, status=400)
+                    leave = Leave.objects.create(employee=request.user, lave_type=data['leave_type'], message=data['message'], start_date=data['start_date'], end_date=data['end_date'], status="Pending")
+                    return JsonResponse({'message':f'Leave request submited successfuly waiting managers approval', 'status':'success'}, status=201) 
+                    
+                else:
+                    return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+
+                
+            else:
+                return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+        else:       
+            return JsonResponse({'errors': { "Leave" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    else:
+        return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
+
+def close_leave(request, leaveID):
+    if request.user.is_authenticated:
+        current_time = now()
+        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+                return HttpResponse("<h1>Request denied: you are on leave</h1>")
+        if request.user.is_staff:
+
+            try:
+                leave = Leave.objects.get(id=int(leaveID))
+                leave.status = "Closed"
+                leave.save()
+                return redirect(request.META.get('HTTP_REFERER', '/'))
+
+            except Exception as e:
+                return HttpResponse(f'close leave : {e}')
+        else:       
+            return HttpResponse('You dont have the The Permission to make this request')
+    else:
+        return HttpResponse('you are required to log')
+
+def approve_leave(request, leaveID):
+    if request.user.is_authenticated:
+        current_time = now()
+        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+                return HttpResponse("<h1>Request denied: you are on leave</h1>")
+        if request.user.is_staff:
+
+            try:
+                leave = Leave.objects.get(id=int(leaveID))
+                leave.status = "Approved"
+                leave.save()
+                return redirect(request.META.get('HTTP_REFERER', '/'))
+
+            except Exception as e:
+                return HttpResponse(f'approve leave : {e}')
+        else:       
+            return HttpResponse('You dont have the The Permission to make this request')
+    else:
+        return HttpResponse('you are required to log')
+
+def reject_leave(request, leaveID):
+    if request.user.is_authenticated:
+        current_time = now()
+        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+                return HttpResponse("<h1>Request denied: you are on leave</h1>")
+        if request.user.is_staff:
+
+            try:
+                leave = Leave.objects.get(id=int(leaveID))
+                leave.status = "Rejected"
+                leave.save()
+                return redirect(request.META.get('HTTP_REFERER', '/'))
+
+            except Exception as e:
+                return HttpResponse(f'reject leave : {e}')
+        else:       
+            return HttpResponse('You dont have the The Permission to make this request')
+    else:
+        return HttpResponse('you are required to log')
+
+def seen_leave(request, leaveID):
+    if request.user.is_authenticated:
+        current_time = now()
+        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+                return HttpResponse("<h1>Request denied: you are on leave</h1>")
+        if request.user.is_staff:
+            try:
+                leave = Leave.objects.get(id=int(leaveID))
+                leave.seen = True
+                leave.save()
+                return redirect(request.META.get('HTTP_REFERER', '/'))
+
+            except Exception as e:
+                return HttpResponse(f'seen leave : {e}')
+        else:       
+            return HttpResponse('You dont have the The Permission to make this request')
+    else:
+        return HttpResponse('you are required to log')

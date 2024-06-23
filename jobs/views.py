@@ -8,6 +8,7 @@ from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperi
 from .models import JobPost, Academic, Skill, Experience, Requirement, Notification
 import re
 from datetime import datetime
+from django.utils.timezone import now
 
 # Create your views here.
 
@@ -96,6 +97,13 @@ def jobs_home(request):
 @csrf_protect
 def add_job(request):
 	if request.user.is_authenticated:
+
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
+
+
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -148,6 +156,10 @@ def add_job(request):
 @csrf_protect
 def get_jobs(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		jobs = JobPost.objects.all()
 
 		try:
@@ -212,6 +224,10 @@ def get_jobs(request):
 @csrf_protect
 def add_job_skill(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -250,6 +266,10 @@ def add_job_skill(request):
 @csrf_protect
 def add_job_acedemic(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -290,6 +310,10 @@ def add_job_acedemic(request):
 @csrf_protect
 def add_job_expereince(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -327,6 +351,10 @@ def add_job_expereince(request):
 @csrf_protect				
 def add_job_requirements(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -364,6 +392,10 @@ def add_job_requirements(request):
 @csrf_protect
 def update_job(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -422,6 +454,10 @@ def update_job(request):
 @csrf_protect
 def update_job_skill(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -575,6 +611,10 @@ def update_job_requirements(request):
 @csrf_protect
 def delete_job(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -611,6 +651,10 @@ def delete_job(request):
 @csrf_protect
 def delete_job_skill(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -646,6 +690,10 @@ def delete_job_skill(request):
 @csrf_protect
 def delete_job_acedemic(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -679,6 +727,10 @@ def delete_job_acedemic(request):
 @csrf_protect
 def delete_job_expereince(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -712,6 +764,10 @@ def delete_job_expereince(request):
 @csrf_protect				
 def delete_job_requirements(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -747,6 +803,10 @@ def delete_job_requirements(request):
 @csrf_protect	
 def complete_job(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -782,6 +842,10 @@ def complete_job(request):
 @csrf_protect	
 def approve_job(request):
 	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)

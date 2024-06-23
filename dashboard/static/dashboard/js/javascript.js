@@ -912,6 +912,52 @@ function UpdateStaff(){
               });
         }
 
+
+/*==================================================================================*/
+function sendLeave(){
+    const url = 'http://127.0.0.1:8000/profile/add/leave/';
+    const leaveType = document.getElementById('leave_type').value;
+    const message = document.getElementById('message').value;
+    const startTime = document.getElementById('start_date').value;
+    const endTime = document.getElementById('end_date').value;
+
+    const data = {
+        leave_type: leaveType,
+        message: message,
+        start_date: startTime,
+        end_date: endTime,
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // If CSRF token is required
+        },
+        body: JSON.stringify(data),
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+          if (data.status === "error") {
+              handleErrors(data.errors);
+          } else if (data.status === "success") {
+            showFlashMessage(data.message, "success");
+                    
+                      /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+                      
+          } else if (data.status === "warning") {
+            showFlashMessage(data.message, "warning");
+                  
+          }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+          showFlashMessage(error.message, "danger");
+      });
+}
+
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {
     let cookieValue = null;
