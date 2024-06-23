@@ -17,8 +17,9 @@ urlpatterns = [
     path('employee_details/<empID>/', views.employee_details, name="dashboard.employee_details"),
     path('manage_leave/', views.manage_leave, name="dashboard.manage_leave"),
     path('view_leave/', views.view_leave, name="dashboard.view_leave"),
+    path('emp_panel/', views.emp_panel, name="dashboard.emp_panel"),
+    path('manage_attendance/', views.manage_attendance, name="dashboard.manage_attendance"),
 
-    
 
     
 ]

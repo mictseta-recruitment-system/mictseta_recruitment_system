@@ -41,6 +41,7 @@
 		    <li class="list-group-item emp-profile" onclick="toggleVisibility('profileinformation')">Profile Informaton </li>
 		    <li class="list-group-item emp-profile" onclick="toggleVisibility('companyinformation')">Company Information</li>
 		    <li class="list-group-item emp-profile" onclick="toggleVisibility('vacanciesc')">Vacancies created</li>
+		    <li class="list-group-item emp-profile" onclick="toggleVisibility('attendance')">Attandence</li>
 
 		  </ul>
 
@@ -182,7 +183,7 @@
                       {% endif %}
 
               {% else %}
-              <td><button class="btn btn-info" disabled>{{job.status}}</b></td>
+              <td><button class="btn btn-info" disabled><b>{{job.status}}</b></td>
               
               <td><button class="btn btn-danger" disabled>No</button></td>
               
@@ -196,11 +197,54 @@
         
            {% endfor %}
     
-          </tbody>
+       </tbody>
         </table>
 
 		</div>
-		</div>
+
+
+		
 	</div>
+
+	<div id="attendance" style="display:none;">
+			<h4 class="">Attendace</h4>
+			<hr>
+			<div class="row d-flex justify-content-center ">
+					<table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+               
+                
+                <th>date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Late</th>
+                <th>Time Late(mins)</th>
+                <th>Online</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+				
+						{% for attendance in emp.attendance_set.all %}
+		           		
+		             <tr class="text-dark">
+		               	
+		               	<td>{{attendance.date.date}}</td>
+		               	<td>{{attendance.shift.start_time}}</td>
+		               	<td>{{attendance.shift.end_time}}</td>
+		               	<td>{% if attendance.is_late %} Yes {% else %} No {% endif %}</td>
+		               	<td>{{attendance.minutes}}</td>
+		               	<td>{% if attendance.active == "Active" %}Yes{% else %}No{% endif %}</td>
+		               	<td>{{attendance.status}}</td>
+		            </tr>
+		            
+		            {% endfor %}
+              
+          </tbody>
+        </table>
+		</div>
+		</div>
+</div>
 </div>
 {% endblock %}

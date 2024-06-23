@@ -76,9 +76,11 @@ class Shift(models.Model):
 class Attendance(models.Model):
 	employee = models.ForeignKey(User, on_delete=models.CASCADE)
 	shift = models.ForeignKey(Shift, on_delete=models.CASCADE)
-	late = models.CharField(max_length=225,null=True )
+	minutes = models.CharField(max_length=225,null=True )
+	is_late = models.BooleanField(null=False, default=True)
 	status = models.CharField(max_length=225,null=False )
-	date = models.DateTimeField(auto_now_add=True)
+	active = models.CharField(max_length=225,null=True, default="Inactive")
+	date = models.DateField(auto_now_add=True)
 
 class Leave(models.Model):
 	employee = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -1,0 +1,100 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title%}
+Employee Panel
+{% endblock %}
+
+{% block scripts %}
+
+.row {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#countdownHeader {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.countdown {
+    display: flex;
+    justify-content: center;
+}
+
+.countdown-item {
+    margin: 0 10px;
+    text-align: center;
+}
+
+.countdown-value {
+    font-size: 2em;
+    color: #3498db; /* Light blue color */
+    background: #e6f7ff; /* Light blue background */
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.countdown-label {
+    color: #34495e; /* Darker text color */
+    font-size: 0.8em;
+}
+#startShiftButton {
+    background-color: #3498db; /* Light blue color */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#startShiftButton:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+}
+{% endblock %}
+
+
+
+
+{% load static %}
+{% block head %} {{user.staffprofile.department}}  Panel {% endblock %}
+
+{% block description %} on this page, view all stats and activities {% endblock %}
+
+{% block content %}
+
+<input type="text" name="{{start_time}}" value="{{start_time}}" id="shift_start" hidden>
+<input type="text" name="{{end_time}} " value="{{end_time}}" id="shift_end" hidden>
+<input type="text" name="{{status}}" value="{{status}}" id="status" hidden>
+<input type="text" name="link" value="{% url 'end_attendace' user.id %}" id="links" hidden>
+        <div class="row">
+        <h1 id="countdownHeader">Shift starts in</h1>
+        <div id="countdown" class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-value" id="hours">00</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="minutes">00</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-value" id="seconds">00</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+        <button onclick="attend(`{% url 'mark_attendence' user.id %}`)" id="startShiftButton">Start Shift</button>
+    </div>
+
+
+{% endblock %}
+
+{% block countdown %}
+ <script src="{% static 'dashboard/js/countdown.js' %}"></script>
+{% endblock %}

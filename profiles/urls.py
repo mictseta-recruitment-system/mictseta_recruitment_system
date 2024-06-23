@@ -16,8 +16,11 @@ urlpatterns = [
     path('add/reject_leave/<leaveID>/', views.reject_leave, name='reject_leave'),
     path('add/seen_leave/<leaveID>/', views.seen_leave, name='seen_leave'),
     path('add/close_leave/<leaveID>/', views.close_leave, name='close_leave'),
+    path('add/mark_attendence/<empID>/', views.mark_attendence, name='mark_attendence'),
+    path('add/end_attendace/<empID>/', views.end_attendace, name='end_attendace'),
 
-    
+
+   
     # path('', views.home, name='home')
     # path('', views.home, name='home')
 ] 
