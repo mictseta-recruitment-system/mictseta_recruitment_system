@@ -13,7 +13,10 @@
 
 	{% if user.is_superuser and user.staffprofile.department == "MANAGER" or user.is_superuser and user.staffprofile.department == "ADMINISTRATOR"   %}
 	<div class="container mt-5 table-container ">
-        <h6>Employee Leave List</h6>
+        <div class="d-flex justify-content-between">
+            <h6>Employee Leave List</h6>
+            <a href="{% url 'dashboard.leave_generate_pdf_report' %}"> Generate Report</a>
+        </div>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -120,6 +123,7 @@
             <tbody>
 
             {% for leave in user.leave_set.all %}
+            {% if leave.seen == False %}
              <tr class="text-dark">
                                    
                 <td>{{leave.lave_type}}</td>
@@ -141,9 +145,12 @@
                  <td>
                  	{% if leave.status == "Pending" %}
                   	<a href="{% url 'close_leave' leave.id %}" class="btn btn-danger m-1" style="font-size: 12px;"> <i class="fa fa-cross" aria-hidden="true"></i> Close</a>
+                    {% else %}
+                    <a href="{% url 'seen_leave' leave.id %}" class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i> Seen</a>
                   	{% endif %}
                   </td>
                </tr>
+            {% endif %}
             {% endfor %}
               
             </tbody>

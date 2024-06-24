@@ -78,9 +78,10 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark">
                               
-                              {% if user.is_staff %}
+                              {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
                                <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}">Dashbaord</a></li>
                               {% else %}
+                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashbaord</a></li>
                               {% endif %}
                               <li><a class="dropdown-item" href="{% url 'render_profile_page' %}">View Profile</a></li>
                               <li>

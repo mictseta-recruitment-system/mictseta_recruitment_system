@@ -2,16 +2,45 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
 from jobs.models import JobPost, Notification
-from profiles.models import Leave
+from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse
 from django.utils.timezone import now
+from datetime import datetime
+import datetime as dates
+
 
 @ensure_csrf_cookie
 def panel(request):
 	if request.user.is_authenticated:
 
 		return render(request,'panel.html')
+	else:
+		return redirect('render_auth_page')
+
+@ensure_csrf_cookie
+def emp_panel(request):
+	if request.user.is_authenticated:
+		shift_start_time = request.user.shift.start_time
+		shift_end_time = request.user.shift.end_time
+		current_time =  datetime.now()
+		
+		att = Attendance.objects.filter(employee=request.user, date=dates.date.today()).exists()
+		if att :
+			att = Attendance.objects.get(employee=request.user, date=dates.date.today())
+			status = att.active
+		else:
+			status = "Inactive"
+
+		if current_time.month  < 10 :
+
+			start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
+			end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
+		else:
+			start_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_start_time}" 
+			end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
+
+		return render(request,'emp_panel.html', {'start_time':start_time,'end_time':end_time,'status':status})
 	else:
 		return redirect('render_auth_page')
 
@@ -176,3 +205,56 @@ def view_leave(request):
             return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
     else:
        return redirect('render_auth_page')
+
+def manage_attendance(request):
+	if request.user.is_authenticated:
+		if request.user.is_staff:
+			try:
+				attendances = Attendance.objects.all()
+				return render(request,'attendance.html',{'attendances':attendances})
+			except Exception as e:
+				return HttpResponse(f'view Attendance: {e}')
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
+
+
+
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
+def fetch_resources(uri, rel):
+    from django.conf import settings
+    import os.path
+    path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+    return path
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result, link_callback=fetch_resources)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+def attendance_generate_pdf_report(request):
+    shifts = Shift.objects.all()
+    attendances = Attendance.objects.all()
+    context = {
+        'shifts': shifts,
+        'attendances': attendances,
+    }
+    pdf = render_to_pdf('pdf_attendance_template.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def leave_generate_pdf_report(request):
+    shifts = Shift.objects.all()
+    leaves = Leave.objects.all()
+    context = {
+        
+        'leaves': leaves,
+    }
+    pdf = render_to_pdf('pdf_leave_templates.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')

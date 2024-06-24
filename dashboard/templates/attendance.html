@@ -1,0 +1,67 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Attendance{% endblock %}
+
+{% block head %} Attendance {% endblock %}
+
+{% block content %}
+
+          <span class="d-flex justify-content-between">
+          	<h3></h3> 
+          	 {% if  user.is_superuser and user.staffprofile.department == "ADMINISTARTOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+            <a href="{% url 'dashboard.attendance_generate_pdf_report' %}"> Generate report</a>
+            {% endif %}
+          </span>
+<div class="table-container">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+               
+                <th>employee</th>
+                <th>date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Late</th>
+                <th>Time Late(mins)</th>
+                <th>is working </th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% if  user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+            	{% for attendance in attendances %}
+            	 <tr class="text-dark">
+	               	<td>{{attendance.employee.first_name}} {{attendance.employee.last_name}}</td>
+	               	<td>{{attendance.date.date}}</td>
+	               	<td>{{attendance.shift.start_time}}</td>
+	               	<td>{{attendance.shift.end_time}}</td>
+	               	<td>{% if attendance.is_late %} Yes {% else %} No {% endif %}</td>
+	               	<td>{{attendance.minutes}}</td>
+	               	<td>{% if attendance.active == "Active" %}Yes{% else %}No{% endif %}</td>
+	               	<td>{{attendance.status}}</td>
+            	</tr>
+            	{% endfor %}
+            
+
+            {% elif user.is_staff %}
+            {% for attendance in user.attendance_set.all %}
+           		
+             <tr class="text-dark">
+               	<td>{{user.first_name}} {{user.last_name}}</td>
+               	<td>{{attendance.date.date}}</td>
+               	<td>{{attendance.shift.start_time}}</td>
+               	<td>{{attendance.shift.end_time}}</td>
+               	<td>{% if attendance.is_late %} Yes {% else %} No {% endif %}</td>
+               	<td>{{attendance.minutes}}</td>
+               	<td>{% if attendance.active == "Active" %}Yes{% else %}No{% endif %}</td>
+               	<td>{{attendance.status}}</td>
+            </tr>
+            
+            {% endfor %}
+            {% endif %}
+              
+            </tbody>
+          </table>
+            
+        </div>
+{% endblock %}

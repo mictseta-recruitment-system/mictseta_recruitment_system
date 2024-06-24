@@ -7,7 +7,7 @@ from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, 
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, PersonalInformation, AddressInformation, ProfileImage, StaffProfile, Shift, Leave
+from .models import Profile, PersonalInformation, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -276,7 +276,7 @@ def calculate_working_hours(start_time, end_time):
     delta = end - start
     working_hours = delta.total_seconds() / 3600.0  # Convert seconds to hours
 
-    return working_hours
+    return round(working_hours)
 
 def calculate_salary(rate, working_hours):
     salary = rate * working_hours * 20
@@ -487,24 +487,52 @@ def update_staff(request):
     else:
         return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
 
+def get_late(shift_start):
+    
+    # Define the first time with seconds
+    
 
-def mark_attendence(request):
+    # Convert the first time to minutes since midnight
+    hours1, minutes1, seconds1 = map(int, shift_start.split(":"))
+    total_minutes1 = hours1 * 60 + (minutes1+10) + seconds1 / 60
+
+    # Get the current time
+    now = datetime.now()
+
+    # Convert the current time to minutes since midnight
+    total_minutes_now = now.hour * 60 + now.minute + now.second / 60
+
+    # Calculate the difference
+    difference = total_minutes_now - total_minutes1
+    
+    if difference > 0 :
+        late = True
+    else:
+        late = False
+        difference = 0
+    return (late, round(difference))
+
+def mark_attendence(request, empID):
     if request.user.is_authenticated:
         if request.user.is_superuser:
- 
-            if request.method == 'POST':
+            from django.utils import timezone
+            if request.method == 'GET':
                 try:
-                    json_data = json.loads(request.body)
-                except Exception :
-                    return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-
-                data = {
-                    'status' : json_data.get('attend-status'),
-
-                }
-                for key, value in data.items():
-                    if key == None or value == None:
-                        return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
+                    employee = User.objects.get(id=int(empID))
+                    is_late, minutes = get_late(employee.shift.start_time)
+                    exists = Attendance.objects.filter(employee=employee, date=timezone.now().date()).exists()
+                    if exists:
+                        attendance = Attendance.objects.get(employee=employee, date=timezone.now().date())
+                        attendance.active = "Active"
+                        attendance.save()
+                        return redirect(request.META.get('HTTP_REFERER', '/'))
+                    else:
+                        attendance = Attendance.objects.create(employee=employee, shift=employee.shift, status="Present", is_late=is_late, minutes=minutes, active="Active")
+                        attendance.save()
+                        return redirect(request.META.get('HTTP_REFERER', '/'))
+                
+                except Exception as e:
+                    return JsonResponse({'errors':{'mark': [f'{e}']}, 'status':'error'})
 
                 return JsonResponse({'errors': { "leave" : ['not yet done']}, 'status':'error'}, status=403)
             else:
@@ -514,6 +542,32 @@ def mark_attendence(request):
     else:
         return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
 
+def end_attendace(request, empID):
+    from django.utils import timezone
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+ 
+            if request.method == 'GET':
+                try:
+                    employee = User.objects.get(id=int(empID))
+                    today = timezone.now().date()
+                    try:
+                        att = Attendance.objects.get(employee=employee, date=timezone.now().date())
+                        att.active = "Inactive"
+                        att.save()
+                        return JsonResponse({'message': 'Session Complete successfully, waiting for next session' , 'status':'success'})
+                    except Exception :
+                        return JsonResponse({'message': 'Session Complete successfully, waiting for next session' , 'status':'success'})
+                except Exception as e:
+                    return JsonResponse({'errors':{'mark': [f'{e}']}, 'status':'error'})
+
+                return JsonResponse({'errors': { "leave" : ['not yet done']}, 'status':'error'}, status=403)
+            else:
+                return JsonResponse({'errors': 'Ivalid request method', 'status':'error'}, status=400)
+        else:       
+            return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    else:
+        return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
 
 def leave(request):
     if request.user.is_authenticated:
