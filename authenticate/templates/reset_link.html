@@ -4,12 +4,113 @@
 	
 {% block content %}
 	
-	<h1>Your forgot your password</h1>
-	<h3>CLick on the buttton bellow to reset your password</h3>
-	
-		<a href="" type="btn" class="btn btn-secondary" id='links'>
-			Reset Password now
-		</a>
+<div class="container justify-content-center">
+    <div class="col-6 reset-password-card">
+        <h1>Forgot Your Password?</h1>
+        <h3>Click on the button below to reset your password</h3>
+        <a href="" class="btn btn-secondary btn-block" id="links">
+            Reset Password Now
+        </a>
+        <button type="button" class="btn-back" onclick="history.back()">Back</button>
+
+    </div>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .reset-password-card {
+            background-color: #ffffff;
+            border: 2px solid #007bff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin: 20px 0 10px;
+            color: #333333;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+			margin-bottom: 30px;
+		  }
+
+		  .input-group-text {
+			background-color: #007bff;
+			color: #ffffff;
+			border:#007bff;
+			border-radius: 4px 0 0 4px;
+			padding: 10px;
+			font-size: 20px;
+		  }
+
+		  .form-control {
+			width: 100%;
+			padding: 10px;
+			font-size: 20px;
+			border: 1px solid #ced4da;
+			border-radius: 0 4px 4px 0;
+		  }
+
+		  .btn {
+			background-color: #007bff;
+			color: #ffffff;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			width: 100%;
+		  }
+
+		  .btn:hover {
+			background-color: #0056b3;
+		  }
+		  .btn-back {
+    background-color: #6c757d;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-back:hover {
+    background-color: #5a6268;
+}
+    </style>        
+</div>
+
+
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function() {
         // Get the value from localStorage

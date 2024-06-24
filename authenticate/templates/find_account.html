@@ -5,25 +5,108 @@
 {% block content %}
 
 <div class="container justify-content-center">
-    <div class="col-md-6" style="margin-top: 50px;">
-        <div class="card">
-            <div class="card-header text-center">
-                <h1>Enter Email to Reset Password</h1>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">&#9993;</span>
-                        <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1" name="email" id="femail">
-                    </div>
-                    <div class="text-center">
-                        <input type="button" name="submit" value="Submit" class="btn btn-primary" id="btn-forgot"/>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div class="col-6 reset-password-card">
+		<h1>Forgot Password?</h1>
+		<p>You can reset your password here.</p>
+		<form method="POST">
+			{% csrf_token %}
+            <div class="form-group input-group mb-3">
+
+				<input type="email" class="form-control" placeholder="Email address" aria-label="Email" name="email" id="femail" required>
+			</div>
+			<input type="button" name="submit" value="Reset Password" class="btn btn-primary" id='btn-forgot'/>
+			<button type="button" class="btn-back" onclick="history.back()">Back</button>
+
+		</form>
+	</div>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f8f9fa;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+		}
+
+		.container {
+			display:flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		  }
+
+		  .reset-password-card {
+			background-color: #ffffff;
+			border: 2px solid #007bff;
+			padding: 40px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			text-align: center;
+			max-width: 600px;
+			width: 100%;
+			margin-top: 70px;
+		  }
+
+		  h1 {
+			font-size: 30px;
+			margin: 30px 0 10px;
+		  }
+
+		  .form-group {
+			margin-bottom: 30px;
+		  }
+
+		  .input-group-text {
+			background-color: #007bff;
+			color: #ffffff;
+			border:#007bff;
+			border-radius: 4px 0 0 4px;
+			padding: 10px;
+			font-size: 20px;
+		  }
+
+		  .form-control {
+			width: 100%;
+			padding: 10px;
+			font-size: 20px;
+			border: 1px solid #ced4da;
+			border-radius: 0 4px 4px 0;
+		  }
+
+		  .btn {
+			background-color: #007bff;
+			color: #ffffff;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			width: 100%;
+		  }
+
+		  .btn:hover {
+			background-color: #0056b3;
+		  }
+		  .btn-back {
+			background-color: #6c757d;
+			color: #ffffff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 4px;
+			font-size: 20px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+			width: 100%;
+			margin-top: 10px;
+		}
+
+		.btn-back:hover {
+			background-color: #5a6268;
+		}
+
+	</style>		
 </div>
 
 <input type="text" id="btn-signup" style="display: none;">
