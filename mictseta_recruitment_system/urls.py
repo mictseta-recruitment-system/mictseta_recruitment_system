@@ -24,5 +24,6 @@ urlpatterns = [
     path('profile/', include("profiles.urls")),
     path('user/', include("users.urls")),
     path('job/', include("jobs.urls")),
-    path('dashboard/', include("dashboard.urls"))
+    path('dashboard/', include("dashboard.urls")),
+    path('jobseeker/', include("dashboard.urls"))
 ]

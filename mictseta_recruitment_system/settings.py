@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users',
     'jobs',
     'dashboard',
+    'job_seeker',
 
     
 ]
