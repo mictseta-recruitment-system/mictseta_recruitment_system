@@ -13,7 +13,10 @@
 
 	{% if user.is_superuser and user.staffprofile.department == "MANAGER" or user.is_superuser and user.staffprofile.department == "ADMINISTRATOR"   %}
 	<div class="container mt-5 table-container ">
-        <h6>Employee Leave List</h6>
+        <div class="d-flex justify-content-between">
+            <h6>Employee Leave List</h6>
+            <a href="{% url 'dashboard.leave_generate_pdf_report' %}"> Generate Report</a>
+        </div>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>

@@ -7,9 +7,10 @@
 {% block content %}
 
           <span class="d-flex justify-content-between">
-          	<h3>My List</h3> 
-          	
-
+          	<h3></h3> 
+          	 {% if  user.is_superuser and user.staffprofile.department == "ADMINISTARTOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+            <a href="{% url 'dashboard.attendance_generate_pdf_report' %}"> Generate report</a>
+            {% endif %}
           </span>
 <div class="table-container">
           <table class="table table-bordered table-striped">
@@ -27,11 +28,11 @@
               </tr>
             </thead>
             <tbody>
-            {% if  user.is_superuser and user.staffprofile.department == "ADMINISTARTOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+            {% if  user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
             	{% for attendance in attendances %}
             	 <tr class="text-dark">
-	               	<td>{{attendance.user.first_name}} {{attendance.user.last_name}}</td>
-	               	<td>{{attendance.date}}</td>
+	               	<td>{{attendance.employee.first_name}} {{attendance.employee.last_name}}</td>
+	               	<td>{{attendance.date.date}}</td>
 	               	<td>{{attendance.shift.start_time}}</td>
 	               	<td>{{attendance.shift.end_time}}</td>
 	               	<td>{% if attendance.is_late %} Yes {% else %} No {% endif %}</td>
@@ -47,7 +48,7 @@
            		
              <tr class="text-dark">
                	<td>{{user.first_name}} {{user.last_name}}</td>
-               	<td>{{attendance.date}}</td>
+               	<td>{{attendance.date.date}}</td>
                	<td>{{attendance.shift.start_time}}</td>
                	<td>{{attendance.shift.end_time}}</td>
                	<td>{% if attendance.is_late %} Yes {% else %} No {% endif %}</td>

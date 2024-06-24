@@ -1,0 +1,79 @@
+<!-- templates/pdf_template.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .report-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <h1>Leace Application Report</h1>
+    </div>
+ 
+    <h2>Leave List</h2>
+    <table>
+         <thead>
+                <tr>
+                    <th>Name & Surname</th>
+                    <th>Date Applied</th>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Satus</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for leave in leaves %}
+                <tr>
+               
+                               <td>{{leave.employee.first_name}} {{leave.employee.last_name}}</td>
+                <td>{{leave.date}}</td>
+                <td>{{leave.lave_type}}</td>
+                <td>{{leave.start_date}}</td>
+                <td>{{leave.end_date}}</td>
+
+                <td>
+	               	{% if leave.status == "Pending" %}
+	                	{{leave.status}}
+	               	{% elif leave.status == "Rejected" %}
+	               		{leave.status}}
+	               	{% elif leave.status == "Closed" %}
+	               		{{leave.status}}
+	               	{% else %}
+	               		{{leave.status}}
+	               	{% endif %}
+                </td>
+                    
+                </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+</body>
+</html>

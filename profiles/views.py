@@ -276,7 +276,7 @@ def calculate_working_hours(start_time, end_time):
     delta = end - start
     working_hours = delta.total_seconds() / 3600.0  # Convert seconds to hours
 
-    return working_hours
+    return round(working_hours)
 
 def calculate_salary(rate, working_hours):
     salary = rate * working_hours * 20
@@ -494,7 +494,7 @@ def get_late(shift_start):
 
     # Convert the first time to minutes since midnight
     hours1, minutes1, seconds1 = map(int, shift_start.split(":"))
-    total_minutes1 = hours1 * 60 + minutes1 + seconds1 / 60
+    total_minutes1 = hours1 * 60 + (minutes1+10) + seconds1 / 60
 
     # Get the current time
     now = datetime.now()
@@ -551,10 +551,13 @@ def end_attendace(request, empID):
                 try:
                     employee = User.objects.get(id=int(empID))
                     today = timezone.now().date()
-                    att = Attendance.objects.get(employee=employee, date=timezone.now().date())
-                    att.active = "Inactive"
-                    att.save()
-                    return JsonResponse({'message': 'Session Complete successfully, waiting for next session' , 'status':'success'})
+                    try:
+                        att = Attendance.objects.get(employee=employee, date=timezone.now().date())
+                        att.active = "Inactive"
+                        att.save()
+                        return JsonResponse({'message': 'Session Complete successfully, waiting for next session' , 'status':'success'})
+                    except Exception :
+                        return JsonResponse({'message': 'Session Complete successfully, waiting for next session' , 'status':'success'})
                 except Exception as e:
                     return JsonResponse({'errors':{'mark': [f'{e}']}, 'status':'error'})
 

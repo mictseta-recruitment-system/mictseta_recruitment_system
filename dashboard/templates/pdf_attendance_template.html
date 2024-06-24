@@ -1,0 +1,100 @@
+<!-- templates/pdf_template.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .report-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <h1>Shift and Attendance Report</h1>
+    </div>
+    <h2>Shifts</h2>
+    <table >
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Rate</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Working Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shift in shifts %}
+            <tr>
+                <td>{{ shift.employee.first_name}} {{ shift.employee.last_name}}</td>
+                <td>R {{ shift.rate }}</td>
+                <td>{{ shift.start_time }}</td>
+                <td>{{ shift.end_time }}</td>
+                <td>{{ shift.working_hours }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Attendance</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Shift</th>
+                <th>Minutes</th>
+                <th>Is Late</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in attendances %}
+            {% if attendance.is_late %}
+                <tr style="background-color: darkred;">
+                    <td>{{ attendance.employee.first_name}} {{ attendance.employee.last_name}}</td>
+                    <td>{{ attendance.shift.id }}</td>
+                    <td>{{ attendance.minutes }}</td>
+                    <td>{{ attendance.is_late }}</td>
+                    <td>{{ attendance.status }}</td>
+                    <td>{{ attendance.date.date }}</td>
+                </tr>
+
+            {% else %}
+                <tr>
+                    <td>{{ attendance.employee.first_name}} {{ attendance.employee.last_name}}</td>
+                    <td>{{ attendance.shift.id }}</td>
+                    <td>{{ attendance.minutes }}</td>
+                    <td>{{ attendance.is_late }}</td>
+                    <td>{{ attendance.status }}</td>
+                    <td>{{ attendance.date.date }}</td>
+                </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

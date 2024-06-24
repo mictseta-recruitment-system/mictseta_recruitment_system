@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
   // Parse shift start and end times
-  const shiftStartTimeString = "2024-06-23T21:40:00"; // Example: Shift starts at 9:00 AM
-  const shiftEndTimeString = "2024-06-23T21:42:00"; // Example: Shift ends at 5:00 PM
+  const shiftStartTimeString = document.getElementById('shift_start').value; // Example: Shift starts at 9:00 AM
+  const shiftEndTimeString = document.getElementById('shift_end').value; // Example: Shift ends at 5:00 PM
   const status = document.getElementById('status').value;
   const link = document.getElementById('links').value;
 

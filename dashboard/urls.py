@@ -20,6 +20,9 @@ urlpatterns = [
     path('emp_panel/', views.emp_panel, name="dashboard.emp_panel"),
     path('manage_attendance/', views.manage_attendance, name="dashboard.manage_attendance"),
 
+    path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),
+    path('leave/report/pdf/', views.leave_generate_pdf_report, name='dashboard.leave_generate_pdf_report'),
+
 
     
 ]
