@@ -1,0 +1,112 @@
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Personal Details{% endblock %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    
+    .content-section {
+        padding: 0px;
+    }
+    
+    .form-group input, .form-group select {
+        border-radius: 0;
+    }
+    .form-group button {
+        border-radius: 0;
+    }
+</style>
+
+<div id="personal_details" class="content-section active">
+    <h2 class="mb-4">Personal Details</h2>
+    <form>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id-number">ID Number</label>
+                    <input type="text" class="form-control" id="id-number" name="id-number">
+                </div>
+                <div class="form-group">
+                    <label for="first-name">First Name</label>
+                    <input type="text" class="form-control" id="first-name" name="first-name">
+                </div>
+                <div class="form-group">
+                    <label for="surname">Surname</label>
+                    <input type="text" class="form-control" id="surname" name="surname">
+                </div>
+                <div class="form-group">
+                    <label for="race">Race</label>
+                    <input type="text" class="form-control" id="race" name="race">
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" class="form-control" id="dob" name="dob">
+                </div>
+                <div class="form-group">
+                    <label for="disability">Disability</label>
+                    <input type="text" class="form-control" id="disability" name="disability">
+                </div>
+                <div class="form-group">
+                    <label for="citizenship-status">Citizenship Status</label>
+                    <input type="text" class="form-control" id="citizenship-status" name="citizenship-status">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="middle-name">Middle Name</label>
+                    <input type="text" class="form-control" id="middle-name" name="middle-name">
+                </div>
+                <div class="form-group">
+                    <label for="marital-status">Marital Status</label>
+                    <input type="text" class="form-control" id="marital-status" name="marital-status">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select class="form-control" id="gender" name="gender">
+                        <option value="Select Gender">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="telephone">Telephone</label>
+                    <input type="tel" class="form-control" id="telephone" name="telephone">
+                </div>
+                <div class="form-group">
+                    <label for="linkedin-profile">LinkedIn Profile</label>
+                    <input type="url" class="form-control" id="linkedin-profile" name="linkedin-profile">
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <input type="text" class="form-control" id="country" name="country">
+                </div>
+                <div class="form-group">
+                    <label for="province">Province</label>
+                    <input type="text" class="form-control" id="province" name="province">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="city-town">City/Town</label>
+                    <input type="text" class="form-control" id="city-town" name="city-town">
+                </div>
+                <div class="form-group">
+                    <label for="district-suburb">District/Suburb</label>
+                    <input type="text" class="form-control" id="district-suburb" name="district-suburb">
+                </div>
+                <div class="form-group">
+                    <label for="postal-code">Postal Code</label>
+                    <input type="text" class="form-control" id="postal-code" name="postal-code">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" class="form-control" id="address" name="address">
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+{% endblock %}

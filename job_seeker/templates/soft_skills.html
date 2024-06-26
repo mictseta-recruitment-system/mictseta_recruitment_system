@@ -1,0 +1,81 @@
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Soft Skills{% endblock %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .content-section {
+        padding: 0px;
+    }
+    
+    .form-group input, .form-group select {
+        border-radius: 0;
+    }
+    .form-group button {
+        border-radius: 0;
+    }
+</style>
+
+<div id="soft-skills" class="content-section active">
+    <h2 class="mb-4">Soft Skills</h2>
+    <form class="mt-4">
+        <div class="form-group row">
+            <label for="softskill1" class="col-sm-2 col-form-label">Soft Skill 1</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="softskill1" name="softskill1">
+            </div>
+            <label for="description1" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="description1" name="description1">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="softskill2" class="col-sm-2 col-form-label">Soft Skill 2</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="softskill2" name="softskill2">
+            </div>
+            <label for="description2" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="description2" name="description2">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="softskill3" class="col-sm-2 col-form-label">Soft Skill 3</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="softskill3" name="softskill3">
+            </div>
+            <label for="description3" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="description3" name="description3">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="softskill4" class="col-sm-2 col-form-label">Soft Skill 4</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="softskill4" name="softskill4">
+            </div>
+            <label for="description4" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="description4" name="description4">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="softskill5" class="col-sm-2 col-form-label">Soft Skill 5</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="softskill5" name="softskill5">
+            </div>
+            <label for="description5" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="description5" name="description5">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

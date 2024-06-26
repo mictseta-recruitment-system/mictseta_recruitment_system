@@ -1,9 +1,18 @@
 from . import views
-from django.contrib import admin
-from django.urls import path 
+from django.urls import path
 
-urlpatterns = [ 
-    path('', views.job_seeker_dashboard, name='jobseeker.dashboard'),
- 	# path('add_job/', views.add_job, name='add_job'),
-    # path('add_job_skill/', views.add_job_skill, name='add_job_skill'),
+urlpatterns = [
+    path('job_seeker_dashboard', views.job_seeker_dashboard, name='job_seeker_dashboard'), 
+    path('personal_details/', views.personal_details, name='personal_details'),
+    path('academic_qualifications/', views.academic_qualifications, name='academic_qualifications'),
+    path('language_proficiency/', views.language_proficiency, name='language_proficiency'),
+    path('soft_skills/', views.soft_skills, name='soft_skills'),
+    path('computer_skills/', views.computer_skills, name='computer_skills'),
+    path('working_experience/', views.working_experience, name='working_experience'),
+    path('referees/', views.referees, name='referees'),
+     path('supporting_documents/', views.supporting_documents, name='supporting_documents'),
+     
+    
+    
+    
 ]
