@@ -1,0 +1,73 @@
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Academic Qualifications{% endblock %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .content-section {
+        padding: 0px;
+    }
+    
+    .form-group input, .form-group select {
+        border-radius: 0;
+    }
+    .form-group button {
+        border-radius: 0;
+    }
+</style>
+
+<div id="academic-qualifications" class="content-section active">
+    <h2 class="mb-4">Academic Qualifications</h2>
+    <form class="mt-4">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="highest-qualification" class="form-label">Highest Qualification</label>
+                <input type="text" class="form-control" id="highest-qualification" name="highest-qualification" required>
+            </div>
+            <div class="col-md-6">
+                <label for="field-of-study" class="form-label">Field of Study</label>
+                <input type="text" class="form-control" id="field-of-study" name="field-of-study" required>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="institution" class="form-label">Institution</label>
+                <input type="text" class="form-control" id="institution" name="institution" required>
+            </div>
+            <div class="col-md-6">
+                <label for="qualification-status" class="form-label">Qualification Status</label>
+                <select class="form-control" id="qualification-status" name="qualification-status" required>
+                    <option value="">Select Status</option>
+                    <option value="Completed">Completed</option>
+                    <option value="In Progress">In Progress</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="year-obtained" class="form-label">Year Obtained</label>
+                <input type="text" class="form-control" id="year-obtained" name="year-obtained" required>
+            </div>
+            <div class="col-md-6">
+                <label for="grade" class="form-label">Grade</label>
+                <input type="text" class="form-control" id="grade" name="grade">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="additional-qualifications" class="form-label">Additional Qualifications</label>
+            <textarea class="form-control" id="additional-qualifications" name="additional-qualifications" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="certifications" class="form-label">Certifications</label>
+            <textarea class="form-control" id="certifications" name="certifications" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="honors-awards" class="form-label">Honors and Awards</label>
+            <textarea class="form-control" id="honors-awards" name="honors-awards" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+{% endblock %}

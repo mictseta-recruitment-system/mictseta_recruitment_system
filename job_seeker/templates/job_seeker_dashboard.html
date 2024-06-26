@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; 
+        }
+
+        .navbar {
+            background-color: #007BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+        
+        .navbar .logo img {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .navbar .title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-left: 20px;
+            text-align: center;
+        }
+        
+        .container-box {
+            display: flex;
+            justify-content: flex-start; 
+            margin-top: 20px; 
+            padding: 20px;
+            background-color: #fff; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+        }
+        
+        .sidebar {
+            background-color: #f8f9fa; 
+            color: #343a40;
+            border-right: 1px solid #ddd; 
+            width: 200px;
+            padding-top: 20px; 
+            height: 100%; 
+            overflow-y: auto; 
+        }
+        
+        .sidebar ul {
+            list-style-type: none;
+            padding-left: 0; 
+        }
+        
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar ul li a {
+            color: #343a40;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        
+        .sidebar ul li a:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .inner-content-box {
+            background-color: #fff; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            padding: 20px;
+            width: 100%; 
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'job_seeker/images/webicon.png' %}" alt="Logo">
+        </div>
+        <div class="title">MICT SETA</div>
+    </nav>
+
+    <div class="container-box">
+        <div class="sidebar">
+            <ul>
+                <li><a href="{% url 'personal_details' %}">Personal Details</a></li>
+                <li><a href="{% url 'academic_qualifications' %}">Academic Qualifications</a></li>
+                <li><a href="{% url 'language_proficiency' %}">Language & Proficiency</a></li>
+                <li><a href="{% url 'computer_skills' %}">Computer Skills</a></li>
+                <li><a href="{% url 'soft_skills' %}">Soft Skills</a></li>
+                <li><a href="{% url 'working_experience' %}">Working Experience</a></li>
+                <li><a href="{% url 'referees' %}">Referees</a></li>
+                <li><a href="{% url 'supporting_documents' %}">Supporting Documents</a></li>
+                
+            </ul>
+        </div>
+      
+        <div class="content">
+            <div class="inner-content-box">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js" integrity="sha384-MCw98/SFnGE8fJT3GXscSEo4E2H6O5+FB2Q+J99lbdGIPl/M6+aInI2tsTuo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+YhzAZtTGh5PZSgVzvbC+6Bihj5y8ZsOJ2n" crossorigin="anonymous"></script>
+</body>
+</html>

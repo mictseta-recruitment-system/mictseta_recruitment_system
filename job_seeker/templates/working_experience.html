@@ -1,0 +1,95 @@
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Working Experience{% endblock %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .content-section {
+        padding: 20px;
+    }
+    
+    .form-group input, .form-group select {
+        border-radius: 0;
+    }
+    .form-group button {
+        border-radius: 0;
+    }
+</style>
+
+<div id="working-experience" class="content-section active">
+    <h2 class="mb-4">Working Experience</h2>
+    <form class="mt-4">
+        <!-- Job Experience 1 -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="job-title1" class="form-label">Job Title</label>
+                <input type="text" class="form-control" id="job-title1" name="job-title1">
+            </div>
+            <div class="col-md-6">
+                <label for="company1" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company1" name="company1">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="location1" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location1" name="location1">
+            </div>
+            <div class="col-md-3">
+                <label for="start-date1" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="start-date1" name="start-date1">
+            </div>
+            <div class="col-md-3">
+                <label for="end-date1" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="end-date1" name="end-date1">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="job-description1" class="form-label">Job Description</label>
+                <textarea class="form-control" id="job-description1" name="job-description1" rows="3"></textarea>
+            </div>
+        </div>
+
+        <!-- Job Experience 2 -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="job-title2" class="form-label">Job Title</label>
+                <input type="text" class="form-control" id="job-title2" name="job-title2">
+            </div>
+            <div class="col-md-6">
+                <label for="company2" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company2" name="company2">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="location2" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location2" name="location2">
+            </div>
+            <div class="col-md-3">
+                <label for="start-date2" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="start-date2" name="start-date2">
+            </div>
+            <div class="col-md-3">
+                <label for="end-date2" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="end-date2" name="end-date2">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label for="job-description2" class="form-label">Job Description</label>
+                <textarea class="form-control" id="job-description2" name="job-description2" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

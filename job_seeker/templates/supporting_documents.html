@@ -1,0 +1,44 @@
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Supporting Documents{% endblock %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .content-section {
+        padding: 0px;
+    }
+    
+    .form-group input, .form-group select {
+        border-radius: 0;
+    }
+    .form-group button {
+        border-radius: 0;
+    }
+</style>
+
+<div id="supporting-documents" class="content-section active">
+    <h2 class="mb-4">Supporting Documents</h2>
+    <form class="mt-4">
+        <div class="form-group">
+            <label for="resume">Resume</label>
+            <input type="file" class="form-control-file" id="resume" name="resume">
+        </div>
+        <div class="form-group">
+            <label for="cover-letter">Cover Letter</label>
+            <input type="file" class="form-control-file" id="cover-letter" name="cover-letter">
+        </div>
+        <div class="form-group">
+            <label for="references">References</label>
+            <input type="file" class="form-control-file" id="references" name="references">
+        </div>
+        <div class="form-group">
+            <label for="portfolio">Portfolio</label>
+            <input type="file" class="form-control-file" id="portfolio" name="portfolio">
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Documents</button>
+    </form>
+</div>
+
+{% endblock %}
+
