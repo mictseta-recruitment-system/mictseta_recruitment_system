@@ -31,7 +31,6 @@ def render_profile_page(request):
 def update_user_profile(request):
     if request.user.is_authenticated:
 
-        pr = Profile.objects.all()
         if request.method == 'POST':
             try:
                 json_data = json.loads(request.body)

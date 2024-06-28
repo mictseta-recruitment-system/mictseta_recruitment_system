@@ -2,7 +2,17 @@
 
 {% block title %}Job Details{% endblock %}
 
-{% block head %}Employee Details {% endblock %}
+
+
+{% block breadcrumbs %}
+      <li class="breadcrumb-item active" aria-current="page">Employee</li>
+      <li class="breadcrumb-item active" aria-current="page">Profile</li>
+
+      <li class="breadcrumb-item active" aria-current="page">{{user.staffprofile.department}}</li>
+      
+     {% endblock %} 
+
+
 {% load static %}
 
 {% block content %}

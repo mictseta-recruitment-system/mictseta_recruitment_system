@@ -102,6 +102,7 @@
         </div>
         <div class="title">MICT SETA</div>
     </nav>
+    {% if not user.is_staff %}
 
     <div class="container-box">
         <div class="sidebar">
@@ -120,10 +121,20 @@
       
         <div class="content">
             <div class="inner-content-box">
-                {% block content %}{% endblock %}
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
     </div>
+    {% else %}
+
+    <div class="d-flex justify-content-center mt-5">
+    	<h1>
+    		Employees are not allowed to view this page
+    	</h1>
+
+    </div>
+    {% endif %}
     <script src="{% static 'users/js/flash.js' %}"></script> 
     <script src="{% static 'job_seeker/js/script.js' %}"></script> 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

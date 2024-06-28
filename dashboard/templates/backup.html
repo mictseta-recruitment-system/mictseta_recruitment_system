@@ -1,0 +1,45 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+ {% block breadcrumbs %}
+      <li class="breadcrumb-item active" aria-current="page">Backup</li>
+      
+     {% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+	
+	<div class="m-5">
+		
+		<button class="btn btn-secondary w-100" role="button" onclick="backup_database()">Backup Now</button>
+		<table class="table table-striped">
+			  <thead>
+			    <tr class="bg-dark">
+			      <th scope="col">#</th>
+			      <th scope="col">File Name</th>
+			      <th scope="col">Date</th>
+			      <th scope="col">Time</th>
+			      <th scope="col">Action</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  	{% for backup in backups %}
+			    <tr>
+			      <th scope="row">1</th>
+			      <td>{{backup.filename}}</td>
+			      <td>{{backup.date}}</td>
+			      <td>{{backup.time}}</td>
+			      <td><button class="btn btn-warning" onclick="restore_database({{backup.id}})">Restore</button> <button class="btn btn-danger" role='button' onclick="delete_database({{backup.id}})">Delete</button> </td>
+			    </tr>
+			    {% endfor %}
+			    
+			  </tbody>
+			</table>
+	</div>
+
+</div>
+
+{% endblock%}

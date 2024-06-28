@@ -2,7 +2,10 @@
 
 {% block title %}Attendance{% endblock %}
 
-{% block head %} Attendance {% endblock %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active" aria-current="page">Attendance</li>
+      <li class="breadcrumb-item active" aria-current="page"> Manage </li>
+ {% endblock %}
 
 {% block content %}
 
@@ -32,7 +35,7 @@
             	{% for attendance in attendances %}
             	 <tr class="text-dark">
 	               	<td>{{attendance.employee.first_name}} {{attendance.employee.last_name}}</td>
-	               	<td>{{attendance.date.date}}</td>
+	               	<td>{{attendance.date}}</td>
 	               	<td>{{attendance.shift.start_time}}</td>
 	               	<td>{{attendance.shift.end_time}}</td>
 	               	<td>{% if attendance.is_late %} Yes {% else %} No {% endif %}</td>
@@ -48,7 +51,7 @@
            		
              <tr class="text-dark">
                	<td>{{user.first_name}} {{user.last_name}}</td>
-               	<td>{{attendance.date.date}}</td>
+               	<td>{{attendance.date}}</td>
                	<td>{{attendance.shift.start_time}}</td>
                	<td>{{attendance.shift.end_time}}</td>
                	<td>{% if attendance.is_late %} Yes {% else %} No {% endif %}</td>

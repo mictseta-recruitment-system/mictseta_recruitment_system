@@ -63,7 +63,12 @@ Employee Panel
 
 
 {% load static %}
-{% block head %} {{user.staffprofile.department}}  Panel {% endblock %}
+
+{% block breadcrumbs %}
+      <li class="breadcrumb-item active" aria-current="page">Employee</li>
+      <li class="breadcrumb-item active" aria-current="page">{{user.staffprofile.department}}</li>
+      
+     {% endblock %}
 
 {% block description %} on this page, view all stats and activities {% endblock %}
 

@@ -101,6 +101,7 @@
             padding: 20px;
             background-color: #016e8c;
             transition: all 0.3s;
+            font-size: 15px;
           }
           .navbar{
             z-index: 1;
@@ -340,37 +341,52 @@
  Leave
     </a>
     <div class="collapse" id="settingsMenu">
-      <a href="{% url 'dashboard.manage_leave' %}" class="pl-4"><i class="fa fa-cog" aria-hidden="true"></i> Manage</a>
+      <a href="{% url 'dashboard.manage_leave' %}" class="pl-4"><i class="fa fa-user-cog" aria-hidden="true"></i> Manage</a>
      
       {% if user.is_superuser%}
         <a href="{% url 'dashboard.view_leave' %}" class="pl-4"><i class="fa fa-eye" aria-hidden="true"></i> View all</a>
       {% endif %}
     </div>
     <hr>
-    <a href="#" data-toggle="collapse" data-target="#reportsMenu" aria-expanded="false" aria-controls="reportsMenu">
-      Attendance
+    <a href="{% url 'dashboard.manage_attendance' %}">
+      <i class="fa fa-history" aria-hidden="true"></i>Attendance
     </a>
-    <div class="collapse" id="reportsMenu">
-      <a href="{% url 'dashboard.manage_attendance' %}" class="pl-4">Manage</a>
-      
-    </div>
+    
     <hr>
+
     <a href="#" data-toggle="collapse" data-target="#notificationsMenu" aria-expanded="false" aria-controls="notificationsMenu">
-      Notifications {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}
+      <i class="fas fa-bell"  > </i>Notifications {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}
     </a>
     <div class="collapse" id="notificationsMenu">
       <a href="{% url 'dashboard.get_notifications'%}" class="pl-4">All Notifications  {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}</a>
-      <a href="#" class="pl-4">Settings</a>
+      <a href="#" class="pl-4"> <i class="fa fa-cog" aria-hidden="true"></i>Settings</a>
     </div>
+    <hr>
+     <i class="fa fa-database mt-3 ml-2 position-absolute text-white" aria-hidden="true"></i> 
+    <a href="{% url 'dashboard.backup_database' %}" class="ml-4">
+      Backup / Restore
+    </a>
+    
+    <hr>
   </div>
 
   <div class="main-content">
     <div class="content">
       <div id="defaultPage" style="margin-top: 40px;">
         <div id="flash-message-container"></div>
-        <h1>{% block head %} {% endblock %}</h1>
+        
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><a href=""> Dashboard</a></li>
+            {% block breadcrumbs %} 
+          
+            {% endblock %}
+          </ol>
+        </nav>
+
         <p>{% block description %} {% endblock %}</p>
         {% block content %}
+        d
         {% endblock %}
       </div>
     </div>

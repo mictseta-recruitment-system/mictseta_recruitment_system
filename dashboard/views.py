@@ -4,10 +4,11 @@ from django.contrib.auth.models import User
 from jobs.models import JobPost, Notification
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.timezone import now
 from datetime import datetime
 import datetime as dates
+from .models import Backup
 
 
 @ensure_csrf_cookie
@@ -159,7 +160,6 @@ def update_staff(request, staffID):
 		return redirect('render_auth_page')
 
 
-
 def employee_details(request, empID):
 	if request.user.is_authenticated:
 		
@@ -170,9 +170,6 @@ def employee_details(request, empID):
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
 		return redirect('render_auth_page')
-
-
-
 
 def manage_leave(request):
 	if request.user.is_authenticated:
@@ -221,6 +218,8 @@ def manage_attendance(request):
 
 
 
+
+
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from io import BytesIO
@@ -253,8 +252,83 @@ def leave_generate_pdf_report(request):
     shifts = Shift.objects.all()
     leaves = Leave.objects.all()
     context = {
-        
         'leaves': leaves,
     }
     pdf = render_to_pdf('pdf_leave_templates.html', context)
     return HttpResponse(pdf, content_type='application/pdf')
+
+
+
+
+from .db_backups import my_backup
+def backup_database(request):
+	if request.user.is_authenticated:
+		if request.user.is_staff:
+			backups = Backup.objects.all()
+			return render(request, 'backup.html', {'backups':backups} )
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
+
+
+def backup_db(request):
+	from django.utils import timezone
+	if request.user.is_authenticated:
+	  	if request.method == 'GET':
+	  		try:
+		  		time = datetime.now().strftime('%H:%M:%S')
+		  		current_date = datetime.now().strftime('%H_%M_%S-%d_%m_%Y')
+		  		date = timezone.now().date()
+		  		filename = f'Backup-{current_date}.backup'
+		  		backup_db = Backup(user=request.user, filename=filename, date=date, time=time)
+		  		backup_db.save()
+		  		my_backup(filename)
+		  	except Exception as e:
+		  		return JsonResponse({'errors': f'{e}', 'status':'error'}, status=400)
+	  		return JsonResponse({'message': 'Database Backup success' , 'status':'success'})
+	  	else:
+	  		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+	else:
+		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+def delete_db(request,dbID):
+	import os
+	from pathlib import Path
+	BASE_DIR = Path(__file__).resolve().parent.parent
+	if request.user.is_authenticated:
+	  	if request.method == 'GET':
+	  		try:
+		  		db_entry = Backup.objects.filter(id=int(dbID)).exists()
+		  		if db_entry:
+		  			db_entry = Backup.objects.get(id=int(dbID))
+		  			# file_path = '/'.join(['backup','database',str(db_entry.filename)])
+		  			file_to_delete = str(BASE_DIR / 'backup' / 'database' / db_entry.filename)
+		  			if os.path.isfile(file_to_delete):
+		  				os.remove(file_to_delete)
+		  			db_entry.delete()
+	  				return JsonResponse({'message': 'Database Backup Deleted' , 'status':'warning'})
+		  	except Exception as e:
+		  		return JsonResponse({'errors':{'server error' : [f'{e}']}, 'status':'error'}, status=400)
+	  	else:
+	  		return JsonResponse({'errors':{ 'MEthod':['Forbidden 403']}, 'status':'error'}, status=400)
+	else:
+		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+from .db_backups import my_restore
+def restore_db(request, dbID):
+	from django.utils import timezone
+	if request.user.is_authenticated:
+	  	if request.method == 'GET':
+	  		try:
+		  		
+		  		restore_db = Backup.objects.get(id=int(dbID))
+		  		
+	  			return JsonResponse({'message': f'Database restored to {restore_db.filename}' , 'status':'success'})
+		  		my_restore(restore_db.filename)
+		  	except Exception as e:
+		  		return JsonResponse({'errors': f'{e}', 'status':'error'}, status=400)
+	  	else:
+	  		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+	else:
+		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)

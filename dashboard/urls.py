@@ -19,6 +19,11 @@ urlpatterns = [
     path('view_leave/', views.view_leave, name="dashboard.view_leave"),
     path('emp_panel/', views.emp_panel, name="dashboard.emp_panel"),
     path('manage_attendance/', views.manage_attendance, name="dashboard.manage_attendance"),
+    path('backup_database/', views.backup_database, name="dashboard.backup_database"),
+    path('backup_db/', views.backup_db, name="dashboard.backup_db"),
+    path('delete_db/<int:dbID>/', views.delete_db, name="dashboard.delete_db"),
+    path('restore_db/<int:dbID>/', views.restore_db, name="dashboard.restore_db"),
+
 
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),
     path('leave/report/pdf/', views.leave_generate_pdf_report, name='dashboard.leave_generate_pdf_report'),

@@ -958,6 +958,102 @@ function sendLeave(){
       });
 }
 
+
+function backup_database(){
+   const url = 'http://127.0.0.1:8000/dashboard/backup_db/';
+   fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // If CSRF token is required
+        }
+        
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+          if (data.status === "error") {
+              handleErrors(data.errors);
+          } else if (data.status === "success") {
+            showFlashMessage(data.message, "success");
+                    
+                      /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+                      
+          } else if (data.status === "warning") {
+            showFlashMessage(data.message, "warning");
+                  
+          }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+          showFlashMessage(error.message, "danger");
+      });
+}
+
+function restore_database(id){
+   const url = 'http://127.0.0.1:8000/dashboard/restore_db/'+id+'/';
+   fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // If CSRF token is required
+        }
+        
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+          if (data.status === "error") {
+              handleErrors(data.errors);
+          } else if (data.status === "success") {
+            showFlashMessage(data.message, "success");
+                    
+                      /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+                      
+          } else if (data.status === "warning") {
+            showFlashMessage(data.message, "warning");
+                  
+          }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+          showFlashMessage(error.message, "danger");
+      });
+}
+
+function delete_database(id){
+   const url = 'http://127.0.0.1:8000/dashboard/delete_db/'+id+'/';
+   fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // If CSRF token is required
+        }
+        
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+          if (data.status === "error") {
+              handleErrors(data.errors);
+          } else if (data.status === "success") {
+            showFlashMessage(data.message, "success");
+                    
+                      /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+                      
+          } else if (data.status === "warning") {
+            showFlashMessage(data.message, "warning");
+                  
+          }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+          showFlashMessage(error.message, "danger");
+      });
+}
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {
     let cookieValue = null;

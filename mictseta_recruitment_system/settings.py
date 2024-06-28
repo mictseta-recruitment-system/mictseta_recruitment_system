@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'corsheaders',
+    'dbbackup',
     'authenticate',
     'home',
     'profiles',
@@ -148,7 +149,12 @@ DATABASES = {
     }
 
 }
+from datetime import datetime
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location' : f'{BASE_DIR}/backup/database/'}
 
+
+#DBBACKUP_FILENAME_TEMPLATE = f"Backup-{datetime.now().strftime('%H_%M_%S-%d_%m_%Y')}.backup"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

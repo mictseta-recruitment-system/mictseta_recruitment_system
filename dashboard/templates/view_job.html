@@ -5,7 +5,13 @@ View jobs
 {% endblock %}
 {% load static %}
 
-{% block head %}Manage jobs{% endblock %}
+{% block breadcrumbs %}
+      <li class="breadcrumb-item active" aria-current="page">Employee</li>
+      <li class="breadcrumb-item active" aria-current="page">Update</li>
+      <li class="breadcrumb-item active" aria-current="page">Profile</li>
+      
+{% endblock %}
+
 
 {% block description %} you can manage job ads from this page {% endblock %}
 {% block content %}
@@ -13,7 +19,7 @@ View jobs
 {% if user.is_staff %}
 
 <!-- View Job Page -->
-      <div id="viewJobPage" class="table-container" style="display: block;">
+<div id="viewJobPage" class="table-container" style="display: block;">
         <table class="table table-bordered table-striped">
           <thead>
             <tr>
