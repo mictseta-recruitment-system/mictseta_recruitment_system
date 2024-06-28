@@ -25,15 +25,19 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="id-number">ID Number</label>
-                    <input type="text" class="form-control" id="id-number" name="id-number">
+                    <input type="text" class="form-control" id="id-number" name="idnumber">
+                </div>
+                 <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email">
                 </div>
                 <div class="form-group">
                     <label for="first-name">First Name</label>
-                    <input type="text" class="form-control" id="first-name" name="first-name">
+                    <input type="text" class="form-control" id="first_name" name="first_name">
                 </div>
                 <div class="form-group">
                     <label for="surname">Surname</label>
-                    <input type="text" class="form-control" id="surname" name="surname">
+                    <input type="text" class="form-control" id="last_name" name="last_name">
                 </div>
                 <div class="form-group">
                     <label for="race">Race</label>
@@ -55,11 +59,11 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="middle-name">Middle Name</label>
-                    <input type="text" class="form-control" id="middle-name" name="middle-name">
+                    <input type="text" class="form-control" id="username" name="middle-name">
                 </div>
                 <div class="form-group">
                     <label for="marital-status">Marital Status</label>
-                    <input type="text" class="form-control" id="marital-status" name="marital-status">
+                    <input type="text" class="form-control" id="marital_status" name="marital_status">
                 </div>
                 <div class="form-group">
                     <label for="gender">Gender</label>
@@ -71,11 +75,11 @@
                 </div>
                 <div class="form-group">
                     <label for="telephone">Telephone</label>
-                    <input type="tel" class="form-control" id="telephone" name="telephone">
+                    <input type="tel" class="form-control" id="phone" name="phone">
                 </div>
                 <div class="form-group">
                     <label for="linkedin-profile">LinkedIn Profile</label>
-                    <input type="url" class="form-control" id="linkedin-profile" name="linkedin-profile">
+                    <input type="url" class="form-control" id="linkedin_profile" name="linkedin_profile">
                 </div>
                 <div class="form-group">
                     <label for="country">Country</label>
@@ -105,7 +109,7 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="button" role="button" onclick="handle_update_profile_info_button_click()" class="btn btn-primary">Update</button>
     </form>
 </div>
 

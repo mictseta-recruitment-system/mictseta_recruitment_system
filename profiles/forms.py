@@ -10,6 +10,10 @@ class UpdateProfileInformationForm(forms.Form):
 	last_name = forms.CharField(max_length=150)
 	idnumber  = forms.CharField(max_length=13)
 	phone = forms.CharField(max_length=10)
+	maritial_status = forms.CharField(max_length=10)
+	race = forms.CharField(max_length=15)
+	disability = forms.CharField(max_length=30)
+
 	r_phone = forms.CharField(max_length=10)
 	
 	def validate_names(self,name):
@@ -29,19 +33,19 @@ class UpdateProfileInformationForm(forms.Form):
 	def clean_first_name(self):
 		first_name = self.cleaned_data.get('first_name')
 		if ' ' in first_name :
-			raise forms.ValidationError("Spaces not allowed in email")
+			raise forms.ValidationError("Spaces not allowed in First Name")
 		return self.validate_names(first_name)
 
 	def clean_last_name(self):
 		last_name = self.cleaned_data.get('last_name')
 		if ' ' in last_name :
-			raise forms.ValidationError("Spaces not allowed in email")
+			raise forms.ValidationError("Spaces not allowed in Last Name")
 		return self.validate_names(last_name)
 
 	def clean_username(self):
 		username = self.cleaned_data.get('username')
 		if ' ' in username :
-			raise forms.ValidationError("Spaces not allowed in email")
+			raise forms.ValidationError("Spaces not allowed in Username")
 		return self.validate_names(username)
 
 	def clean_email(self):
@@ -55,6 +59,26 @@ class UpdateProfileInformationForm(forms.Form):
 			raise forms.ValidationError("Email length is Invalid") 
 		
 		return email
+
+	def clean_maritial_status(self):
+		maritial_status = self.cleaned_data.get('maritial_status')
+		if ' ' in maritial_status :
+			raise forms.ValidationError("Spaces not allowed in maritial status")
+		return self.validate_names(maritial_status)
+
+	def clean_race(self):
+		race = self.cleaned_data.get('race')
+		if ' ' in race :
+			raise forms.ValidationError("Spaces not allowed in race")
+		return self.validate_names(race)
+
+	def clean_disability(self):
+		disability = self.cleaned_data.get('disability')
+		if ' ' in disability :
+			raise forms.ValidationError("Spaces not allowed in disability")
+		return self.validate_names(disability)
+
+
 
 	# def clean_password(self):
 		

@@ -73,6 +73,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const email = document.getElementById("email").value;
         const idnumber = document.getElementById("idnumber").value;
         const phone = document.getElementById("phone").value;
+        const maritial_status = document.getElementById("maritial_status").value;
+        const race = document.getElementById("race").value;
+        const disability = document.getElementById("disability").value;
 
         const data2 = {
             username : username,
@@ -80,7 +83,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
             last_name : last_name,
             email : email,
             phone :  phone ,  
-            idnumber : idnumber
+            idnumber : idnumber,
+            maritial_status : maritial_status,
+            race : race,
+            disability : disability,
            
         };
        

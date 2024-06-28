@@ -45,9 +45,12 @@ def update_user_profile(request):
                 'email' : json_data.get('email'),
                 'phone' : json_data.get('phone'),
                 'idnumber': json_data.get('idnumber'),
+                'maritial_status' : json_data.get('maritial_status'),
+                'race' : json_data.get('race'),
+                'disability' : json_data.get('disability'),
                 'r_username' : f'{request.user.username}',
                 'r_email' : f'{request.user.email}',
-                'r_phone' : 'False'
+                'r_phone' : 'False',
                 # 'r_idnum' : f'{request.user.profile.idnumber}'
             }
        
@@ -82,8 +85,13 @@ def update_user_profile(request):
                    
                     user.profile.idnumber = data['idnumber']
                     user.profile.phone = data['phone']
+                    user.profile.maritial_status = data['maritial_status']
+                    user.profile.race = data['race']
+                    user.profile.disability = data['disability']
+
                     user.profile.age = ValidateIdNumber(data['idnumber']).get_age()
                     user.profile.gender = ValidateIdNumber(data['idnumber']).get_gender()
+                    user.profile.dob = ValidateIdNumber(data['idnumber']).get_gender()
                     user.profile.save()
                     user.save()
                     print("======================")

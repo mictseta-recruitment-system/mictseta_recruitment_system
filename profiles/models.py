@@ -9,10 +9,16 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     idnumber = models.CharField(max_length=13, unique=True)
     phone = models.CharField(max_length=10, unique=True, null=True)
+    dob = models.CharField(max_length=6,null=False )
     gender = models.CharField(max_length=6, null=True)
     age = models.CharField(max_length=6, null=True)
+    maritial_status = models.CharField(max_length=10, null=True)
+    race = models.CharField(max_length=15, null=True)
+    disability = models.CharField(max_length=30, null=True)
     is_verified = models.BooleanField(default=False, null=False)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    
+
     def __str__(self):
 
         return f'{self.user.username} Profile Information'
