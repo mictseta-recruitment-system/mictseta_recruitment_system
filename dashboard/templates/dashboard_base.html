@@ -302,7 +302,6 @@
     <div class="collapse" id="usersMenu">
       <a href="{% url 'dashboard.view_staff' %}" class="pl-4">
           <i class="fa fa-users" aria-hidden="true"></i> View all  </a>
-      <a href="{% url 'dashboard.add_staff_page' %}" class="pl-4"><i class="fa fa-user-plus" aria-hidden="true"></i>Add</a>
     </div>
     <hr>
 {% else %}
@@ -354,7 +353,8 @@
       <div id="defaultPage" style="margin-top: 40px;">
         <div id="flash-message-container"></div>
         
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+
+        <nav style="--bs-breadcrumb-divider: '>';margin-top: 80px;" aria-label="breadcrumb" class="p-1 pt-3 rounded-2">
           <ol class="breadcrumb">
             <li class="breadcrumb-item active"><a href=""> Dashboard</a></li>
             {% block breadcrumbs %} 
@@ -363,7 +363,10 @@
           </ol>
         </nav>
 
-        <p>{% block description %} {% endblock %}</p>
+        <div class="container">
+          
+        {% block description %} {% endblock %}
+        </div>
         {% block content %}
         d
         {% endblock %}

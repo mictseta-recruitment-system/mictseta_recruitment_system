@@ -40,9 +40,9 @@
                     <td><a class="btn btn-primary" data-toggle="collapse" href="#collapse{{emp.id}}" role="button" aria-expanded="false" aria-controls="collapse{{emp.id}}">Expand</a></td>
                 </tr>
                 <tr class="collapse bg-dark" id="collapse{{emp.id}}">
-                    <td colspan="4">
-                        <table class="table table-bordered table-striped">
-                            <thead class="bg-info">
+                    <td colspan="4" class="bg-dark">
+                        <table class="table table-bordered table-striped bg-dark">
+                            <thead class="bg-dark">
                                 <tr class="text-white">
                                     
                                     <th>Leave Type</th>
@@ -53,10 +53,10 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-secondary">
                             	{% for leave in emp.leave_set.all %}
                                 {% if leave.seen == False %}
-                                <tr class="text-white">
+                                <tr class="text-white bg-dark">
                                    
                                     <td>{{leave.lave_type}}</td>
                                     <td>{{leave.message}}</td>

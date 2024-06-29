@@ -13,12 +13,71 @@ View jobs
 {% endblock %}
 
 
-{% block description %} you can manage job ads from this page {% endblock %}
+{% block description %}
+
+<div class="d-flex justify-content-between mt-2 ">
+
+  <div class="card text-bg-primary mb-3 mx-2 w-100 shadow-lg rounded" style="height:80px;">
+  <div class="card-body"> 
+    <div class="card-text d-flex justify-content-between">
+      <div>
+      <h6><b>All Jobs</b></h6>
+      <h6>{{all_jobs}}</h6> 
+        
+      </div>
+      <i class="fa fa-briefcase fa-3x" aria-hidden="true"></i>
+    </div>
+  </div>
+</div>
+
+<div class="card text-bg-success mb-3 mx-2 w-100 shadow-lg rounded" style="height:80px;">
+  <div class="card-body"> 
+    <div class="card-text d-flex justify-content-between">
+      <div>
+      <h6><b>Open Jobs</b></h6>
+      <h6>{{open_jobs}}</h6>  
+      </div>
+      <i class="fa fa-briefcase fa-3x" aria-hidden="true"></i>
+    </div>
+  </div>
+</div>
+
+<div class="card text-bg-warning mb-3 mx-2 w-100 shadow-lg rounded" style="height:80px;">
+  <div class="card-body"> 
+    <div class="card-text d-flex justify-content-between">
+      <div>
+      <h6 class="text-white"><b>Pending Jobs</b></h6>
+      <h6 class="text-white">{{pending_jobs}}</h6> 
+      </div>
+      <i class="fa fa-briefcase fa-3x text-white " aria-hidden="true"></i>
+    </div>
+  </div>
+</div>
+
+<div class="card text-bg-danger mb-3 mx-2 w-100 shadow-lg rounded" style="height:80px;">
+  <div class="card-body"> 
+    <div class="card-text d-flex justify-content-between">
+      <div>
+      <h6><b>Closed Jobs</b></h6>
+      <h6>{{closed_jobs}}</h6> 
+        
+      </div>
+      <i class="fa fa-briefcase fa-3x" aria-hidden="true"></i>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+
+
+ {% endblock %}
 {% block content %}
 
 
 
-<div class="card">
+<div class="card shadow-lg rounded">
   <div class="card-header d-flex justify-content-between " style="height:50px;">
 
     <h6>Jobs / Vacancy List</h6> 
@@ -37,14 +96,14 @@ View jobs
 
 <table id="example" class="table table-striped" style="width:100%">
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Job title</th>
-                <th>Issued By</th>
-                <th>Date of expiry</th>
-                <th>Status date</th>
-                <th>completed</th>
-                <th>Action</th>
+            <tr class="bg-dark text-white">
+                <th class="bg-dark text-white" >ID</th>
+                <th class="bg-dark text-white" >Job title</th>
+                <th class="bg-dark text-white" >Issued By</th>
+                <th class="bg-dark text-white">Date of expiry</th>
+                <th class="bg-dark text-white">Status date</th>
+                <th class="bg-dark text-white">completed</th>
+                <th class="bg-dark text-white">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -52,7 +111,7 @@ View jobs
             {% if job.user == user or user.is_superuser %}
               <tr>
                 <td>{{job.id}}</td>
-                <td><a href="{% url 'dashboard.job_details' job.id %}">{{job.title}}</a></td>
+                <td><b><a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{job.title}}</a></b></td>
                 <td>{{job.user.email}}</td>
                 <td>{{job.end_date}}</td>
 

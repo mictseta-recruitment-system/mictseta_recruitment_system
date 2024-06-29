@@ -80,7 +80,12 @@ def view_jobs(request):
 			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
 				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		jobs = JobPost.objects.all()
-		return render(request,'view_job.html',{'jobs':jobs})
+		all_jobs = len(jobs)
+		open_jobs= len(JobPost.objects.filter(status="Approved"))
+		pending_jobs = len(JobPost.objects.filter(status="waiting"))
+		pending_jobs = len(JobPost.objects.filter(status="pending")) + pending_jobs
+		closed_jobs = len(JobPost.objects.filter(status="closed"))
+		return render(request,'view_job.html',{'jobs':jobs, 'all_jobs':all_jobs,'open_jobs':open_jobs, 'pending_jobs':pending_jobs,'closed_jobs':closed_jobs})
 	else:
 		return redirect('render_auth_page')
 

@@ -864,7 +864,7 @@ def approve_job(request):
 			try:
 				job_post = JobPost.objects.get(id=int(data['job_post_id']))
 				job_post.is_approved = True
-				job_post.status = "Approved"
+				job_post.status = "open"
 				job_post.save()
 				noty = Notification.objects.create(user=request.user, action="Job Approval", job_title=job_post.title, status=job_post.status)
 				noty.save()
