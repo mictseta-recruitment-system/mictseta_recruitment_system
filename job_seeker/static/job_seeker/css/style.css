@@ -1,0 +1,124 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa; 
+}
+
+.navbar {
+    background-color: #007BFF;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.navbar .logo img {
+    width: 50px;
+    height: 50px;
+}
+
+.navbar .title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 20px;
+    text-align: center;
+}
+
+.container-box {
+    display: flex;
+    justify-content: flex-start; 
+    padding: 20px;
+    background-color: #fff; 
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+}
+.inner-content-box
+.sidebar {
+    background-color: #f8f9fa; 
+    color: #343a40;
+    border-right: 1px solid #ddd; 
+    width: 200px;
+    padding-top: 20px; 
+    height: 100%; 
+    overflow-y: auto; 
+} 
+.sidebar ul {
+    list-style-type: none;
+    padding-left: 0; 
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    color: #343a40;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+    background-color: #007BFF;
+    color: white;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.inner-content-box {
+    
+    background-color: #fff; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    padding: 20px;
+    width: 100%; 
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.content-section {
+    padding: 0px;
+}
+
+.form-group input, .form-group select {
+    border-radius: 0;
+}
+.form-group button {
+    border-radius: 0;
+}
+ /* Progress indicator */
+ .progress-circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(#007bff calc(var(--percentage) * 1%), #e9ecef 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-circle::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.progress-circle span {
+    position: absolute;
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+}
+.progress-circle{
+    margin: 100px auto;
+}
