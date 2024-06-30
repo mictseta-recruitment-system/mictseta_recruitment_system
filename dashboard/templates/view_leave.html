@@ -11,44 +11,77 @@
 
 
 {% block content %}
+ <div class="table-container mt-3">
+          <div class="card shadow-lg rounded">
+              <div class="card-header d-flex justify-content-between " style="height:50px;">
 
-<table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                	<th>Img</th>
-                    <th>Name & Surname</th>
-                    <th>Date Applied</th>
-                    <th>Leave Type</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Satus</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for leave in leaves %}
-                <tr>
-                 <td><img src="{{leave.employee.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"> 
-                </td>
-                <td>{{leave.employee.first_name}} {{leave.employee.last_name}}</td>
-                <td>{{leave.date}}</td>
-                <td>{{leave.lave_type}}</td>
-                <td>{{leave.start_date}}</td>
-                <td>{{leave.end_date}}</td>
+                <h6>Leave List</h6> 
 
-                <td>
-	               	{% if leave.status == "Pending" %}
-	                	<button class="btn btn-warning" disabled>{{leave.status}}</button>
-	               	{% elif leave.status == "Rejected" %}
-	               		<button class="btn btn-danger" disabled>{{leave.status}}</button>
-	               	{% elif leave.status == "Closed" %}
-	               		<button class="btn btn-info" disabled>{{leave.status}}</button>
-	               	{% else %}
-	               		<button class="btn btn-success" disabled>{{leave.status}}</button>
-	               	{% endif %}
-                </td>
-                    
-                </tr>
-            {% endfor %}
-            </tbody>
-           </table>
+                
+              </div>
+              
+
+
+              <div class="card-body"> 
+
+                <table id="leave" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                               <th class="bg-dark text-white">Img</th>
+                                <th class="bg-dark text-white">Name & Surname</th>
+                                <th class="bg-dark text-white">Date Applied</th>
+                                <th class="bg-dark text-white">Leave Type</th>
+                                <th class="bg-dark text-white">Start Date</th>
+                                <th class="bg-dark text-white">End Date</th>
+                                <th class="bg-dark text-white">Satus</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            {% for leave in leaves %}
+                                <tr>
+                                 <td><img src="{{leave.employee.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"> 
+                                </td>
+                                <td>{{leave.employee.first_name}} {{leave.employee.last_name}}</td>
+                                <td>{{leave.date}}</td>
+                                <td>{{leave.lave_type}}</td>
+                                <td>{{leave.start_date}}</td>
+                                <td>{{leave.end_date}}</td>
+
+                                <td>
+                                    {% if leave.status == "Pending" %}
+                                        <button class="btn btn-warning" disabled>{{leave.status}}</button>
+                                    {% elif leave.status == "Rejected" %}
+                                        <button class="btn btn-danger" disabled>{{leave.status}}</button>
+                                    {% elif leave.status == "Closed" %}
+                                        <button class="btn btn-info" disabled>{{leave.status}}</button>
+                                    {% else %}
+                                        <button class="btn btn-success" disabled>{{leave.status}}</button>
+                                    {% endif %}
+                                </td>
+                                    
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                
+                            </tr>
+                        </tfoot>
+                    </table>
+                  </div>
+                </div>
+
+              <script >
+              
+              $(document).ready(function (){
+
+                new DataTable('#leave');
+
+              });
+
+            </script>
+        </div>
+
+           
+           
 {% endblock %}

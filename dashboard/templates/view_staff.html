@@ -19,73 +19,73 @@ Manage Users
 
 <!-- User Table Section -->
         <div class="table-container">
-    <div class="card shadow-lg rounded">
-        <div class="card-header d-flex justify-content-between " style="height:50px;">
+          <div class="card shadow-lg rounded">
+              <div class="card-header d-flex justify-content-between " style="height:50px;">
 
-          <h6>Employee / Staff List</h6> 
+                <h6>Employee / Staff List</h6> 
 
-          <a href="{% url 'dashboard.add_staff_page' %}" class="btn btn-success py-0" style=""><i class="fa fa-plus" aria-hidden="true"></i> Add Employee/ Staff</a> 
+                <a href="{% url 'dashboard.add_staff_page' %}" class="btn btn-success py-0" style=""><i class="fa fa-plus" aria-hidden="true"></i> Add Employee/ Staff</a> 
 
-        </div>
-        
-
-
-        <div class="card-body"> 
-
-          <table id="employee" class="table table-striped" style="width:100%">
-                  <thead>
-                      <tr>
-                         <th class="bg-dark text-white">ID</th>
-                          <th class="bg-dark text-white">Name</th>
-                          <th class="bg-dark text-white">Email</th>
-                          <th class="bg-dark text-white">Role</th>
-                          <th class="bg-dark text-white">is Active</th>
-                          <th class="bg-dark text-white">Action</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                              {% for staff in staffs %}
-                        <tr>
-                          <td>EMP{{staff.id}}</td>
-                          <td><img src="{{staff.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"><b>{{staff.first_name}} {{staff.last_name}}</b></td>
-                          <td>{{staff.email}}</td>
-                          {% if staff.is_staff %}
-                         
-                          <td>{{staff.staffprofile.department}}</td>
-                          {% else %}
-                          <td>Applicant</td>
-                          {% endif %}
-                          {% if staff.is_active %}
-                          <td>Yes</td>
-                          {% else %}
-                          <td>Yes</td>
-                          {% endif %}
-                            {% if staff.staffprofile.department == "ADMINISTRATOR" %}
-                            <td><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a></td>
-                            {% else %}
-                            {% if user.is_superuser %}
-                            <td ><a href="{% url 'dashboard.update_staff' staff.id %}" class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i></a> 
-                            <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i></button><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a> </td>
-                            
-                            {% else %}
-                              <td > 
-                            <a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a>
-                          </td>
-                            {% endif %}
-                            {% endif %}
+              </div>
+              
 
 
-                        </tr>
-                      {% endfor %}
-                  </tbody>
-                  <tfoot>
-                      <tr>
-                          
-                      </tr>
-                  </tfoot>
-              </table>
-            </div>
-          </div>
+              <div class="card-body"> 
+
+                <table id="employee" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                               <th class="bg-dark text-white">ID</th>
+                                <th class="bg-dark text-white">Name</th>
+                                <th class="bg-dark text-white">Email</th>
+                                <th class="bg-dark text-white">Role</th>
+                                <th class="bg-dark text-white">is Active</th>
+                                <th class="bg-dark text-white">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                    {% for staff in staffs %}
+                              <tr>
+                                <td>EMP{{staff.id}}</td>
+                                <td><img src="{{staff.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"><b>{{staff.first_name}} {{staff.last_name}}</b></td>
+                                <td>{{staff.email}}</td>
+                                {% if staff.is_staff %}
+                               
+                                <td>{{staff.staffprofile.department}}</td>
+                                {% else %}
+                                <td>Applicant</td>
+                                {% endif %}
+                                {% if staff.is_active %}
+                                <td>Yes</td>
+                                {% else %}
+                                <td>Yes</td>
+                                {% endif %}
+                                  {% if staff.staffprofile.department == "ADMINISTRATOR" %}
+                                  <td><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                                  {% else %}
+                                  {% if user.is_superuser %}
+                                  <td ><a href="{% url 'dashboard.update_staff' staff.id %}" class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i></a> 
+                                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i></button><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a> </td>
+                                  
+                                  {% else %}
+                                    <td > 
+                                  <a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                </td>
+                                  {% endif %}
+                                  {% endif %}
+
+
+                              </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                
+                            </tr>
+                        </tfoot>
+                    </table>
+                  </div>
+                </div>
 
               <script >
               
@@ -97,7 +97,7 @@ Manage Users
 
             </script>
         </div>
-      </div>
+      
 
 
 {% endblock %}

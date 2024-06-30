@@ -9,6 +9,11 @@ class JobPost(models.Model):
     end_date = models.DateTimeField(null=False)
     location = models.CharField(max_length=225, unique=False, null=False)
     salary_range = models.CharField(max_length=100, null=True)  # Added field for salary range
+    # LEVEL_CHOICES = [
+    #     ('Remote', 'Remote'),
+    #     ('Part-Time', 'Part-Time'),
+    #     ('Full-Time', 'Full-Time'),
+    # ]
     job_type = models.CharField(max_length=50, null=False, default='Full-time')  # Added field for job type
     industry = models.CharField(max_length=100, null=True)  # Added field for industry
     company_name = models.CharField(max_length=225, null=True)  # Added field for company name

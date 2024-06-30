@@ -4,31 +4,42 @@
 
  {% block breadcrumbs %}
       <li class="breadcrumb-item active" aria-current="page">Backup</li>
-      
+      <li class="breadcrumb-item active" aria-current="page">Database</li>
      {% endblock %}
 
 {% block content %}
 
 
-<div class="container">
+
 	
-	<div class="m-5">
+<div class="container mt-5">
 		
-		<button class="btn btn-secondary w-100" role="button" onclick="backup_database()">Backup Now</button>
-		<table class="table table-striped">
+		
+		
+	<div class="card shadow-lg rounded">
+		<div class="card-header d-flex justify-content-between " style="height:50px;">
+		
+
+			<button class="btn btn-primary w-100" role="button" onclick="backup_database()" style="  background: radial-gradient(circle at 74.2% 50.9%, rgb(14, 72, 222) 5.2%, rgb(3, 22, 65) 75.3%);">Backup Now</button>
+
+		</div>
+  
+
+
+  		<div class="card-body"> 
+			<table class="table table-striped">
 			  <thead>
 			    <tr class="bg-dark">
-			      <th scope="col">#</th>
-			      <th scope="col">File Name</th>
-			      <th scope="col">Date</th>
-			      <th scope="col">Time</th>
-			      <th scope="col">Action</th>
+			      <th scope="col" class="bg-dark text-white">File Name</th>
+			      <th scope="col" class="bg-dark text-white">Date</th>
+			      <th scope="col" class="bg-dark text-white">Time</th>
+			      <th scope="col" class="bg-dark text-white">Action</th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			  	{% for backup in backups %}
 			    <tr>
-			      <th scope="row">1</th>
+			      
 			      <td>{{backup.filename}}</td>
 			      <td>{{backup.date}}</td>
 			      <td>{{backup.time}}</td>
@@ -38,6 +49,7 @@
 			    
 			  </tbody>
 			</table>
+		</div>
 	</div>
 
 </div>

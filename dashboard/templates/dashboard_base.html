@@ -52,6 +52,9 @@
     .content {
       flex: 1;
     }
+    .bread-container{
+    background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
+    }
     {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
               .sidebar {
               width: 180px;
@@ -60,14 +63,23 @@
               bottom: 0;
               left: 0;
               padding: 20px;
-              background-color: #091063;
-              transition: all 0.3s;
+              /*background-color: #091063;*/
+             /* background: linear-gradient(179.2deg, rgb(21, 21, 212) 0.9%, rgb(53, 220, 243) 95.5%);*/
+            /* background: linear-gradient(89.5deg, rgb(4, 29, 55) -0.1%, rgb(2, 67, 135) 25.1%, rgb(28, 133, 243) 49.6%, rgb(115, 181, 250) 74.5%, rgb(214, 239, 253) 99.3%);
+              transition: all 0.3s;*/
+             background: radial-gradient(circle at 74.2% 50.9%, rgb(14, 72, 222) 5.2%, rgb(3, 22, 65) 75.3%);
             }
              .navbar{
               z-index: 1;
               position: fixed;
               width:100%;
-              background-color: #121a7a;
+              /*background: linear-gradient(rgb(52, 102, 174) 0%, rgb(83, 144, 241) 100%);*/
+             /* background: radial-gradient(circle at 48.7% 44.3%, rgb(30, 144, 231) 0%, rgb(56, 113, 209) 22.9%, rgb(38, 76, 140) 76.7%, rgb(31, 63, 116) 100.2%);*/
+             /*background: linear-gradient(112.1deg, rgb(77, 238, 253) 0.7%, rgb(3, 151, 232) 26.1%, rgb(47, 31, 116) 95.7%);*/
+             /*background: linear-gradient(112.1deg, rgb(77, 238, 253) 0.7%, rgb(3, 151, 232) 26.1%, rgb(47, 31, 116) 95.7%);*/
+            /* background: linear-gradient(179.2deg, rgb(21, 21, 212) 0.9%, rgb(53, 220, 243) 95.5%);*/
+           /* background: radial-gradient(circle at 85.4% 50.8%, rgb(14, 72, 222) 0%, rgb(3, 22, 65) 74.2%);*/
+           background: radial-gradient(circle at 74.2% 50.9%, rgb(14, 72, 222) 5.2%, rgb(3, 22, 65) 75.3%);
             }
            
             .sidebar a:hover {
@@ -232,9 +244,15 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark ">
-    <button class="btn btn-outeline-primary text-white" id="sidebarCollapse">{{user.first_name}} {{user.last_surname}}</button>
+    <!-- <button class="btn btn-outeline-primary text-white" id="sidebarCollapse">{{user.first_name}} {{user.last_surname}}</button> -->
    
-    <a class="navbar-brand" href="#">{{user.staffprofile.department}}</a>
+    <a class="navbar-brand " href="#">
+      
+      <img src="{% static 'job_seeker/images/webicon.png' %}" class="rounded-2 float-start mx-4" alt="..." style="width:40px;height:40px;" >
+      <span>
+        MICTSETA - RMS
+      </span>
+    </a>
     
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -245,12 +263,15 @@
           <a class="nav-link" href="#">
             <a href="{% url 'dashboard.get_notifications'%}">
               
-              <button type="button" class="btn btn-primaryn position-relative p-0 mr-4 mb-1">
-               <i class="fas fa-bell fa-2x text-primary"  > </i>
+              <button type="button" class="btn btn-primarys position-relative p-0 mr-4 mb-1">
+               <i class="fas fa-bell fa-2x text-dark"  > </i>
+                {% if notify_len %}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger ">
-                  99+
+                  {{notify_len}}
                   <span class="visually-hidden">unread messages</span>
                 </span>
+                {% else %}
+                {% endif%}
               </button>
               
            
@@ -281,6 +302,7 @@
 
   <div class="sidebar">
     <h2 class="text-white">Dashboard</h2>
+    <hr>
     <a href="#" data-toggle="collapse" data-target="#dashboardMenu" aria-expanded="false" aria-controls="dashboardMenu">
       Dashboard
     </a>
@@ -354,9 +376,9 @@
         <div id="flash-message-container"></div>
         
 
-        <nav style="--bs-breadcrumb-divider: '>';margin-top: 80px;" aria-label="breadcrumb" class="p-1 pt-3 rounded-2">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item active"><a href=""> Dashboard</a></li>
+        <nav style="--bs-breadcrumb-divider: '>';margin-top: 80px;" aria-label="breadcrumb" class="p-1 pt-3 rounded-2 bread-container">
+          <ol class="breadcrumb px-3">
+            <li class="breadcrumb-item active"> {{user.staffprofile.department}}</li>
             {% block breadcrumbs %} 
           
             {% endblock %}
@@ -368,7 +390,7 @@
         {% block description %} {% endblock %}
         </div>
         {% block content %}
-        d
+      
         {% endblock %}
       </div>
     </div>

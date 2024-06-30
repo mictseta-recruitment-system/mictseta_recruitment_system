@@ -6,9 +6,8 @@ View jobs
 {% load static %}
 
 {% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Employee</li>
-      <li class="breadcrumb-item active" aria-current="page">Update</li>
-      <li class="breadcrumb-item active" aria-current="page">Profile</li>
+      <li class="breadcrumb-item active" aria-current="page">Recruitment</li>
+      <li class="breadcrumb-item active" aria-current="page">Jobs</li>
       
 {% endblock %}
 
@@ -92,16 +91,17 @@ View jobs
   {% if user.is_staff %}
 
   <!-- View Job Page -->
-  <div id="viewJobPage" class="table-container" style="display: block;">
+    <div id="viewJobPage" class="table-container" style="display: block;">
 
-<table id="example" class="table table-striped" style="width:100%">
+    <table id="example" class="table table-striped" style="width:100%">
         <thead>
             <tr class="bg-dark text-white">
                 <th class="bg-dark text-white" >ID</th>
                 <th class="bg-dark text-white" >Job title</th>
+                 <th class="bg-dark text-white" >Job Type</th>
                 <th class="bg-dark text-white" >Issued By</th>
                 <th class="bg-dark text-white">Date of expiry</th>
-                <th class="bg-dark text-white">Status date</th>
+                <th class="bg-dark text-white">Status</th>
                 <th class="bg-dark text-white">completed</th>
                 <th class="bg-dark text-white">Action</th>
             </tr>
@@ -112,6 +112,18 @@ View jobs
               <tr>
                 <td>{{job.id}}</td>
                 <td><b><a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{job.title}}</a></b></td>
+                
+                {% if job.job_type == "Contract" or job.job_type == "Part-Time" %}
+                   <td><button class="btn btn-dark  text-white p-0" >{{job.job_type}}</button></td>
+                {% elif job.job_type == "Permanent" or job.job_type == "Full-Time" %}
+                   <td><button class="btn btn-secondary text-white p-0" disabled>{{job.job_type}}</button></td>
+                {% elif job.job_type == "Remote" %}
+                   <td><button class="btn btn-danger text-white p-0" disabled>{{job.job_type}}</button></td>
+                {% else%}
+                <td>{{job.job_type}}</td>
+                {% endif %}
+
+
                 <td>{{job.user.email}}</td>
                 <td>{{job.end_date}}</td>
 
@@ -120,31 +132,35 @@ View jobs
                
                 
                 {% if job.is_complete %}
-                    {% if job.is_approved %}
-                    <td><button class="btn btn-success" disabled>{{job.status}}</button></td>
+                    {% if job.status == "open" %}
+                    <td><button class="btn btn-success p-0" disabled>{{job.status}}</button></td>
+                    {% elif job.status == "closed" %}
+                    <td><button class="btn btn-danger p-0" disabled>{{job.status}}</button></td>
                     {% else %}
-                    <td><button class="btn btn-warning" disabled>{{job.status}}</button></td>
+                    <td><button class="btn btn-warning p-0" disabled>{{job.status}}</button></td>
+
+
                     {% endif %}
-                   <td><button class="btn btn-success" disabled>Yes</button></td>
+                   <td><button class="btn btn-success p-0" disabled>Yes</button></td>
                         {% if user.is_superuser %}
                         <td>
                           {% if not job.is_approved %}
-                          <a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a>
-                          <a class="btn btn-success m-1" type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true" style="font-size: 12px;"></i> </a>
+                          <a class="btn btn-warning " data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a>
+                          <a class="btn btn-success m-1 " type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true" style="font-size: 12px;"></i> </a>
 
                           {% endif %}
                           <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
                         </td>
                         {% else %}
                             {% if not job.is_approved %}
-                              <td><a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a></td>
+                              <td><a class="btn btn-warning p" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a></td>
                             {% endif %}
                         {% endif %}
 
                 {% else %}
-                <td><button class="btn btn-info" disabled>{{job.status}}</b></td>
+                <td><button class="btn btn-info p-0" disabled>{{job.status}}</b></td>
                 
-                <td><button class="btn btn-danger" disabled>No</button></td>
+                <td><button class="btn btn-danger p-0" disabled>No</button></td>
                 
 
                 <td>
@@ -158,15 +174,7 @@ View jobs
              {% endfor %}
         </tbody>
         <tfoot>
-            <tr>
-                <th>ID</th>
-                <th>Job title</th>
-                <th>Issued By</th>
-                <th>Date of expiry</th>
-                <th>Status date</th>
-                <th>completed</th>
-                <th>Action</th>
-            </tr>
+           
         </tfoot>
     </table>
     <script >
