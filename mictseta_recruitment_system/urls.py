@@ -25,5 +25,6 @@ urlpatterns = [
     path('user/', include("users.urls")),
     path('job/', include("jobs.urls")),
     path('dashboard/', include("dashboard.urls")),
-    path('jobseeker/', include("job_seeker.urls"))
+    path('jobseeker/', include("job_seeker.urls")),
+    path('taskmanager/', include("task_manager.urls"))
 ]

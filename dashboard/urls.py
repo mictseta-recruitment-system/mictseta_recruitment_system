@@ -23,6 +23,7 @@ urlpatterns = [
     path('backup_db/', views.backup_db, name="dashboard.backup_db"),
     path('delete_db/<int:dbID>/', views.delete_db, name="dashboard.delete_db"),
     path('restore_db/<int:dbID>/', views.restore_db, name="dashboard.restore_db"),
+    path('task_manager', views.task_manager, name="dashboard.task_manager"),
 
 
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),

@@ -1054,6 +1054,138 @@ function delete_database(id){
           showFlashMessage(error.message, "danger");
       });
 }
+
+
+
+function addCategory() {
+  const url = 'http://127.0.0.1:8000/taskmanager/create_category/';
+  
+
+  const name = document.getElementById('category_name').value;
+ 
+  
+  const jsonData = {
+    category_name: name,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+
+function updateCategory(categoryID) {
+  const url = 'http://127.0.0.1:8000/taskmanager/update_category/';
+  
+
+  const name = document.getElementById('category_name'+ categoryID).value;
+ 
+  
+  const jsonData = {
+    category_name: name,
+    categoryID : categoryID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function deleteCategory(catid) {
+  const url = 'http://127.0.0.1:8000/taskmanager/delete_category/';
+  
+  const jsonData = {
+    categoryID: catid,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+
+
+
+
+
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {
     let cookieValue = null;

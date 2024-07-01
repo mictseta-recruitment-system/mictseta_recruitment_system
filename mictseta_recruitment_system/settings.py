@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'jobs',
     'dashboard',
     'job_seeker',
+    'task_manager',
 
     
 ]

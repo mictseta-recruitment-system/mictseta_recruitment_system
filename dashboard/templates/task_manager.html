@@ -1,0 +1,209 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title%}
+Task Manager
+{% endblock %}
+
+{% load static %}
+{% block head %} Task Manager {% endblock %}
+
+{% block breadcrumbs %}
+      <li class="breadcrumb-item active" aria-current="page">Task Manager</li>
+      
+{% endblock %}
+
+{% block description %} Manage all Tasks here  {% endblock %}
+
+
+{% block content %}
+
+
+<div class="container d-flex justify-content-between">
+	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1">
+	  <h5 class="card-header d-flex justify-content-between w-100">
+	    
+	    <span>Category List</span>
+	    <button type="button" class="btn btn-success py-0" data-bs-toggle="modal" data-bs-target="#newCategory"> <i class="fa fa-plus" aria-hidden="true"></i> New</button>
+	
+	  </h5>
+	  <div class="card-body">
+	    <ul class="list-group list-group-flush">
+		  {% for category in categories %}
+		  <li class="list-group-item d-flex justify-content-between align-items-center">
+		   	 {{category.name}}
+		     <div>
+			    <span class="badge bg-warning rounded-pill " type="button" data-bs-toggle="modal" data-bs-target="#updateCategory{{category.id}}"> <i class="fa fa-edit" aria-hidden="true"></i></span>
+			    <span class="badge bg-danger rounded-pill" type="button" onclick="deleteCategory({{category.id}})"> <i class="fa fa-trash" aria-hidden="true"></i></span>
+		   	 </div>
+		  </li>
+
+		  <div class="modal fade" id="updateCategory{{category.id}}" tabindex="-1" aria-labelledby="updateCategory{{category.id}}" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h1 class="modal-title fs-5" id="updateCategory{{category.id}}">Update Category > <span class="text-secondary">{{category.name}}</span> </h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <div class="mb-3">
+					  <label for="exampleFormControlInput1" class="form-label">Category name</label>
+					  <input type="text" class="form-control" value="{{category.name}}" id="category_name{{category.id}}" placeholder="e.g. Jobs / vacancy ">
+					</div>
+			      </div>
+			      <div class="modal-footer d-flex justify-content-between">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-primary" onclick="updateCategory({{category.id}})">Save changes</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		  {% endfor %}
+		<!--   <li class="list-group-item d-flex justify-content-between align-items-center">
+		    A second list item
+		     <div>
+			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
+			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
+		   	 </div>
+		  </li>
+		  <li class="list-group-item d-flex justify-content-between align-items-center">
+		    A third list item
+		     <div>
+			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
+			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
+		   	 </div>
+		  </li> -->
+		</ul>
+	  </div>
+	</div>
+
+	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1">
+	  <h5 class="card-header d-flex justify-content-between w-100">
+	    
+	    <span>Task List</span>
+	    <button type="button" class="btn btn-success py-0" data-bs-toggle="modal" data-bs-target="#newTask"> <i class="fa fa-plus" aria-hidden="true"></i> New</button>
+	
+	  </h5>
+	  <div class="card-body">
+	   <ul class="list-group list-group-flush">
+		  <li class="list-group-item d-flex justify-content-between align-items-center">
+		   	 <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">Task 1
+		   	 <div>
+			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
+			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
+			    <span class="badge bg-info rounded-pill"> <i class="fa fa-eye" aria-hidden="true"></i></span>
+
+		   	 </div>
+		  </li>
+		  <li class="list-group-item d-flex justify-content-between align-items-center">
+		    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">Task 2
+		    <div>
+			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
+			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
+			      <span class="badge bg-info rounded-pill"> <i class="fa fa-eye" aria-hidden="true"></i></span>
+		   	 </div>
+		  </li>
+		  <li class="list-group-item d-flex justify-content-between align-items-center">
+		    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">Task 3
+		     <div>
+			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
+			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
+			      <span class="badge bg-info rounded-pill"> <i class="fa fa-eye" aria-hidden="true"></i></span>
+		   	 </div>
+		  </li>
+		</ul>
+	  </div>
+	</div>
+	
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="newCategory" tabindex="-1" aria-labelledby="newCategory" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newCategory">Add New Category</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+		  <label for="exampleFormControlInput1" class="form-label">Category name</label>
+		  <input type="text" class="form-control" id="category_name" placeholder="e.g. Jobs / vacancy ">
+		</div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="addCategory()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="newTask" tabindex="-1" aria-labelledby="newTask" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="newTask">Add New Task</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      	<div class="d-flex justify-content-between">
+	        <div class="mb-3">
+			  <label for="exampleFormControlInput1" class="form-label">Task name</label>
+			  <input type="text" class="form-control" id="task_name" placeholder="e.g. schedule interview">
+			</div>
+			<div class="mb-3">
+				<label for="category" class="form-label">Choose Category from the list:</label>
+				<input list="categories" class="form-control" name="category" id="category">
+
+				<datalist id="categories">
+				  <option value="Edge">
+				  <option value="Firefox">
+				  <option value="Chrome">
+				  <option value="Opera">
+				  <option value="Safari">
+				</datalist>
+				
+			</div>
+      		
+      	</div>
+      	<div class="d-flex justify-content-between">
+	       <div class="mb-3">
+				<label for="assignee" class="form-label">Choose assignee from the list:</label>
+				<input list="assignees" class="form-control" name="assignee" id="assignee">
+
+				<datalist id="assignees">
+				  <option value="manager@mictseta.com">Jeff nengovhela</option>
+				</datalist>
+				
+			</div>
+			<div class="mb-3">
+				<label for="priority" class="form-label">Choose task priority :</label>
+				<input list="prioritys" class="form-control" name="priority" id="priority">
+
+				<datalist id="prioritys">
+				  <option value="high">very important</option>
+				  <option value="medium">important</option>
+				  <option value="low">less important</option>
+				</datalist>
+				
+			</div>
+      		
+      	</div>
+      	<div class="mb-3">
+		  <label for="description" class="form-label">Task Description</label>
+		  <textarea class="form-control" id="description" rows="4"></textarea>
+		</div>
+
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

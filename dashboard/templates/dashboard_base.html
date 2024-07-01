@@ -63,7 +63,7 @@
               top: 0;
               bottom: 0;
               left: 0;
-              padding: 20px;
+              padding-top: 20px;
               /*background-color: #091063;*/
              /* background: linear-gradient(179.2deg, rgb(21, 21, 212) 0.9%, rgb(53, 220, 243) 95.5%);*/
             /* background: linear-gradient(89.5deg, rgb(4, 29, 55) -0.1%, rgb(2, 67, 135) 25.1%, rgb(28, 133, 243) 49.6%, rgb(115, 181, 250) 74.5%, rgb(214, 239, 253) 99.3%);
@@ -102,7 +102,7 @@
             top: 0;
             bottom: 0;
             left: 0;
-            padding: 20px;
+            padding-top: 20px;
             background-color: #016e8c;
             transition: all 0.3s;
             font-size: 15px;
@@ -352,16 +352,21 @@
     </div>
     <hr>
     <a href="{% url 'dashboard.manage_attendance' %}">
-      <i class="fa fa-history" aria-hidden="true"></i>Attendance
+      <i class="fa fa-history" aria-hidden="true"></i> Attendance
+    </a>
+    
+    <hr>
+    <a href="{% url 'dashboard.task_manager' %}">
+      <i class="fa fa-tasks" aria-hidden="true"></i> Task-Manager
     </a>
     
     <hr>
 
     <a href="#" data-toggle="collapse" data-target="#notificationsMenu" aria-expanded="false" aria-controls="notificationsMenu">
-      <i class="fas fa-bell"  > </i>Notifications {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}
+      <i class="fas fa-bell"  > </i> Notifications {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}
     </a>
     <div class="collapse" id="notificationsMenu">
-      <a href="{% url 'dashboard.get_notifications'%}" class="pl-4">All Notifications  {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}</a>
+      <a href="{% url 'dashboard.get_notifications'%}" class="pl-4"> All Notifications  {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}</a>
       <a href="#" class="pl-4"> <i class="fa fa-cog" aria-hidden="true"></i>Settings</a>
     </div>
     <hr>

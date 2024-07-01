@@ -9,6 +9,7 @@ from django.utils.timezone import now
 from datetime import datetime
 import datetime as dates
 from .models import Backup
+from task_manager.models import Category, Task
 
 
 @ensure_csrf_cookie
@@ -284,7 +285,17 @@ def leave_generate_pdf_report(request):
     return HttpResponse(pdf, content_type='application/pdf')
 
 
+def task_manager(request):
+	if request.user.is_authenticated:
+		if request.user.is_staff:
+			tasks = Task.objects.all()
+			categoreis = Category.objects.all()
 
+			return render(request, 'task_manager.html',{'tasks':tasks, 'categories':categoreis})
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
 
 from .db_backups import my_backup
 def backup_database(request):
