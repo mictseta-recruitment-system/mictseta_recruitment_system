@@ -55,6 +55,7 @@
     .bread-container{
     background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
     }
+    
     {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
               .sidebar {
               width: 180px;
@@ -265,6 +266,7 @@
               
               <button type="button" class="btn btn-primarys position-relative p-0 mr-4 mb-1">
                <i class="fas fa-bell fa-2x text-dark"  > </i>
+               {% if user.notification_set.all > 0  or user.is_superuser %}
                 {% if notify_len %}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger ">
                   {{notify_len}}
@@ -272,6 +274,7 @@
                 </span>
                 {% else %}
                 {% endif%}
+              {% endif %}
               </button>
               
            
@@ -300,7 +303,7 @@
     </div>
   </nav>
 
-  <div class="sidebar">
+  <div class="sidebar" style=" overflow-y: scroll; overflow-x:none;">
     <h2 class="text-white">Dashboard</h2>
     <hr>
     <a href="#" data-toggle="collapse" data-target="#dashboardMenu" aria-expanded="false" aria-controls="dashboardMenu">
@@ -366,6 +369,10 @@
     <a href="{% url 'dashboard.backup_database' %}" class="ml-4">
       Backup / Restore
     </a>
+    <hr>
+
+             
+                
     
     <hr>
   </div>
@@ -489,6 +496,7 @@
       document.querySelector('.main-content').classList.toggle('active');
     });
   </script>
+
 
 </body>
 </html>

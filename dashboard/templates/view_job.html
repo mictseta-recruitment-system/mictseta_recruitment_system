@@ -146,7 +146,7 @@ View jobs
                         <td>
                           {% if not job.is_approved %}
                           <a class="btn btn-warning " data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a>
-                          <a class="btn btn-success m-1 " type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true" style="font-size: 12px;"></i> </a>
+                          <a class="btn btn-success m-1 " type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-check" aria-hidden="true" style="font-size: 12px;"></i> </a>
 
                           {% endif %}
                           <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> </a>

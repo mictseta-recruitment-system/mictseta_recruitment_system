@@ -47,7 +47,12 @@ Manage Users
                                     {% for staff in staffs %}
                               <tr>
                                 <td>EMP{{staff.id}}</td>
-                                <td><img src="{{staff.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"><b>{{staff.first_name}} {{staff.last_name}}</b></td>
+                                  {% if user.profileimage.image %}
+                                    <td><img src="{{staff.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"><b>{{staff.first_name}} {{staff.last_name}}</b></td>
+                                  {% else %}
+                                    <td><img src="{% static 'dashboard/images/default_user.jpg' %}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"><b>{{staff.first_name}} {{staff.last_name}}</b></td>
+                                  {% endif %}
+
                                 <td>{{staff.email}}</td>
                                 {% if staff.is_staff %}
                                

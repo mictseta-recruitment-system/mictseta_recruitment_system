@@ -34,10 +34,10 @@ def emp_panel(request):
 		else:
 			status = "Inactive"
 
-		if current_time.month  < 10 :
+		if current_time.month  < 10  and current_time.day < 10 :
 
-			start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
-			end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
+			start_time = f"{current_time.year}-0{current_time.month}-0{current_time.day}T{shift_start_time}" 
+			end_time = f"{current_time.year}-0{current_time.month}-0{current_time.day}T{shift_end_time}"
 		else:
 			start_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_start_time}" 
 			end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
@@ -90,11 +90,10 @@ def view_jobs(request):
 		for job in jobs:
 			if current_time > job.end_date :
 				job.status = "closed"
-				print(job)
 				job.save()
 
 		all_jobs = len(jobs)
-		open_jobs= len(JobPost.objects.filter(status="Approved"))
+		open_jobs= len(JobPost.objects.filter(status="open"))
 		pending_jobs = len(JobPost.objects.filter(status="waiting"))
 		pending_jobs = len(JobPost.objects.filter(status="pending")) + pending_jobs
 		closed_jobs = len(JobPost.objects.filter(status="closed"))

@@ -50,6 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
              sendShiftEndRequest(link);
           }
           const timeUntilEnd = shiftEndTime - now;
+          console.log(timeUntilEnd)
+          console.log(shiftEndTime)
+          console.log(now)
           document.getElementById('countdownHeader').textContent = 'Shift ends in ';
           setCountdown(timeUntilEnd);
           document.getElementById('startShiftButton').disabled = true;

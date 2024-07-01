@@ -521,7 +521,7 @@ def get_late(shift_start):
 
 def mark_attendence(request, empID):
     if request.user.is_authenticated:
-        if request.user.is_superuser:
+        if request.user.is_staff:
             from django.utils import timezone
             if request.method == 'GET':
                 try:
@@ -545,9 +545,9 @@ def mark_attendence(request, empID):
             else:
                 return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
         else:       
-            return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+            return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
     else:
-        return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
 def end_attendace(request, empID):
     from django.utils import timezone
