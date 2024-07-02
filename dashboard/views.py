@@ -10,6 +10,7 @@ from datetime import datetime
 import datetime as dates
 from .models import Backup
 from task_manager.models import Category, Task
+import json
 
 
 @ensure_csrf_cookie
@@ -17,7 +18,16 @@ def panel(request):
 	if request.user.is_authenticated:
 		notify_len = len(Notification.objects.all())
 		notification = Notification.objects.all()
-		return render(request,'panel.html', { 'notify_len':notify_len, 'notifications':notification})
+		if request.user.is_superuser:
+			categoreis = Category.objects.filter(user=request.user).distinct()
+		else:
+			categoreis = Category.objects.filter(task__assigned_to=request.user).distinct()
+		cats = []
+		data = []
+		for cat in categoreis:
+			cats.append(cat.name)
+			data.append(len(Task.objects.filter(category=cat, is_complete=False)))
+		return render(request,'panel.html', { 'notify_len':notify_len, 'notifications':notification,'cats':json.dumps(cats), 'datas':json.dumps(data)})
 	else:
 		return redirect('render_auth_page')
 
@@ -44,7 +54,19 @@ def emp_panel(request):
 			end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
 		notification = Notification.objects.all()
 		notify_len = len(Notification.objects.filter(is_seen=False))
-		return render(request,'emp_panel.html', {'start_time':start_time,'end_time':end_time,'status':status, 'notifications':notification.reverse(), 'notify_len':notify_len})
+
+		if request.user.is_superuser:
+			categoreis = Category.objects.filter(user=request.user).distinct()
+		else:
+			categoreis = Category.objects.filter(task__assigned_to=request.user).distinct()
+			
+		cats = []
+		data = []
+		for cat in categoreis:
+			cats.append(cat.name)
+			data.append(len(Task.objects.filter(category=cat, is_complete=False)))
+		
+		return render(request,'emp_panel.html', {'start_time':start_time,'end_time':end_time,'status':status, 'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data)})
 	else:
 		return redirect('render_auth_page')
 
@@ -288,10 +310,18 @@ def leave_generate_pdf_report(request):
 def task_manager(request):
 	if request.user.is_authenticated:
 		if request.user.is_staff:
-			tasks = Task.objects.all()
-			categoreis = Category.objects.all()
-
-			return render(request, 'task_manager.html',{'tasks':tasks, 'categories':categoreis})
+			if request.user.is_superuser:
+				categoreis = Category.objects.filter(user=request.user).distinct()
+			else:
+				categoreis = Category.objects.filter(task__assigned_to=request.user).distinct()
+				for cat in categoreis:
+					print(cat.name)
+			# tasks = Task.objects.filter()
+			if request.user.is_superuser:
+				assignees = User.objects.filter(is_staff=True)
+			else:
+				assignees = User.objects.filter(id=request.user.id)
+			return render(request, 'task_manager.html',{ 'categories':categoreis, 'assignees':assignees})
 		else:       
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:

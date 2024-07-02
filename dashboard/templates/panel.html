@@ -14,7 +14,7 @@
 
 <!-- Charts Section -->
         <div class="row mt-3">
-          <div class="col-lg-6 ">
+          <div class="col-lg-6 p-2">
             <div class="card mb-4">
               <div class="card-body  shadow-lg">
                 <h5 class="card-title">Job vs Applicant</h5>
@@ -31,67 +31,136 @@
             </div>
           </div>
         </div>
-      <div class="col-md-6 p-0 shadow-lg rounded-2">
-        
-            <div class="card w-100" style="max-height:225px;">
-              <h5 class="card-header d-flex justify-content-between"> 
-                <div>
-                  <i class="fas fa-bell text-dark"  > </i> 
-                  Notifications
-                  
-                </div>
-                <a href="{% url 'dashboard.get_notifications'%}" class="btn btn-outline-info p-0 px-1"> View All</a>
-              </h5>
-              <div class="card-body" style=" overflow-y: scroll;">
-                <ul class="list-group list-group-flush">
-                {% if notifications %}
-                     {% for notific in notifications %}
-                        {% if notific.is_seen %}
-                        {% else %}
-                          <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                              <div class="fw-bold text-left">
-                                {{notific.action}} 
-                                {% if notific.status == "Approved" or notific.status == "open" %}
-                                <button class="btn btn-success text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
 
-                                {% elif notific.status == "waiting" or notific.status == "Pending" %}
-                                <button class="btn btn-warning text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
-
-                                {% else %}
-                                <button class="btn btn-danger text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
-
-                                {% endif %} 
-                              </div>
-
-                              {{notific.job_title}}, {{notific.timestamp}}
-                            </div>
-                             <a href="{% url 'dashboard.delete_notifications' notific.id %}">
-                                <span class="badge text-bg-danger rounded-pill">
-                                    <i class="fa fa-times " aria-hidden="true"></i>
-                                </span>
-                            </a>
-                          </li>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                   
-      
-                      <div class="d-flex justify-content-center ">
-                        
-                        <i class="fa fa-bell-slash fa-5x text-danger" aria-hidden="true"></i>
-                        
-                      </div>
-                      <div class="d-flex justify-content-center mt-5">
-                        <h5><b>Oops</b>, You dont have <b class="text-danger">Notifications</b> yet </h5>
-                      </div>
-        
-                {% endif %}
-                </ul>
+        <div class="row">
+          <div class="col-lg-6 px-2">
+            <div class="card" >
+              <div class="card-body shadow-lg " >
+                <h5 class="card-title">Pending Tasks</h5>
+                <canvas id="pendingTask" ></canvas>
               </div>
             </div>
-        
-    </div>
+          </div>
+
+            <div class="col-lg-6 p-0 shadow-lg rounded-2">
+              
+                  <div class="card w-100" style="max-height:225px;">
+                    <h5 class="card-header d-flex justify-content-between"> 
+                      <div>
+                        <i class="fas fa-bell text-dark"  > </i> 
+                        Notifications
+                        
+                      </div>
+                      <a href="{% url 'dashboard.get_notifications'%}" class="btn btn-outline-info p-0 px-1"> View All</a>
+                    </h5>
+                    <div class="card-body" style=" overflow-y: scroll;">
+                      <ul class="list-group list-group-flush">
+                      {% if notifications %}
+                           {% for notific in notifications %}
+                              {% if notific.is_seen %}
+                              {% else %}
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                  <div class="ms-2 me-auto">
+                                    <div class="fw-bold text-left">
+                                      {{notific.action}} 
+                                      {% if notific.status == "Approved" or notific.status == "open" %}
+                                      <button class="btn btn-success text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
+
+                                      {% elif notific.status == "waiting" or notific.status == "Pending" %}
+                                      <button class="btn btn-warning text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
+
+                                      {% else %}
+                                      <button class="btn btn-danger text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
+
+                                      {% endif %} 
+                                    </div>
+
+                                    {{notific.job_title}}, {{notific.timestamp}}
+                                  </div>
+                                   <a href="{% url 'dashboard.delete_notifications' notific.id %}">
+                                      <span class="badge text-bg-danger rounded-pill">
+                                          <i class="fa fa-times " aria-hidden="true"></i>
+                                      </span>
+                                  </a>
+                                </li>
+                              {% endif %}
+                          {% endfor %}
+                      {% else %}
+                         
+            
+                            <div class="d-flex justify-content-center ">
+                              
+                              <i class="fa fa-bell-slash fa-5x text-danger" aria-hidden="true"></i>
+                              
+                            </div>
+                            <div class="d-flex justify-content-center mt-5">
+                              <h5><b>Oops</b>, You dont have <b class="text-danger">Notifications</b> yet </h5>
+                            </div>
+              
+                      {% endif %}
+                      </ul>
+                    </div>
+                  </div>
+              
+          </div>
+
+  </div>
 
 
+{% endblock %}
+
+{% block chart %}
+
+<script>
+  
+  var ctxUserGrowth = document.getElementById('userGrowthChart').getContext('2d');
+    var userGrowthChart = new Chart(ctxUserGrowth, {
+      type: 'bar',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'User Growth',
+          data: [28, 48, 40, 19, 86, 27, 90],
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
+          borderColor: 'rgba(153, 102, 255, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    let category = JSON.parse('{{ cats|escapejs }}');  // Parse the JSON data
+    let datas = JSON.parse('{{ datas|escapejs }}'); 
+
+
+    var ctxpendingTask = document.getElementById('pendingTask').getContext('2d');
+    var pendingTask = new Chart(ctxpendingTask, {
+      type: 'bar',
+      data: {
+        labels: category,
+        datasets: [{
+          label: 'pendingTask',
+          data: datas,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+</script>
 {% endblock %}

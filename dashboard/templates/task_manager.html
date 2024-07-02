@@ -19,6 +19,19 @@ Task Manager
 
 
 <div class="container d-flex justify-content-between">
+
+	
+  <!-- List group -->
+  <!-- <div class="list-group list-group-flush" id="myList" role="tablist">
+    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#home" role="tab">Home</a>
+    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#profile" role="tab">Profile</a>
+    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#messages" role="tab">Messages</a>
+    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#settings" role="tab">Settings</a>
+  </div> -->
+
+  <!-- Tab panes -->
+
+
 	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1">
 	  <h5 class="card-header d-flex justify-content-between w-100">
 	    
@@ -27,16 +40,30 @@ Task Manager
 	
 	  </h5>
 	  <div class="card-body">
-	    <ul class="list-group list-group-flush">
-		  {% for category in categories %}
-		  <li class="list-group-item d-flex justify-content-between align-items-center">
+	    
+		  <div class="list-group list-group-flush" id="myList" role="tablist">
+		  {% for category in categories  %}
+		    
+
+		    <a class="list-group-item list-group-item-action d-flex justify-content-between" data-bs-toggle="list" href="#category{{category.id}}" role="tab">{{category.name}}
+		    	{% if user.id == category.user.id %}
+		    	<span>
+				    	 <span class="badge bg-warning rounded-pill " type="button" data-bs-toggle="modal" data-bs-target="#updateCategory{{category.id}}"> <i class="fa fa-edit" aria-hidden="true"></i></span>
+					    <span class="badge bg-danger rounded-pill" type="button" onclick="deleteCategory({{category.id}})"> <i class="fa fa-trash" aria-hidden="true"></i></span>
+		    	</span>
+		    	{% else %}
+		    	{% endif %}
+		    </a>
+		  <!-- <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center " data-bs-toggle="list" href="#home" role="tab">
 		   	 {{category.name}}
 		     <div>
 			    <span class="badge bg-warning rounded-pill " type="button" data-bs-toggle="modal" data-bs-target="#updateCategory{{category.id}}"> <i class="fa fa-edit" aria-hidden="true"></i></span>
 			    <span class="badge bg-danger rounded-pill" type="button" onclick="deleteCategory({{category.id}})"> <i class="fa fa-trash" aria-hidden="true"></i></span>
 		   	 </div>
-		  </li>
-
+		  </li> -->
+		    
+		   	
+		  
 		  <div class="modal fade" id="updateCategory{{category.id}}" tabindex="-1" aria-labelledby="updateCategory{{category.id}}" aria-hidden="true">
 			  <div class="modal-dialog modal-dialog-centered">
 			    <div class="modal-content">
@@ -58,6 +85,7 @@ Task Manager
 			  </div>
 			</div>
 		  {% endfor %}
+		  </div>
 		<!--   <li class="list-group-item d-flex justify-content-between align-items-center">
 		    A second list item
 		     <div>
@@ -72,7 +100,7 @@ Task Manager
 			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
 		   	 </div>
 		  </li> -->
-		</ul>
+		
 	  </div>
 	</div>
 
@@ -83,34 +111,197 @@ Task Manager
 	    <button type="button" class="btn btn-success py-0" data-bs-toggle="modal" data-bs-target="#newTask"> <i class="fa fa-plus" aria-hidden="true"></i> New</button>
 	
 	  </h5>
-	  <div class="card-body">
-	   <ul class="list-group list-group-flush">
-		  <li class="list-group-item d-flex justify-content-between align-items-center">
-		   	 <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">Task 1
-		   	 <div>
-			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
-			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
-			    <span class="badge bg-info rounded-pill"> <i class="fa fa-eye" aria-hidden="true"></i></span>
+	  	<div class="card-body">
+		  	<div class="tab-content">
+	    	<div class="tab-pane active" id="category{{category.id}}" role="tabpanel">
+	    		<div class="d-flex justify-content-center ">
+	                        
+	              <i class="fa fa-eye fa-3x text-info" aria-hidden="true"></i>
+	                        
+	             </div>
+	              <div class="d-flex justify-content-center mt-5">
+	             <h6>Choose a category to view related <b class="text-info">Tasks</b> </h6>
+	            </div>
+	    	</div>
+		  	{% for category in categories %}
+	    	<div class="tab-pane" id="category{{category.id}}" role="tabpanel">
+	    		 <ul class="list-group list-group-flush">
+	    		{% if category.task_set.all %}
+	    			{% for task in category.task_set.all %}
+	    			
+					  <li class="list-group-item d-flex justify-content-between align-items-center">
+					  		{% if task.is_complete %}
+					   	 		<input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox" onclick="checkTask({{task.id}})" checked>
+					   	 		<s> {{task.name}}</s>
+					   	 	{% else %}
+					   	 			<input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox" onclick="checkTask({{task.id}})">
+					   	 		{{task.name}}
+					   	 	{% endif %}
+					   	 {% if user.id == category.user.id %}
+					   	 <div>
+						    <span class="badge bg-warning rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#updateTask{{task.id}}"> 
+						    	<i class="fa fa-edit" aria-hidden="true"></i>
+						    </span>
+						    <span class="badge bg-danger rounded-pill" type="button" onclick="deleteTask({{task.id}})"> 
+						    	<i class="fa fa-trash" aria-hidden="true"></i>
+						    </span>
+						    <span class="badge bg-info rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#viewTask{{task.id}}">
+						    	<i class="fa fa-eye" aria-hidden="true"></i>
+						    </span>
 
-		   	 </div>
-		  </li>
-		  <li class="list-group-item d-flex justify-content-between align-items-center">
-		    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">Task 2
-		    <div>
-			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
-			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
-			      <span class="badge bg-info rounded-pill"> <i class="fa fa-eye" aria-hidden="true"></i></span>
-		   	 </div>
-		  </li>
-		  <li class="list-group-item d-flex justify-content-between align-items-center">
-		    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">Task 3
-		     <div>
-			    <span class="badge bg-warning rounded-pill"> <i class="fa fa-edit" aria-hidden="true"></i></span>
-			    <span class="badge bg-danger rounded-pill"> <i class="fa fa-trash" aria-hidden="true"></i></span>
-			      <span class="badge bg-info rounded-pill"> <i class="fa fa-eye" aria-hidden="true"></i></span>
-		   	 </div>
-		  </li>
-		</ul>
+					   	 </div>
+					   	 {% else %}
+					   	 <span class="badge bg-info rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#viewTask{{task.id}}">
+						    	<i class="fa fa-eye" aria-hidden="true"></i>
+						    </span>
+					   	 {% endif %}
+					  </li>
+					  <!-- Modal -->
+						<div class="modal fade" id="updateTask{{task.id}}" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
+						  <div class="modal-dialog modal-dialog-centered">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h1 class="modal-title fs-5" id="">Update Task > <span class="text-secondary">{{task.name}}</span></h1>
+						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						      </div>
+						      <div class="modal-body">
+						      	<div class="d-flex justify-content-between">
+							        <div class="mb-3">
+									  <label for="exampleFormControlInput1" class="form-label">Task name</label>
+									  <input type="text" class="form-control" id="task_name{{task.id}}" placeholder="e.g. schedule interview" value="{{task.name}}">
+									</div>
+									<div class="mb-3">
+										<label for="category" class="form-label">Choose Category from the list:</label>
+										<input list="categories" class="form-control" name="category" id="task_category{{task.id}}" value="{{category.name}}">
+
+										<datalist id="categories">
+										
+										  {% for category in categories %}
+										  <option value="{{category.name}}">
+										  {% endfor %}
+										</datalist>
+										
+									</div>
+						      		
+						      	</div>
+						      	<div class="d-flex justify-content-between">
+							       <div class="mb-3">
+										<label for="assignee" class="form-label">Choose assignee from the list:</label>
+										<input list="assignees" class="form-control" name="assignee" id="assignee{{task.id}}" value="{{task.assigned_to.email}}" >
+
+										<datalist id="assignees">
+											
+											{% for assignee in assignees %}
+										  <option value="{{assignee.email}}">{{assignee.first_name}} {{assignee.last_name}}</option>
+											{% endfor %}
+										</datalist>
+										
+									</div>
+									<div class="mb-3">
+										<label for="priority" class="form-label">Choose task priority :</label>
+										<input list="prioritys" class="form-control" name="priority" id="priority{{task.id}}" value="{{task.priority}}">
+
+										<datalist id="prioritys">
+										
+										  <option value="high">very important</option>
+										  <option value="medium">important</option>
+										  <option value="low">less important</option>
+										</datalist>
+										
+									</div>
+						      		
+						      	</div>
+						      	<div class="mb-3">
+								  <label for="description" class="form-label">Task Description</label>
+								  <textarea class="form-control" id="description{{task.id}}" rows="4" >{{task.description}}</textarea>
+								</div>
+
+						      </div>
+						      <div class="modal-footer d-flex justify-content-between">
+						        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						        <button type="button" class="btn btn-primary" onclick="updateTask({{task.id}})">Save changes</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+<!--===================================  -->
+							<!-- Modal -->
+							<div class="modal fade" id="viewTask{{task.id}}" tabindex="-1" aria-labelledby="newTask" aria-hidden="true">
+							  <div class="modal-dialog modal-dialog-centered">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <h1 class="modal-title fs-5" id="">View Task > <span class="text-secondary"> {{task.name}}</span></h1>
+							        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							      </div>
+							      <div class="modal-body">
+							      	<div class="d-flex justify-content-between">
+								        <div class="mb-3 col-6">
+												  <label for="exampleFormControlInput1" class="form-label"><b>Task name:</b></label>
+												  <p>{{task.name}}</p>
+												</div>
+												<div class="mb-3 col-6">
+													<label for="category" class="form-label"><b>Category :</b></label>
+													<p>{{task.category.name}}</p>
+													
+												</div>
+							      		
+							      	</div>
+							      	<div class="d-flex justify-content-between">
+								      		<div class="mb-3 col-6">
+														<label for="assignee" class="form-label"><b>Assignee :</b></label>
+														{% if user.profileimage.image %}
+                                    <p><img src="{{task.assigned_to.profileimage.image.url}}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"> <b> {{task.assigned_to.first_name}} {{task.assigned_to.last_name}}</b></p>
+                                  {% else %}
+                                    <p><img src="{% static 'dashboard/images/default_user.jpg' %}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"> <b> {{task.assigned_to.first_name}} {{task.assigned_to.last_name}}</b></p>
+                                  {% endif %}
+
+													
+													
+													</div>
+													<div class="mb-3 col-6 ">
+															<label for="priority" class="form-label"><b>Task Priority :</b></label><br>
+															{% if task.priority == "high" %}
+																<p class="btn btn-danger p-1" disabled>{{task.priority}}</p>
+															{% elif task.priority == "medium" %}
+																<p class="btn btn-warning p-1" disabled>{{task.priority}}</p>
+															{% elif task.priority == "low" %}
+																<p class="btn btn-info p-1" disabled>{{task.priority}}</p>
+															{% endif %}
+													</div>
+							      		
+							      	</div>
+							      	
+							      	<div class="mb-3 col-12">
+											  <label for="description" class="form-label"><b>Task Description</b></label>
+											  <p>{{task.description}}</p>
+											</div>
+
+							      </div>
+							      <div class="modal-footer d-flex justify-content-between">
+							        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+	    			{% endfor %}
+				{% else %}
+					<div class="d-flex justify-content-center ">
+                        
+                        <i class="fa fa-tasks fa-3x text-danger" aria-hidden="true"></i>
+                        
+                      </div>
+                      <div class="d-flex justify-content-center mt-5">
+                        <h5><b>Oops</b>, You dont have <b class="text-danger">Tasks</b> yet </h5>
+                      </div>
+				{% endif %}
+					 
+				</ul>
+	    	</div>
+	    	{% endfor %}
+	    	
+  		</div>
+
+	  
 	  </div>
 	</div>
 	
@@ -140,12 +331,13 @@ Task Manager
   </div>
 </div>
 
+
 <!-- Modal -->
 <div class="modal fade" id="newTask" tabindex="-1" aria-labelledby="newTask" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="newTask">Add New Task</h1>
+        <h1 class="modal-title fs-5" id="">Add New Task</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -156,14 +348,12 @@ Task Manager
 			</div>
 			<div class="mb-3">
 				<label for="category" class="form-label">Choose Category from the list:</label>
-				<input list="categories" class="form-control" name="category" id="category">
+				<input list="categories" class="form-control" name="category" id="task_category">
 
 				<datalist id="categories">
-				  <option value="Edge">
-				  <option value="Firefox">
-				  <option value="Chrome">
-				  <option value="Opera">
-				  <option value="Safari">
+				  {% for category in categories %}
+				  <option value="{{category.name}}">
+				  {% endfor %}
 				</datalist>
 				
 			</div>
@@ -175,7 +365,9 @@ Task Manager
 				<input list="assignees" class="form-control" name="assignee" id="assignee">
 
 				<datalist id="assignees">
-				  <option value="manager@mictseta.com">Jeff nengovhela</option>
+					{% for assignee in assignees %}
+				  <option value="{{assignee.email}}">{{assignee.first_name}} {{assignee.last_name}}</option>
+					{% endfor %}
 				</datalist>
 				
 			</div>
@@ -200,7 +392,7 @@ Task Manager
       </div>
       <div class="modal-footer d-flex justify-content-between">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary" onclick="addTask()">Save changes</button>
       </div>
     </div>
   </div>

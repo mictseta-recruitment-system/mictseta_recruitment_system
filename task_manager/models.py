@@ -15,3 +15,4 @@ class Task(models.Model):
     priority = models.CharField(max_length=20,default="low", null=False)
     description = models.TextField(max_length=225 , null=False)
     date = models.DateTimeField(auto_now_add=True)
+    is_complete = models.BooleanField(default=False, null=False)

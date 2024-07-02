@@ -1055,7 +1055,181 @@ function delete_database(id){
       });
 }
 
+function addTask() {
+  const url = 'http://127.0.0.1:8000/taskmanager/create_task/';
+  
 
+  const name = document.getElementById('task_name').value;
+  const category = document.getElementById('task_category').value;
+  const assignee = document.getElementById('assignee').value;
+  const priority = document.getElementById('priority').value;
+  const description = document.getElementById('description').value;
+ 
+  
+  const jsonData = {
+    task_name: name,
+    category : category,
+    assigned_to : assignee,
+    priority : priority,
+    description : description,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function updateTask(taskID) {
+  const url = 'http://127.0.0.1:8000/taskmanager/update_task/';
+  
+
+  const name = document.getElementById('task_name'+ taskID).value;
+  const category = document.getElementById('task_category'+ taskID).value;
+  const assignee = document.getElementById('assignee'+ taskID).value;
+  const priority = document.getElementById('priority'+ taskID).value;
+  const description = document.getElementById('description'+ taskID).value;
+ 
+  
+  const jsonData = {
+    task_name: name,
+    category : category,
+    assigned_to : assignee,
+    priority : priority,
+    description : description,
+    taskID : taskID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function deleteTask(taskid) {
+  const url = 'http://127.0.0.1:8000/taskmanager/delete_task/';
+  
+  const jsonData = {
+    taskID: taskid,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+function checkTask(taskid) {
+  const url = 'http://127.0.0.1:8000/taskmanager/check_task/';
+  
+  const jsonData = {
+    taskID: taskid,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 
 function addCategory() {
   const url = 'http://127.0.0.1:8000/taskmanager/create_category/';
@@ -1086,7 +1260,7 @@ function addCategory() {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      
+      location.reload();
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1130,7 +1304,7 @@ function updateCategory(categoryID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      
+      location.reload();
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1166,9 +1340,9 @@ function deleteCategory(catid) {
       handleErrors(data.errors);
      
     } else if (data.status === "success") {
-   
-      showFlashMessage(data.message, "success");
       
+      showFlashMessage(data.message, "success");
+      location.reload();
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");

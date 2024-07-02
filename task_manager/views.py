@@ -28,16 +28,16 @@ def create_task(request):
 				}
 			for key, value in data.items():
 				if key == None or value == None:
-					return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
+					return JsonResponse({'errors': {f'{key}' :[' field is required ']}, 'status':'error'}, status=404)
 			form = TaskForm(data)
 			if form.is_valid() : 
-				user_exist = User.objects.filter(id=int(data['assigned_to'])).exists()
+				user_exist = User.objects.filter(email=data['assigned_to']).exists()
 				if user_exist:
-					user = User.objects.get(id=int(data['assigned_to']))
-					category_exist = Category.objects.filter(id=int(data['category'])),exists()
+					user = User.objects.get(email=data['assigned_to'])
+					category_exist = Category.objects.filter(name=data['category']).exists()
 					if category_exist:
-						category = Category.objects.get(id=int(data['category']))
-						task_exist = Task.objects.filter(name=data['name'],category=category, assigned_to=user, priority=data['priority'], description=data['description']),exists()
+						category = Category.objects.get(name=data['category'])
+						task_exist = Task.objects.filter(name=data['name'],category=category, assigned_to=user, priority=data['priority'], description=data['description']).exists()
 						if not task_exist:
 							task = Task.objects.create(name=data['name'],category=category, assigned_to=user, priority=data['priority'], description=data['description'])
 							task.save()
@@ -79,15 +79,16 @@ def update_task(request):
 					return JsonResponse({'errors': {'validation':[f'{key} field is required ']}, 'status':'error'}, status=404)
 			form = TaskForm(data)
 			if form.is_valid() : 
-				user_exist = User.objects.filter(id=int(data['assigned_to'])).exists()
+				user_exist = User.objects.filter(email=data['assigned_to']).exists()
 				if user_exist:
-					user = User.objects.get(id=int(data['assigned_to']))
-					category_exist = Category.objects.filter(id=int(data['category'])).exists()
+					user = User.objects.get(email=data['assigned_to'])
+					print(user)
+					category_exist = Category.objects.filter(name=data['category']).exists()
 					if category_exist:
-						category = Category.objects.get(id=int(data['category']))
+						category = Category.objects.get(name=data['category'])
 						task_exist = Task.objects.filter(name=data['name'],category=category, assigned_to=user, priority=data['priority'], description=data['description']).exists()
 						if not task_exist:
-							task = Task.objects.create(id=int(data['taskID']))
+							task = Task.objects.get(id=int(data['taskid']))
 							task.name = data['name']
 							task.category = category
 							task.assigned_to = user
@@ -139,6 +140,43 @@ def delete_task(request):
 			return JsonResponse({'errors': {'Method':['Forbidden Method 403']}, 'status':'error'}, status=400)
 	else:       
 		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+@csrf_protect
+def check_task(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception :
+				return JsonResponse({'errors':{'request':['Supply a json oject: check documentation for more info ']}, 'status':'error'})
+
+			data = {
+            	'taskID'    : json_data.get('taskID')
+            }
+
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {'validation':[f'{key} field is required ']}, 'status':'error'}, status=404)
+            
+			task_exist = Task.objects.filter(id=int(data['taskID'])).exists()
+			if not task_exist:
+				return JsonResponse({'errors': {'task':['task Not Found']}, 'status':'error'}, status=400)
+			try:
+				task = Task.objects.get(id=int(data['taskID']))
+				if task.is_complete == False:
+					task.is_complete = True
+				else:
+					task.is_complete = False
+
+				task.save()
+				return JsonResponse({'message':f'task {task.name} status Changed successfuly', 'status':'success'}, status=201) 
+			except Exception as e :
+				return JsonResponse({'errors': {'Delete':[f'Error Deleting task {e}']}, 'status':'error'}, status=400)
+		else:
+			return JsonResponse({'errors': {'Method':['Forbidden Method 403']}, 'status':'error'}, status=400)
+	else:       
+		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
 
 
 @csrf_protect
