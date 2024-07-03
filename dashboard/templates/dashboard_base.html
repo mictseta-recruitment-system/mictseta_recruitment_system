@@ -266,7 +266,7 @@
               
               <button type="button" class="btn btn-primarys position-relative p-0 mr-4 mb-1">
                <i class="fas fa-bell fa-2x text-dark"  > </i>
-               {% if user.notification_set.all > 0  or user.is_superuser %}
+               {% if user.notifications or user.is_superuser %}
                 {% if notify_len %}
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger ">
                   {{notify_len}}

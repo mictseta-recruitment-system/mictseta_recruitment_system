@@ -53,8 +53,13 @@ def emp_panel(request):
 		else:
 			start_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_start_time}" 
 			end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
-		notification = Notification.objects.all()
-		notify_len = len(Notification.objects.filter(is_seen=False))
+		
+		if request.user.is_superuser:
+			notification = Notification.objects.all()
+			notify_len = len(Notification.objects.filter(is_seen=False))
+		else:
+			notification = Notification.objects.filter(user=request.user)
+			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 
 		if request.user.is_superuser:
 			categoreis = Category.objects.filter(Q(user=request.user) | Q(task__assigned_to=request.user)).distinct()
@@ -75,7 +80,10 @@ def emp_panel(request):
 def view_staff(request):
 	if request.user.is_authenticated:
 		staff = User.objects.filter(is_staff=True)
-		notify_len = len(Notification.objects.all())
+		if request.user.is_superuser:
+			notify_len = len(Notification.objects.filter(is_seen=False))
+		else:
+			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 		return render(request,'view_staff.html',{'staffs':staff,'notify_len':notify_len})
 	else:
 		return redirect('render_auth_page')
@@ -87,15 +95,26 @@ def add_job(request):
 		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
 			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
 				return HttpResponse("<h1>Request denied: you are on leave</h1>")
-		notify_len = len(Notification.objects.all())
-		return render(request,'add_job.html',{'notify_len':notify_len})
+		if request.user.is_superuser:
+			notify_len = len(Notification.objects.filter(is_seen=False))
+		else:
+			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+		employees = User.objects.filter(is_staff=True)
+		if request.user.is_superuser:
+			employees = User.objects.filter(is_staff=True)
+		else:
+			employees = User.objects.filter(id=request.user.id)
+		return render(request,'add_job.html',{'notify_len':notify_len,'employees':employees})
 	else:
 		return redirect('render_auth_page')
 
 @csrf_protect
 def update_job(request):
 	if request.user.is_authenticated:
-		notify_len = len(Notification.objects.all())
+		if request.user.is_superuser:
+			notify_len = len(Notification.objects.filter(is_seen=False))
+		else:
+			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 
 		return render(request,'update_job.html',{'notify_len':notify_len})
 	else:
@@ -121,8 +140,15 @@ def view_jobs(request):
 		pending_jobs = len(JobPost.objects.filter(status="waiting"))
 		pending_jobs = len(JobPost.objects.filter(status="pending")) + pending_jobs
 		closed_jobs = len(JobPost.objects.filter(status="closed"))
-		notify_len = len(Notification.objects.all())
-		return render(request,'view_job.html',{'notify_len':notify_len,'jobs':jobs, 'all_jobs':all_jobs,'open_jobs':open_jobs, 'pending_jobs':pending_jobs,'closed_jobs':closed_jobs})
+		if request.user.is_superuser:
+			notify_len = len(Notification.objects.filter(is_seen=False))
+		else:
+			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+		if request.user.is_superuser:
+			employees = User.objects.filter(is_staff=True)
+		else:
+			employees = User.objects.filter(id=request.user.id)
+		return render(request,'view_job.html',{'employees':employees,'notify_len':notify_len,'jobs':jobs, 'all_jobs':all_jobs,'open_jobs':open_jobs, 'pending_jobs':pending_jobs,'closed_jobs':closed_jobs})
 	else:
 		return redirect('render_auth_page')
 
@@ -135,7 +161,10 @@ def job_details(request, jobID):
 				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		try:
 			job = JobPost.objects.get(id=int(jobID))
-			notify_len = len(Notification.objects.all())
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			return render(request,'detailed_job.html',{'job':job, 'notify_len':notify_len})
 		except Exception as e:
 			return HttpResponse(f"<h1> Sever Error : Job not Found : {e}</h1>")
@@ -148,12 +177,18 @@ def get_notifications(request):
 		try:
 			if request.user.is_superuser:
 				notification = Notification.objects.all()
-				notify_len = len(Notification.objects.all())
+				if request.user.is_superuser:
+					notify_len = len(Notification.objects.filter(is_seen=False))
+				else:
+					notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 				return render(request,'notification.html',{'notify_len':notify_len,'notifications':notification.reverse()})
 			elif request.user.is_staff:
 				notification = Notification.objects.filter(user=request.user)
 
-			notify_len = len(Notification.objects.all())
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			return render(request,'notification.html',{'notify_len':notify_len,'notifications':notification.reverse()})
 		except Exception as e:
 			return HttpResponse(f"<h1> Sever Error : Notification: {e}</h1>")
@@ -186,7 +221,10 @@ def add_staff_page(request):
 			if leave.start_date <= current_time <= leave.end_date:
 				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.user.is_superuser:
-			notify_len = len(Notification.objects.all())
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			return render(request,'add_staff.html', {'notify_len':notify_len})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
@@ -201,7 +239,10 @@ def update_staff(request, staffID):
 			if leave.start_date <= current_time <= leave.end_date:
 				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		staff = User.objects.get(id=int(staffID))
-		notify_len = len(Notification.objects.all())
+		if request.user.is_superuser:
+			notify_len = len(Notification.objects.filter(is_seen=False))
+		else:
+			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 		return render(request,'update_staff.html', {'staff':staff, 'notify_len':notify_len})
 	else:
 		return redirect('render_auth_page')
@@ -212,7 +253,10 @@ def employee_details(request, empID):
 		
 		emp = User.objects.get(id=empID)
 		if request.user.is_superuser or request.user.id == emp.id:
-			notify_len = len(Notification.objects.all())
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			return render(request, 'employee_details.html',{'emp':emp,'notify_len':notify_len})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
@@ -229,7 +273,10 @@ def manage_leave(request):
 
 			# Filter staff users who have one or more leaves
 			emps = User.objects.filter(is_staff=True).annotate(leave_count=Count('leave')).filter(leave_count__gt=0)
-			notify_len = len(Notification.objects.all())
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			return render(request, 'manage_leave.html', {'emps':emps,'notify_len':notify_len})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
@@ -237,27 +284,31 @@ def manage_leave(request):
 		return redirect('render_auth_page')
 
 def view_leave(request):
-    if request.user.is_authenticated:
-        if request.user.is_staff:
-
-            try:
-                leaves = Leave.objects.all()
-                notify_len = len(Notification.objects.all())
-                return render(request, 'view_leave.html', {'leaves':leaves,'notify_len':notify_len})
-
-            except Exception as e:
-                return HttpResponse(f'view leave: {e}')
-        else:       
-            return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
-    else:
-       return redirect('render_auth_page')
+	if request.user.is_authenticated:
+		if request.user.is_staff:
+			try:
+				leaves = Leave.objects.all()
+				if request.user.is_superuser:
+					notify_len = len(Notification.objects.filter(is_seen=False))
+				else:
+					notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+				return render(request, 'view_leave.html', {'leaves':leaves,'notify_len':notify_len})
+			except Exception as e:
+				return HttpResponse(f'view leave: {e}')
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
 
 def manage_attendance(request):
 	if request.user.is_authenticated:
 		if request.user.is_staff:
 			try:
 				attendances = Attendance.objects.all()
-				notify_len = len(Notification.objects.all())
+				if request.user.is_superuser:
+					notify_len = len(Notification.objects.filter(is_seen=False))
+				else:
+					notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 				return render(request,'attendance.html',{'attendances':attendances,'notify_len':notify_len})
 			except Exception as e:
 				return HttpResponse(f'view Attendance: {e}')
@@ -322,7 +373,11 @@ def task_manager(request):
 				assignees = User.objects.filter(is_staff=True)
 			else:
 				assignees = User.objects.filter(id=request.user.id)
-			return render(request, 'task_manager.html',{ 'categories':categoreis, 'assignees':assignees})
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+			return render(request, 'task_manager.html',{ 'categories':categoreis, 'assignees':assignees,'notify_len':notify_len})
 		else:       
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
@@ -333,7 +388,10 @@ def backup_database(request):
 	if request.user.is_authenticated:
 		if request.user.is_staff:
 			backups = Backup.objects.all()
-			notify_len = len(Notification.objects.all())
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			return render(request, 'backup.html', {'backups':backups, 'notify_len':notify_len} )
 		else:       
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")

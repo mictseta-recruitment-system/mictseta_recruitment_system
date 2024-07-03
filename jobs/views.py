@@ -26,6 +26,7 @@ def serialize_job_post(Jobs):
 			'job_type'		:	Job.job_type,
 			'industry'		:	Job.industry,
 			'company_name'	:	Job.company_name,
+			'assigned_to'	: 	Job.assigned_to.email
 				# 'application_deadline' :	json_data.get('application_deadline')            
 		}
 		jobs.append(job)
@@ -117,7 +118,8 @@ def add_job(request):
 				'salary_range'	:	json_data.get('salary_range'),
 				'job_type'		:	json_data.get('job_type'),
 				'industry'		:	json_data.get('industry'),
-				'company_name'	:	json_data.get('company_name')
+				'company_name'	:	json_data.get('company_name'),
+				'assigned_to'	:	json_data.get('job_assigned_to')
 			}
 			for key, value in data.items():
 
@@ -127,9 +129,12 @@ def add_job(request):
 					if " " in value:
 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
 			try:
-				print(type(data['end_date']) , data['end_date'])
+				
 				date_format = "%Y-%m-%d"
 				end_date = datetime.strptime(data['end_date'], date_format)
+				# current_date =datime.now("%Y-%m-%d")
+				# if current_date >= end_date:
+				# 	return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
 			except:
 				return JsonResponse({'errors': {'Date':'Iconccerct data format try - DD:MMM:YYYY'}, 'status':'error'}, status=404)
    
@@ -138,8 +143,12 @@ def add_job(request):
 				exists = JobPost.objects.filter(title=data['title'], industry=data['industry'], company_name=data['company_name']).exists()
 				if exists:
 					return JsonResponse({'errors': {'job post':['Job Post already exists']}, 'status': 'error'}, status=400)
+				exist = User.objects.filter(email=data['assigned_to']).exists()
+				if not exist:
+					return JsonResponse({'errors': {'User':'Assigned user does not exist'}, 'status':'error'}, status=404)
+				user = User.objects.get(email=data['assigned_to'])
 				try:
-					add_job_post = JobPost.objects.create(user=request.user, title=data['title'],description=data['description'],location=data['location'], salary_range=data['salary_range'], job_type=data['job_type'], industry=data['industry'], company_name=data['company_name'], end_date=end_date)
+					add_job_post = JobPost.objects.create(user=request.user,assigned_to=user, title=data['title'],description=data['description'],location=data['location'], salary_range=data['salary_range'], job_type=data['job_type'], industry=data['industry'], company_name=data['company_name'], end_date=end_date)
 					add_job_post.save()
 					noty = Notification.objects.create(user=request.user, action="Created New Job ad", job_title=add_job_post.title, status=add_job_post.status)
 					noty.save()
@@ -172,54 +181,6 @@ def get_jobs(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
-# @csrf_protect
-# def add_job(request):
-# 	if request.user.is_authenticated:
-# 		if request.method == 'POST':
-# 			try:
-# 				json_data = json.loads(request.body)
-# 			except Exception:
-# 				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
-# 			data = {
-# 				'title'			:	json_data.get('title'),
-# 				'description'	:	json_data.get('description'),
-# 				'end_date'		:	json_data.get('end_date'),
-# 				'location'		:	json_data.get('location'),
-# 				'salary_range'	:	json_data.get('salary_range'),
-# 				'job_type'		:	json_data.get('job_type'),
-# 				'industry'		:	json_data.get('industry'),
-# 				'company_name'	:	json_data.get('company_name')
-# 			}
-# 			for key, value in data.items():
-
-# 				if key == None or value == None:
-# 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
-# 				if key in ['end_date']:
-# 					if " " in value:
-# 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
-# 			try:
-# 				date_format = "%d:%b:%Y"
-# 				end_date = datetime.strptime(data['end_date'], date_format)
-# 			except:
-# 				return JsonResponse({'errors': 'Iconccerct data format try - DD:MMM:YYYY', 'status':'error'}, status=404)
-   
-# 			form = AddJobForm(data)
-# 			if form.is_valid():
-# 				exists = JobPost.objects.filter(title=data['title'], industry=data['industry'], company_name=data['company_name']).exists()
-# 				if exists:
-# 					return JsonResponse({'errors': {'job post':['Job Post already exists']}, 'status': 'error'}, status=400)
-# 				try:
-# 					add_job_post = JobPost.objects.create(user=request.user, title=data['title'],description=data['description'],location=data['location'], salary_range=data['salary_range'], job_type=data['job_type'], industry=data['industry'], company_name=data['company_name'], end_date=end_date)
-# 					add_job_post.save()
-# 					return JsonResponse({'message': 'Job Post Created Successfully', 'status': 'success'}, status=201)
-# 				except Exception as e:
-# 					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
-# 			else:
-# 				return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
-# 		else:
-# 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
-# 	else:
-# 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
 @csrf_protect
 def add_job_skill(request):
@@ -411,6 +372,7 @@ def update_job(request):
 				'industry'		:	json_data.get('industry'),
 				'company_name'	:	json_data.get('company_name'),
 				'job_id'	:	json_data.get('job_id'),
+				'assigned_to'	:	json_data.get('assigned_to')
 			}
 			for key, value in data.items():
 
@@ -422,6 +384,8 @@ def update_job(request):
 			try:
 				date_format = "%Y-%m-%d"
 				end_date = datetime.strptime(data['end_date'], date_format)
+				# if current_date >= end_date:
+				# 	return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
 			except:
 				return JsonResponse({'errors': {'Date':['Iconccerct data format try - MM:DD:YYYY']}, 'status':'error'}, status=404)
    
@@ -430,6 +394,10 @@ def update_job(request):
 				exists = JobPost.objects.filter(id=int(data['job_id'])).exists()
 				if not exists:
 					return JsonResponse({'errors': {'job post':['Job does not exists']}, 'status': 'error'}, status=400)
+				exist = User.objects.filter(email=data['assigned_to']).exists()
+				if not exist:		
+					return JsonResponse({'errors': {'User':'Assigned user does not exist'}, 'status':'error'}, status=404)
+				user = User.objects.get(email=data['assigned_to'])
 				try:
 					update_job_post = JobPost.objects.get(id=int(data['job_id']))
 					update_job_post.title = data['title']
@@ -440,6 +408,7 @@ def update_job(request):
 					update_job_post.job_type = data['job_type']
 					update_job_post.industry = data['industry']
 					update_job_post.company_name = data['company_name']
+					update_job_post.assigned_to = user
 					update_job_post.save()
 					return JsonResponse({'message': 'Job Post UPDATED Successfully', 'status': 'success'}, status=201)
 				except Exception as e:

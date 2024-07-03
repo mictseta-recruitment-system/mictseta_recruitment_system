@@ -128,7 +128,7 @@ Task Manager
 	    		 <ul class="list-group list-group-flush">
 	    		{% if category.task_set.all %}
 	    			{% for task in category.task_set.all %}
-	    			{% if task.assigned_to == user %}
+	    			{% if task.assigned_to  %}
 					  <li class="list-group-item d-flex justify-content-between align-items-center">
 					  		{% if task.is_complete %}
 					   	 		<input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox" onclick="checkTask({{task.id}})" checked>
@@ -178,7 +178,9 @@ Task Manager
 										<datalist id="categories">
 										
 										  {% for category in categories %}
+										  	{% if category.user == user %}
 										  <option value="{{category.name}}">
+										  	{% endif %}
 										  {% endfor %}
 										</datalist>
 										

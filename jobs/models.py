@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class JobPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
+    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     title = models.CharField(max_length=225, unique=False, null=False)
     description = models.TextField(null=False)
     start_date = models.DateTimeField(auto_now_add=True)

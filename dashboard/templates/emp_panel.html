@@ -102,7 +102,7 @@ Employee Panel
         </div>
     </div>
     
-        <div class="col-12 col-lg-6 mt-3">
+        <div class="col-12 col-lg-6 ">
             <div class="card" style="width:100%;height:100%;">
               <div class="card-body shadow-lg rounded-2" style="width:100%;height:100%;">
                 <h5 class="card-title">Pending Tasks</h5>
@@ -127,16 +127,16 @@ Employee Panel
                 {% if notifications %}
                      {% for notific in notifications %}
                         {% if notific.is_seen %}
-                        {% elif user.is_superuser or user.id == notific.id %}
+                        {% elif user.is_superuser or user.id == notific.user.id %}
                           <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
                               <div class="fw-bold text-left">
                                 {{notific.action}} 
-                                {% if notific.status == "Approved" %}
+                                {% if notific.status == "open" %}
                                 <button class="btn btn-success text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
 
-                                {% elif notific.status == "waiting" or notific.status == "Pending" %}
-                                <button class="btn btn-warning text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
+                                {% elif notific.status == "waiting" or notific.status == "pending" %}
+                                <button class="btn btn-warning text-dark p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
 
                                 {% else %}
                                 <button class="btn btn-danger text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
@@ -196,10 +196,10 @@ Employee Panel
       data: {
         labels: category,
         datasets: [{
-          label: 'pendingTask',
+          label: 'pending task',
           data: datas,
-          backgroundColor: 'rgba(153, 102, 255, 0.2)',
-          borderColor: 'rgba(153, 102, 255, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1
         }]
       },

@@ -46,6 +46,8 @@ function addJob() {
   const location = document.getElementById('location').value;
   const salary_range = document.getElementById('salary_range').value;
   const job_type = document.getElementById('job_type').value;
+  const assigned_to = document.getElementById('assigned_to').value;
+
 
   // Extract value from company_name input field
   company_name = document.getElementById('company_name').value;
@@ -60,7 +62,8 @@ function addJob() {
     salary_range: salary_range,
     job_type: job_type,
     industry: industry,
-    company_name: company_name
+    company_name: company_name,
+    job_assigned_to: assigned_to,
   };
 
   // Fetch API POST request
@@ -126,6 +129,7 @@ function updateJob(jobID,spinner,content) {
   const location = document.getElementById('location'+ jobID).value;
   const salary_range = document.getElementById('salary_range'+ jobID).value;
   const job_type = document.getElementById('job_type'+ jobID).value;
+  const assigned_to = document.getElementById('assigned_to'+ jobID).value;
 
   // Extract value from company_name input field
   const company_name = document.getElementById('company_name'+ jobID).value;
@@ -141,7 +145,8 @@ function updateJob(jobID,spinner,content) {
     job_type: job_type,
     industry: industry,
     company_name: company_name,
-    job_id: jobID 
+    job_id: jobID,
+    assigned_to: assigned_to,
   };
 
   // Fetch API POST request

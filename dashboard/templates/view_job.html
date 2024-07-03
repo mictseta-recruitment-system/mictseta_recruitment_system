@@ -99,7 +99,8 @@ View jobs
                 <th class="bg-dark text-white" >ID</th>
                 <th class="bg-dark text-white" >Job title</th>
                  <th class="bg-dark text-white" >Job Type</th>
-                <th class="bg-dark text-white" >Issued By</th>
+                 <th class="bg-dark text-white" >Issued by</th>
+                <th class="bg-dark text-white" >Responsible</th>
                 <th class="bg-dark text-white">Date of expiry</th>
                 <th class="bg-dark text-white">Status</th>
                 <th class="bg-dark text-white">completed</th>
@@ -108,7 +109,7 @@ View jobs
         </thead>
         <tbody>
           {% for job in jobs %}
-            {% if job.user == user or user.is_superuser %}
+            {% if job.user == user or user.is_superuser or job.assigned_to == user %}
               <tr>
                 <td>{{job.id}}</td>
                 <td><b><a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{job.title}}</a></b></td>
@@ -123,8 +124,8 @@ View jobs
                 <td>{{job.job_type}}</td>
                 {% endif %}
 
-
-                <td>{{job.user.email}}</td>
+                 <td>{{job.user.email}}</td>
+                <td>{{job.assigned_to.email}}</td>
                 <td>{{job.end_date}}</td>
 
               
@@ -153,7 +154,9 @@ View jobs
                         </td>
                         {% else %}
                             {% if not job.is_approved %}
-                              <td><a class="btn btn-warning p" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a></td>
+                              <td><a class="btn btn-warning " data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a></td>
+                            {% else %}
+                              <td><button class="btn btn-secondary p-2 text-white" style="font-size: 12px;" disabled> <b>Done</b>  </button></td>
                             {% endif %}
                         {% endif %}
 
@@ -264,12 +267,18 @@ View jobs
               <label for="companyName">Company Name</label>
               <input type="text" class="form-control" id="company_name{{job.id}}" placeholder="Company Name" value="{{job.company_name}}">
             </div>
-            <select class="form-select" multiple aria-label="multiple select example">
-    <option selected>Open this select menu</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </select>
+             <div class="mb-3">
+              <label for="assigned_to" class="form-label">Choose responsible HOD :</label>
+              <input list="assigned_tos" class="form-control" name="assigned_to" id="assigned_to{{job.id}}" placeholder="Select user here">
+
+              <datalist id="assigned_tos">
+                {% for emp in employees %}
+                <option value="{{emp.email}}">{{emp.first_name}} {{emp.last_name}} - {{emp.staffprofile.department}}</option>
+                {% endfor %}
+                
+              </datalist>
+                    
+          </div>
             
           </form>
         </div>
