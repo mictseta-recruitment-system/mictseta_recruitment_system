@@ -114,7 +114,7 @@ Employee Panel
     
     <div class="col-12 col-lg-6 mt-3">
         <div>
-            <div class="card shadow-lg rounded-2 " style="max-height:225px;">
+            <div class="card shadow-lg rounded-2 " style="max-height:330px;">
               <h5 class="card-header d-flex justify-content-between">
                 <span>
                     <i class="fas fa-bell text-dark"  > 
@@ -124,7 +124,7 @@ Employee Panel
             </h5>
               <div class="card-body" style=" overflow-y: scroll;">
                 <ul class="list-group list-group-flush">
-                {% if user.notification_set.all > 0 %}
+                {% if notifications %}
                      {% for notific in notifications %}
                         {% if notific.is_seen %}
                         {% elif user.is_superuser or user.id == notific.id %}

@@ -11,6 +11,7 @@ import datetime as dates
 from .models import Backup
 from task_manager.models import Category, Task
 import json
+from django.db.models import Q
 
 
 @ensure_csrf_cookie
@@ -56,7 +57,7 @@ def emp_panel(request):
 		notify_len = len(Notification.objects.filter(is_seen=False))
 
 		if request.user.is_superuser:
-			categoreis = Category.objects.filter(user=request.user).distinct()
+			categoreis = Category.objects.filter(Q(user=request.user) | Q(task__assigned_to=request.user)).distinct()
 		else:
 			categoreis = Category.objects.filter(task__assigned_to=request.user).distinct()
 			
@@ -311,7 +312,7 @@ def task_manager(request):
 	if request.user.is_authenticated:
 		if request.user.is_staff:
 			if request.user.is_superuser:
-				categoreis = Category.objects.filter(user=request.user).distinct()
+				categoreis = Category.objects.filter(Q(user=request.user) | Q(task__assigned_to=request.user)).distinct()
 			else:
 				categoreis = Category.objects.filter(task__assigned_to=request.user).distinct()
 				for cat in categoreis:

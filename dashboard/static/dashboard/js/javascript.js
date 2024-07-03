@@ -977,11 +977,12 @@ function backup_database(){
               handleErrors(data.errors);
           } else if (data.status === "success") {
             showFlashMessage(data.message, "success");
-                    
+            location.reload() 
                       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
                       
           } else if (data.status === "warning") {
             showFlashMessage(data.message, "warning");
+            location.reload()
                   
           }
       })
@@ -1009,11 +1010,13 @@ function restore_database(id){
               handleErrors(data.errors);
           } else if (data.status === "success") {
             showFlashMessage(data.message, "success");
+            location.reload()
                     
                       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
                       
           } else if (data.status === "warning") {
             showFlashMessage(data.message, "warning");
+            location.reload()
                   
           }
       })
@@ -1041,11 +1044,13 @@ function delete_database(id){
               handleErrors(data.errors);
           } else if (data.status === "success") {
             showFlashMessage(data.message, "success");
+            location.reload()
                     
                       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
                       
           } else if (data.status === "warning") {
             showFlashMessage(data.message, "warning");
+            location.reload()
                   
           }
       })

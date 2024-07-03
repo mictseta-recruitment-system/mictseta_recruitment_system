@@ -32,7 +32,7 @@ Task Manager
   <!-- Tab panes -->
 
 
-	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1">
+	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1" style="height:auto;">
 	  <h5 class="card-header d-flex justify-content-between w-100">
 	    
 	    <span>Category List</span>
@@ -104,7 +104,7 @@ Task Manager
 	  </div>
 	</div>
 
-	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1">
+	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1" style="height:auto;">
 	  <h5 class="card-header d-flex justify-content-between w-100">
 	    
 	    <span>Task List</span>
@@ -128,7 +128,7 @@ Task Manager
 	    		 <ul class="list-group list-group-flush">
 	    		{% if category.task_set.all %}
 	    			{% for task in category.task_set.all %}
-	    			
+	    			{% if task.assigned_to == user %}
 					  <li class="list-group-item d-flex justify-content-between align-items-center">
 					  		{% if task.is_complete %}
 					   	 		<input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox" onclick="checkTask({{task.id}})" checked>
@@ -156,6 +156,7 @@ Task Manager
 						    </span>
 					   	 {% endif %}
 					  </li>
+
 					  <!-- Modal -->
 						<div class="modal fade" id="updateTask{{task.id}}" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
 						  <div class="modal-dialog modal-dialog-centered">
@@ -283,6 +284,7 @@ Task Manager
 							    </div>
 							  </div>
 							</div>
+							{% endif %}
 	    			{% endfor %}
 				{% else %}
 					<div class="d-flex justify-content-center ">

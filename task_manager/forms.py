@@ -8,7 +8,7 @@ class TaskForm(forms.Form):
 
 	
 	def validate_names(self,name):
-		pattern = r"[~`!#$%^&*()=\/\*\\|}{\[\];'\?]"
+		pattern = r"[~`!#$%^&*()=\/\*\\|}{\[\];\?]"
 		matches = re.findall(pattern, name)
 		if matches:
 			raise forms.ValidationError("No special characters allowed")
@@ -40,7 +40,7 @@ class CategoryForm(forms.Form):
 	name = forms.CharField(max_length=150)
 
 	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];'\?]"
+		pattern = r"[~`+!@#$%^&*()=\/\*\\|}{\[\];\?]"
 		matches = re.findall(pattern, name)
 		if matches:
 			raise forms.ValidationError("No special characters allowed")
