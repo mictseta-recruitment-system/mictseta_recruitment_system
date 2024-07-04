@@ -18,7 +18,7 @@ Task Manager
 {% block content %}
 
 
-<div class="container d-flex justify-content-between">
+<div class="row">
 
 	
   <!-- List group -->
@@ -31,8 +31,10 @@ Task Manager
 
   <!-- Tab panes -->
 
+<div class="col-sm-12 col-md-6 ">
+	
 
-	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1" style="height:auto;">
+	<div class="card shadow-lg rounded-2 m-1" style="height:auto;">
 	  <h5 class="card-header d-flex justify-content-between w-100">
 	    
 	    <span>Category List</span>
@@ -103,8 +105,10 @@ Task Manager
 		
 	  </div>
 	</div>
+</div>
 
-	<div class="card col-md-6 p-0 w-100 shadow-lg rounded-2 m-1" style="height:auto;">
+<div class="col-12 col-md-6 ">
+	<div class="card p-0 w-100 shadow-lg rounded-2 m-1" style="height:auto;">
 	  <h5 class="card-header d-flex justify-content-between w-100">
 	    
 	    <span>Task List</span>
@@ -128,7 +132,7 @@ Task Manager
 	    		 <ul class="list-group list-group-flush">
 	    		{% if category.task_set.all %}
 	    			{% for task in category.task_set.all %}
-	    			{% if task.assigned_to  %}
+	    			{% if task.assigned_to == user or task.category.user == user %}
 					  <li class="list-group-item d-flex justify-content-between align-items-center">
 					  		{% if task.is_complete %}
 					   	 		<input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox" onclick="checkTask({{task.id}})" checked>
@@ -136,7 +140,7 @@ Task Manager
 					   	 	{% else %}
 					   	 			<input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox" onclick="checkTask({{task.id}})">
 					   	 		{{task.name}}
-					   	 	{% endif %}
+					   	 {% endif %}
 					   	 {% if user.id == category.user.id %}
 					   	 <div>
 						    <span class="badge bg-warning rounded-pill" type="button" data-bs-toggle="modal" data-bs-target="#updateTask{{task.id}}"> 
@@ -308,7 +312,7 @@ Task Manager
 	  
 	  </div>
 	</div>
-	
+</div>
 
 </div>
 

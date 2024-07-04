@@ -552,7 +552,7 @@ def mark_attendence(request, empID):
 def end_attendace(request, empID):
     from django.utils import timezone
     if request.user.is_authenticated:
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.is_staff:
  
             if request.method == 'GET':
                 try:

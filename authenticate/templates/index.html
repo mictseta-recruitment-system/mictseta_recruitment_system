@@ -137,7 +137,7 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
  {% if jobs %}
         {% for job in jobs %}
 
-        <div class="job-card">
+        <div class="job-card{{job.id}}">
             <h3><strong>{{job.title}}</strong></h3>
             <div class="details">
                 <span><strong>Location</strong> : {{job.location}}</span> |

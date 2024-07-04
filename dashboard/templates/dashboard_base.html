@@ -344,8 +344,7 @@
  Leave
     </a>
     <div class="collapse" id="settingsMenu">
-      <a href="{% url 'dashboard.manage_leave' %}" class="pl-4"><i class="fa fa-user-cog" aria-hidden="true"></i> Manage</a>
-     
+      <a href="{% url 'dashboard.manage_leave' %}" class="pl-4"><i class="fa fa-user-cog" aria-hidden="true"></i> Manage</a> 
       {% if user.is_superuser%}
         <a href="{% url 'dashboard.view_leave' %}" class="pl-4"><i class="fa fa-eye" aria-hidden="true"></i> View all</a>
       {% endif %}
@@ -354,19 +353,16 @@
     <a href="{% url 'dashboard.manage_attendance' %}">
       <i class="fa fa-history" aria-hidden="true"></i> Attendance
     </a>
-    
     <hr>
     <a href="{% url 'dashboard.task_manager' %}">
       <i class="fa fa-tasks" aria-hidden="true"></i> Task-Manager
     </a>
-    
     <hr>
-
     <a href="#" data-toggle="collapse" data-target="#notificationsMenu" aria-expanded="false" aria-controls="notificationsMenu">
       <i class="fas fa-bell"  > </i> Notifications {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}
     </a>
     <div class="collapse" id="notificationsMenu">
-      <a href="{% url 'dashboard.get_notifications'%}" class="pl-4"> All Notifications  {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}</a>
+      <a href="{% url 'dashboard.get_notifications'%}" class="pl-4">All Notifications  {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}</a>
       <a href="#" class="pl-4"> <i class="fa fa-cog" aria-hidden="true"></i>Settings</a>
     </div>
     <hr>
@@ -374,11 +370,6 @@
     <a href="{% url 'dashboard.backup_database' %}" class="ml-4">
       Backup / Restore
     </a>
-    <hr>
-
-             
-                
-    
     <hr>
   </div>
 
@@ -392,7 +383,6 @@
           <ol class="breadcrumb px-3">
             <li class="breadcrumb-item active"> {{user.staffprofile.department}}</li>
             {% block breadcrumbs %} 
-          
             {% endblock %}
           </ol>
         </nav>
@@ -407,6 +397,8 @@
       </div>
     </div>
   </div>
+
+
 
  
   {% block countdown %}

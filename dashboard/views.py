@@ -70,7 +70,7 @@ def emp_panel(request):
 		data = []
 		for cat in categoreis:
 			cats.append(cat.name)
-			data.append(len(Task.objects.filter(category=cat, is_complete=False)))
+			data.append(len(Task.objects.filter(category=cat, is_complete=False, assigned_to=request.user)))
 		
 		return render(request,'emp_panel.html', {'start_time':start_time,'end_time':end_time,'status':status, 'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data)})
 	else:
@@ -365,7 +365,7 @@ def task_manager(request):
 			if request.user.is_superuser:
 				categoreis = Category.objects.filter(Q(user=request.user) | Q(task__assigned_to=request.user)).distinct()
 			else:
-				categoreis = Category.objects.filter(task__assigned_to=request.user).distinct()
+				categoreis = Category.objects.filter(Q(user=request.user) | Q(task__assigned_to=request.user)).distinct()
 				for cat in categoreis:
 					print(cat.name)
 			# tasks = Task.objects.filter()

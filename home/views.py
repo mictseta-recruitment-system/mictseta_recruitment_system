@@ -17,6 +17,7 @@ def home(request):
             job.status = "closed"
             job.save()
     jobs = JobPost.objects.filter(status="open") 
+    print(jobs)
     return render(request,'index.html', {'jobs':jobs})
 
 

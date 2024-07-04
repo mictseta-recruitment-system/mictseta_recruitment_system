@@ -593,14 +593,11 @@ def delete_job(request):
 				'job_id'	:	json_data.get('job_id'),
 			}
 			for key, value in data.items():
-
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
 				if key in ['end_date']:
 					if " " in value:
 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
-   	
-			
 			exists = JobPost.objects.filter(id=int(data['job_id'])).exists()
 			if not exists:
 				return JsonResponse({'errors': {'job post':['Job does not exists']}, 'status': 'error'}, status=400)

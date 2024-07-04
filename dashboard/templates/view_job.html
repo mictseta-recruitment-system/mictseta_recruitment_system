@@ -269,7 +269,7 @@ View jobs
             </div>
              <div class="mb-3">
               <label for="assigned_to" class="form-label">Choose responsible HOD :</label>
-              <input list="assigned_tos" class="form-control" name="assigned_to" id="assigned_to{{job.id}}" placeholder="Select user here">
+              <input list="assigned_tos" class="form-control" name="assigned_to" id="assigned_to{{job.id}}" placeholder="Select user here" value="{{job.assigned_to.email}}">
 
               <datalist id="assigned_tos">
                 {% for emp in employees %}
