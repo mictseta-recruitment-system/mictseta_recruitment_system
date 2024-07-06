@@ -131,9 +131,10 @@ def view_jobs(request):
 		jobs = JobPost.objects.all()
 		
 		for job in jobs:
-			if current_time > job.end_date :
-				job.status = "closed"
-				job.save()
+			if job.status != "closed":
+				if current_time > job.end_date :
+					job.status = "closed"
+					job.save()
 
 		all_jobs = len(jobs)
 		open_jobs= len(JobPost.objects.filter(status="open"))
@@ -366,8 +367,6 @@ def task_manager(request):
 				categoreis = Category.objects.filter(Q(user=request.user) | Q(task__assigned_to=request.user)).distinct()
 			else:
 				categoreis = Category.objects.filter(Q(user=request.user) | Q(task__assigned_to=request.user)).distinct()
-				for cat in categoreis:
-					print(cat.name)
 			# tasks = Task.objects.filter()
 			if request.user.is_superuser:
 				assignees = User.objects.filter(is_staff=True)
@@ -461,16 +460,6 @@ def restore_db(request, dbID):
 		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
 
-
-def crud_events(request):
-	if request.user.is_authenticated:
-		if request.user.is_superuser :
-			return render(request, 'crud_events.html')
-		else:       
-			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
-	else:
-		return redirect('render_auth_page')
-
 def get_log_user_by_id(event):
 	try : 
 		user =  User.objects.get(id=event.user_id)
@@ -479,14 +468,56 @@ def get_log_user_by_id(event):
 		user = "ANONYMOUS"
 	return user
 
+
+def get_changed_fields(event):
+	if event != 'null' and event != None: 
+		dictionary = json.loads(event)
+		return dictionary
+	else:
+		return event
+
+# Convert the JSON string to a Python dictionary
+
+def crud_events(request):
+	if request.user.is_authenticated:
+		if request.user.is_superuser :
+			cruds = CRUDEvent.objects.all()
+			method_type = ('CREATE','UPDATE','DELETE')
+			data = []
+
+			for event in cruds:
+				event_data = {
+					'object_json' 	:get_changed_fields(event.object_json_repr)[0],
+					'id'		: event.id,
+					'user' 			: get_log_user_by_id(event),
+					'event_type' 	: method_type[event.event_type -1],
+					'content_type'	: event.content_type.model,
+					'object'		: event.object_repr,
+					'changed_fields': get_changed_fields(event.changed_fields),
+					'date'			: event.datetime,
+				}
+				data.append(event_data)
+
+			return render(request, 'crud_events.html',{'crud_events':data})
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
+
+
+
+
+
+
+
 def login_events(request):
 	if request.user.is_authenticated:
 		if request.user.is_superuser :
 			data = []
 			login_types = ('LOGIN','LOGOUT','FAILDE LOGIN')
-			cruds = LoginEvent.objects.all()
+			logins = LoginEvent.objects.all()
 
-			for event in cruds :
+			for event in logins :
 				event_data = {
 					'date'		: event.datetime,
 					'method'	: login_types[event.login_type],
@@ -501,9 +532,10 @@ def login_events(request):
 	else:
 		return redirect('render_auth_page')
 
+
 def login_events_generate_pdf_report(request):
 	data = []
-	login_types = ('LOGIN','LOGOUT','FAILDE LOGIN')
+	login_types = ('LOGIN','LOGOUT','FAILED LOGIN')
 	cruds = LoginEvent.objects.all()
 
 	for event in cruds :
@@ -518,4 +550,30 @@ def login_events_generate_pdf_report(request):
         'login_events': data,
     }
 	pdf = render_to_pdf('pdf_login_events.html', context)
+	return HttpResponse(pdf, content_type='application/pdf')
+
+def crud_events_generate_pdf_report(request):
+	cruds = CRUDEvent.objects.all()
+	method_type = ('CREATE','UPDATE','DELETE')
+	data = []
+
+	for event in cruds:
+		event_data = {
+			
+			'id'			: event.id,
+			'user' 			: get_log_user_by_id(event),
+			'event_type' 	: method_type[event.event_type -1],
+			'content_type'	: event.content_type.model,
+			'object'		: event.object_repr,
+			'changed_fields': get_changed_fields(event.changed_fields),
+			'date'			: event.datetime,
+		}
+		
+		data.append(event_data)
+	
+	context = {
+        'crud_events': data,
+    }
+
+	pdf = render_to_pdf('pdf_crud_events.html', context)
 	return HttpResponse(pdf, content_type='application/pdf')

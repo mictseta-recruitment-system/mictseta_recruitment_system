@@ -24,7 +24,7 @@ class JobPost(models.Model):
     
    
     def __str__(self):
-        return f'{self.title} Job Post'
+        return f'{self.title} Job Vacancy, owened by : {self.user.first_name} {self.user.last_name}'
 
 
 class Academic(models.Model):
@@ -33,7 +33,7 @@ class Academic(models.Model):
     qualification = models.CharField(max_length=225, unique=False, null=False)
 
     def __str__(self):
-        return f'{self.level} Academic for {self.job_post.title} Job Post'
+        return f'Academic for {self.job_post.title} Job Vacancy'
 
 
 class Skill(models.Model):
@@ -47,7 +47,7 @@ class Skill(models.Model):
     level = models.CharField(max_length=50, choices=LEVEL_CHOICES, null=False)
 
     def __str__(self):
-         return f'{self.name} Skill for {self.job_post.title} Job Post'
+         return f'Skill for {self.job_post.title} Job Vacancy'
 
 
 class Experience(models.Model):
@@ -56,14 +56,14 @@ class Experience(models.Model):
     duration = models.CharField(max_length=40, unique=False, null=False)
 
     def __str__(self):
-        return f'{self.name} Experience for {self.job_post.title} Job Post'
+        return f'Experience for {self.job_post.title} Job Vacancy'
 
 class Requirement(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='requirements')
     description = models.CharField(max_length=225, unique=False, null=False)
 
     def __str__(self):
-        return f'Requirements for {self.job_post.title} Job Post'
+        return f'Requirements for {self.job_post.title} Job Vacancy'
 
 
 class Notification(models.Model):
@@ -73,7 +73,8 @@ class Notification(models.Model):
     status = models.CharField(max_length=225, unique=False, null=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     is_seen = models.BooleanField(null=False, default=False)
-
+    def __str__(self):
+        return f'Notification for {self.job_title} Job Vacancy'
 # class Requirement(models.Model):
 #     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
 #     cv = models.BooleanField(default=False, null=False)

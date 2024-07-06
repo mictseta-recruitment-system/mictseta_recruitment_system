@@ -31,6 +31,7 @@ urlpatterns = [
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),
     path('leave/report/pdf/', views.leave_generate_pdf_report, name='dashboard.leave_generate_pdf_report'),
     path('login_events/report/pdf/', views.login_events_generate_pdf_report, name='dashboard.login_events_generate_pdf_report'),
+    path('crud_events/report/pdf/', views.crud_events_generate_pdf_report, name='dashboard.crud_events_generate_pdf_report'),
 
 
 

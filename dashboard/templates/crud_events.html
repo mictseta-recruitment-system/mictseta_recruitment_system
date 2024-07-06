@@ -12,6 +12,203 @@
 
 
 {% block content %}
+<div class="table-container mt-3" >
+ <div class="card shadow-lg rounded">
+    <div class="card-header d-flex justify-content-between " >
 
+        <h6>CRUD Events List</h6> 
+
+         <a href="{% url 'dashboard.crud_events_generate_pdf_report' %}" class="btn btn-warning py-0" style=""><i class="fa fa-bar-chart" aria-hidden="true"></i> Generate report </a> 
+
+    </div>
+              
+
+
+    <div class="card-body" style="overflow-x: scroll;"> 
+            <table id="crud_events" class="table table-striped" style="width:100%">
+              <thead>
+                  <tr>
+                      <th>Names</th>
+                      <th>Email</th>
+                      <th>Event Type</th>
+                      <th>Content Type </th>
+                      <th>Object </th>
+                      <th>Date</th>
+                      <th>Changed fields</th>
+                      
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for crud_event in crud_events %}
+                  {% if crud_event.changed_fields == None  %}
+                     <tr>
+                                  <td>
+                                    {% if crud_event.user == 'ANONYMOUS' %}
+                                    System
+                                    {% else %}
+                                    {{crud_event.user.first_name}} {{crud_event.user.last_name}}
+                                    {% endif %}
+                                  </td>
+                                  <td>{{crud_event.user.email}}</td>
+                                  <td>
+                                     {% if crud_event.event_type == "CREATE" %}
+                                    
+                                    <button type="button" class="btn btn-success p-0" disabled>
+                                      {{crud_event.event_type}}
+                                    </button>
+                                    {% elif crud_event.event_type == "UPDATE" %}
+                                    <button type="button" class="btn btn-info p-0" disabled>
+                                      {{crud_event.event_type}}
+                                    </button> 
+                                     {% elif crud_event.event_type == "DELETE" %}
+                                     <button type="button" class="btn btn-danger p-0" disabled>
+                                      {{crud_event.event_type}}
+                                    </button>
+                                     {% endif %}
+                                  </td>
+                                  <td>{{crud_event.content_type}}</td>
+                                  <td>{{crud_event.object}}</td>
+                                    <td>{{crud_event.date}}</td>
+                                 <td>
+                                       
+                                 <button type="button" class="btn btn-dark p-0" >
+                                None
+                              </button>
+                      
+                                 </td>
+                              </tr>
+
+                  {% elif crud_event.changed_fields  %}
+                  <tr>
+                                  <td>
+                                    {% if crud_event.user == 'ANONYMOUS' %}
+                                    System
+                                    {% else %}
+                                    {{crud_event.user.first_name}} {{crud_event.user.last_name}}
+                                    {% endif %}
+                                  </td>
+                                  <td>{{crud_event.user.email}}</td>
+                                  <td>
+                                    {% if crud_event.event_type == "CREATE" %}
+                                    
+                                    <button type="button" class="btn btn-success p-0" disabled>
+                                      {{crud_event.event_type}}
+                                    </button>
+                                    {% elif crud_event.event_type == "UPDATE" %}
+                                    <button type="button" class="btn btn-info p-0" disabled>
+                                      {{crud_event.event_type}}
+                                    </button> 
+                                     {% elif crud_event.event_type == "DELETE" %}
+                                     <button type="button" class="btn btn-danger p-0" disabled>
+                                      {{crud_event.event_type}}
+                                    </button>
+                                     {% endif %}
+
+                                  </td>
+                                  <td>{{crud_event.content_type}}</td>
+                                  <td>{{crud_event.object}}</td>
+                      <td>{{crud_event.date}}</td>
+                                  <td>
+                              <button type="button" class="btn btn-primary p-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{crud_event.id}}">
+                                View
+                              </button>
+                                     </td>
+                      
+                  </tr>
+                        <div class="modal fade" id="staticBackdrop{{crud_event.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg" >
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Change Values</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+
+                              <div class="container">
+                                    <h5><b> Model</b> : {{crud_event.object}}</h5>
+                                          <ul class="list-group list-group-flush">
+                                          {% for field,value in crud_event.object_json.fields.items %}
+                                            <li class="list-group-item d-flex justify-content-between">
+                                        
+                                                {% if field != 'user' and field != 'assigned_to' %}
+                                                <span><b>{{field}}</b></span> 
+                                                <span>{{value}}</span>
+                                                {% endif %}
+
+                                          </li>
+                                            
+                                          {% endfor %}
+                                          </ul>
+                              </div>
+                                    <div class="container text-center bg-secondary border border-opacity-75">
+                                      <div class="row align-items-start">
+                                        <div class="col">
+                                          Field
+                                        </div>
+                                        <div class="col ">
+                                          Old Value
+                                        </div>
+                                        <div class="col">
+                                          Current(new) Value
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    {% for key,value in crud_event.changed_fields.items %}
+                                    <div class="container text-center border border-opacity-75">
+                                      <div class="row align-items-start">
+                                        <div class="col">
+                                          {{key}}
+                                        </div>
+                                        <div class="col border border-danger">
+                                         {{value.0}}
+                                        </div>
+                                        <div class="col border border-success">
+                                          {{value.1}}
+                                        </div>
+                                      </div>
+                                    </div>
+                                         
+                                    {% endfor%}
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Understood</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                              
+                  {% endif %}
+
+
+                        <!-- Modal -->
+                 {% endfor %}
+
+              </tbody>
+              <tfoot>
+                  <tr>
+                       <th>Names</th>
+                      <th>Email</th>
+                      <th>Event Type</th>
+                      <th>Content Type </th>
+                      <th>Object </th>
+                      <th>Changed fields</th>
+                      <th>Date</th>
+                  </tr>
+              </tfoot>
+          </table>
+      </div>
+</div>
+     <script >
+              
+              $(document).ready(function (){
+
+                new DataTable('#crud_events');
+
+              });
+
+     </script>
+</div>
 
 {% endblock %}

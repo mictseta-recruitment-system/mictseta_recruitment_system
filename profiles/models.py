@@ -21,7 +21,7 @@ class Profile(models.Model):
 
     def __str__(self):
 
-        return f'{self.user.username} Profile Information'
+        return f'{self.user.email} Profile Information'
 
 class PersonalInformation(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
@@ -36,7 +36,7 @@ class PersonalInformation(models.Model):
 	job_location = models.CharField(max_length=225,null=True )
 
 	def __str__(self):
-		return f"{self.user.username} Personal Information"
+		return f"{self.user.email} Personal Information"
 
 class AddressInformation(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -47,14 +47,15 @@ class AddressInformation(models.Model):
 	postal_code = models.CharField(max_length=6,null=True )
 	
 	def __str__(self):
-		return f"{self.user.username} Address Information"
+		return f"{self.user.email} Address Information"
 
 
 class ProfileImage(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	image = models.ImageField(upload_to='static/profiles/images/')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
-
+	def __str__(self):
+		return f"{self.user.email} Profile Image"
 
 	
 # =======================================================================================
@@ -70,6 +71,8 @@ class StaffProfile(models.Model):
 	gender = models.CharField(max_length=6,null=False )
 	age = models.CharField(max_length=6,null=False )
 	dob = models.CharField(max_length=6,null=False )
+	def __str__(self):
+		return f"{self.user.email} Staff Profile"
 
 class Shift(models.Model):
 	employee = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -77,6 +80,8 @@ class Shift(models.Model):
 	start_time = models.CharField(max_length=225,null=False)
 	end_time = models.CharField(max_length=225,null=False)
 	working_hours = models.CharField(max_length=225,null=False)
+	def __str__(self):
+		return f"{self.employee.email} Shift Details"
 	
 	
 class Attendance(models.Model):
@@ -87,6 +92,8 @@ class Attendance(models.Model):
 	status = models.CharField(max_length=225,null=False )
 	active = models.CharField(max_length=225,null=True, default="Inactive")
 	date = models.DateField(auto_now_add=True)
+	def __str__(self):
+		return f"{self.employee.email} Shift Details"
 
 class Leave(models.Model):
 	employee = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -97,6 +104,8 @@ class Leave(models.Model):
 	date = models.DateTimeField(auto_now_add=True)
 	status = models.CharField(max_length=225,null=False )
 	seen = models.BooleanField(null=False, default=False)
+	def __str__(self):
+		return f"{self.employee.email} Leave Details"
 
 
 class Raise(models.Model):
@@ -105,3 +114,5 @@ class Raise(models.Model):
 	amount = models.CharField(max_length=225,null=False)
 	date = models.DateTimeField(auto_now_add=True)
 	status = models.CharField(max_length=225,null=False )
+	def __str__(self):
+		return f"{self.employee.email} Raise Details"
