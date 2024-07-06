@@ -1,0 +1,95 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Audit|Login Events{% endblock %}
+
+{% block breadcrumbs %}
+      <li class="breadcrumb-item active" aria-current="page">Aduit Log</li>
+      <li class="breadcrumb-item active" aria-current="page">Login Events</li>
+      
+     {% endblock %}
+
+{% load static %}
+
+
+{% block content %}
+<div class="table-container mt-3" >
+ <div class="card shadow-lg rounded">
+    <div class="card-header d-flex justify-content-between " >
+
+        <h6>Login Events List</h6> 
+
+         <a href="{% url 'dashboard.login_events_generate_pdf_report' %}" class="btn btn-warning py-0" style=""><i class="fa fa-bar-chart" aria-hidden="true"></i> Generate report </a> 
+
+    </div>
+              
+
+
+    <div class="card-body" style="overflow-x: scroll;"> 
+		<table id="login_events" class="table table-striped" style="width:100%">
+	        <thead>
+	            <tr>
+	                <th>Date</th>
+	                <th>Method</th>
+	                <th>User </th>
+	                <th>User Email</th>
+	                <th>Remote IP</th>
+	                
+	            </tr>
+	        </thead>
+	        <tbody>
+	        	{% for login_event in login_events %}
+
+	        	<tr>
+	                <td>{{login_event.date }}</td>
+
+	                <td>
+	                	{% if login_event.method == "LOGIN" %}
+		                	<button type="text" class="btn btn-primary p-0 " disabled> 
+		                		{{ login_event.method }}
+		                	</button>
+	                	{% elif login_event.method == "LOGOUT" %}
+		                	<button type="text" class="btn btn-info p-0" disabled> 
+		                		{{ login_event.method }}
+		                	</button>
+	                	{% else %}
+	                		<button type="text" class="btn btn-danger p-0" disabled> 
+		                		{{ login_event.method }}
+		                	</button>
+		                {% endif %}
+	            	</td>
+	                {% if login_event.user != "ANONYMOUS" %}
+	                <td>{{ login_event.user.first_name }} {{ login_event.user.last_name }}</td>
+	                <td>{{ login_event.user.email }}</td>
+	                {% else %}
+	                <td>{{ login_event.user }}</td>
+	                <td>{{ login_event.user }}</td>
+	                {% endif %}
+	                <td>{{ login_event.remote_ip }}</td>
+	                
+	            </tr>
+	           {% endfor %}
+
+	        </tbody>
+	        <tfoot>
+	            <tr>
+	                <th>Date</th>
+	                <th>Method</th>
+	                <th>User </th>
+	                <th>User Email</th>
+	                <th>Remote IP</th>
+	            </tr>
+	        </tfoot>
+	    </table>
+	</div>
+</div>
+     <script >
+              
+              $(document).ready(function (){
+
+                new DataTable('#login_events');
+
+              });
+
+     </script>
+</div>
+{% endblock %}

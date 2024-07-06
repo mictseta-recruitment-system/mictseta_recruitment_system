@@ -1,0 +1,141 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>LOGIN EVENTS RECORDS</title>
+	<style>
+		body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .report-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .btn-info{
+        	background-color: lightskyblue;
+        }
+        .btn-danger{
+        	background-color: maroon;
+        }
+        .btn-success{
+        	background-color: lightgreen;
+
+        }
+        button{
+        	
+        }
+	</style>
+</head>
+<body>
+	<div class="report-header">
+        <h1> Audit Log  Report</h1>
+    </div>
+ 
+    <h2>Login Events List Table</h2>
+
+
+		<table id="login_events" class="table table-striped" style="width:100%">
+	        <thead>
+	            <tr>
+	                <th>Date</th>
+	                <th>Method</th>
+	                <th>User </th>
+	                <th>User Email</th>
+	                <th>Remote IP</th>
+	                
+	            </tr>
+	        </thead>
+	        <tbody>
+	        	{% for login_event in login_events %}
+
+	        	<tr>
+	                <td>{{login_event.date }}</td>
+
+	                <td>
+	                	{% if login_event.method == "LOGIN" %}
+		                	<button type="text" class="btn btn-success" disabled> 
+		                		{{ login_event.method }}
+		                	</button>
+	                	{% elif login_event.method == "LOGOUT" %}
+		                	<button type="text" class="btn btn-info" disabled> 
+		                		{{ login_event.method }}
+		                	</button>
+	                	{% else %}
+	                		<button type="text" class="btn btn-danger " disabled> 
+		                		{{ login_event.method }}
+		                	</button>
+		                {% endif %}
+	            	</td>
+	                {% if login_event.user != "ANONYMOUS" %}
+	                <td>{{ login_event.user.first_name }} {{ login_event.user.last_name }}</td>
+	                <td>{{ login_event.user.email }}</td>
+	                {% else %}
+	                <td>{{ login_event.user }}</td>
+	                <td>{{ login_event.user }}</td>
+	                {% endif %}
+	                <td>{{ login_event.remote_ip }}</td>
+	                
+	            </tr>
+	           {% endfor %}
+
+	        </tbody>
+	        <tfoot>
+	            <tr>
+	                <th>Date</th>
+	                <th>Method</th>
+	                <th>User </th>
+	                <th>User Email</th>
+	                <th>Remote IP</th>
+	            </tr>
+	        </tfoot>
+	    </table>
+	
+
+     <script >
+              
+              $(document).ready(function (){
+
+                new DataTable('#login_events');
+
+              });
+
+
+
+
+     </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+</body>
+</html>
+
+
+
+
+
+

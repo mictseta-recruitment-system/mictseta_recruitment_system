@@ -12,7 +12,7 @@ from .models import Backup
 from task_manager.models import Category, Task
 import json
 from django.db.models import Q
-
+from easyaudit.models import CRUDEvent, LoginEvent
 
 @ensure_csrf_cookie
 def panel(request):
@@ -459,3 +459,63 @@ def restore_db(request, dbID):
 	  		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
 	else:
 		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+
+
+def crud_events(request):
+	if request.user.is_authenticated:
+		if request.user.is_superuser :
+			return render(request, 'crud_events.html')
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
+
+def get_log_user_by_id(event):
+	try : 
+		user =  User.objects.get(id=event.user_id)
+		return user 
+	except :
+		user = "ANONYMOUS"
+	return user
+
+def login_events(request):
+	if request.user.is_authenticated:
+		if request.user.is_superuser :
+			data = []
+			login_types = ('LOGIN','LOGOUT','FAILDE LOGIN')
+			cruds = LoginEvent.objects.all()
+
+			for event in cruds :
+				event_data = {
+					'date'		: event.datetime,
+					'method'	: login_types[event.login_type],
+					'remote_ip'	: event.remote_ip,
+					'user'		: get_log_user_by_id(event),
+
+				}
+				data.append(event_data)
+			return render(request, 'login_events.html', {'login_events':data})
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
+
+def login_events_generate_pdf_report(request):
+	data = []
+	login_types = ('LOGIN','LOGOUT','FAILDE LOGIN')
+	cruds = LoginEvent.objects.all()
+
+	for event in cruds :
+		event_data = {
+			'date'		: event.datetime,
+			'method'	: login_types[event.login_type],
+			'remote_ip'	: event.remote_ip,
+			'user'		: get_log_user_by_id(event),
+		}
+		data.append(event_data)
+	context = {
+        'login_events': data,
+    }
+	pdf = render_to_pdf('pdf_login_events.html', context)
+	return HttpResponse(pdf, content_type='application/pdf')

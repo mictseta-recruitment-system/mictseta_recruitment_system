@@ -28,5 +28,8 @@ def referees(request):
 def supporting_documents(request):
     return render(request, 'supporting_documents.html')
 
+def job_details(request):
+    return render(request, 'jobseeker_job_details.html')
+
 
 

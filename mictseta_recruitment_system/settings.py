@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'dashboard',
     'job_seeker',
     'task_manager',
-
+    'easyaudit',
     
 ]
 
@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 ]
 
 ROOT_URLCONF = 'mictseta_recruitment_system.urls'

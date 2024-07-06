@@ -10,7 +10,8 @@ urlpatterns = [
     path('computer_skills/', views.computer_skills, name='computer_skills'),
     path('working_experience/', views.working_experience, name='working_experience'),
     path('referees/', views.referees, name='referees'),
-     path('supporting_documents/', views.supporting_documents, name='supporting_documents'),
+    path('supporting_documents/', views.supporting_documents, name='supporting_documents'),
+    path('job_details/', views.job_details, name='jobseeker.job_details'),
      
     
     
