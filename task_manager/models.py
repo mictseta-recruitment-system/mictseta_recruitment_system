@@ -7,7 +7,7 @@ class Category(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
-        return f"Category {self.name}, Owned by : {self.user.email}"
+        return f"{self.name} category "
 
 class Task(models.Model):
     name = models.CharField(max_length=100, null=False)

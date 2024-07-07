@@ -13,9 +13,10 @@ def home(request):
     current_time = now()
     jobs = JobPost.objects.filter(is_approved=True)
     for job in jobs:
-        if current_time > job.end_date :
-            job.status = "closed"
-            job.save()
+        if job.status != "closed":
+            if current_time > job.end_date :
+                job.status = "closed"
+                job.save()
     jobs = JobPost.objects.filter(status="open") 
     print(jobs)
     return render(request,'index.html', {'jobs':jobs})
