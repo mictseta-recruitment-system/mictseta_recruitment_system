@@ -7,7 +7,7 @@ class Category(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
-        return f"{self.name} category "
+        return f"{self.name} category"
 
 class Task(models.Model):
     name = models.CharField(max_length=100, null=False)
@@ -19,4 +19,4 @@ class Task(models.Model):
     is_complete = models.BooleanField(default=False, null=False)
 
     def __str__(self):
-        return f"Task {self.name} from Category {self.category.name}"
+        return f"Task {self.name} from category {self.category.name}"
