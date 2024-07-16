@@ -3,16 +3,22 @@
     function handle_update_profile_info_button_click() {
         const first_name = document.getElementById("first_name").value;
         const last_name = document.getElementById("last_name").value;
-        const username = document.getElementById("username").value;
+      
         const email = document.getElementById("email").value;
         const idnumber = document.getElementById("idnumber").value;
         const phone = document.getElementById("phone").value;
         const maritial_status = document.getElementById("maritial_status").value;
         const race = document.getElementById("race").value;
         const disability = document.getElementById("disability").value;
+        const linkedin_profile = document.getElementById("linkedin_profile").value;
+        const personal_website = document.getElementById("personal_website").value;
+        
+
 
         const data2 = {
-            username : username,
+            
+            linkedin_profile : linkedin_profile,
+            personal_website : personal_website,
             first_name : first_name,
             last_name : last_name,
             email : email,
@@ -65,3 +71,37 @@
   setTimeout(() => {
       updateProgress(50);
   }, 2000);
+
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function handleErrors(errors) {
+  for (const key in errors) {
+    //to ensure it makes the container Empty before displaying the next error 
+document.getElementById('flash-message-container').innerHTML=``;
+//the next error
+    if (errors.hasOwnProperty(key)) {
+      const error = errors[key];
+      if (Array.isArray(error)) {
+        error.forEach((errorMessage) => {
+          showFlashMessage(`${errorMessage}`, "danger");
+        });
+      } else {
+        showFlashMessage(` ${error}`, "danger");
+      }
+    }
+  }
+}

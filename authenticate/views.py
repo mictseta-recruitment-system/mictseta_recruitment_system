@@ -85,7 +85,6 @@ def sign_up(request):
 			return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 		print(json_data)
 		data = {
-		'username' : json_data.get('username'),
 		'email' : json_data.get('email'),
 		'idnumber': json_data.get('idnumber'),
 		'password' : json_data.get('password'),
@@ -103,9 +102,9 @@ def sign_up(request):
 			
 			user = authenticate(request, email=data['email'], password=data['password'])
 			if user is None:
-				new_user = User.objects.create_user( email=data['email'], password=data['password'], username=data['username'])
+				new_user = User.objects.create_user( email=data['email'], password=data['password'], username=data['idnumber'])
 				new_user.save()
-				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() )
+				profile = Profile.objects.create(user=new_user, idnumber=data['idnumber'], age=ValidateIdNumber(data['idnumber']).get_age(), gender=ValidateIdNumber(data['idnumber']).get_gender() , dob=ValidateIdNumber(data['idnumber']).get_birthdate() )
 				profile.save()
 				return JsonResponse({'message':f'User profile for {new_user.username} is created successfuly', 'status':'success'}, status=201)
 

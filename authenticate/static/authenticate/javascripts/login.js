@@ -1,7 +1,4 @@
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    const sign_in = document.getElementById('btn-signin');
-
     
     function handle_sign_in_button_click() {
         const lemail = document.getElementById("lemail").value;
@@ -53,12 +50,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
    
 
        /*===================================================================================*/
-   const sign_up = document.getElementById('btn-signup');
+
 
     function handle_sign_up_button_click() {
       /*  const first_name = document.getElementById("first_name").value;
         const last_name = document.getElementById("last_name").value;*/
-        const username = document.getElementById("username").value;
+        
         const email = document.getElementById("email").value;
         const idnumber = document.getElementById("idnumber").value;
         const password = document.getElementById("password").value;
@@ -71,12 +68,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
             last_name : last_name,*/
            /* phone :  phone , */ 
             email : email,
-            username : username,
+           
             idnumber : idnumber,
             password : password,
             password2 : password2
         };
-        console.log(idnumber)
 
         fetch("http://127.0.0.1:8000/auth/sign_up/", {
           method: "POST",
@@ -89,7 +85,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "error") {
-             console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
               } else {
@@ -106,7 +101,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
           })
           .catch((error) => {
             showFlashMessage("An unexpected error occurred", "danger");
-            console.error("Error:", error);
           });
     }
 
@@ -115,7 +109,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
      
     /*===================================================================================*/ 
 
-    const forgot_pass = document.getElementById('btn-forgot');
+
 
 
     function handle_forgot_button_click() {
@@ -154,18 +148,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
           })
           .catch((error) => {
             showFlashMessage("An unexpected error occurred", "danger");
-            console.error("Error:", error);
           });
     }
    
 
-    sign_up.addEventListener('click', handle_sign_up_button_click)
-    sign_in.addEventListener('click', handle_sign_in_button_click)
-    forgot_pass.addEventListener('click', handle_forgot_button_click)
-    update_personal_info.addEventListener('click',handle_update_profile_button_click)
-
-
- });
 
 
 

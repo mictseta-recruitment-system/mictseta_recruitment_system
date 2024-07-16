@@ -4,7 +4,7 @@ from .models import Profile, ProfileImage
 from authenticate.data_validator import *
 
 class UpdateProfileInformationForm(forms.Form):
-	username = forms.CharField(max_length=150)
+	
 	email = forms.CharField(max_length=150)
 	first_name = forms.CharField(max_length=150)
 	last_name = forms.CharField(max_length=150)
@@ -13,7 +13,7 @@ class UpdateProfileInformationForm(forms.Form):
 	maritial_status = forms.CharField(max_length=10)
 	race = forms.CharField(max_length=15)
 	disability = forms.CharField(max_length=30)
-
+	
 	r_phone = forms.CharField(max_length=10)
 	
 	def validate_names(self,name):
@@ -42,11 +42,6 @@ class UpdateProfileInformationForm(forms.Form):
 			raise forms.ValidationError("Spaces not allowed in Last Name")
 		return self.validate_names(last_name)
 
-	def clean_username(self):
-		username = self.cleaned_data.get('username')
-		if ' ' in username :
-			raise forms.ValidationError("Spaces not allowed in Username")
-		return self.validate_names(username)
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')
@@ -68,6 +63,8 @@ class UpdateProfileInformationForm(forms.Form):
 
 	def clean_race(self):
 		race = self.cleaned_data.get('race')
+		if race == "empty":
+			return race
 		if ' ' in race :
 			raise forms.ValidationError("Spaces not allowed in race")
 		return self.validate_names(race)
@@ -76,9 +73,53 @@ class UpdateProfileInformationForm(forms.Form):
 		disability = self.cleaned_data.get('disability')
 		if ' ' in disability :
 			raise forms.ValidationError("Spaces not allowed in disability")
+		
+		linkedin_profile = self.cleaned_data.get('linkedin_profile')
+		
+		if linkedin_profile == "none" or linkedin_profile =="" or linkedin_profile == None or linkedin_profile ==" ":
+			return linkedin_profile
+		pattern = re.compile(r'^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub|company)\/[A-Za-z0-9_-]+\/?$')
+		if not bool(pattern.match(linkedin_profile)) :
+		 	raise forms.ValidationError("linkedin url is invalid")
+
+		personal_website = self.cleaned_data.get('personal_website')
+		if personal_website == "none" or personal_website =="" or personal_website == None or personal_website ==" ":
+			return personal_website
+		pattern = re.compile(r'^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/[a-zA-Z0-9-]*)*\/?$')
+		if not bool(pattern.match(personal_website)):
+			raise forms.ValidationError('your personal website url is invalid')
+
 		return self.validate_names(disability)
 
+	def clean_phone(self):
+		phone = self.cleaned_data.get('phone')
+		r_phone = self.cleaned_data.get('r_phone')
+		if phone == "empty":
+			return phone
+		if ' ' in phone :
+			raise forms.ValidationError("Spaces not allowed in email")
+		exist = User.objects.filter(profile__phone=phone).exists()
+		if exist:
+			user = User.objects.get(profile__phone=phone)
+			print(user.profile.phone, r_phone)
+			if user.profile.phone == r_phone:
+				pass
+			else:
+				raise forms.ValidationError("phone Number Already taken")
+		if not validate_south_african_phone_number(phone):
+			raise forms.ValidationError("Phone number is not a valid south african number or its empty")
+		return phone
 
+
+		
+
+		
+
+	# def clean_username(self):
+	# 	username = self.cleaned_data.get('username')
+	# 	if ' ' in username :
+	# 		raise forms.ValidationError("Spaces not allowed in Username")
+	# 	return self.validate_names(username)
 
 	# def clean_password(self):
 		
@@ -106,23 +147,6 @@ class UpdateProfileInformationForm(forms.Form):
 	# 		raise forms.ValidationError("Password cannot contain username of first name")  
 	# 	return password
 
-	def clean_phone(self):
-		phone = self.cleaned_data.get('phone')
-		r_phone = self.cleaned_data.get('r_phone')
-		if ' ' in phone :
-			raise forms.ValidationError("Spaces not allowed in email")
-		exist = User.objects.filter(profile__phone=phone).exists()
-		if exist:
-			user = User.objects.get(profile__phone=phone)
-			print(user.profile.phone, r_phone)
-			if user.profile.phone == r_phone:
-				pass
-			else:
-				raise forms.ValidationError("phone Number Already taken")
-		
-		if not validate_south_african_phone_number(phone):
-			raise forms.ValidationError("Phone number is not a valid south african number or its empty")
-		return phone
 
 	def clean_idnumber(self):
 		idnumber = self.cleaned_data.get('idnumber')

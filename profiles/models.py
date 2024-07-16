@@ -16,6 +16,8 @@ class Profile(models.Model):
     race = models.CharField(max_length=15, null=True)
     disability = models.CharField(max_length=30, null=True)
     is_verified = models.BooleanField(default=False, null=False)
+    linkedin_profile = models.CharField(max_length=225)
+    personal_website = models.CharField(max_length=225)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     
 

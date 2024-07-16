@@ -38,7 +38,9 @@ def update_user_profile(request):
                 return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
             print(json_data)
             data = {
-                'username' : json_data.get('username'),
+                
+                'linkedin_profile' : json_data.get('linkedin_profile'),
+                'personal_website' : json_data.get('personal_website'),
                 'first_name' : json_data.get('first_name'),
                 'last_name' : json_data.get('last_name'),
                 'email' : json_data.get('email'),
@@ -52,10 +54,11 @@ def update_user_profile(request):
                 'r_phone' : 'False',
                 # 'r_idnum' : f'{request.user.profile.idnumber}'
             }
-       
-            for key, value in data.items():
-                if key == None or value == None:
-                    return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
+            shallow_copy = data.copy()
+            print(data)
+            for key,value in shallow_copy.items():
+                if value == "" or value == " " or value=='None':
+                    shallow_copy[key] = "empty"
             form = UpdateProfileInformationForm(data)
             if form.is_valid() : 
                 exist = User.objects.filter(email=data['email']).exists()
@@ -66,17 +69,11 @@ def update_user_profile(request):
                     else:
                         raise forms.ValidationError(f"Email: {email} is already taken")
 
-                exist = User.objects.filter(username=data['username']).exists()
-                if exist:
-                    user = User.objects.get(username=data['username'])
-                    if user.username == request.user.username:
-                        pass
-                    else:
-                        raise forms.ValidationError(f"Username:{username} is already taken")
+                
                 try :
                     user = User.objects.get(id=request.user.id)
                     print(user)
-                    user.username = data['username']
+                    user.username = data['idnumber']
                     user.first_name = data['first_name']
                     user.last_name = data['last_name']
                     user.email = data['email']

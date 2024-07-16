@@ -33,7 +33,7 @@ class UserSignInForm(forms.Form):
 
 
 class UserSignUpForm(forms.Form):
-	username = forms.CharField(max_length=150)
+	
 	email = forms.CharField(max_length=150)
 	idnumber  = forms.CharField(max_length=13)
 	password = forms.CharField(max_length=128)
@@ -50,15 +50,6 @@ class UserSignUpForm(forms.Form):
 		except Exception as e:
 			raise forms.ValidationError(e)
 		return name
-
-	def clean_username(self):
-		username = self.cleaned_data.get('username')
-		if ' ' in username :
-			raise forms.ValidationError("Spaces not allowed ")
-		exist = User.objects.filter(username=username).exists()
-		if exist:
-			raise forms.ValidationError(f" {username} is already taken")
-		return self.validate_names(username)
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')

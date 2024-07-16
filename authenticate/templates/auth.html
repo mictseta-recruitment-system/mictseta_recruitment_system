@@ -123,7 +123,7 @@
             <label><input type="checkbox">Remember Me</label>
             <a href="{% url 'find_account' %}">Forgot Password?</a>
         </div>
-        <button type="button" class="btn" id="btn-signin" style="background-color: blue;color: white;">Login</button>
+        <button type="button" class="btn" id="btn-signin" onclick="handle_sign_in_button_click()" style="background-color: blue;color: white;">Login</button>
         <div class="register-link">
             <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
         </div>
@@ -162,11 +162,6 @@
         
 
         <div class="input-group mb-3">
-            <input type="text" name="username" id="username" class="form-control" placeholder="Surname" required>
-        </div>
-
-        
-        <div class="input-group mb-3">
             <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
         </div>
 
@@ -178,7 +173,7 @@
             <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
             <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
         </div>
-        <button type="button" class="btn" id="btn-signup" style="background-color: blue;color: white;">Create account</button>
+        <button type="button" class="btn" onclick="handle_sign_up_button_click()" style="background-color: blue;color: white;">Create account</button>
         <div class="register-link">
             <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
         </div>
