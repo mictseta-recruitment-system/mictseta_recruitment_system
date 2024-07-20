@@ -5,18 +5,49 @@
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
  
+<style>
+    body {
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+
+    .content-section {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .content-section h2 {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+</style>
 <div id="personal_details" class="content-section active">
-    <h2 class="mb-4">Personal Details</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="mb-4">Personal Details</h2>
+        </div>
+        <div class="col-md-6">
+            <h2 class="mb-4">Contact Details</h2>
+        </div>
+    </div>
     <form>
         <div class="row">
+            <!-- Personal Details Section -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="id-number">ID Number</label>
                     <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}" disabled>
-                </div>
-                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" value="{{user.email}}" disabled>
                 </div>
                 <div class="form-group">
                     <label for="first-name">First Name</label>
@@ -27,8 +58,25 @@
                     <input type="text" class="form-control" id="last_name" name="last_name" value="{{user.last_name}}">
                 </div>
                 <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select class="form-control" id="gender" name="gender">
+                        <option value="{{user.profile.gender}}" selected>{{user.profile.gender}}</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="marital-status">Marital Status</label>
+                    <select class="form-control" id="marital_status" name="marital_status">
+                        <option value="{{user.profile.marital_status}}" selected>{{user.profile.marital_status}}</option>
+                        <option value="Married">Married</option>
+                        <option value="Single">Single</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="race">Select Race</label>
-                    <select class="form-control" id="race" name="race" value="{{user.profile.race}}">
+                    <select class="form-control" id="race" name="race">
                         <option value="{{user.profile.race}}" selected>{{user.profile.race}}</option>
                         <option value="Black">Black</option>
                         <option value="Coloured">Coloured</option>
@@ -36,82 +84,43 @@
                         <option value="Indian">Indian</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="dob">Date of Birth</label>
-                    <input type="text" class="form-control" id="dob" name="dob" value="{{user.profile.dob}}" disabled>
+                    <input type="text" class="form-control" id="dob" name="dob" value="{{user.profile.dob}}" >
                 </div>
                 <div class="form-group">
                     <label for="disability">Disability</label>
-                    <input type="text" class="form-control" id="disability" name="disability" value="{{user.profile.disability}}" >
-                </div>
-               <!--  <div class="form-group">
-                    <label for="citizenship-status">Citizenship Status</label>
-                    <input type="text" class="form-control" id="citizenship-status" name="citizenship-status">
-                </div> -->
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="Status">Maritial Status</label>
-                    <select class="form-control" id="maritial_status" name="maritial_status">
-                         <option value="{{user.profile.maritial_status}}" selected>{{user.profile.maritial_status}}</option>
-                        <option value="Married">Married</option>
-                        <option value="Married">Married</option>
-                        <option value="Single">Single</option>
+                    <select class="form-control" id="disability" name="disability">
+                        <option value="{{user.profile.disability}}" selected>{{user.profile.disability}}</option>
+                        <option value="None">None</option>
+                        <option value="Hearing">Hearing</option>
+                        <option value="Vision">Vision</option>
+                        <option value="Mobility">Mobility</option>
+                        <option value="Cognitive">Cognitive</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
+            </div>
+           
+            <!-- Contact Details Section -->
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <input class="form-control" id="gender" name="gender" value="{{user.profile.gender}}" disabled>
-                       
-                   
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" value="{{user.email}}">
                 </div>
                 <div class="form-group">
                     <label for="telephone">Telephone</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" value="{{user.profile.phone}}" >
+                    <input type="tel" class="form-control" id="phone" name="phone" value="{{user.profile.phone}}">
                 </div>
                 <div class="form-group">
-                    <label for="linkedin-profile">LinkedIn profile</label>
+                    <label for="linkedin-profile">LinkedIn Profile</label>
                     <input type="url" class="form-control" id="linkedin_profile" name="linkedin_profile" value="{{user.profile.linkedin_profile}}">
-                </div> 
-                 <div class="form-group">
-                    <label for="linkedin-profile">Personal Website</label>
-                    <input type="url" class="form-control" id="personal_website" name="personal_website" value="{{user.profile.linkedin_profile}}">
-                </div> 
+                </div>
+                <div class="form-group">
+                    <label for="personal-website">Personal Website</label>
+                    <input type="url" class="form-control" id="personal_website" name="personal_website" value="{{user.profile.personal_website}}">
+                </div>
             </div>
-            <!-- <div class="col-md-12">
-                <div class="form-group">
-                    <label for="Province">Province</label>
-                    <select class="form-control" id="Province" name="Province">
-                        <option selected>Select Province</option>  
-                        <option value="Western Cape">Western Cape</option>
-                        <option value="Limpopo">Limpopo</option>
-                        <option value="North West">North West</option>
-                        <option value="Mpumalanga">Mpumalanga</option>
-                        <option value="Gauteng">Gauteng</option>
-                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-                        <option value="Northern Cape">Northern Cape</option>
-                        <option value="Eastern Cape">Eastern Cape</option>
-                        <option value="Free State">Free State</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="city-town">City/Town</label>
-                    <input type="text" class="form-control" id="city-town" name="city-town">
-                </div>
-                <div class="form-group">
-                    <label for="district-suburb">District/Suburb</label>
-                    <input type="text" class="form-control" id="district-suburb" name="district-suburb">
-                </div>
-                <div class="form-group">
-                    <label for="postal-code">Postal Code</label>
-                    <input type="text" class="form-control" id="postal-code" name="postal-code">
-                </div>
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" name="address">
-                </div>
-            </div> -->
         </div>
         <button type="button" role="button" onclick="handle_update_profile_info_button_click()" class="btn btn-primary">Update</button>
     </form>

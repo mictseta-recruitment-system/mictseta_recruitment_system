@@ -3,77 +3,69 @@
 {% block title %}Language & Proficiency{% endblock %}
 
 {% block content %}
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    .content-section {
-        padding: 0px;
-    }
-    
-    .form-group input, .form-group select {
-        border-radius: 0;
-    }
-    .form-group button {
-        border-radius: 0;
-    }
-</style>
+<div class="language -proficiency">
+    <h2>Language Proficiency</h2>
 
-<div id="language-proficiency" class="content-section active">
-    <h2 class="mb-4">Language & Proficiency</h2>
-    <form class="mt-4">
-        <div class="form-group row">
-            <label for="language1" class="col-sm-2 col-form-label">Language 1</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="language1" name="language1">
-            </div>
-            <label for="proficiency1" class="col-sm-2 col-form-label">Proficiency</label>
-            <div class="col-sm-4">
-                <select class="form-control" id="proficiency1" name="proficiency1">
-                    <option value="Select Proficiency">Select Proficiency</option>
-                    <option value="Basic">Basic</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                    <option value="Fluent">Fluent</option>
-                </select>
-            </div>
+    <div class="language-form">
+        <div class="form-group">
+            <label for="language">Language:</label>
+            <input type="text" id="language" class="form-control" placeholder="Enter language...">
+           
         </div>
-        <div class="form-group row">
-            <label for="language2" class="col-sm-2 col-form-label">Language 2</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="language2" name="language2">
-            </div>
-            <label for="proficiency2" class="col-sm-2 col-form-label">Proficiency</label>
-            <div class="col-sm-4">
-                <select class="form-control" id="proficiency2" name="proficiency2">
-                    <option value="Select Proficiency">Select Proficiency</option>
-                    <option value="Basic">Basic</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                    <option value="Fluent">Fluent</option>
-                </select>
-            </div>
+
+        <div class="form-group">
+            <label for="proficiency">Proficiency Level:</label>
+            <select id="proficiency" class="form-control">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="fluent">Fluent</option>
+            </select>
         </div>
-        <div class="form-group row">
-            <label for="language3" class="col-sm-2 col-form-label">Language 3</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="language3" name="language3">
-            </div>
-            <label for="proficiency3" class="col-sm-2 col-form-label">Proficiency</label>
-            <div class="col-sm-4">
-                <select class="form-control" id="proficiency3" name="proficiency3">
-                    <option value="Select Proficiency">Select Proficiency</option>
-                    <option value="Basic">Basic</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                    <option value="Fluent">Fluent</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-10 offset-sm-2">
-                <button type="submit" class="btn btn-primary">Update</button>
-            </div>
-        </div>
-    </form>
+
+        <button id="add-language" class="btn btn-primary">Update</button>
+        
+        <!-- Button to trigger modal -->
+        <button id="add-language-modal" class="btn btn-secondary" data-toggle="modal" data-target="#languageModal">
+            Additional Language
+        </button>
+    </div>
+
+    <ul id="language-list" class="language-list">
+        <!-- Languages dynamically added will appear here -->
+    </ul>
 </div>
 
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="languageModal" tabindex="-1" role="dialog" aria-labelledby="languageModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="languageModalLabel">Additional Language</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="modal-language">Language:</label>
+            <input type="text" id="modal-language" class="form-control" placeholder="Enter language...">
+        </div>
+        <div class="form-group">
+            <label for="modal-proficiency">Proficiency Level:</label>
+            <select id="modal-proficiency" class="form-control">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="fluent">Fluent</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="save-language-modal" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
