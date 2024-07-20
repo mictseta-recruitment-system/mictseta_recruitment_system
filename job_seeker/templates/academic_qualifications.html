@@ -54,20 +54,73 @@
                 <input type="text" class="form-control" id="grade" name="grade">
             </div>
         </div>
-        <div class="mb-3">
-            <label for="additional-qualifications" class="form-label">Additional Qualifications</label>
-            <textarea class="form-control" id="additional-qualifications" name="additional-qualifications" rows="3"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="certifications" class="form-label">Certifications</label>
-            <textarea class="form-control" id="certifications" name="certifications" rows="3"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="honors-awards" class="form-label">Honors and Awards</label>
-            <textarea class="form-control" id="honors-awards" name="honors-awards" rows="3"></textarea>
-        </div>
+    
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
+
+    <!-- Button to trigger modal -->
+    <button type="button" class="btn btn-secondary mt-3" data-toggle="modal" data-target="#additionalQualificationModal">
+        Add Additional Qualification
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="additionalQualificationModal" tabindex="-1" role="dialog" aria-labelledby="additionalQualificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="additionalQualificationModalLabel">Add Additional Qualification</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="additional-highest-qualification" class="form-label">Highest Qualification</label>
+                                <input type="text" class="form-control" id="additional-highest-qualification" name="additional-highest-qualification" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="additional-field-of-study" class="form-label">Field of Study</label>
+                                <input type="text" class="form-control" id="additional-field-of-study" name="additional-field-of-study" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="additional-institution" class="form-label">Institution</label>
+                                <input type="text" class="form-control" id="additional-institution" name="additional-institution" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="additional-qualification-status" class="form-label">Qualification Status</label>
+                                <select class="form-control" id="additional-qualification-status" name="additional-qualification-status" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="In Progress">In Progress</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="additional-year-obtained" class="form-label">Year Obtained</label>
+                                <input type="text" class="form-control" id="additional-year-obtained" name="additional-year-obtained" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="additional-grade" class="form-label">Grade</label>
+                                <input type="text" class="form-control" id="additional-grade" name="additional-grade">
+                            </div>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" id="save-language-modal" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}

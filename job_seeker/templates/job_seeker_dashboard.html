@@ -6,11 +6,9 @@
     <title>{% block title %} Dashboard {% endblock %}</title>
     {% load static %}
     <!-- Bootstrap CSS -->
-<link rel="stylesheet" href="{% static 'job_seeker/css/style.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{% static 'job_seeker/css/style.css' %}">
     <link rel="shortcut icon" href="{% static './authenticate/images/webicon.png' %}" type="image/x-icon">
-     
 </head>
 <body>
     <nav class="navbar">
@@ -18,12 +16,12 @@
             <img src="{% static 'job_seeker/images/webicon.png' %}" alt="Logo">
         </div>
         <div class="title">MICT SETA</div>
+        
     </nav> 
     <div class="container-box">
         <div class="sidebar">
             <ul>
                 <li><a href="{% url 'job_seeker_dashboard' %}"><strong>Dashboard</strong></a></li>
-                
                 <li><a href="{% url 'personal_details' %}">Personal Details</a></li>
                 <li><a href="{% url 'academic_qualifications' %}">Academic Qualifications</a></li>
                 <li><a href="{% url 'language_proficiency' %}">Language & Proficiency</a></li>
@@ -32,14 +30,12 @@
                 <li><a href="{% url 'working_experience' %}">Working Experience</a></li>
                 <li><a href="{% url 'referees' %}">Referees</a></li>
                 <li><a href="{% url 'supporting_documents' %}">Supporting Documents</a></li>
-                 <li><a href="{% url 'jobseeker.job_details' %}">Job Details</a></li>
-                
+                <li><a href="{% url 'jobseeker.job_details' %}">Job Details</a></li>
             </ul>
         </div>
-      
         <div class="content">
             <div class="inner-content-box">
-                 <div id="flash-message-container"></div>
+                <div id="flash-message-container"></div>
                 {% block content %}
                 <h1>Progress Updates</h1>
                 <div class="container mt-5" id="progress-circle"> 
@@ -47,19 +43,14 @@
                         <span>75%</span>
                     </div>
                 {% endblock %}
-                
             </div>
         </div>
     </div>  
     <script src="{% static 'users/js/flash.js' %}"></script> 
     <script src="{% static 'job_seeker/js/script.js' %}"></script> 
     
-             
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js" integrity="sha384-MCw98/SFnGE8fJT3GXscSEo4E2H6O5+FB2Q+J99lbdGIPl/M6+aInI2tsTuo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+YhzAZtTGh5PZSgVzvbC+6Bihj5y8ZsOJ2n" crossorigin="anonymous"></script>
 </body>
 </html>
