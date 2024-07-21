@@ -4,71 +4,81 @@
 
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<style>
-   
-    
-    
-</style>
 
 <div id="computer-skills" class="content-section active">
     <h2 class="mb-4">Computer Skills</h2>
     <form class="mt-4">
         <div class="form-group row">
-            <label for="skill1" class="col-sm-2 col-form-label">Skill 1</label>
+            <label for="skill1" class="col-sm-2 col-form-label">Computer Skill</label>
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="skill1" name="skill1">
-            </div>
-            <label for="description1" class="col-sm-2 col-form-label">Description</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="description1" name="description1">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="skill2" class="col-sm-2 col-form-label">Skill 2</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="skill2" name="skill2">
-            </div>
-            <label for="description2" class="col-sm-2 col-form-label">Description</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="description2" name="description2">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="skill3" class="col-sm-2 col-form-label">Skill 3</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="skill3" name="skill3">
-            </div>
-            <label for="description3" class="col-sm-2 col-form-label">Description</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="description3" name="description3">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="skill4" class="col-sm-2 col-form-label">Skill 4</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="skill4" name="skill4">
-            </div>
-            <label for="description4" class="col-sm-2 col-form-label">Description</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="description4" name="description4">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="skill5" class="col-sm-2 col-form-label">Skill 5</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="skill5" name="skill5">
-            </div>
-            <label for="description5" class="col-sm-2 col-form-label">Description</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="description5" name="description5">
+                <select class="form-control" id="skill1" name="skill1">
+                    <option value="">Select a skill</option>
+                    <option value="Software Development">Software Development</option>
+                    <option value="Degrees & Certificates">Degrees & Certificates</option>
+                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                    <option value="Networking & Wireless">Networking & Wireless</option>
+                    <option value="SEO / SEM Marketing">SEO / SEM Marketing</option>
+                    <option value="Business Analysis">Business Analysis</option>
+                    <option value="Foreign Language">Foreign Language</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                    <option value="Cybersecurity">Cybersecurity</option>
+                    <option value="Data Analysis">Data Analysis</option>
+                </select>
             </div>
         </div>
         <div class="form-group row">
             <div class="col-sm-10 offset-sm-2">
                 <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addSkillModal">Add Skill</button>
             </div>
         </div>
     </form>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSkillModalLabel">Add Additional Computer Skill</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label for="additionalSkill" class="col-sm-4 col-form-label">Computer Skill</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="additionalSkill" name="additionalSkill">
+                                <option value="">Select a skill</option>
+                                <option value="Software Development">Software Development</option>
+                                <option value="Degrees & Certificates">Degrees & Certificates</option>
+                                <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                <option value="Networking & Wireless">Networking & Wireless</option>
+                                <option value="SEO / SEM Marketing">SEO / SEM Marketing</option>
+                                <option value="Business Analysis">Business Analysis</option>
+                                <option value="Foreign Language">Foreign Language</option>
+                                <option value="Machine Learning">Machine Learning</option>
+                                <option value="Cybersecurity">Cybersecurity</option>
+                                <option value="Data Analysis">Data Analysis</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 {% endblock %}

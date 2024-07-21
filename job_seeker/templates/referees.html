@@ -6,7 +6,7 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
     .content-section {
-        padding: 0px;
+        padding: 20px;
     }
     
     .form-group input, .form-group select {
@@ -21,59 +21,62 @@
     <h2 class="mb-4">Referees</h2>
     <form class="mt-4">
         <!-- Referee 1 -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="referee1-name" class="form-label">Referee 1 Name</label>
-                <input type="text" class="form-control" id="referee1-name" name="referee1-name">
-            </div>
-            <div class="col-md-4">
-                <label for="referee1-contact" class="form-label">Contact Information</label>
-                <input type="text" class="form-control" id="referee1-contact" name="referee1-contact">
-            </div>
-            <div class="col-md-4">
-                <label for="referee1-position" class="form-label">Position</label>
-                <input type="text" class="form-control" id="referee1-position" name="referee1-position">
-            </div>
+        <div class="form-group mb-3">
+            <label for="referee1-name" class="form-label">Referee Name</label>
+            <input type="text" class="form-control" id="referee1-name" name="referee1-name">
         </div>
-
-        <!-- Referee 2 -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="referee2-name" class="form-label">Referee 2 Name</label>
-                <input type="text" class="form-control" id="referee2-name" name="referee2-name">
-            </div>
-            <div class="col-md-4">
-                <label for="referee2-contact" class="form-label">Contact Information</label>
-                <input type="text" class="form-control" id="referee2-contact" name="referee2-contact">
-            </div>
-            <div class="col-md-4">
-                <label for="referee2-position" class="form-label">Position</label>
-                <input type="text" class="form-control" id="referee2-position" name="referee2-position">
-            </div>
+        <div class="form-group mb-3">
+            <label for="referee1-contact" class="form-label">Contact Information</label>
+            <input type="text" class="form-control" id="referee1-contact" name="referee1-contact">
         </div>
-
-        <!-- Referee 3 -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="referee3-name" class="form-label">Referee 3 Name</label>
-                <input type="text" class="form-control" id="referee3-name" name="referee3-name">
-            </div>
-            <div class="col-md-4">
-                <label for="referee3-contact" class="form-label">Contact Information</label>
-                <input type="text" class="form-control" id="referee3-contact" name="referee3-contact">
-            </div>
-            <div class="col-md-4">
-                <label for="referee3-position" class="form-label">Position</label>
-                <input type="text" class="form-control" id="referee3-position" name="referee3-position">
-            </div>
+        <div class="form-group mb-3">
+            <label for="referee1-position" class="form-label">Position</label>
+            <input type="text" class="form-control" id="referee1-position" name="referee1-position">
         </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <button type="submit" class="btn btn-primary">Update</button>
-            </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addRefereeModal">Add Referee</button>
         </div>
     </form>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="addRefereeModal" tabindex="-1" role="dialog" aria-labelledby="addRefereeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRefereeModalLabel">Add Additional Referee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group mb-3">
+                        <label for="referee2-name" class="form-label">Referee Name</label>
+                        <input type="text" class="form-control" id="referee2-name" name="referee2-name">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="referee2-contact" class="form-label">Contact Information</label>
+                        <input type="text" class="form-control" id="referee2-contact" name="referee2-contact">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="referee2-position" class="form-label">Position</label>
+                        <input type="text" class="form-control" id="referee2-position" name="referee2-position">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 {% endblock %}
