@@ -30,13 +30,15 @@
         }
         .sidebar ul li {
             margin: 0;
+            padding: 5px 0; 
         }
         .sidebar ul li a {
             display: flex;
             align-items: center;
+            padding: 0px 0px; 
         }
         .sidebar ul li a i {
-            margin-right: 10px;
+            margin-right: 5px; 
         }
     </style>
 </head>
@@ -69,6 +71,11 @@
                 <li><a href="{% url 'supporting_documents' %}"><i class="fas fa-file-alt"></i>Supporting Documents</a></li>
                 <hr>
                 <li><a href="{% url 'jobseeker.job_details' %}"><i class="fas fa-info-circle"></i>Job Details</a></li>
+                <li><a href="{% url 'application_tracking' %}"><i class="fas fa-search"></i>Application Tracking</a></li>
+                <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i>Interviews</a></li>
+                <li><a href="{% url 'feedback' %}"><i class="fas fa-comments"></i>Feedback</a></li>
+                <hr>
+                <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </div>
         <div class="content">
