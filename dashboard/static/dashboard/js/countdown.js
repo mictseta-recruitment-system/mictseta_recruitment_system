@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   const shiftStartTime = new Date(shiftStartTimeString);
   const shiftEndTime = new Date(shiftEndTimeString);
- 
+ console.log(shiftStartTime)
+ console.log(shiftEndTime)
   let x = 0
   // Function to update countdown timer
   function updateCountdown() {

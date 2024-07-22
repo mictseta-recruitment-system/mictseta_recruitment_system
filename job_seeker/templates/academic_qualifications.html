@@ -19,7 +19,46 @@
 
 <div id="academic-qualifications" class="content-section active">
     <h2 class="mb-4">Academic Qualifications</h2>
-    <form class="mt-4">
+
+    <div class="card">
+      <div class="card-header">
+        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#additionalQualificationModal">
+        Add Additional Qualification
+    </button>
+      </div>
+      <div class="card-body">
+       
+      <table class="table table-striped table-hover">
+          <thead>
+            <tr class="bg-dark text-light">
+              <th scope="col">Highest Qualification</th>
+              <th scope="col">Field of Study</th>
+              <th scope="col">Institution</th>
+               <th scope="col">Status</th>
+              <th scope="col">Year Obtained</th>
+              <th scope="col">Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+                {% for qualification in user.qualifications.all %}
+            <tr>
+                <td>{{qualification.highest_qualification}}</td>
+                <td>{{qualification.field_of_study}}</td>
+                <td>{{qualification.institution}}</td>
+                <td>{{qualification.status}}</td>
+                <td>{{qualification.year_obtained}}</td>
+                <td>{{qualification.grade}}</td>
+             
+            </tr>
+                {% endfor %}
+            
+          </tbody>
+                
+        </table>
+      </div>
+    </div>
+
+<!--     <form class="mt-4">
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="highest-qualification" class="form-label">Highest Qualification</label>
@@ -57,11 +96,9 @@
     
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
-
+ -->
     <!-- Button to trigger modal -->
-    <button type="button" class="btn btn-secondary mt-3" data-toggle="modal" data-target="#additionalQualificationModal">
-        Add Additional Qualification
-    </button>
+   
 
     <!-- Modal -->
     <div class="modal fade" id="additionalQualificationModal" tabindex="-1" role="dialog" aria-labelledby="additionalQualificationModalLabel" aria-hidden="true">
@@ -78,21 +115,21 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="additional-highest-qualification" class="form-label">Highest Qualification</label>
-                                <input type="text" class="form-control" id="additional-highest-qualification" name="additional-highest-qualification" required>
+                                <input type="text" class="form-control" id="highest_qualification" name="highest_qualification" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="additional-field-of-study" class="form-label">Field of Study</label>
-                                <input type="text" class="form-control" id="additional-field-of-study" name="additional-field-of-study" required>
+                                <input type="text" class="form-control" id="field_of_study" name="field_of_study" required>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="additional-institution" class="form-label">Institution</label>
-                                <input type="text" class="form-control" id="additional-institution" name="additional-institution" required>
+                                <input type="text" class="form-control" id="institution" name="additional-institution" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="additional-qualification-status" class="form-label">Qualification Status</label>
-                                <select class="form-control" id="additional-qualification-status" name="additional-qualification-status" required>
+                                <select class="form-control" id="status" name="additional-qualification-status" required>
                                     <option value="">Select Status</option>
                                     <option value="Completed">Completed</option>
                                     <option value="In Progress">In Progress</option>
@@ -102,17 +139,17 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="additional-year-obtained" class="form-label">Year Obtained</label>
-                                <input type="text" class="form-control" id="additional-year-obtained" name="additional-year-obtained" required>
+                                <input type="text" class="form-control" id="year_obtained" name="additional-year-obtained" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="additional-grade" class="form-label">Grade</label>
-                                <input type="text" class="form-control" id="additional-grade" name="additional-grade">
+                                <input type="text" class="form-control" id="grade" name="additional-grade">
                             </div>
                         </div>
                     
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" id="save-language-modal" class="btn btn-primary">Save changes</button>
+                            <button type="button" id="save-language-modal" class="btn btn-primary" onclick="handle_update_qualification_button_click()">Save changes</button>
                     </form>
                 </div>
             </div>

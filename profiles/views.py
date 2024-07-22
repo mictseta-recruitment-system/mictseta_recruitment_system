@@ -3,11 +3,11 @@ from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UpdatePersonalInformationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
+from .forms import UpdateQualificationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, PersonalInformation, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance
+from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -104,52 +104,35 @@ def update_user_profile(request):
 
 
 @csrf_protect
-def update_personal_info(request):
+def update_qualification(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             try:
                 json_data = json.loads(request.body)
             except Exception :
                 return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-            personal_data = {
-                'linkedin_profile' : json_data.get('linkedin_profile'),
-                'personal_website' : json_data.get('personal_website'),
-                'job_title'  : json_data.get('job_title'),
-                'current_employer' : json_data.get('current_employer'),
-                'years_of_expreince' : json_data.get('years_of_expreince'),
-                'industry' : json_data.get('industry'),
-                'carear_level' : json_data.get('carear_level'),
-                'desired_job' : json_data.get('desired_job'),
-                'job_location' : json_data.get('job_location')
+            data = {
+                'highest_qualification' : json_data.get('highest_qualification'),
+                'field_of_study' : json_data.get('field_of_study'),
+                'institution'  : json_data.get('institution'),
+                'year_obtained' : json_data.get('year_obtained'),
+                'status' : json_data.get('status'),
+                'grade' : json_data.get('grade')
                 }
-            personal_data_form =  UpdatePersonalInformationForm(personal_data)
-            if personal_data_form.is_valid() : #and address_data_form.is_valid():
+            print(data)
+            qualification_data_form =  UpdateQualificationForm(data)
+            if qualification_data_form.is_valid() : #and address_data_form.is_valid():
                 try:
-                    # address_data_form = AddressInformationForm(address_data)
-                    personal_info = PersonalInformation.objects.create(user=request.user, linkedin_profile=personal_data['linkedin_profile'],personal_website=personal_data['personal_website'],job_title=personal_data['job_title'], current_employer=personal_data['current_employer'], years_of_expreince=personal_data['years_of_expreince'], industry=personal_data['industry'], carear_level=personal_data['carear_level'], desired_job=personal_data['desired_job'], job_location=personal_data['job_location'] )
-                    # address_info = AddressInformation.objects.create(user=request.user, street_address_line=address_data['street_address_line'], street_address_line1=address_data['street_address_line1'], city=address_data['city'], province=address_data['province'], postal_code=address_data['postal_code'] )
-                    personal_info.save()
-                    # address_info.save()     
-                    return JsonResponse({"message":"update personal information success"})
-                except IntegrityError:
-                    personal_information = PersonalInformation.objects.get(user_id=request.user.id)
-                    print(personal_information)
-                    personal_information.linkedin_profile = personal_data['linkedin_profile']
-                    personal_information.personal_website = personal_data['personal_website']
-                    personal_information.job_title = personal_data['job_title']
-                    personal_information.current_employer = personal_data['current_employer']
-                    personal_information.years_of_expreince = personal_data['years_of_expreince']
-                    personal_information.industry = personal_data['industry']
-                    personal_information.carear_level = personal_data['carear_level']
-                    personal_information.desired_job = personal_data['desired_job']
-                    personal_information.job_location = personal_data['job_location']
-                    personal_information.save()
-                    print('=========done=========')
-                    return JsonResponse({"message":"update personal information success", "status":"success"}, status=200)
+                    exists = Qualification.objects.filter(highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],status=data['status']).exists()
+                    if exists:
+                         return JsonResponse({'errors':{ "Qualification" : ['it Already exists']}, 'status':'error'}, status=404)
+                    qualification = Qualification.objects.create(user=request.user,highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],grade=data['grade'],status=data['status'])
+                    qualification.save()
+                    return JsonResponse({"message":"Added qualification information success"})
                 except Exception as e: 
                     return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
             else:
-               return JsonResponse({"errors":personal_data_form.errors, "status":"error"}, status=400) 
+               return JsonResponse({"errors":qualification_data_form.errors, "status":"error"}, status=400) 
         else:
             return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
     else:       

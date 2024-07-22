@@ -61,6 +61,57 @@
             console.error("Error:", error);
           });
     }
+  function handle_update_qualification_button_click() {
+       
+        const highest_qualification = document.getElementById("highest_qualification").value;
+        const field_of_study = document.getElementById("field_of_study").value;
+        const institution = document.getElementById("institution").value;
+        const year_obtained = document.getElementById("year_obtained").value;
+         const status = document.getElementById("status").value;
+        const grade = document.getElementById("grade").value;
+       
+        const personal_information = {
+
+            highest_qualification : highest_qualification,
+            field_of_study : field_of_study,
+            institution : institution, 
+            year_obtained : year_obtained, 
+            grade : grade,
+             status : status
+        };
+        
+
+        fetch("http://127.0.0.1:8000/profile/update/update_qualification/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(personal_information),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+                location.reload();
+                showFlashMessage(data.message, "success");
+
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
     
     // Setting the auto Progress
     function updateProgress(percentage) {

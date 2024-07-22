@@ -6,8 +6,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import UserSignInForm, UserSignUpForm
-from profiles.forms import UpdatePersonalInformationForm
-from profiles.models import Profile, PersonalInformation,  AddressInformation
+from profiles.models import Profile,  AddressInformation
 from .data_validator import ValidateIdNumber
 
 from django.utils.http import urlsafe_base64_encode

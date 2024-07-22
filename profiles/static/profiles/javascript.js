@@ -124,38 +124,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
     
     /*===================================================================================*/ 
     
-     const update_personal_info = document.getElementById('update_personal_info');
+     const update_qualification = document.getElementById('update_personal_info');
 
     
-    function handle_update_personal_info_button_click() {
+    function handle_update_qualification_button_click() {
        
-        const linkedin = document.getElementById("linkedin").value;
-        const website = document.getElementById("website").value;
-        const job_title = document.getElementById("job_title").value;
-        const employer = document.getElementById("employer").value;
-        const year_expereince = document.getElementById("year_expereince").value;
-        const industry = document.getElementById("industry").value;
-        const carear_level = document.getElementById("carear_level").value;
-        const desired_job = document.getElementById("desired_job").value;
-        const job_location = document.getElementById("job_location").value;
-        
-
-
+        const highest_qualification = document.getElementById("highest_qualification").value;
+        const field_of_study = document.getElementById("field_of_study").value;
+        const institution = document.getElementById("institution").value;
+        const year_obtained = document.getElementById("year_obtained").value;
+        const grade = document.getElementById("grade").value;
+       
         const personal_information = {
 
-            linkedin_profile : linkedin,
-            personal_website : website,
-            job_title : job_title, 
-            current_employer : employer, 
-            years_of_expreince : year_expereince, 
-            industry :  industry, 
-            carear_level : carear_level,
-            desired_job : desired_job,
-            job_location : job_location,
+            highest_qualification : highest_qualification,
+            field_of_study : field_of_study,
+            institution : institution, 
+            year_obtained : year_obtained, 
+            grade : grade
         };
         
 
-        fetch("http://127.0.0.1:8000/profile/update/personal_information/", {
+        fetch("http://127.0.0.1:8000/profile/update/update_qualification/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -193,7 +183,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     update_profile_info.addEventListener('click', handle_update_profile_info_button_click);
 
     
-    update_personal_info.addEventListener('click',handle_update_personal_info_button_click);
+    update_qualification.addEventListener('click',handle_update_qualification_button_click);
     update_address_info.addEventListener('click', handle_update_address_info_button_click);
 
 

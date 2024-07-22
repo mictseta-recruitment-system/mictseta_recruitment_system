@@ -25,20 +25,48 @@ class Profile(models.Model):
 
         return f'{self.user.email} Profile Information'
 
-class PersonalInformation(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
-	linkedin_profile = models.CharField(max_length=225)
-	personal_website = models.CharField(max_length=225)
-	job_title = models.CharField(max_length=225) 
-	current_employer =  models.CharField(max_length=225, null=False)
-	years_of_expreince = models.CharField(max_length=100, null=False)
-	industry = models.CharField(max_length=225, null=False)
-	carear_level = models.CharField(max_length=225, null=False)
-	desired_job = models.CharField(max_length=225, null=False)
-	job_location = models.CharField(max_length=225,null=True )
-
+class Qualification(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='qualifications')
+	highest_qualification = models.CharField(max_length=225, null=True)
+	field_of_study = models.CharField(max_length=225, null=True)
+	institution = models.CharField(max_length=225,null=True) 
+	year_obtained =  models.CharField(max_length=225, null=True)
+	status =  models.CharField(max_length=225, null=True)
+	grade = models.CharField(max_length=100, null=True)
 	def __str__(self):
-		return f"{self.user.email} Personal Information"
+		return f"{self.user.email} Qualification information"
+
+class Language(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	language = models.CharField(max_length=225)
+	proficiency = models.CharField(max_length=225)
+	def __str__(self):
+		return f"{self.user.email} Language and proficiency information"
+
+class ComputerSkills(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	skill = models.CharField(max_length=225)
+	level = models.CharField(max_length=225)
+	def __str__(self):
+		return f"{self.user.email} Computer Skills information"
+
+class SoftSkills(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	skill = models.CharField(max_length=225)
+	level = models.CharField(max_length=225)
+	def __str__(self):
+		return f"{self.user.email} Soft Skills information"
+
+class WorkingExpereince(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	job_title = models.CharField(max_length=225)
+	company = models.CharField(max_length=225)
+	location = models.CharField(max_length=225)
+	start_date = models.CharField(max_length=225)
+	end_date = models.CharField(max_length=225)
+	years_of_expreince = models.CharField(max_length=225)
+	def __str__(self):
+		return f"{self.user.email} Working Expereince information"
 
 class AddressInformation(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
