@@ -7,30 +7,68 @@
     {% load static %}
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{% static 'job_seeker/css/style.css' %}">
     <link rel="shortcut icon" href="{% static './authenticate/images/webicon.png' %}" type="image/x-icon">
+    <style>
+        .navbar-custom {
+            background-color: #007bff; 
+        }
+        .navbar-custom .navbar-brand, 
+        .navbar-custom .nav-link {
+            color: #fff;
+            font-weight: bold;
+        }
+        .navbar-custom .navbar-brand:hover, 
+        .navbar-custom .nav-link:hover {
+            color: #d5d5d5; 
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 0;
+        }
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+        }
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img src="{% static 'job_seeker/images/webicon.png' %}" alt="Logo">
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'job_seeker/images/webicon.png' %}" alt="Logo" width="70" height="70">
+            MICT SETA
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+            </ul>
         </div>
-        <div class="title">MICT SETA</div>
-        
-    </nav> 
+    </nav>
     <div class="container-box">
         <div class="sidebar">
             <ul>
-                <li><a href="{% url 'job_seeker_dashboard' %}"><strong>Dashboard</strong></a></li>
-                <li><a href="{% url 'personal_details' %}">Personal Details</a></li>
-                <li><a href="{% url 'academic_qualifications' %}">Academic Qualifications</a></li>
-                <li><a href="{% url 'language_proficiency' %}">Language & Proficiency</a></li>
-                <li><a href="{% url 'computer_skills' %}">Computer Skills</a></li>
-                <li><a href="{% url 'soft_skills' %}">Soft Skills</a></li>
-                <li><a href="{% url 'working_experience' %}">Working Experience</a></li>
-                <li><a href="{% url 'referees' %}">Referees</a></li>
-                <li><a href="{% url 'supporting_documents' %}">Supporting Documents</a></li>
-                <li><a href="{% url 'jobseeker.job_details' %}">Job Details</a></li>
+                <li><a href="{% url 'job_seeker_dashboard' %}"><i class="fas fa-tachometer-alt"></i><strong>Dashboard</strong></a></li>
+                <hr>
+                <li><a href="{% url 'personal_details' %}"><i class="fas fa-user"></i>Personal Details</a></li>
+                <li><a href="{% url 'academic_qualifications' %}"><i class="fas fa-graduation-cap"></i>Academic Qualifications</a></li>
+                <li><a href="{% url 'language_proficiency' %}"><i class="fas fa-language"></i>Language & Proficiency</a></li>
+                <li><a href="{% url 'computer_skills' %}"><i class="fas fa-desktop"></i>Computer Skills</a></li>
+                <li><a href="{% url 'soft_skills' %}"><i class="fas fa-comments"></i>Soft Skills</a></li>
+                <li><a href="{% url 'working_experience' %}"><i class="fas fa-briefcase"></i>Working Experience</a></li>
+                <li><a href="{% url 'referees' %}"><i class="fas fa-users"></i>Referees</a></li>
+                <li><a href="{% url 'supporting_documents' %}"><i class="fas fa-file-alt"></i>Supporting Documents</a></li>
+                <hr>
+                <li><a href="{% url 'jobseeker.job_details' %}"><i class="fas fa-info-circle"></i>Job Details</a></li>
             </ul>
         </div>
         <div class="content">
@@ -39,7 +77,7 @@
                 {% block content %}
                 <h1>Progress Updates</h1>
                 <div class="container mt-5" id="progress-circle"> 
-                    <div class="progress-circle" style="--percentage: 75;">
+                    <div class="progress-circle" style="--percentage: 75%;">
                         <span>75%</span>
                     </div>
                 {% endblock %}
