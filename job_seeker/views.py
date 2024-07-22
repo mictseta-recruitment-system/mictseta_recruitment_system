@@ -31,5 +31,17 @@ def supporting_documents(request):
 def job_details(request):
     return render(request, 'jobseeker_job_details.html')
 
+def application_tracking(request):
+    return render(request, 'application_tracking.html')
+
+def interviews(request):
+    return render(request, 'interviews.html')
+
+def feedback(request):
+    return render(request, 'feedback.html')
+
+def logout(request):
+    return render(request, 'logout.html')
+
 
 
