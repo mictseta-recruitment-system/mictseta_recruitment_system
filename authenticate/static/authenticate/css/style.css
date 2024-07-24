@@ -156,7 +156,7 @@
 }   
 
 .filterbar {
-  position: absolute;
+  position: relative;
   top: 120px;
   left: 20px;
   display: flex;

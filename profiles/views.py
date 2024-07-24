@@ -407,25 +407,29 @@ def update_staff(request):
                         user = User.objects.get(staffprofile__idnumber=data['idnumber'])
                         
                         try:
-                            exist = User.objects.get(email=data['email']) 
-                            if user != exist:
-                                exist = None
-                        except:
-                            exist = None
-                        if exist is not None:
-                            pass
-                        else:
-                            return JsonResponse({"errors":f"phone:{data['email']} is already taken", "status":"error"}, status=400)
+                            exist = User.objects.filter(email=data['email']).exists()
+                            if exist :
+                                user_by_email = User.objects.get(email=data['email'])
+                                if user != user_by_email:
+                                    return JsonResponse({"errors":f"email:{data['email']} is already taken", "status":"error"}, status=400)
+                            else:
+                                pass
+                        except Exception as e:
+                                    return JsonResponse({"errors":{'data':[f'e']}, "status":"error"}, status=400)
+                            
+                           
 
                         try:
-                            exist = User.objects.get(username=data['username']) 
-                        except:
-                            exist = None
-                        if exist is not None:
-                            pass
-                        else:
-                            return JsonResponse({"errors":f"phone:{data['username']} is already taken", "status":"error"}, status=400)
-                        
+                            exist = User.objects.filter(username=data['username']).exists()
+                            if exist :
+                                user_by_username = User.objects.get(username=data['username'])
+                                if user != user_by_username:
+                                    return JsonResponse({"errors":f"username:{data['username']} is already taken", "status":"error"}, status=400)
+                            else:
+                                pass
+                        except Exception as e:
+                                    return JsonResponse({"errors":{'data':[f'e']}, "status":"error"}, status=400)                        
+                       
                         try:
                             exist = User.objects.filter(staffprofile__phone=data['phone'], id=data['idnumber']).exists()
                             if not exist:

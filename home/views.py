@@ -23,9 +23,5 @@ def home(request):
 
 
 def job_details(request):
-    jobs = JobPost.objects.filter(is_approved=True)
-    for job in jobs:
-            if current_time > job.end_date :
-                job.status = "closed"
-                job.save()
+   
     return render(request,'job_details.html')

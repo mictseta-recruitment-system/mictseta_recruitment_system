@@ -15,7 +15,6 @@ def hasValidDate(id):
     year = id[0:2]
     month = id[2:4]
     day = id[4:6]
-
     date1 = f'{month}/{day}/19{year}'
     date2 = f'{month}/{day}/20{year}'
 
