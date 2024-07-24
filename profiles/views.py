@@ -440,7 +440,7 @@ def update_staff(request):
                             return JsonResponse({"errors":f'{e}', "status":"error"}, status=400)
                         
                     else:
-                        return JsonResponse({"errors":f'User:staff Uer does not exist', "status":"error"}, status=400)
+                        return JsonResponse({"errors":f'User:staff User does not exist', "status":"error"}, status=400)
 
                     try :
 

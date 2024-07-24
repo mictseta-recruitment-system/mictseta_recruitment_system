@@ -56,7 +56,7 @@
     background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
     }
     
-    {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+    {% if user.is_superuser  %}
               .sidebar {
               width: 180px;
               position: fixed;
@@ -319,7 +319,7 @@
     </div>
     <hr>
 
-{% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+{% if user.is_superuser  %}
     <a href="#" data-toggle="collapse" data-target="#usersMenu" aria-expanded="false" aria-controls="usersMenu">
       <i class="fa fa-user-secret" aria-hidden="true"></i>
        Employees
