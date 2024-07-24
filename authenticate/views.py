@@ -63,7 +63,10 @@ def sign_in(request):
 			print(user)
 			if user is not None:
 				login(request, user)
-				return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success'}, status=200)
+				if user.is_staff:
+					return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success', 'user_type':'staff'}, status=200)
+					
+				return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success', 'user_type':'seeker'}, status=200)
 				
 			else:
 				return JsonResponse({'errors':{'password':[' is incorrect']}, 'status':'error'}, status=400)

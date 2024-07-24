@@ -41,16 +41,22 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                       <li class="nav-item">
                         <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
                       </li>
-                      {% if user.is_authenticated %}
+                    {% if user.is_authenticated and not user.is_staff %}
                       <li class="nav-item">
                         <a class="nav-link" href="{% url 'job_seeker_dashboard' %}">Job Seeker</a>
                     </li>
-                    {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">LogOut</a>
+                  </li>
+                    
+                    {% elif not user.is_staff %}
                     <li class="nav-item">
                       <a class="nav-link" href="{% url 'render_auth_page' %}">Job Seeker</a>
                   </li>
-                    {% endif %}
-                      {% if user.is_authenticated %}
+                  {% else %}
+
+                  {% endif %}
+                  {% if user.is_authenticated and user.is_superuser %}
                       <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
                         <ul class="navbar-nav">
                           <li class="nav-item dropdown">
@@ -64,21 +70,16 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                               {% else %}
                               <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashbaord</a></li>
                               {% endif %}
-                              <li><a class="dropdown-item" href="{% url 'render_profile_page' %}">View Profile</a></li>
-                              <li>
-                                <a class="dropdown-item" data-bs-toggle="modal" 
-                                data-bs-target="#staticBackdrop">Logout</a></li>
-                             
-                          
+                              <li><a class="dropdown-item" href="{% url 'log_out' %}">Log Out</a></li>
                             </ul>
                           </li>
                         </ul>
                       </div>
-                     {% else %}
-                        <li class="nav-item">
-                       <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
-                     </li>
-                     {% endif %}
+                  {% elif not user.is_authenticated %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
+                    </li>
+                  {% endif %}
                     </ul>
                   </div>
              </div>
@@ -104,7 +105,7 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
             </div>
           </div>
     
-      <img width="100%" src="static/authenticate/images/Company-images/mict-seta-slider2.jpg" alt="Descriptive Alt Text">
+     
  
     <div class="filterbar"> 
         <select class="form-select" aria-label="Default select example">
@@ -134,30 +135,42 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
           </select>
     </div>
    
- {% if jobs %}
-        {% for job in jobs %}
+  <div class="row" style="margin-top: 100px;">
 
-        <div class="job-card{{job.id}}">
-            <h3><strong>{{job.title}}</strong></h3>
+    {% if jobs %}
+    {% for job in jobs %}
+
+    <div class="col-6">
+      <div class="card w-100 ">
+        <div class="card-body">
+          <h5 class="card-title">{{job.title}}</h5>
             <div class="details">
-                <span><strong>Location</strong> : {{job.location}}</span> |
-                <span>South Africa</span> |
-                <span><strong>Closing Date</strong> : {{ job.end_date}}</span>
+              <span><strong>Location</strong> : </span> |
+              <span>South Africa</span> |
+              <span><strong>Closing Date</strong> : {{ job.end_date}}</span>
             </div>
-            <p>{{job.description}}</p>
-            <a href="">See more...</a>
+          <p class="card-text">{{job.description}}</p>
+          <a href="{% url 'job_details' %}" class="card-link">see more.. </a>
+         
         </div>
-      
-        {% endfor %}
+      </div>
+    </div>
+    
+
+   
+  
+    {% endfor %}
 {% else %}
-  <div class="container mt-5">
-        <div class="job-card">
-            <h3>No Jobs Available.</h3>
-            
-        </div></div>
-{% endif %}
-       
+<div class="container mt-5">
+    <div class="job-card">
+        <h3>No Jobs Available.</h3>
         
+    </div></div>
+{% endif %}
+   
+    
+  </div>
+ 
        
        <div class="social-media-icons">
         <ul>

@@ -33,12 +33,19 @@
                 showFlashMessage("An unknown error occurred", "danger");
               }
             } else if (data.status === "success") {
-                showFlashMessage(data.message, "success");
-                window.location.href = "/";
+                    if(data.user_type ==="staff"){
+                      showFlashMessage(data.message, "success");
+                      window.location.href = "/dashboard";
+                    }else{
+                      showFlashMessage(data.message, "success");
+                       window.location.href = "/";
+                    }
+
+                
 
             } else if (data.status === "warning") {
                 showFlashMessage(data.message, "warning");
-                window.location.href = "/profile/";
+                window.location.href = "/";
                 showFlashMessage(data.message, "warning");
             }
           })
