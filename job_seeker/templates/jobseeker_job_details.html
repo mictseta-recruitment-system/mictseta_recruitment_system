@@ -4,6 +4,79 @@
 
 {% block content %}
 
-Jobseeker job details here 
+<!-- Navigation Bar -->
+</nav>
 
+<!-- Filter Form -->
+<form method="GET" action="{% url 'job_details' %}">
+    <div class="filter-options">
+        <label for="job_type">Job Type:</label>
+        <select id="job_type" name="job_type">
+            <option value="">All</option>
+            <option value="full_time">Permanent</option>
+            <option value="contract">Contract</option>
+        </select>
+
+        <label for="location">Location:</label>
+        <select id="location" name="location">
+            <!-- locations -->
+            <option value="">All</option>
+            <option value="johannesburg">Johannesburg</option>
+            <option value="pretoria">Pretoria</option>
+            <option value="cape_town">Cape Town</option>
+            <option value="Kempton_Park">Kempton Park</option>
+            <option value="Durban">Durban</option>
+            <option value="Polokwane">Polokwane</option>
+            <option value="Tzaneen">Tzaneen</option>
+            <option value="Vereeniging">Vereeniging</option>
+            <option value="Centurion">Centurion</option>
+        </select>
+
+        <label for="industry">Industry:</label>
+        <select id="industry" name="industry">
+            <option value="">All</option>
+            <!-- industries -->
+            <option value="healthcare">Healthcare</option>
+            <option value="education">Education</option>
+            <option value="technology">Technology</option>
+            <option value="Business and Finance">Business and Finance</option>
+            <option value="Creative and Media">Creative and Media</option>
+            <option value="Science and Engineering">Science and Engineering</option>
+            <option value="Trades and Services">Trades and Services</option>
+        </select>
+
+        <button type="submit">Filter</button>
+    </div>
+</form>
+
+<!-- Job Details List -->
+<div class="job-details">
+    {% for job in job_list %}
+        <div class="job-item">
+            <img src="{{ job.image_url }}" alt="{{ job.title }} image" style="width:100px;height:100px;">
+            <h3>{{ job.title }}</h3>
+            <p>{{ job.description }}</p>
+            <p>Location: {{ job.location }}</p>
+            <p>Industry: {{ job.industry }}</p>
+            <p>Job Type: {{ job.job_type }}</p>
+            <p>Application Start Date: {{ job.start_date }}</p>
+            <p>Application End Date: {{ job.end_date }}</p>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<footer>
+    <nav class="footer-nav">
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'job_list' %}">Job Listings</a></li>
+        <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+        <li><a href="{% url 'faq' %}">FAQ</a></li>
+        </ul>
+    </nav>
+</footer>
 {% endblock %}
