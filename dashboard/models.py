@@ -7,8 +7,6 @@ class Backup(models.Model):
     filename = models.CharField(max_length=13, unique=True)
     date = models.DateField(unique=False, null=True)
     time = models.CharField(max_length=60,null=False,unique=True )
-    
-
     def __str__(self):
 
         return f'{self.user.email} Backed up Database'

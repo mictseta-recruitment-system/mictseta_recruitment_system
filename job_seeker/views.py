@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from jobs.models import JobPost
 # Create your views here.
 def job_seeker_dashboard(request):
     return render(request, 'job_seeker_dashboard.html')
@@ -29,13 +29,17 @@ def supporting_documents(request):
     return render(request, 'supporting_documents.html')
 
 def job_details(request):
-    return render(request, 'jobseeker_job_details.html')
+    job_list = JobPost.objects.filter(status='open')
+    return render(request, 'jobseeker_job_details.html', {'job_list':job_list})
 
 def application_tracking(request):
     return render(request, 'application_tracking.html')
 
 def interviews(request):
     return render(request, 'interviews.html')
+
+def job_information(request):
+    return render(request, 'job_information.html')
 
 def feedback(request):
     return render(request, 'feedback.html')
