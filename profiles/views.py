@@ -3,11 +3,11 @@ from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UpdateQualificationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
+from .forms import UpdateQualificationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm, UpdateLanguageForm,UpdateSkillsForm
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification
+from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -119,7 +119,7 @@ def update_qualification(request):
                 'status' : json_data.get('status'),
                 'grade' : json_data.get('grade')
                 }
-            print(data)
+
             qualification_data_form =  UpdateQualificationForm(data)
             if qualification_data_form.is_valid() : #and address_data_form.is_valid():
                 try:
@@ -138,6 +138,67 @@ def update_qualification(request):
     else:       
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
+@csrf_protect
+def update_language(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                json_data = json.loads(request.body)
+            except Exception :
+                return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+            data = {
+                'language' : json_data.get('language'),
+                'proficiency' : json_data.get('proficiency'),
+                }
+   
+            language_data_form =  UpdateLanguageForm(data)
+            if language_data_form.is_valid() : #and address_data_form.is_valid():
+                try:
+                    exists = Language.objects.filter(user=request.user,language=data['language'],proficiency=data['proficiency']).exists()
+                    if exists:
+                         return JsonResponse({'errors':{ "Languge" : ['it Already exists']}, 'status':'error'}, status=404)
+                    language = Language.objects.create(user=request.user,language=data['language'],proficiency=data['proficiency'])
+                    language.save()
+                    return JsonResponse({"message":"Added Language information success"})
+                except Exception as e: 
+                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
+            else:
+               return JsonResponse({"errors":language_data_form.errors, "status":"error"}, status=400) 
+        else:
+            return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    else:       
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+@csrf_protect
+def update_skill(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            try:
+                json_data = json.loads(request.body)
+            except Exception :
+                return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+            data = {
+                'skill' : json_data.get('skill'),
+                'level' : json_data.get('level'),
+                }
+   
+            skill_data_form =  UpdateSkillsForm(data)
+            if skill_data_form.is_valid() : #and address_data_form.is_valid():
+                try:
+                    exists = ComputerSkills.objects.filter(user=request.user,skill=data['skill'],level=data['level']).exists()
+                    if exists:
+                         return JsonResponse({'errors':{ "Skill" : ['it Already exists']}, 'status':'error'}, status=404)
+                    skill = ComputerSkills.objects.create(user=request.user,skill=data['skill'],level=data['level'])
+                    skill.save()
+                    return JsonResponse({"message":"Added Skill information success"})
+                except Exception as e: 
+                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
+            else:
+               return JsonResponse({"errors":skill_data_form.errors, "status":"error"}, status=400) 
+        else:
+            return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    else:       
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
 
 @csrf_protect
@@ -416,9 +477,6 @@ def update_staff(request):
                                 pass
                         except Exception as e:
                                     return JsonResponse({"errors":{'data':[f'e']}, "status":"error"}, status=400)
-                            
-                           
-
                         try:
                             exist = User.objects.filter(username=data['username']).exists()
                             if exist :
@@ -429,7 +487,6 @@ def update_staff(request):
                                 pass
                         except Exception as e:
                                     return JsonResponse({"errors":{'data':[f'e']}, "status":"error"}, status=400)                        
-                       
                         try:
                             exist = User.objects.filter(staffprofile__phone=data['phone'], id=data['idnumber']).exists()
                             if not exist:
@@ -447,14 +504,11 @@ def update_staff(request):
                         return JsonResponse({"errors":f'User:staff Uer does not exist', "status":"error"}, status=400)
 
                     try :
-
-    
                         user = User.objects.get(staffprofile__idnumber=data['idnumber'])
                         user.first_name = data['first_name']
                         user.last_name = data['last_name']
                         user.email = data['email']
                         # user.password = data['password']
-                       
                         user.staffprofile.job_title = data['job_title']
                         user.staffprofile.phone = data['phone']
                         user.staffprofile.department = data['department']
@@ -479,23 +533,15 @@ def update_staff(request):
         return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
 
 def get_late(shift_start):
-    
-    # Define the first time with seconds
-    
-
     # Convert the first time to minutes since midnight
     hours1, minutes1, seconds1 = map(int, shift_start.split(":"))
     total_minutes1 = hours1 * 60 + (minutes1+10) + seconds1 / 60
-
     # Get the current time
     now = datetime.now()
-
     # Convert the current time to minutes since midnight
     total_minutes_now = now.hour * 60 + now.minute + now.second / 60
-
-    # Calculate the difference
+    # Clculate the difference
     difference = total_minutes_now - total_minutes1
-    
     if difference > 0 :
         late = True
     else:

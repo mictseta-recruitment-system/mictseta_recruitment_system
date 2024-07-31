@@ -37,14 +37,14 @@ class Qualification(models.Model):
 		return f"{self.user.email} Qualification information"
 
 class Language(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='languages')
 	language = models.CharField(max_length=225)
 	proficiency = models.CharField(max_length=225)
 	def __str__(self):
 		return f"{self.user.email} Language and proficiency information"
 
 class ComputerSkills(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skills')
 	skill = models.CharField(max_length=225)
 	level = models.CharField(max_length=225)
 	def __str__(self):

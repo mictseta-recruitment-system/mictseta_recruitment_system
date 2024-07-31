@@ -4,7 +4,6 @@ from .models import Profile, ProfileImage
 from authenticate.data_validator import *
 
 class UpdateProfileInformationForm(forms.Form):
-	
 	email = forms.CharField(max_length=150)
 	first_name = forms.CharField(max_length=150)
 	last_name = forms.CharField(max_length=150)
@@ -13,11 +12,9 @@ class UpdateProfileInformationForm(forms.Form):
 	maritial_status = forms.CharField(max_length=10)
 	race = forms.CharField(max_length=15)
 	disability = forms.CharField(max_length=30)
-	
 	r_phone = forms.CharField(max_length=10)
 	
 	def validate_names(self,name):
-     
 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?]"
 		matches = re.findall(pattern, name)
 		if matches:
@@ -41,7 +38,6 @@ class UpdateProfileInformationForm(forms.Form):
 		if ' ' in last_name :
 			raise forms.ValidationError("Spaces not allowed in Last Name")
 		return self.validate_names(last_name)
-
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')
@@ -110,11 +106,6 @@ class UpdateProfileInformationForm(forms.Form):
 			raise forms.ValidationError("Phone number is not a valid south african number or its empty")
 		return phone
 
-
-		
-
-		
-
 	# def clean_username(self):
 	# 	username = self.cleaned_data.get('username')
 	# 	if ' ' in username :
@@ -151,7 +142,6 @@ class UpdateProfileInformationForm(forms.Form):
 	def clean_idnumber(self):
 		idnumber = self.cleaned_data.get('idnumber')
 		# r_idnum = self.cleaned_data.get('r_idnum')
-
 		# validate = ValidateIdNumber(idnumber)
 		# is_valid = validate.validateSAID()
 		# exist = User.objects.filter(profile__idnumber=idnumber).exists()
@@ -167,7 +157,6 @@ class UpdateProfileInformationForm(forms.Form):
 		# 	raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
 
-
 class UpdateQualificationForm(forms.Form):
 	highest_qualification = forms.CharField(max_length=225)
 	field_of_study = forms.CharField(max_length=225)
@@ -176,9 +165,7 @@ class UpdateQualificationForm(forms.Form):
 	status =  forms.CharField(max_length=225)
 	grade = forms.CharField(max_length=100)
 
-
 	def validate_names(self,name):
-     
 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, name)
 		if matches:
@@ -222,10 +209,58 @@ class UpdateQualificationForm(forms.Form):
 		if status == "":
 			raise forms.ValidationError("academic status cannot be empty")
 		return self.validate_names(status)
+	
+class UpdateLanguageForm(forms.Form):
+	language = forms.CharField(max_length=225)
+	proficiency = forms.CharField(max_length=225)
+	
+	def validate_names(self,name):
+		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 2:
+			raise forms.ValidationError(f"Name:{name} is too short")
+		try:
+			str(name)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return name
 
+	def clean_language(self):
+		language = self.cleaned_data.get('language')
+		return self.validate_names(language)
+
+	def clean_proficiency(self):
+		proficiency = self.cleaned_data.get('proficiency')
+		return self.validate_names(proficiency)
+
+class UpdateSkillsForm(forms.Form):
+	skill = forms.CharField(max_length=225)
+	level = forms.CharField(max_length=225)
+	
+	def validate_names(self,name):
+		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 2:
+			raise forms.ValidationError(f"Name:{name} is too short")
+		try:
+			str(name)
+		except Exception as e:
+			raise forms.ValidationError(e)
+		return name
+
+	def clean_skill(self):
+		skill = self.cleaned_data.get('skill')
+		return self.validate_names(skill)
+		
+	def clean_level(self):
+		level = self.cleaned_data.get('level')
+		return self.validate_names(level)
 
 class UpdateAddressInformationForm(forms.Form):
-
 	street_address_line = forms.CharField(max_length=225)
 	street_address_line1 = forms.CharField(max_length=225)
 	city = forms.CharField(max_length=225)
@@ -233,7 +268,6 @@ class UpdateAddressInformationForm(forms.Form):
 	postal_code = forms.CharField(max_length=6)
 
 	def validate_names(self,name):
-     
 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, name)
 		if matches:
