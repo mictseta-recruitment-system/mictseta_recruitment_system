@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {% extends 'base1.html' %}
 
 {% block title %} MICSETA | Authenticate {% endblock %}
@@ -226,3 +227,465 @@
 </script>
 
 {% endblock %}
+=======
+<<<<<<< HEAD
+{% extends 'base1.html' %}
+
+{% block title %} MICSETA | Authenticate {% endblock %}
+
+{% block content %}
+{% load static %}
+<style>
+    body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .left-section, .right-section {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .left-section {
+        background-color: #016eff;
+        color: #ffffff;
+        text-align: center;
+    }
+    
+    .left-section img {
+        max-width: 60%;
+        height: auto;
+        border: none; /* Added to remove any border */
+    }
+    
+    .right-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .form-container {
+        max-width: 500px;
+        width: 100%;
+    }
+    
+    h1 {
+        font-size: 40px;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    
+    h6 {
+        font-size: 18px;
+        color: #0693e3;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .input-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .input-group input {
+        width: calc(100% - 40px); /* Adjusted for icon space */
+        padding: 15px;
+        border: none; /* Removed border */
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .input-group .eye-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 18px;
+        color: #333;
+    }
+    
+    .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .remember-forgot label {
+        font-size: 14px;
+        color: #333333;
+    }
+    
+    .remember-forgot a {
+        font-size: 14px;
+        color: #0693e3;
+        text-decoration: none;
+    }
+    
+    .remember-forgot a:hover {
+        text-decoration: underline;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none; /* Removed border */
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary {
+        background-color: #0693e3;
+    }
+</style>
+
+<div class="left-section">
+    <div>
+        <img src="{% static 'authenticate/images/image.png' %}" alt="Company Logo or Image">
+        <h1>Welcome to MICTSETA</h1>
+        <p>Shaping skills, Pioneering Industries, Empowering Futures.</p>
+    </div>
+</div>
+
+<div class="right-section">
+    <div class="form-container" id="form-container">
+
+        <div class="wrapper" id="wrapper-sign-in">
+
+            <form action="" id="login-form" method="POST">
+                {% csrf_token %}
+                <div id="flash-message-container"></div>
+                <h1>Login</h1>
+                <div class="spinner"></div>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email Address" id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
+                    <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox"> Remember Me</label>
+                    <a href="{% url 'find_account' %}">Forgot Password?</a>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
+                <div class="register-link">
+                    <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="wrapper" id="wrapper-sign-up" style="display: none;">
+            <form action="" id="signup-form" method="POST">
+                
+<div id="flash-message-container"></div>
+                
+<h1>Sign Up</h1>
+                <h6>Add your details to create an account and start preparing your documents.</h6>
+
+                <div class="input-group mb-3">
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                    <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
+                    <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
+                <div class="register-link">
+                    <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById('btn-sign-up').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('wrapper-sign-in').style.display = 'none';
+        document.getElementById('wrapper-sign-up').style.display = 'block';
+    });
+
+    document.getElementById('btn-sign-in').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('wrapper-sign-in').style.display = 'block';
+        document.getElementById('wrapper-sign-up').style.display = 'none';
+    });
+
+    document.getElementById('toggle-password-login').addEventListener('click', function() {
+        const passwordInput = document.getElementById('lpassword');
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    });
+
+    document.getElementById('toggle-password-signup1').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    });
+
+    document.getElementById('toggle-password-signup2').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password2');
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    });
+
+   
+    function handle_sign_up_button_click() {
+        // Handle sign-up functionality here
+    }
+</script>
+
+{% endblock %}
+=======
+{% extends 'base1.html' %}
+
+{% block title %} MICSETA | Authenticate {% endblock %}
+
+{% block content %}
+{% load static %}
+<style>
+    body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .left-section, .right-section {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    
+    .left-section {
+        background-color: #016eff;
+        color: #ffffff;
+        text-align: center;
+    }
+    
+    .left-section img {
+        max-width: 60%;
+        height: auto;
+        border: none; /* Added to remove any border */
+    }
+    
+    .right-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .form-container {
+        max-width: 500px;
+        width: 100%;
+    }
+    
+    h1 {
+        font-size: 40px;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    
+    h6 {
+        font-size: 18px;
+        color: #0693e3;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .input-group {
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .input-group input {
+        width: calc(100% - 40px); /* Adjusted for icon space */
+        padding: 15px;
+        border: none; /* Removed border */
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .input-group .eye-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 18px;
+        color: #333;
+    }
+    
+    .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    
+    .remember-forgot label {
+        font-size: 14px;
+        color: #333333;
+    }
+    
+    .remember-forgot a {
+        font-size: 14px;
+        color: #0693e3;
+        text-decoration: none;
+    }
+    
+    .remember-forgot a:hover {
+        text-decoration: underline;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none; /* Removed border */
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary {
+        background-color: #0693e3;
+    }
+</style>
+
+<div class="left-section">
+    <div>
+        <img src="{% static 'authenticate/images/image.png' %}" alt="Company Logo or Image">
+        <h1>Welcome to MICTSETA</h1>
+        <p>Shaping skills, Pioneering Industries, Empowering Futures.</p>
+    </div>
+</div>
+
+<div class="right-section">
+    <div class="form-container" id="form-container">
+
+        <div class="wrapper" id="wrapper-sign-in">
+
+            <form action="" id="login-form" method="POST">
+                {% csrf_token %}
+                <h1>Login</h1>
+                <div class="spinner"></div>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email Address" id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
+                    <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox"> Remember Me</label>
+                    <a href="{% url 'find_account' %}">Forgot Password?</a>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
+                <div class="register-link">
+                    <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="wrapper" id="wrapper-sign-up" style="display: none;">
+            <form action="" id="signup-form" method="POST">
+                <h1>Sign Up</h1>
+                <h6>Add your details to create an account and start preparing your documents.</h6>
+
+                <div class="input-group mb-3">
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                    <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
+                    <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
+                <div class="register-link">
+                    <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById('btn-sign-up').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('wrapper-sign-in').style.display = 'none';
+        document.getElementById('wrapper-sign-up').style.display = 'block';
+    });
+
+    document.getElementById('btn-sign-in').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('wrapper-sign-in').style.display = 'block';
+        document.getElementById('wrapper-sign-up').style.display = 'none';
+    });
+
+    document.getElementById('toggle-password-login').addEventListener('click', function() {
+        const passwordInput = document.getElementById('lpassword');
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    });
+
+    document.getElementById('toggle-password-signup1').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    });
+
+    document.getElementById('toggle-password-signup2').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password2');
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    });
+
+    function handle_sign_in_button_click() {
+        // Handle sign-in functionality here
+    }
+
+    function handle_sign_up_button_click() {
+        // Handle sign-up functionality here
+    }
+</script>
+
+{% endblock %}
+>>>>>>> 56f6a9c97a3f9747a0946f7b558fbaacdbccba14
+>>>>>>> Stashed changes

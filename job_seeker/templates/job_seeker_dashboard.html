@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,3 +107,113 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Dashboard {% endblock %}</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'job_seeker/css/style.css' %}">
+    <link rel="shortcut icon" href="{% static './authenticate/images/webicon.png' %}" type="image/x-icon">
+    <style>
+        .navbar-custom {
+            background-color: #007bff; 
+        }
+        .navbar-custom .navbar-brand, 
+        .navbar-custom .nav-link {
+            color: #fff;
+            font-weight: bold;
+        }
+        .navbar-custom .navbar-brand:hover, 
+        .navbar-custom .nav-link:hover {
+            color: #d5d5d5; 
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 0;
+            padding: 5px 0; 
+        }
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 0px 0px; 
+        }
+        .sidebar ul li a i {
+            margin-right: 5px; 
+            color: #007bff; /* Change icon color to blue */
+        }
+        .sidebar ul li a:hover i {
+            color: #0056b3; /* Darker blue for hover state */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'job_seeker/images/webicon.png' %}" alt="Logo" width="70" height="70">
+            MICT SETA
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-box">
+        <div class="sidebar">
+            <ul>
+                <li><a href="{% url 'job_seeker_dashboard' %}"><i class="fas fa-tachometer-alt"></i><strong>Dashboard</strong></a></li>
+                <hr>
+                <li><a href="{% url 'personal_details' %}"><i class="fas fa-user"></i>Personal Details</a></li>
+                <li><a href="{% url 'academic_qualifications' %}"><i class="fas fa-graduation-cap"></i>Academic Qualifications</a></li>
+                <li><a href="{% url 'language_proficiency' %}"><i class="fas fa-language"></i>Language & Proficiency</a></li>
+                <li><a href="{% url 'computer_skills' %}"><i class="fas fa-desktop"></i>Computer Skills</a></li>
+                <li><a href="{% url 'soft_skills' %}"><i class="fas fa-comments"></i>Soft Skills</a></li>
+                <li><a href="{% url 'working_experience' %}"><i class="fas fa-briefcase"></i>Working Experience</a></li>
+                <li><a href="{% url 'referees' %}"><i class="fas fa-users"></i>Referees</a></li>
+                <li><a href="{% url 'supporting_documents' %}"><i class="fas fa-file-alt"></i>Supporting Documents</a></li>
+                <hr>
+                <li><a href="{% url 'jobseeker.job_details' %}"><i class="fas fa-info-circle"></i>Job Details</a></li>
+                <li><a href="{% url 'application_tracking' %}"><i class="fas fa-search"></i>Application Tracking</a></li>
+                <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i>Interviews</a></li>
+                <li><a href="{% url 'feedback' %}"><i class="fas fa-comments"></i>Feedback</a></li>
+                <hr>
+                <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <div class="inner-content-box">
+                <div id="flash-message-container"></div>
+                {% block content %}
+                <h1>Progress Updates</h1>
+                <div class="container mt-5" id="progress-circle"> 
+                    <div class="progress-circle" style="--percentage: 75%;">
+                        <span>75%</span>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>  
+    <script src="{% static 'users/js/flash.js' %}"></script> 
+    <script src="{% static 'job_seeker/js/script.js' %}"></script> 
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+>>>>>>> Stashed changes

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {% extends 'job_seeker_dashboard.html' %}
 
 {% block title %}Feedback{% endblock %}
@@ -29,3 +30,36 @@
     </table>
 </div>
 {% endblock %}
+=======
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+<div class="feedback" style="padding: 20px; font-family: Arial, sans-serif;">
+    <h2 style="text-align: center; color: #333;">Feedback</h2>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #f8f8f8; border-bottom: 2px solid #ddd;">
+                <th style="padding: 10px; text-align: left; font-weight: bold;">Feedback</th>
+                <th style="padding: 10px; text-align: left; font-weight: bold;">Date Received</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if feedback_list %}
+                {% for feedback in feedback_list %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 10px;">{{ feedback.text }}</td>
+                    <td style="padding: 10px;">{{ feedback.date_received|date:"Y-m-d" }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2" style="padding: 20px; text-align: center; color: #999;">No feedback available.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+>>>>>>> Stashed changes

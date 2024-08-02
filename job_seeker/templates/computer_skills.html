@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {% extends 'job_seeker_dashboard.html' %}
 
 {% block title %}Computer Skills{% endblock %}
@@ -107,3 +108,114 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 {% endblock %}
+=======
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Computer Skills{% endblock %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<div id="computer-skills" class="content-section active">
+    <h2 class="mb-4">Computer Skills</h2>
+    <form class="mt-4">
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label for="skill1" class="col-sm-2 col-form-label">Computer Skill</label>
+                    <select class="form-control" id="skill1" name="skill1">
+                        <option value="">Select a skill</option>
+                        <option value="Software Development">Software Development</option>
+                        <option value="Degrees & Certificates">Degrees & Certificates</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Networking & Wireless">Networking & Wireless</option>
+                        <option value="SEO / SEM Marketing">SEO / SEM Marketing</option>
+                        <option value="Business Analysis">Business Analysis</option>
+                        <option value="Foreign Language">Foreign Language</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Data Analysis">Data Analysis</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="proficiency">Proficiency Level:</label>
+                    <select id="level" class="form-control">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                
+                    </select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="list-group">
+                    {% for skill in user.skills.all %}
+                      <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                        <div class="d-flex w-100 justify-content-between">
+                          <h5 class="mb-1">{{skill.skill}}</h5>
+                         <span class="badge rounded-pill"><i class="fas fa-trash fa-2x text-danger"></i></span>
+                        </div>
+                        
+                        <small>{{skill.level}}</small>
+                      </a>
+                  {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="button" onclick="handle_update_skill_button_click()" class="btn btn-primary">Update</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addSkillModal">Add Skill</button>
+
+<div class="modal fade" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSkillModalLabel">Add Additional Computer Skill</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label for="additionalSkill" class="col-sm-4 col-form-label">Computer Skill</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="additionalSkill" name="additionalSkill">
+                                <option value="">Select a skill</option>
+                                <option value="Software Development">Software Development</option>
+                                <option value="Degrees & Certificates">Degrees & Certificates</option>
+                                <option value="Artificial Intelligence">Artificial Intelligence</option>
+                                <option value="Networking & Wireless">Networking & Wireless</option>
+                                <option value="SEO / SEM Marketing">SEO / SEM Marketing</option>
+                                <option value="Business Analysis">Business Analysis</option>
+                                <option value="Foreign Language">Foreign Language</option>
+                                <option value="Machine Learning">Machine Learning</option>
+                                <option value="Cybersecurity">Cybersecurity</option>
+                                <option value="Data Analysis">Data Analysis</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+ -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}
+>>>>>>> Stashed changes

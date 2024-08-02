@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {% extends 'job_seeker_dashboard.html' %}
 
 {% block title %}Job Details{% endblock %}
@@ -109,3 +110,116 @@
     </nav>
 </footer>
 {% endblock %}
+=======
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+{% block content %}
+
+
+
+<div class="card">
+  <div class="card-header">
+    <!-- Filter Form -->
+<form method="GET" action="{% url 'job_details' %}">
+    <div class="filter-options">
+        <label for="job_type">Job Type:</label>
+        <select id="job_type" name="job_type">
+            <option value="">All</option>
+            <option value="full_time">Permanent</option>
+            <option value="contract">Contract</option>
+        </select>
+
+        <label for="location">Location:</label>
+        <select id="location" name="location">
+            <!-- locations -->
+            <option value="">All</option>
+            <option value="johannesburg">Johannesburg</option>
+            <option value="pretoria">Pretoria</option>
+            <option value="cape_town">Cape Town</option>
+            <option value="Kempton_Park">Kempton Park</option>
+            <option value="Durban">Durban</option>
+            <option value="Polokwane">Polokwane</option>
+            <option value="Tzaneen">Tzaneen</option>
+            <option value="Vereeniging">Vereeniging</option>
+            <option value="Centurion">Centurion</option>
+        </select>
+
+        <label for="industry">Industry:</label>
+        <select id="industry" name="industry">
+            <option value="">All</option>
+            <!-- industries -->
+            <option value="healthcare">Healthcare</option>
+            <option value="education">Education</option>
+            <option value="technology">Technology</option>
+            <option value="Business and Finance">Business and Finance</option>
+            <option value="Creative and Media">Creative and Media</option>
+            <option value="Science and Engineering">Science and Engineering</option>
+            <option value="Trades and Services">Trades and Services</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
+  </div>
+  <div class="card-body">
+    <!-- Job Details List -->
+        <div class="job-details">
+
+            {% if job_list %}
+                {% for job in job_list %}
+                   <div class="card mt-5 ">
+                          <div class="card-body">
+                            <h5 class="card-title">{{ job.title }}</h5>
+                            <h6 class="card-subtitle mb-2 "><b>Location:</b> <span class="text-muted">{{ job.location }}</span> 
+                            | <b>Industry:</b> <span class="text-muted">{{ job.industry }}</span> | <b>Job Type:</b> <span class="text-muted">{{ job.job_type }}</span></h6>
+                            <p class="card-text">{{ job.description }}</p>
+                            <a href="#" class="card-link text-muted" disabled>Application End Date: {{ job.end_date }}</a>
+                            <a href="{% url 'job_information' %}" class="card-link" disabled>see more</a>
+                            
+                          </div>
+                        </div>
+                    
+                {% endfor %}
+            {% else %}
+                <div class="card mt-5 border-0">
+                          <div class="card-body">
+                            <div class="d-flex justify-content-center">
+                                <i class="fa-solid fa-triangle-exclamation fa-5x text-warning"></i>
+
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-4">
+                                <h5 class="card-title">No Job/Vacancy Available</h5>
+                            </div>
+                            
+                          </div>
+                        </div>
+                    
+            {% endif %}
+        </div>        
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block footer %}
+<footer>
+    <nav class="footer-nav">
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'job_list' %}">Job Listings</a></li>
+        <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'contact' %}">Contact Us</a></li>
+        <li><a href="{% url 'faq' %}">FAQ</a></li>
+        </ul>
+    </nav>
+</footer>
+{% endblock %}
+>>>>>>> Stashed changes

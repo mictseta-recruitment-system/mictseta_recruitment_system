@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {% extends 'job_seeker_dashboard.html' %}
 
 {% block title %}Language & Proficiency{% endblock %}
@@ -111,3 +112,118 @@
   </div>
 </div> -->
 {% endblock %}
+=======
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Language & Proficiency{% endblock %}
+
+{% block content %}
+<div class="language-proficiency">
+    <h2>Language Proficiency</h2>
+
+    <div class="language-form d-flex justify-content-between">
+        <div class="col-6">
+            <div class="form-group">
+                <label for="language">Language:</label>
+                <select id="language" class="form-control">
+                    <option value="">Select a language...</option>
+                    <option value="afrikaans">Afrikaans</option>
+                    <option value="english">English</option>
+                    <option value="isindebele">IsiNdebele</option>
+                    <option value="isixhosa">IsiXhosa</option>
+                    <option value="isizulu">IsiZulu</option>
+                    <option value="sesotho">Sesotho</option>
+                    <option value="sesothosa">Sesotho sa Leboa</option>
+                    <option value="setswana">Setswana</option>
+                    <option value="siswati">SiSwati</option>
+                    <option value="tshivenda">Tshivenda</option>
+                    <option value="xitsonga">Xitsonga</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="proficiency">Proficiency Level:</label>
+                <select id="proficiency" class="form-control">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="fluent">Fluent</option>
+                </select>
+            </div>
+
+            <button id="add-language" onclick="handle_update_language_button_click()" class="btn btn-primary">Add</button>
+        </div>
+        <div class="col-6">
+            <div class="list-group">
+                {% for language in user.languages.all %}
+                  <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">{{language.language}}</h5>
+                     <span class="badge rounded-pill"><i class="fas fa-trash fa-2x text-danger"></i></span>
+                    </div>
+                    
+                    <small>{{language.proficiency}}</small>
+                  </a>
+              {% endfor %}
+            </div>
+        </div>
+
+
+        <!-- Button to trigger modal -->
+    </div>
+
+       <!--  <button id="add-language-modal" class="btn btn-secondary" data-toggle="modal" data-target="#languageModal">
+            Additional Language
+        </button>
+    <ul id="language-list" class="language-list">
+        
+    </ul>
+</div>
+
+
+<div class="modal fade" id="languageModal" tabindex="-1" role="dialog" aria-labelledby="languageModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="languageModalLabel">Additional Language</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="modal-language">Language:</label>
+            <select id="modal-language" class="form-control">
+              <option value="">Select a language...</option>
+              <option value="afrikaans">Afrikaans</option>
+              <option value="english">English</option>
+              <option value="isindebele">IsiNdebele</option>
+              <option value="isixhosa">IsiXhosa</option>
+              <option value="isizulu">IsiZulu</option>
+              <option value="sesotho">Sesotho</option>
+              <option value="sesothosa">Sesotho sa Leboa</option>
+              <option value="setswana">Setswana</option>
+              <option value="siswati">SiSwati</option>
+              <option value="tshivenda">Tshivenda</option>
+              <option value="xitsonga">Xitsonga</option>
+          </select>
+        </div>
+        <div class="form-group">
+            <label for="modal-proficiency">Proficiency Level:</label>
+            <select id="modal-proficiency" class="form-control">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+                <option value="fluent">Fluent</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="save-language-modal" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+{% endblock %}
+>>>>>>> Stashed changes
