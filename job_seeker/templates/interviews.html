@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 {% extends 'job_seeker_dashboard.html' %}
 
 {% block title %}Interviews{% endblock %}
@@ -32,38 +31,3 @@
     </table>
 </div>
 {% endblock %}
-=======
-{% extends 'job_seeker_dashboard.html' %}
-
-{% block title %}Interviews{% endblock %}
-
-{% block content %}
-<div class="interviews" style="padding: 20px; font-family: Arial, sans-serif;">
-    <h2 style="text-align: center; color: #333;">Upcoming Interviews</h2>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr style="background-color: #f8f8f8; border-bottom: 2px solid #ddd;">
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Position</th>
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Interview Date</th>
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if interviews %}
-                {% for interview in interviews %}
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 10px;">{{ interview.position }}</td>
-                    <td style="padding: 10px;">{{ interview.interview_date|date:"Y-m-d" }}</td>
-                    <td style="padding: 10px;">{{ interview.status }}</td>
-                </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="3" style="padding: 20px; text-align: center; color: #999;">No upcoming interviews.</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
-</div>
-{% endblock %}
->>>>>>> Stashed changes
