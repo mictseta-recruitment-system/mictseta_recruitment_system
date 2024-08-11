@@ -16,12 +16,12 @@
     <link rel="shortcut icon" href="{% static './authenticate/images/webicon.png' %}" type="image/x-icon">
     <style>
         .navbar-custom {
-            background-color: #007bff; 
+            background-color: #ffffff; 
         }
         .navbar-custom .navbar-brand, 
         .navbar-custom .nav-link {
-            color: #fff;
-            font-weight: bold;
+            color:#333333;
+            
         }
         .navbar-custom .navbar-brand:hover, 
         .navbar-custom .nav-link:hover {
@@ -52,8 +52,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-custom">
         <a class="navbar-brand" href="#">
-            <img src="{% static 'job_seeker/images/webicon.png' %}" alt="Logo" width="70" height="70">
-            MICT SETA
+            <img class="nav-logo" src="{% static 'authenticate/images/mict_logo.png' %}" alt="Logo">
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
