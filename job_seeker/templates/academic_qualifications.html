@@ -36,7 +36,7 @@
               <th scope="col">Institution</th>
                <th scope="col">Status</th>
               <th scope="col">Year Obtained</th>
-              <th scope="col">Grade</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -47,7 +47,8 @@
                 <td>{{qualification.institution}}</td>
                 <td>{{qualification.status}}</td>
                 <td>{{qualification.year_obtained}}</td>
-                <td>{{qualification.grade}}</td>
+                <td><button class="btn btn-danger">Delete</button> </td>
+                
              
             </tr>
                 {% endfor %}
@@ -141,10 +142,7 @@
                                 <label for="additional-year-obtained" class="form-label">Year Obtained</label>
                                 <input type="text" class="form-control" id="year_obtained" name="additional-year-obtained" required>
                             </div>
-                            <div class="col-md-6">
-                                <label for="additional-grade" class="form-label">Grade</label>
-                                <input type="text" class="form-control" id="grade" name="additional-grade">
-                            </div>
+                           
                         </div>
                     
                         <div class="modal-footer">

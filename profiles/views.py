@@ -26,7 +26,7 @@ def render_profile_page(request):
     else:
         return redirect('render_auth_page')
 
-
+        
 @csrf_protect
 def update_user_profile(request):
     if request.user.is_authenticated:
@@ -38,7 +38,6 @@ def update_user_profile(request):
                 return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
             print(json_data)
             data = {
-                
                 'linkedin_profile' : json_data.get('linkedin_profile'),
                 'personal_website' : json_data.get('personal_website'),
                 'first_name' : json_data.get('first_name'),
@@ -194,7 +193,8 @@ def update_skill(request):
                 except Exception as e: 
                     return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
             else:
-               return JsonResponse({"errors":skill_data_form.errors, "status":"error"}, status=400) 
+
+                return JsonResponse({"errors":skill_data_form.errors, "status":"error"}, status=400) 
         else:
             return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
     else:       
