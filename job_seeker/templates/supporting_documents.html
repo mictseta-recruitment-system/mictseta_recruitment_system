@@ -18,27 +18,27 @@
 </style>
 
 <div id="supporting-documents" class="content-section active">
-    <h2 class="mb-4">Supporting Documents</h2>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Supporting Documents</li>
+        </ol>
+      </nav>
     <form class="mt-4">
         <div class="form-group">
-            <label for="resume">Resume</label>
-            <input type="file" class="form-control-file" id="resume" name="resume">
+            <label for="drivers-license">Driver's License</label>
+            <input type="file" class="form-control-file" id="drivers-license" name="drivers-license">
         </div>
         <div class="form-group">
-            <label for="cover-letter">Cover Letter</label>
-            <input type="file" class="form-control-file" id="cover-letter" name="cover-letter">
+            <label for="id">ID</label>
+            <input type="file" class="form-control-file" id="id" name="id">
         </div>
         <div class="form-group">
-            <label for="references">References</label>
-            <input type="file" class="form-control-file" id="references" name="references">
-        </div>
-        <div class="form-group">
-            <label for="portfolio">Portfolio</label>
-            <input type="file" class="form-control-file" id="portfolio" name="portfolio">
+            <label for="passport">Passport</label>
+            <input type="file" class="form-control-file" id="passport" name="passport">
         </div>
         <button type="submit" class="btn btn-primary">Upload Documents</button>
     </form>
 </div>
 
 {% endblock %}
-

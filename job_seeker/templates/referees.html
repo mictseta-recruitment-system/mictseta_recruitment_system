@@ -4,23 +4,22 @@
 
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    .content-section {
-        padding: 20px;
-    }
-    
-    .form-group input, .form-group select {
-        border-radius: 0;
-    }
-    .form-group button {
-        border-radius: 0;
-    }
-</style>
+
 
 <div id="referees" class="content-section active">
-    <h2 class="mb-4">Referees</h2>
+    <div class="form-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Referee</li>
+            </ol>
+          </nav>
+        <p class="mb-0">Provide details of people who can provide a reference for you.</p>
+    </div>
+
     <form class="mt-4">
         <!-- Referee 1 -->
+<<<<<<< HEAD
         <div class="form-group mb-3">
             <label for="referee1-name" class="form-label">Referee Full Name</label>
             <input type="text" class="form-control" id="referee1-name" name="referee1-name">
@@ -41,6 +40,27 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Update</button>
             <!-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addRefereeModal">Add Referee</button> -->
+=======
+        <fieldset class="border p-4 mb-4">
+            <legend class="w-auto px-2">Referee </legend>
+            <div class="form-group mb-3">
+                <label for="referee1-name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="referee1-name" name="referee1-name" placeholder="Enter full name" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="referee1-contact" class="form-label">Contact Information</label>
+                <input type="text" class="form-control" id="referee1-contact" name="referee1-contact" placeholder="Phone number or email" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="referee1-position" class="form-label">Position/Relationship</label>
+                <input type="text" class="form-control" id="referee1-position" name="referee1-position" placeholder="e.g., Manager, Mentor, etc." required>
+            </div>
+        </fieldset>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addRefereeModal">Add Another Referee</button>
+>>>>>>> 69badcc49e1b0f86fdf3f4ea0593f885de6688e6
         </div>
     </form>
 </div>
@@ -58,19 +78,19 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group mb-3">
-                        <label for="referee2-name" class="form-label">Referee Name</label>
-                        <input type="text" class="form-control" id="referee2-name" name="referee2-name">
+                        <label for="referee2-name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="referee2-name" name="referee2-name" placeholder="Enter full name" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="referee2-contact" class="form-label">Contact Information</label>
-                        <input type="text" class="form-control" id="referee2-contact" name="referee2-contact">
+                        <input type="text" class="form-control" id="referee2-contact" name="referee2-contact" placeholder="Phone number or email" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="referee2-position" class="form-label">Position</label>
-                        <input type="text" class="form-control" id="referee2-position" name="referee2-position">
+                        <label for="referee2-position" class="form-label">Position/Relationship</label>
+                        <input type="text" class="form-control" id="referee2-position" name="referee2-position" placeholder="e.g., Manager, Mentor, etc." required>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="submit" class="btn btn-primary">Add Referee</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
