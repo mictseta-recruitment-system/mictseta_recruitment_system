@@ -28,7 +28,7 @@ async function sleeper(jobID, mod, spinner, content) {
 
   if (mod === 'true') {
     $('#JobToggle'+jobID).modal('hide');
-    $('#skillToggle'+jobID).modal('show');
+    $('#jobRequirements'+jobID).modal('show');
   }
 }
 
@@ -202,8 +202,7 @@ function updateJob(jobID,spinner,content) {
 
 function addJobSkill(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_skill/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
+ 
   const skillListElement = document.getElementById('skillList' + jobID);
 
   const name = document.getElementById('name'+ jobID).value;
@@ -229,9 +228,9 @@ function addJobSkill(jobID, spinner, content, modal) {
   .then(data => {
     if (data.status === "error") {
       handleErrors(data.errors, jobID, spinner);
-      sleeper(jobID, 'false', spinner, content);
+      
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+     
       showFlashMessage(data.message, "success");
       skillListElement.innerHTML = '';
 
@@ -248,12 +247,12 @@ function addJobSkill(jobID, spinner, content, modal) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      sleeper(jobID, 'true', spinner, content); // Pass 'true' to show skillToggle modal
+      
       
     } else if (data.status === "warning") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      d
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+      
     }
   })
   .catch(error => {
@@ -264,8 +263,6 @@ function addJobSkill(jobID, spinner, content, modal) {
 
 function deleteSkill(jobID, spinner, content, modal, skillID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_skill/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
   const skillListElement = document.getElementById('skillList' + jobID);
 
   const jsonData = {
@@ -287,9 +284,9 @@ function deleteSkill(jobID, spinner, content, modal, skillID) {
   .then(data => {
     if (data.status === "error") {
       handleErrors(data.errors, jobID, spinner);
-      sleeper(jobID, 'false', spinner, content);
+     
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+     
       showFlashMessage(data.message, "success");
       skillListElement.innerHTML = '';
 
@@ -306,12 +303,11 @@ function deleteSkill(jobID, spinner, content, modal, skillID) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      sleeper(jobID, 'true', spinner, content); // Pass 'true' to show skillToggle modal
       
     } else if (data.status === "warning") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+      
     }
   })
   .catch(error => {
@@ -324,8 +320,7 @@ function deleteSkill(jobID, spinner, content, modal, skillID) {
 
 function addEducation(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_acedemic/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
+  
   const skillListElement = document.getElementById('educationList' + jobID);
 
   const level = document.getElementById('Elevel'+ jobID).value;
@@ -352,9 +347,9 @@ function addEducation(jobID, spinner, content, modal) {
   .then(data => {
     if (data.status === "error") {
       handleErrors(data.errors, jobID, spinner);
-      sleeper(jobID, 'false', spinner, content);
+    
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+    
       showFlashMessage(data.message, "success");
       skillListElement.innerHTML = '';
 
@@ -371,12 +366,12 @@ function addEducation(jobID, spinner, content, modal) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal
+      
       
     } else if (data.status === "warning") {
       document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+      
     }
   })
   .catch(error => {
@@ -387,8 +382,7 @@ function addEducation(jobID, spinner, content, modal) {
 
 function deleteEducation(jobID, spinner, content, modal, educationID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_acedemic/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
+  
   const skillListElement = document.getElementById('educationList' + jobID);
 
   const jsonData = {
@@ -410,9 +404,9 @@ function deleteEducation(jobID, spinner, content, modal, educationID) {
   .then(data => {
     if (data.status === "error") {
       handleErrors(data.errors, jobID, spinner);
-      sleeper(jobID, 'false', spinner, content);
+    
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+      
       showFlashMessage(data.message, "success");
       skillListElement.innerHTML = '';
 
@@ -429,12 +423,12 @@ function deleteEducation(jobID, spinner, content, modal, educationID) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal
+
       
     } else if (data.status === "warning") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+     
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+     
     }
   })
   .catch(error => {
@@ -447,8 +441,7 @@ function deleteEducation(jobID, spinner, content, modal, educationID) {
 
 function addExperience(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_expereince/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
+  
   const skillListElement = document.getElementById('experienceList' + jobID);
 
   const name = document.getElementById('Ename'+ jobID).value;
@@ -474,10 +467,9 @@ function addExperience(jobID, spinner, content, modal) {
   .then(data => {
     if (data.status === "error") {
       handleErrors(data.errors, jobID, spinner);
-      sleeper(jobID, 'false', spinner, content);
+      
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
-      showFlashMessage(data.message, "success");
+     
       skillListElement.innerHTML = '';
 
             // Re-render list items based on updated data
@@ -493,12 +485,12 @@ function addExperience(jobID, spinner, content, modal) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal
+      
       
     } else if (data.status === "warning") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+      
     }
   })
   .catch(error => {
@@ -509,8 +501,7 @@ function addExperience(jobID, spinner, content, modal) {
 
 function deleteExperience(jobID, spinner, content, modal, experienceID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_expereince/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
+  
   const experinceElement = document.getElementById('experienceList' + jobID);
 
   const jsonData = {
@@ -532,9 +523,9 @@ function deleteExperience(jobID, spinner, content, modal, experienceID) {
   .then(data => {
     if (data.status === "error") {
       handleErrors(data.errors, jobID, spinner);
-      sleeper(jobID, 'false', spinner, content);
+     
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+     
       showFlashMessage(data.message, "success");
       experinceElement.innerHTML = '';
 
@@ -551,12 +542,12 @@ function deleteExperience(jobID, spinner, content, modal, experienceID) {
                 `;
                 experinceElement.appendChild(listItem);
             });
-      sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal
+  
       
     } else if (data.status === "warning") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+
     }
   })
   .catch(error => {
@@ -568,8 +559,7 @@ function deleteExperience(jobID, spinner, content, modal, experienceID) {
 /*****************************************************************************************************************************************************/
 function addRequirements(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_requirements/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
+ 
   const skillListElement = document.getElementById('requirementsList' + jobID);
 
   const description = document.getElementById('Rdescription'+ jobID).value;
@@ -595,7 +585,7 @@ function addRequirements(jobID, spinner, content, modal) {
       handleErrors(data.errors, jobID, spinner);
       sleeper(jobID, 'false', spinner, content);
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+      
       showFlashMessage(data.message, "success");
       skillListElement.innerHTML = '';
 
@@ -612,12 +602,12 @@ function addRequirements(jobID, spinner, content, modal) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal
+      
       
     } else if (data.status === "warning") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+
     }
   })
   .catch(error => {
@@ -628,8 +618,6 @@ function addRequirements(jobID, spinner, content, modal) {
 
 function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_requirements/';
-  document.getElementById(spinner + jobID).style.display = 'block';
-  document.getElementById(content + jobID).style.display = 'none';
   const experinceElement = document.getElementById('requirementsList' + jobID);
 
   const jsonData = {
@@ -651,9 +639,9 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
   .then(data => {
     if (data.status === "error") {
       handleErrors(data.errors, jobID, spinner);
-      sleeper(jobID, 'false', spinner, content);
+     
     } else if (data.status === "success") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+     
       showFlashMessage(data.message, "success");
       experinceElement.innerHTML = '';
 
@@ -670,12 +658,12 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
                 `;
                 experinceElement.appendChild(listItem);
             });
-      sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal
+      
       
     } else if (data.status === "warning") {
-      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      
       showFlashMessage(data.message, "warning");
-      sleeper(jobID, 'false', spinner, content);
+
     }
   })
   .catch(error => {

@@ -198,7 +198,7 @@ View jobs
 
   {% for job in jobs %}
     <div class="modal fade" id="JobToggle{{job.id}}" aria-hidden="true" aria-labelledby="JobToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-fullscreen">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="JobToggleLabel">Job Details</h5>
@@ -295,7 +295,215 @@ View jobs
   </div>
   <!-- =====================================Skills modal here ======================================= -->
 
-  <div class="modal fade" id="skillToggle{{job.id}}" aria-hidden="true" aria-labelledby="skillToggleToggleLabel2" tabindex="-1">
+
+
+<div class="modal" id="jobRequirements{{job.id}}" tabindex="-1">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Job Requirements</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-6"> 
+            <div class="card">
+              <div class="card-header">
+                Add Skills 
+              </div>
+              <div class="card-body">
+                <div id="editSkill{{job.id}}" class="form-container" style="display: block;">
+                <!-- <h3>EDIT SKILLS </h3> -->
+                   <form class="d-flex justify-content-between">
+                      <div class="form-group">
+                        <label for="Skillname">Skill name</label>
+                        <input type="text" class="form-control" id="name{{job.id}}" placeholder="Skill ">
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="location">Level</label>
+                        <select class="form-control" id="level{{job.id}}">
+                          <option>Beginner</option>
+                          <option>Intermediate</option>
+                          <option>Advanced</option>
+                        </select>
+                      </div>
+                    
+                        <div class="form-group mt-6">
+                          <br>
+                          <button class="btn btn-info" type="button" role="button" onclick="addJobSkill({{job.id}},'spinnerSkill','editSkill','skillToggle')" id="" >Add</button>
+                      </div>
+                    </form>
+                    <hr>
+                  <div id="skillList{{job.id}}">
+                  
+                    <ul class="list-group list-group-flush">
+                      {% for skill in job.skills.all %}
+                      <li class="list-group-item d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{skill.name}}</div>
+                            {{skill.level}}
+                          </div>
+                          
+                          <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill({{job.id}},'spinnerSkill','editSkill','skillToggle',{{skill.id}})"></i>
+                      </li>
+                      
+                      {% endfor %}
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+           
+          </div>
+
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header">
+                Add Qualification
+              </div>
+              <div class="card-body">
+                <div id="editEducation{{job.id}}" class="form-container" style="display: block;">
+                <!-- <h3>EDIT Education </h3> -->
+                    <form class="d-flex justify-content-between">
+                      <div class="form-group ">
+                        <label for="level">Level</label>
+                        <input type="text" class="form-control" id="Elevel{{job.id}}" placeholder="eg. grade 12 or Information Technology">
+                      </div>
+
+                      <div class="form-group mx-2">
+                        <label for="qualification">qualification</label>
+                        <input type="text" class="form-control" id="qualification{{job.id}}" placeholder="eg. Matric or Diploma">
+                      </div>
+                      <div class="form-group ">
+                          <br>
+                          <button class="btn btn-info" type="button" role="button" onclick="addEducation({{job.id}},'spinnerEducation','editEducation','EducationToggle')" id="add_btn" >Add</button>
+                      </div>
+                    </form>
+                     <hr>
+                    <div id="educationList{{job.id}}">
+                    
+                      <ul class="list-group list-group-flush">
+                        {% for education in job.educations.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                              <div class="fw-bold">{{education.level}}</div>
+                               {{education.qualification}}
+                            </div>
+                            
+                            <i class="fa-solid fa-square-minus min-icon" onclick="deleteEducation({{job.id}},'spinnerEducation','editEducation','EducationToggle',{{education.id}})"></i>
+                        </li>
+                        
+                        {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+              </div>
+            </div>   
+          </div>
+
+          <div class="col-6 mt-2">
+            <div class="card">
+              <div class="card-header">
+                Add Experience
+              </div>
+              <div class="card-body">
+              
+                  <div id="editExperience{{job.id}}" class="form-container" style="display: block;">
+                      <form class="d-flex justify-content-between">
+                        <div class="form-group ">
+                          <label for="name">Experience</label>
+                          <input type="text" class="form-control" id="Ename{{job.id}}" placeholder="Expereince in what?">
+                        </div>
+                         <div class="form-group mx-2">
+                          <label for="duration">duration</label>
+                          <input type="text" class="form-control" id="Eduration{{job.id}}" placeholder="for how long">
+                        </div>
+                        
+                        
+                        <div class="form-group ">
+                            <br>
+                            <button class="btn btn-info "  type="button" role="button" onclick="addExperience({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn" >Add</button>
+                        </div>
+                      </form>
+                      <hr>
+                      <div id="experienceList{{job.id}}">
+                      
+                        <ul class="list-group list-group-flush">
+                          {% for experience in job.experiences.all %}
+                          <li class="list-group-item d-flex justify-content-between align-items-start">
+                              <div class="ms-2 me-auto">
+                                <div class="fw-bold">{{experience.name}}</div>
+                                 {{experience.duration}}
+                              </div>
+                              
+                              <i class="fa-solid fa-square-minus min-icon" onclick="deleteExperience({{job.id}},'spinnerExperience','editExperience','experienceToggle',{{experience.id}})"></i>
+                          </li>
+                          
+                          {% endfor %}
+                        </ul>
+                      </div>
+                  </div>
+                </div>
+              </div> 
+          </div>
+
+          <div class="col-6 mt-2">
+            <div class="card">
+              <div class="card-header">
+                Add Requrements & Responsibilities
+              </div>
+              <div class="card-body">
+               <div id="editRequirements{{job.id}}" class="form-container" style="display: block;">
+                  <form class="d-flex justify-content-between">
+                    <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Requirements</label>
+                      <!-- <input type="text" class="form-control"  placeholder="description"> -->
+                      <textarea class="form-control" id="Rdescription{{job.id}}" rows="2" placeholder="job requirements and responsibilties "></textarea>
+                    </div>
+                    
+            
+                    <div class="form-group ">
+                        <br>
+                        <br>
+                        <button class="btn btn-info "  type="button" role="button" onclick="addRequirements({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn" >Add</button>
+                    </div>
+                  </form>
+                   <hr>
+                  <div id="requirementsList{{job.id}}">
+                  
+                    <ul class="list-group list-group-flush">
+                      {% for requirement in job.requirements.all %}
+                      <li class="list-group-item d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{requirement.name}}</div>
+                             {{requirement.duration}}
+                          </div>
+                          
+                          <i class="fa-solid fa-square-minus min-icon" onclick="deleteRequirements({{job.id}},'spinnerRequirements','editRequirements','requirementsToggle',{{requirement.id}})"></i>
+                      </li>
+                      
+                      {% endfor %}
+                    </ul>
+                  </div>
+              </div>
+              </div>
+            </div>
+              
+          </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-success" data-bs-target="#complete{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Complete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- <div class="modal fade" id="skillToggle{{job.id}}" aria-hidden="true" aria-labelledby="skillToggleToggleLabel2" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -309,48 +517,7 @@ View jobs
             <p>loading...</p>
           </div>
 
-          <div id="editSkill{{job.id}}" class="form-container" style="display: block;">
-            <!-- <h3>EDIT SKILLS </h3> -->
-              <div id="skillList{{job.id}}">
-              
-                <ul class="list-group list-group-flush">
-                  {% for skill in job.skills.all %}
-                  <li class="list-group-item d-flex justify-content-between align-items-start">
-                      <div class="ms-2 me-auto">
-                        <div class="fw-bold">{{skill.name}}</div>
-                        {{skill.level}}
-                      </div>
-                      
-                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill({{job.id}},'spinnerSkill','editSkill','skillToggle',{{skill.id}})"></i>
-                  </li>
-                  
-                  {% endfor %}
-                </ul>
-              </div>
-
-              <hr>
-            <form class="d-flex justify-content-between">
-              <div class="form-group">
-                <label for="Skillname">Skill name</label>
-                <input type="text" class="form-control" id="name{{job.id}}" placeholder="Skill ">
-              </div>
-              
-              <div class="form-group">
-                <label for="location">Level</label>
-                <select class="form-control" id="level{{job.id}}">
-                  <option>Beginner</option>
-                  <option>Intermediate</option>
-                  <option>Advanced</option>
-                </select>
-              </div>
-            
-                <div class="form-group mt-6">
-                  <br>
-                  <button class="btn btn-info" type="button" role="button" onclick="addJobSkill({{job.id}},'spinnerSkill','editSkill','skillToggle')" id="" >Add</button>
-              </div>
-              
-            </form>
-          </div>
+         
 
         </div>
         <div class="modal-footer d-flex justify-content-between">
@@ -362,9 +529,9 @@ View jobs
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- =====================================EducationToggle modal here ======================================= -->
-  <div class="modal fade" id="EducationToggle{{job.id}}" aria-hidden="true" aria-labelledby="EducationToggleToggleLabel2" tabindex="-1">
+<!--   <div class="modal fade" id="EducationToggle{{job.id}}" aria-hidden="true" aria-labelledby="EducationToggleToggleLabel2" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -378,45 +545,7 @@ View jobs
             <p>loading...</p>
           </div>
 
-           <div id="editEducation{{job.id}}" class="form-container" style="display: block;">
-            <!-- <h3>EDIT SKILLS </h3> -->
-           
-              <div id="educationList{{job.id}}">
-              
-                <ul class="list-group list-group-flush">
-                  {% for education in job.educations.all %}
-                  <li class="list-group-item d-flex justify-content-between align-items-start">
-                      <div class="ms-2 me-auto">
-                        <div class="fw-bold">{{education.level}}</div>
-                         {{education.qualification}}
-                      </div>
-                      
-                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteEducation({{job.id}},'spinnerEducation','editEducation','EducationToggle',{{education.id}})"></i>
-                  </li>
-                  
-                  {% endfor %}
-                </ul>
-              </div>
-
-
-              <hr>
-            <form class="d-flex justify-content-between">
-              <div class="form-group ">
-                <label for="level">Level</label>
-                <input type="text" class="form-control" id="Elevel{{job.id}}" placeholder="eg. grade 12 or Information Technology">
-              </div>
-               <div class="form-group mx-2">
-                <label for="qualification">qualification</label>
-                <input type="text" class="form-control" id="qualification{{job.id}}" placeholder="eg. Matric or Diploma">
-              </div>
-              
-              
-              <div class="form-group ">
-                  <br>
-                  <button class="btn btn-info" type="button" role="button" onclick="addEducation({{job.id}},'spinnerEducation','editEducation','EducationToggle')" id="add_btn" >Add</button>
-              </div>
-            </form>
-          </div>
+          
         </div>
         <div class="modal-footer d-flex justify-content-between">
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
@@ -427,10 +556,10 @@ View jobs
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- =====================================experienceToggle modal here ======================================= -->
-  <div class="modal fade" id="experienceToggle{{job.id}}" aria-hidden="true" aria-labelledby="experienceToggleToggleLabel2" tabindex="-1">
+  <!-- <div class="modal fade" id="experienceToggle{{job.id}}" aria-hidden="true" aria-labelledby="experienceToggleToggleLabel2" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -444,45 +573,7 @@ View jobs
             <p>loading...</p>
           </div>
 
-          <div id="editExperience{{job.id}}" class="form-container" style="display: block;">
-            <!-- <h3>EDIT SKILLS </h3> -->
-
-              <div id="experienceList{{job.id}}">
-              
-                <ul class="list-group list-group-flush">
-                  {% for experience in job.experiences.all %}
-                  <li class="list-group-item d-flex justify-content-between align-items-start">
-                      <div class="ms-2 me-auto">
-                        <div class="fw-bold">{{experience.name}}</div>
-                         {{experience.duration}}
-                      </div>
-                      
-                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteExperience({{job.id}},'spinnerExperience','editExperience','experienceToggle',{{experience.id}})"></i>
-                  </li>
-                  
-                  {% endfor %}
-                </ul>
-              </div>
-
-
-              <hr>
-            <form class="d-flex justify-content-between">
-              <div class="form-group ">
-                <label for="name">Experience</label>
-                <input type="text" class="form-control" id="Ename{{job.id}}" placeholder="Expereince in what?">
-              </div>
-               <div class="form-group mx-2">
-                <label for="duration">duration</label>
-                <input type="text" class="form-control" id="Eduration{{job.id}}" placeholder="for how long">
-              </div>
-              
-              
-              <div class="form-group ">
-                  <br>
-                  <button class="btn btn-info "  type="button" role="button" onclick="addExperience({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn" >Add</button>
-              </div>
-            </form>
-          </div>
+          
         </div>
         <div class="modal-footer d-flex justify-content-between">
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
@@ -493,10 +584,10 @@ View jobs
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- =====================================requirementsToggle modal here ======================================= -->
-  <div class="modal fade" id="requirementsToggle{{job.id}}" aria-hidden="true" aria-labelledby="requirementsToggleToggleLabel2" tabindex="-1">
+  <!-- <div class="modal fade" id="requirementsToggle{{job.id}}" aria-hidden="true" aria-labelledby="requirementsToggleToggleLabel2" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -510,46 +601,7 @@ View jobs
             <p>loading...</p>
           </div>
 
-          <div id="editRequirements{{job.id}}" class="form-container" style="display: block;">
-            <!-- <h3>EDIT SKILLS </h3> -->
-             
-
-
-              <div id="requirementsList{{job.id}}">
-              
-                <ul class="list-group list-group-flush">
-                  {% for requirement in job.requirements.all %}
-                  <li class="list-group-item d-flex justify-content-between align-items-start">
-                      <div class="ms-2 me-auto">
-                        <div class="fw-bold">{{requirement.name}}</div>
-                         {{requirement.duration}}
-                      </div>
-                      
-                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteRequirements({{job.id}},'spinnerRequirements','editRequirements','requirementsToggle',{{requirement.id}})"></i>
-                  </li>
-                  
-                  {% endfor %}
-                </ul>
-              </div>
-
-
-
-              <hr>
-            <form class="d-flex justify-content-between">
-              <div class="form-group m-1" style="width: 90%;">
-                <label for="description">Requirements</label>
-                <!-- <input type="text" class="form-control"  placeholder="description"> -->
-                <textarea class="form-control" id="Rdescription{{job.id}}" rows="2" placeholder="job requirements and responsibilties "></textarea>
-              </div>
-              
-      
-              <div class="form-group ">
-                  <br>
-                  <br>
-                  <button class="btn btn-info "  type="button" role="button" onclick="addRequirements({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn" >Add</button>
-              </div>
-            </form>
-          </div>
+         
         </div>
         <div class="modal-footer d-flex justify-content-between">
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
@@ -565,7 +617,7 @@ View jobs
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
   <!-- Modal -->
