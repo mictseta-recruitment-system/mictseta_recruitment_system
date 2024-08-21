@@ -6,6 +6,8 @@ def job_seeker_dashboard(request):
 
 def personal_details(request):
     return render(request, 'personal_details.html')
+def address_details(request):
+    return render(request, 'address_details.html')
 
 def academic_qualifications(request):
     return render(request, 'academic_qualifications.html')
