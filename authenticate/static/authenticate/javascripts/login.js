@@ -4,9 +4,15 @@
         const lemail = document.getElementById("lemail").value;
         const lpassword = document.getElementById("lpassword").value;
         
+document.getElementById('flash-message-container').innerHTML=``;
        /* const forms = document.getElementById("login-form");
         csrftoken = forms.getElementsByTagName("input")[0].value;
         console.log(csrftoken)*/
+        if(lemail==''&&lpassword==''){
+        showFlashMessage('The fields are required!', "danger")
+      return;
+      }
+        
         const data1 = {
           email: lemail,
           password: lpassword,
@@ -68,47 +74,69 @@
         const password = document.getElementById("password").value;
         const password2 = document.getElementById("password2").value;
       /*  const phone = document.getElementById("phone").value;*/
-
-
+document.getElementById('flash-message-container').innerHTML=``;
+      if(email!=''&&password!=''&&idnumber!=''&&password!=''){
+ 
+    if(password==password2){
+      if(idnumber.length==13){
         const data2 = {
-            /*first_name : first_name,
-            last_name : last_name,*/
-           /* phone :  phone , */ 
-            email : email,
-           
-            idnumber : idnumber,
-            password : password,
-            password2 : password2
-        };
+          /*first_name : first_name,
+          last_name : last_name,*/
+         /* phone :  phone , */ 
+          email : email,
+         
+          idnumber : idnumber,
+          password : password,
+          password2 : password2
+      };
 
-        fetch("http://127.0.0.1:8000/auth/sign_up/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            'X-CSRFToken': getCookie('csrftoken') 
-          },
-          body: JSON.stringify(data2),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "error") {
-              if (data.errors) {
-                handleErrors(data.errors);
-              } else {
-                showFlashMessage("An unknown error occurred", "danger");
-              }
-            } else if (data.status === "success") {
-                window.location.href = "/auth/authenticates/";
-                showFlashMessage(data.message, "success");
-
-            } else if (data.status === "warning") {
-                window.location.href = "/auth/authenticates/";
-                showFlashMessage(data.message, "warning");
+      fetch("http://127.0.0.1:8000/auth/sign_up/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'X-CSRFToken': getCookie('csrftoken') 
+        },
+        body: JSON.stringify(data2),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === "error") {
+            if (data.errors) {
+              handleErrors(data.errors);
+            } else {
+              showFlashMessage("An unknown error occurred", "danger");
             }
-          })
-          .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
-          });
+          } else if (data.status === "success") {
+              window.location.href = "/auth/authenticates/";
+              showFlashMessage(data.message, "success");
+
+          } else if (data.status === "warning") {
+              window.location.href = "/auth/authenticates/";
+              showFlashMessage(data.message, "warning");
+          }
+        })
+        .catch((error) => {
+          showFlashMessage("An unexpected error occurred", "danger");
+        });
+   
+      }else{
+
+        showFlashMessage('The ID number is invalid!', "danger")
+        return;
+      }
+    }else{
+      showFlashMessage('The passwords does not match!', "danger")
+      return;
+
+    }
+      }else{
+        
+        showFlashMessage('The fields are required!', "danger")
+        return;
+      }
+        
+
+      
     }
 
     /*===================================================================================*/ 
@@ -166,20 +194,29 @@
 function handleErrors(errors) {
   for (const key in errors) {
     //to ensure it makes the container Empty before displaying the next error 
-document.getElementById('flash-message-container').innerHTML=``;
 //the next error
     if (errors.hasOwnProperty(key)) {
       const error = errors[key];
       if (Array.isArray(error)) {
         error.forEach((errorMessage) => {
-          showFlashMessage(`${key}:${errorMessage}`, "danger");
+          if(key=='email'){
+
+
+            showFlashMessage(`Email is not registered`, "danger");
+          }else if(key =='password'){
+document.getElementById('flash-message-container').innerHTML=``;
+            showFlashMessage(`Incorrect credentials`, "danger");
+
+          }
         });
       } else {
-        showFlashMessage(`${key}: ${error}`, "danger");
+document.getElementById('flash-message-container').innerHTML=``;
+        showFlashMessage(`${error}`, "danger");
       }
     }
   }
 }
+
 
 function getCookie(name) {
     let cookieValue = null;
@@ -205,12 +242,14 @@ btnSignUp.addEventListener("click", funcDisplaySignUp);
 btnSignIn.addEventListener("click", funcDisplaySignIn);
 
 function funcDisplaySignUp(event) {
+  document.getElementById('flash-message-container').innerHTML=``;
   event.preventDefault();
   frmSignUp.style.display = "block";
   frmSignIn.style.display = "none";
 }
 
 function funcDisplaySignIn(event) {
+  document.getElementById('flash-message-container').innerHTML=``;
   event.preventDefault();
   frmSignUp.style.display = "none";
   frmSignIn.style.display = "block";
