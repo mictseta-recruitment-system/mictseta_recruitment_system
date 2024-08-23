@@ -59,7 +59,7 @@
   <div class="card-body">
     <!-- Job Details List -->
         <div class="job-details">
-
+          <a href="{% url 'job_information' %}" class="card-link" disabled>see more</a>
             {% if job_list %}
                 {% for job in job_list %}
                    <div class="card mt-5 ">
