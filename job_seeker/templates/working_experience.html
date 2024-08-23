@@ -5,54 +5,57 @@
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-
-
-    
-    <!-- Form for Adding or Updating Experience -->
-    
-       
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Working Experience</li>
-                </ol>
-              </nav>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="job-title1" class="form-label">Job Title</label>
-                    <input type="text" class="form-control" id="job-title1" name="job-title1" placeholder="Enter job title" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="company1" class="form-label">Company</label>
-                    <input type="text" class="form-control" id="company1" name="company1" placeholder="Enter company name" required>
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="location1" class="form-label">Location</label>
-                    <input type="text" class="form-control" id="location1" name="location1" placeholder="Enter location" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="start-date1" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="start-date1" name="start-date1" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="end-date1" class="form-label">End Date</label>
-                    <input type="date" class="form-control" id="end-date1" name="end-date1">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="years-experience1" class="form-label">Years of Experience</label>
-                    <input type="number" class="form-control" id="years-experience1" name="years-experience1" min="0" placeholder="e.g., 3" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save Experience</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addExperienceModal">Add Another Experience</button>
-            </div>
-        </fieldset>
-    </form>
+<!-- Form for Adding or Updating Experience -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Working Experience</li>
+    </ol>
+</nav>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="job-title1" class="form-label">Job Title</label>
+        <input type="text" class="form-control" id="job-title1" name="job-title1" placeholder="Enter job title" required>
+    </div>
+    <div class="col-md-6">
+        <label for="company1" class="form-label">Company</label>
+        <input type="text" class="form-control" id="company1" name="company1" placeholder="Enter company name" required>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="location1" class="form-label">Location</label>
+        <select class="form-control" id="location1" name="location1" required>
+            <option value="" disabled selected>Select location</option>
+            <option value="Johannesburg">Johannesburg</option>
+            <option value="Pretoria">Pretoria</option>
+            <option value="Cape Town">Cape Town</option>
+            <option value="Kempton_Park">Kempton Park</option>
+            <option value="Durban">Durban</option>
+            <option value="Polokwane">Polokwane</option>
+            <option value="Tzaneen">Tzaneen</option>
+            <option value="Vereeniging">Vereeniging</option>
+            <option value="Centurion">Centurion</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="start-date1" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="start-date1" name="start-date1" required>
+    </div>
+    <div class="col-md-3">
+        <label for="end-date1" class="form-label">End Date</label>
+        <input type="date" class="form-control" id="end-date1" name="end-date1">
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="years-experience1" class="form-label">Years of Experience</label>
+        <input type="number" class="form-control" id="years-experience1" name="years-experience1" min="0" placeholder="e.g., 3" required>
+    </div>
+</div>
+<div class="form-group">
+    <button type="submit" class="btn btn-primary">Save Experience</button>
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addExperienceModal">Add Another Experience</button>
 </div>
 
 <!-- Modal for Adding Additional Work Experience -->
@@ -80,7 +83,18 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="location2" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location2" name="location2" placeholder="Enter location" required>
+                            <select class="form-control" id="location1" name="location1" required>
+                                <option value="" disabled selected>Select location</option>
+                                <option value="Johannesburg">Johannesburg</option>
+                                <option value="Pretoria">Pretoria</option>
+                                <option value="Cape Town">Cape Town</option>
+                                <option value="Kempton_Park">Kempton Park</option>
+                                <option value="Durban">Durban</option>
+                                <option value="Polokwane">Polokwane</option>
+                                <option value="Tzaneen">Tzaneen</option>
+                                <option value="Vereeniging">Vereeniging</option>
+                                <option value="Centurion">Centurion</option>
+                            </select>
                         </div>
                         <div class="col-md-3">
                             <label for="start-date2" class="form-label">Start Date</label>
