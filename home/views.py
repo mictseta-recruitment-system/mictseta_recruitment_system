@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from jobs.models import JobPost
 from django.utils.timezone import now
 # Create your views here.
@@ -22,6 +22,7 @@ def home(request):
     return render(request,'index.html', {'jobs':jobs})
 
 
-def job_details(request):
-   
-    return render(request,'job_details.html')
+def job_details(request, job_id):
+    job = get_object_or_404(JobPost, id=job_id, is_approved=True)
+    return render(request, 'job_details.html', {'job': job})
+    

@@ -68,9 +68,9 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                             <ul class="dropdown-menu dropdown-menu-dark">
                               
                               {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
-                               <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}">Dashbaord</a></li>
+                               <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}">Dashboard</a></li>
                               {% else %}
-                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashbaord</a></li>
+                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashboard</a></li>
                               {% endif %}
                               <li><a class="dropdown-item" href="{% url 'log_out' %}">Log Out</a></li>
                             </ul>
@@ -145,14 +145,23 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
     <div class="col-6">
       <div class="card w-100 ">
         <div class="card-body">
-          <h5 class="card-title">{{job.title}}</h5>
+          <h5 class="card-title">{{job.title|capfirst }}</h5>
             <div class="details">
               <span><strong>Location</strong> : </span> |
               <span>South Africa</span> |
               <span><strong>Closing Date</strong> : {{ job.end_date}}</span>
             </div>
-          <p class="card-text">{{job.description}}</p>
-          <a href="{% url 'job_details' %}" class="card-link">see more.. </a>
+          <p class="card-text">{{job.description|capfirst }}</p>
+          
+          {% if user.is_authenticated %}
+            
+          <a href="{% url 'job_details' job.id %}" class="card-link">See more.. </a>
+
+          {% else %}
+          
+          <a href="{% url 'render_auth_page' %}" class="card-link">See more.. </a>
+          {% endif %}
+            
          
         </div>
       </div>
