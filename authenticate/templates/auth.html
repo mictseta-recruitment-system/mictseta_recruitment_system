@@ -9,23 +9,18 @@
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         background-color: #f4f6f9;
         margin: 0;
-        padding: 0; 
-    }
-    .main{
+        padding: 0;
+        display: flex;
         height: 100vh;
         overflow: hidden;
-        display: flex;
-
     }
-    .left-section, .filled-right-section {
+    
+    .left-section, .right-section {
         flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 20px;
-    }
-    .filled-right-section{
-        display: grid;
     }
     
     .left-section {
@@ -128,78 +123,71 @@
         color: black;
     }
 </style>
-<div class="main">
-  <div class="left-section">
+
+<div class="left-section">
     <div>
         <img src="{% static 'authenticate/images/image.png' %}" alt="Company Logo or Image">
         <h1>Welcome to MICTSETA</h1>
         <p>Shaping skills, Pioneering Industries, Empowering Futures.</p>
     </div>
 </div>
-<div class="filled-right-section">
-    
-    <div id="flash-message-container"></div>
-    <div class="right-section">
-        <div class="form-container" id="form-container">
-    
-            <div class="wrapper" id="wrapper-sign-in">
-    
-                <form action="" id="login-form" method="POST">
-                    {% csrf_token %}
-                    <h1>Login</h1>
-                    <div class="spinner"></div>
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="Email Address" id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
-                        <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <div class="remember-forgot">
-                        <label><input type="checkbox"> Remember Me</label>
-                        <a href="{% url 'find_account' %}">Forgot Password?</a>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
-                    <div class="register-link">
-                        <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
-                    </div>
-                </form>
-            </div>
-    
-            <div class="wrapper" id="wrapper-sign-up" style="display: none;">
-                <form action="" id="signup-form" method="POST">
-                    <h1>Sign Up</h1>
-                    <div id="flash-message-container"></div>
-                    <h6>Add your details to create an account and start preparing your documents.</h6>
-    
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
-                    </div>
-    
-                    <div class="input-group mb-3">
-                        <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
-                    </div>
-    
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-                        <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
-                        <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
-                    <div class="register-link">
-                        <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
-                    </div>
-                </form>
-            </div>
-    
-        </div>
-    </div>
-</div>
 
-  
+<div class="right-section">
+    <div class="form-container" id="form-container">
+
+        <div class="wrapper" id="wrapper-sign-in">
+
+            <form action="" id="login-form" method="POST">
+                {% csrf_token %}
+                <h1>Login</h1>
+                <div class="spinner"></div>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email Address" id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
+                    <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox"> Remember Me</label>
+                    <a href="{% url 'find_account' %}">Forgot Password?</a>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
+                <div class="register-link">
+                    <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+
+        <div class="wrapper" id="wrapper-sign-up" style="display: none;">
+            <form action="" id="signup-form" method="POST">
+                <h1>Sign Up</h1>
+                <h6>Add your details to create an account and start preparing your documents.</h6>
+
+                <div class="input-group mb-3">
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                    <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
+                    <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
+                </div>
+                <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
+                <div class="register-link">
+                    <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
+                </div>
+            </form>
+        </div>
+
+    </div>
 </div>
 
 <script>

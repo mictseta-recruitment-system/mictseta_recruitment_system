@@ -7,7 +7,7 @@
         const email = document.getElementById("email").value;
         const idnumber = document.getElementById("idnumber").value;
         const phone = document.getElementById("phone").value;
-        // const maritial_status = document.getElementById("maritial_status").value;
+        const maritial_status = document.getElementById("maritial_status").value;
         const race = document.getElementById("race").value;
         const disability = document.getElementById("disability").value;
         const linkedin_profile = document.getElementById("linkedin_profile").value;
@@ -24,7 +24,7 @@
             email : email,
             phone :  phone ,  
             idnumber : idnumber,
-           maritial_status : "",
+            maritial_status : maritial_status,
             race : race,
             disability : disability,
            
@@ -231,10 +231,7 @@ document.getElementById('flash-message-container').innerHTML=``;
       const error = errors[key];
       if (Array.isArray(error)) {
         error.forEach((errorMessage) => {
-          if(key=='maritial_status'){
-            showFlashMessage(  ` Your maritial status is required`, "danger");
-          }
-          
+          showFlashMessage(`${errorMessage}`, "danger");
         });
       } else {
         showFlashMessage(` ${error}`, "danger");

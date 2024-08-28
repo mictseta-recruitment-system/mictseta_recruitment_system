@@ -113,7 +113,7 @@ View jobs
               <tr>
                 <td>{{job.id}}</td>
                 <td><b><a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{job.title}}</a></b></td>
-                
+ 
                 {% if job.job_type == "Contract" or job.job_type == "Part-Time" %}
                    <td><button class="btn btn-dark  text-white p-0" >{{job.job_type}}</button></td>
                 {% elif job.job_type == "Permanent" or job.job_type == "Full-Time" %}
@@ -282,10 +282,7 @@ View jobs
             
           </form>
         </div>
-
-
-
-        </div>
+      </div>
         <div class="modal-footer d-flex justify-content-between">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
           <button class="btn btn-primary" onclick="updateJob({{job.id}},'spinner','editJob')">Save & Continue</button>
@@ -496,12 +493,17 @@ View jobs
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-success" data-bs-target="#complete{{job.id}}" data-bs-toggle="modal" data-bs-dismiss="modal">Complete</button>
+         {% if job.is_complete %}
+              <button class="btn btn-success" data-bs-dismiss="modal">Save & Close</button>
+
+              {% else %}
+             <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-primary ">SUBMIT JOB AD</button>
+              {% endif %}
       </div>
     </div>
   </div>
 </div>
-
+</div>
 
   <!-- <div class="modal fade" id="skillToggle{{job.id}}" aria-hidden="true" aria-labelledby="skillToggleToggleLabel2" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">

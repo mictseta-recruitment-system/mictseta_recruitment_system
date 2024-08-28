@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification
+from jobs.models import JobPost, Notification, JobApplication
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -88,6 +88,14 @@ def view_staff(request):
 		else:
 			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 		return render(request,'view_staff.html',{'staffs':staff,'notify_len':notify_len})
+	else:
+		return redirect('render_auth_page')
+
+@csrf_protect
+def job_applications(request):
+	if request.user.is_authenticated:
+		applications = JobApplication.objects.all()
+		return render(request, 'job_applications.html', {'total':JobApplication, 'applications':applications})
 	else:
 		return redirect('render_auth_page')
 

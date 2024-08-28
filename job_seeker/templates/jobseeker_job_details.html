@@ -69,7 +69,7 @@
                             | <b>Industry:</b> <span class="text-muted">{{ job.industry }}</span> | <b>Job Type:</b> <span class="text-muted">{{ job.job_type }}</span></h6>
                             <p class="card-text">{{ job.description }}</p>
                             <a href="#" class="card-link text-muted" disabled>Application End Date: {{ job.end_date }}</a>
-                            <a href="{% url 'job_information' %}" class="card-link" disabled>see more</a>
+                            <a href="{% url 'job_information' job.id %}" class="card-link" disabled>see more</a>
                             
                           </div>
                         </div>
