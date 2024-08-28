@@ -26,7 +26,7 @@ urlpatterns = [
     path('task_manager/', views.task_manager, name="dashboard.task_manager"),
     path('crud_events/', views.crud_events, name="dashboard.crud_events"),
     path('login_events/', views.login_events, name="dashboard.login_events"),
-
+    path('job_applications/', views.job_applications, name="dashboard.job_applications"),
 
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),
     path('leave/report/pdf/', views.leave_generate_pdf_report, name='dashboard.leave_generate_pdf_report'),

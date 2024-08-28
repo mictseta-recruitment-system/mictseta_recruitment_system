@@ -5,10 +5,12 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, Skill, Experience, Requirement, Notification
+from .models import JobPost, Academic, Skill, Experience, Requirement, Notification, JobApplication
 import re
 from datetime import datetime
 from django.utils.timezone import now
+from django.utils import timezone
+
 
 # Create your views here.
 
@@ -91,7 +93,21 @@ def jobs_home(request):
 
 	return HttpResponse("Welcomt to job posts")
 
-
+@csrf_protect
+def job_application(request, jobID):
+	if request.user.is_authenticated:
+		
+		job = JobPost.objects.filter(id=jobID).first()
+		exists = JobApplication.objects.filter(user=request.user, job_id=job).exists()
+		if exists:
+			return JsonResponse({'errors': {'Application' : ['Application already exists']}, 'status': 'error'}, status=400)
+		new_application = JobApplication.objects.create(user=request.user, job_id=job, status="pending")
+		new_application.save()
+		return JsonResponse({'message': 'Job Application submitted successfully', 'status': 'success'}, status=201)
+	
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+	return 
 
 
 
@@ -131,7 +147,7 @@ def add_job(request):
 			try:
 				
 				date_format = "%Y-%m-%d"
-				end_date = datetime.strptime(data['end_date'], date_format)
+				end_date = timezone.make_aware(datetime.strptime(data['end_date'], date_format))
 				# current_date =datime.now("%Y-%m-%d")
 				# if current_date >= end_date:
 				# 	return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)

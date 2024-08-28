@@ -17,5 +17,5 @@ urlpatterns = [
     path('interviews/', views.interviews, name='interviews'),
     path('feedback/', views.feedback, name='feedback'),
     path('logout/', views.logout, name='logout'),
-    path('job_information/', views.job_information, name='job_information'),
+    path('job_information/<int:jobID>', views.job_information, name='job_information'),
 ]

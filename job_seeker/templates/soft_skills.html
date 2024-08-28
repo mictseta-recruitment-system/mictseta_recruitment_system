@@ -44,16 +44,10 @@
                 <label for="softskill1" class="col-form-label">Soft Skill</label>
                 <select class="form-control" id="softskill1" name="softskill1">
                     <option value="">Select a skill</option>
-                    <option value="Communication">Communication</option>
-                    <option value="Problem Solving">Problem Solving</option>
-                    <option value="Time Management">Time Management</option>
-                    <option value="Decision Making">Decision Making</option>
-                    <option value="Leadership">Leadership</option>
-                    <option value="Negotiation">Negotiation</option>
-                    <option value="Organization">Organization</option>
-                    <option value="Teamwork">Teamwork</option>
-                    <option value="Creativity">Creativity</option>
-                    <option value="Flexibility">Flexibility</option>
+
+                    {% for skill in skills %}
+                     <option value="{{skill.skill}}">{{skill.skill}}</option>
+                    {% endfor %}
                 </select>
            
             
