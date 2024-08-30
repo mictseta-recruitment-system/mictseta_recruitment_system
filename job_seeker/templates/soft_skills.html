@@ -33,16 +33,15 @@
 <div id="soft-skills" class="content-section active">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Soft Skills</li>
+            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Soft Skills</li>
         </ol>
-      </nav>
+    </nav>
     <form class="mt-4">
         <div class="form-group row">
-            
             <div class="col-sm-4">
                 <label for="softskill1" class="col-form-label">Soft Skill</label>
-                <select class="form-control" id="softskill1" name="softskill1">
+                <select class="form-control" id="softskill1" name="softskill1" onchange="toggleOtherSoftSkill()">
                     <option value="">Select a skill</option>
                     <option value="Communication">Communication</option>
                     <option value="Problem Solving">Problem Solving</option>
@@ -54,12 +53,14 @@
                     <option value="Teamwork">Teamwork</option>
                     <option value="Creativity">Creativity</option>
                     <option value="Flexibility">Flexibility</option>
+                    <option value="Other">Other</option>
                 </select>
-           
-            
-                
-
-                </select>
+            </div>
+        </div>
+        <div class="form-group row" id="other-soft-skill-group" style="display: none;">
+            <label for="otherSoftSkill" class="col-sm-2 col-form-label">Specify Skill</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="otherSoftSkill" name="otherSoftSkill">
             </div>
         </div>
         <div class="form-group row">
@@ -74,7 +75,6 @@
         <div class="form-group row">
             <div class="col-sm-10 offset-sm-2">
                 <button type="submit" class="btn btn-primary">Update</button>
-               <!--  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addSkillModal">Add Skill</button> -->
             </div>
         </div>
     </form>
@@ -132,6 +132,16 @@
 </div>
 
 <script>
+    function toggleOtherSoftSkill() {
+        var skillSelect = document.getElementById('softskill1');
+        var otherSkillGroup = document.getElementById('other-soft-skill-group');
+        if (skillSelect.value === 'Other') {
+            otherSkillGroup.style.display = 'block';
+        } else {
+            otherSkillGroup.style.display = 'none';
+        }
+    }
+
     function updateProficiencyValue(id) {
         const slider = document.getElementById('proficiency' + id);
         const output = document.getElementById('proficiencyValue' + id);
