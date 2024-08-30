@@ -700,7 +700,7 @@ function completeJob(jobID, spinner, content, modal) {
     } else if (data.status === "success") {
       document.getElementById('modal-b' + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
       showFlashMessage(data.message, "success");
-    
+      location.reload();
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
       
     } else if (data.status === "warning") {

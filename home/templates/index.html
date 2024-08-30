@@ -68,9 +68,9 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                             <ul class="dropdown-menu dropdown-menu-dark">
                               
                               {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
-                               <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}">Dashbaord</a></li>
+                               <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}">Dashboard</a></li>
                               {% else %}
-                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashbaord</a></li>
+                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashboard</a></li>
                               {% endif %}
                               <li><a class="dropdown-item" href="{% url 'log_out' %}">Log Out</a></li>
                             </ul>
@@ -118,17 +118,23 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
           </select>
           <select class="form-select" aria-label="Default select example">
             <option selected>Location</option>
-            <option value="1">Johannesburg</option>
-            <option value="2">Pretoria</option>
-            <option value="3">Cape Town</option>
-            <option value="3">Kempton Park</option>
-            <option value="3">Durban</option>
-            <option value="3">Polokwane</option>
-            <option value="3">Tzaneen</option>
-            <option value="3">Vereeniging</option>
-            <option value="3">Centurion</option>
+            <option value="1">Western Cape</option>
+            <option value="2">Limpopo</option>
+            <option value="3">North West</option>
+            <option value="3">Mpumalanga</option>
+            <option value="3">Gauteng</option>
+            <option value="3">KwaZulu-Natal</option>
+            <option value="3">Northern Cape</option>
+            <option value="3">Eastern Cape</option>
           </select>
-         
+          <select class="form-select" aria-label="Default select example">
+            <option selected>Salary</option>
+            <option value="Less than R10,000">Less than R10,000</option>
+            <option value="R10,000 - R20,000">R10,000 - R20,000</option>
+            <option value="R20,000 - R30,000">R20,000 - R30,000</option>
+            <option value="R30,000 - R40,000">R30,000 - R40,000</option>
+            <option value="R50,000 - More">R50,000 - More</option> 
+          </select>
     </div>
    
   <div class="row" style="margin-top: 100px;">
@@ -139,14 +145,23 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
     <div class="col-6">
       <div class="card w-100 ">
         <div class="card-body">
-          <h5 class="card-title">{{job.title}}</h5>
+          <h5 class="card-title">{{job.title|capfirst }}</h5>
             <div class="details">
               <span><strong>Location</strong> : </span> |
               <span>South Africa</span> |
               <span><strong>Closing Date</strong> : {{ job.end_date}}</span>
             </div>
-          <p class="card-text">{{job.description}}</p>
-          <a href="{% url 'job_details' %}" class="card-link">see more.. </a>
+          <p class="card-text">{{job.description|capfirst }}</p>
+          
+          {% if user.is_authenticated %}
+            
+          <a href="{% url 'job_details' job.id %}" class="card-link">See more.. </a>
+
+          {% else %}
+          
+          <a href="{% url 'render_auth_page' %}" class="card-link">See more.. </a>
+          {% endif %}
+            
          
         </div>
       </div>

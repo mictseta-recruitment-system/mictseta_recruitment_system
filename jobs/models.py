@@ -84,3 +84,16 @@ class Notification(models.Model):
 
 #     def __str__(self):
 #         return f'Requirements for {self.job_post.title} Job Post'
+
+
+class JobApplication(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="applications")
+    job_id = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=100, null=False)
+
+
+class SkillValidation(models.Model):
+    skill = models.CharField(max_length=100, null=True)
+    level = models.CharField(max_length=15, null=True)
+    category = models.CharField(max_length=20,null=True)

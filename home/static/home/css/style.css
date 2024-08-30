@@ -1,4 +1,4 @@
-/* Global Styles */
+ 
 body {
   display: flex;
   flex-direction: column;
@@ -8,6 +8,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
+  padding: 20px;
 }
 
 

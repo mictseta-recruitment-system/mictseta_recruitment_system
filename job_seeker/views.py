@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from jobs.models import JobPost
+from jobs.models import JobPost, SkillValidation
+
 # Create your views here.
 def job_seeker_dashboard(request):
     return render(request, 'job_seeker_dashboard.html')
@@ -16,7 +17,9 @@ def language_proficiency(request):
     return render(request, 'language_proficiency.html')
 
 def soft_skills(request):
-    return render(request, 'soft_skills.html')
+    skills = SkillValidation.objects.filter(category="soft")
+
+    return render(request, 'soft_skills.html', {'skills':skills})
 
 def computer_skills(request):
     return render(request, 'computer_skills.html')
@@ -40,8 +43,9 @@ def application_tracking(request):
 def interviews(request):
     return render(request, 'interviews.html')
 
-def job_information(request):
-    return render(request, 'job_information.html')
+def job_information(request, jobID):
+    jobs = JobPost.objects.filter(id=jobID).first()
+    return render(request, 'job_information.html', {'jobs':jobs})
 
 def feedback(request):
     return render(request, 'feedback.html')
