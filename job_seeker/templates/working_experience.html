@@ -5,53 +5,43 @@
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-
-
-    
-    <!-- Form for Adding or Updating Experience -->
-    
-       
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Working Experience</li>
-                </ol>
-              </nav>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="job-title1" class="form-label">Job Title</label>
-                    <input type="text" class="form-control" id="job-title1" name="job-title1" placeholder="Enter job title" required>
-                </div>
-                <div class="col-md-6">
-                    <label for="company1" class="form-label">Company</label>
-                    <input type="text" class="form-control" id="company1" name="company1" placeholder="Enter company name" required>
-                </div>
+<!-- Form for Adding or Updating Experience -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Working Experience</li>
+    </ol>
+</nav>
+<div class="container">
+    <form>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="job-title1" class="form-label">Job Title</label>
+                <input type="text" class="form-control" id="job-title1" name="job-title1" placeholder="Enter job title" required>
             </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="location1" class="form-label">Location</label>
-                    <input type="text" class="form-control" id="location1" name="location1" placeholder="Enter location" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="start-date1" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="start-date1" name="start-date1" required>
-                </div>
-                <div class="col-md-3">
-                    <label for="end-date1" class="form-label">End Date</label>
-                    <input type="date" class="form-control" id="end-date1" name="end-date1">
-                </div>
+            <div class="col-md-6">
+                <label for="company1" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company1" name="company1" placeholder="Enter company name" required>
             </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="years-experience1" class="form-label">Years of Experience</label>
-                    <input type="number" class="form-control" id="years-experience1" name="years-experience1" min="0" placeholder="e.g., 3" required>
-                </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="location1" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location1" name="location1" placeholder="Enter location" required>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save Experience</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addExperienceModal">Add Another Experience</button>
+            <div class="col-md-3">
+                <label for="start-date1" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="start-date1" name="start-date1" required>
             </div>
-        </fieldset>
+            <div class="col-md-3">
+                <label for="end-date1" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="end-date1" name="end-date1">
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save Experience</button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addExperienceModal">Add Another Experience</button>
+        </div>
     </form>
 </div>
 
@@ -89,12 +79,6 @@
                         <div class="col-md-3">
                             <label for="end-date2" class="form-label">End Date</label>
                             <input type="date" class="form-control" id="end-date2" name="end-date2">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="years-experience2" class="form-label">Years of Experience</label>
-                            <input type="number" class="form-control" id="years-experience2" name="years-experience2" min="0" placeholder="e.g., 2" required>
                         </div>
                     </div>
                     <div class="form-group">
