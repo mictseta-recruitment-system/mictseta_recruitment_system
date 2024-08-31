@@ -11,7 +11,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Referee</li>
+              <li class="breadcrumb-item active" aria-current="page">References</li>
             </ol>
           </nav>
         <p class="mb-0">Provide details of people who can provide a reference for you.</p>
@@ -20,7 +20,7 @@
     <form class="mt-4">
         <!-- Referee 1 -->
         <fieldset class="border p-4 mb-4">
-            <legend class="w-auto px-2">Referee </legend>
+            <legend class="w-auto px-2">References </legend>
             <div class="form-group mb-3">
                 <label for="referee1-name" class="form-label">Full Name</label>
                 <input type="text" class="form-control" id="referee1-name" name="referee1-name" placeholder="Enter full name" required>
@@ -37,7 +37,7 @@
         
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addRefereeModal">Add Another Referee</button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addRefereeModal">Add Another Reference</button>
         </div>
     </form>
 </div>
@@ -47,7 +47,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addRefereeModalLabel">Add Additional Referee</h5>
+                <h5 class="modal-title" id="addRefereeModalLabel">Add Additional Reference</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -67,7 +67,7 @@
                         <input type="text" class="form-control" id="referee2-position" name="referee2-position" placeholder="e.g., Manager, Mentor, etc." required>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Add Referee</button>
+                        <button type="submit" class="btn btn-primary">Add Reference</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>

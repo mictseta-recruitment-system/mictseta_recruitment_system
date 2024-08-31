@@ -76,7 +76,15 @@
 
                         <div class="form-group">
                             <label for="field-of-study" class="form-label">Field of Study</label>
-                            <input type="text" class="form-control" id="field-of-study" name="field_of_study" required>
+                            <select class="form-control" id="field-of-study" name="field-of-study" required>
+                                <option value="">Field of Study</option>
+                                <option value="Advertising">Advertising</option>
+                                <option value="Film and electronic Media">Film and electronic Media</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Telecommunications">Telecommunications</option>
+                            </select>
+                
                         </div>
 
                         <div class="form-group">
@@ -95,7 +103,7 @@
 
                         <div class="form-group">
                             <label for="year-obtained" class="form-label">Year Obtained</label>
-                            <input type="number" class="form-control" id="year-obtained" name="year_obtained" placeholder="e.g., 2020" required>
+                            <input type="number" class="form-control" id="year-obtained" name="year_obtained" placeholder="e.g., 2020" min="1000" max="9999" required>
                         </div>
 
                     

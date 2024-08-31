@@ -139,6 +139,8 @@
 
             <form action="" id="login-form" method="POST">
                 {% csrf_token %}
+                <div id="flash-message-container"></div>
+
                 <h1>Login</h1>
                 <div class="spinner"></div>
                 <div class="input-group mb-3">
