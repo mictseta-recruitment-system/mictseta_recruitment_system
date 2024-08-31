@@ -1,16 +1,5 @@
  
-.wrapper {
-  margin: 100px auto;
-  padding: 30px;
-  border-radius: 10px;
-  text-align: center;
-}
-  
-.wrapper h1 {
-  font-size: 46px;
-  margin: 20px 0;
-  color: blue;
-}
+
 
 .wrapper h6 {
   font-size: 18px;
@@ -24,7 +13,7 @@
 }
 
 .input-group .form-control, .input-box input, #resetPasswordForm .form-control-sm {
-  width: 50%;
+  width: 60%;
   height: 50px;
   padding: 10px;
   border: 1px solid black;
@@ -154,4 +143,3 @@
   max-width: 400px;
   margin: 0 auto;
 }   
-
