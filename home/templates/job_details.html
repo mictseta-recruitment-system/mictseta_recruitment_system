@@ -44,15 +44,28 @@
               <p>{{job.requirements|capfirst}}</p>
               <hr />
               <h4>Experience</h4>
+              <p>Here will be experience details</p>
             </div>
-            <p></p>
+            
+            
+            {% if user.is_staff %}
             <div class="d-grid gap-2 col-6 mx-auto">
               <a
-                href="{% url 'job_application' job.id %}"
-                class="btn btn-outline-success"
-                >Apply Now</a
+                href="{% url 'home' %}"
+                class="btn btn-outline-danger"
+                >Back</a
               >
             </div>
+              {% else %}
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <a
+                  href="{% url 'job_application' job.id %}"
+                  class="btn btn-outline-success"
+                  >Apply Now</a
+                >
+              </div>
+            {% endif %}
+              
           </div>
         </div>
       </div>

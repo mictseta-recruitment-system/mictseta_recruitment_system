@@ -152,7 +152,7 @@ def add_job(request):
 				# if current_date >= end_date:
 				# 	return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
 			except:
-				return JsonResponse({'errors': {'Date':'Iconccerct data format try - DD:MMM:YYYY'}, 'status':'error'}, status=404)
+				return JsonResponse({'errors': {'Date':'Incorrect data format try - DD:MMM:YYYY'}, 'status':'error'}, status=404)
    
 			form = AddJobForm(data)
 			if form.is_valid():
