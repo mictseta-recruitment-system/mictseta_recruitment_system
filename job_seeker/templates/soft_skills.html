@@ -6,27 +6,31 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
     .content-section {
-        padding: 0px;
+        padding: 0;
     }
     
     .form-group input, .form-group select {
         border-radius: 0;
     }
+    
     .form-group button {
         border-radius: 0;
     }
+    
     .proficiency-wrapper {
         display: flex;
         align-items: center;
     }
+    
     .proficiency-wrapper input[type="range"] {
         flex-grow: 1;
     }
+    
     .proficiency-value {
         margin-left: 10px;
         width: 40px;
         text-align: center;
-        font-weight: bold;
+      
     }
 </style>
 
@@ -37,12 +41,15 @@
             <li class="breadcrumb-item active" aria-current="page">Soft Skills</li>
         </ol>
     </nav>
+
+    
     <form class="mt-4">
         <div class="form-group row">
             <div class="col-sm-4">
                 <label for="softskill1" class="col-form-label">Soft Skill</label>
                 <select class="form-control" id="softskill1" name="softskill1" onchange="toggleOtherSoftSkill()">
                     <option value="">Select a skill</option>
+
 
                     <option value="Communication">Communication</option>
                     <option value="Problem Solving">Problem Solving</option>
@@ -65,18 +72,31 @@
                 <input type="text" class="form-control" id="otherSoftSkill" name="otherSoftSkill">
             </div>
         </div>
+
+                    
+                
+                  
+                </select>
+            </div>
+        </div>
+        
+
         <div class="form-group row">
-            <label for="proficiency1" class="col-sm-2 col-form-label">Proficiency Level</label>
-            <div class="col-sm-4">
+            <div class="col-md-6">
+                <label for="proficiency1" class="col-form-label">Proficiency Level</label>
                 <div class="proficiency-wrapper">
-                    <input type="range" class="form-control-range" id="proficiency1" name="proficiency1" min="1" max="10" value="5" oninput="updateProficiencyValue(1)">
+                    <input type="range" class="form-control-range" id="proficiency1" name="proficiency1" min="1" max="10" step="1" value="5" oninput="updateProficiencyValue(1)">
                     <span id="proficiencyValue1" class="proficiency-value">5</span>
                 </div>
             </div>
         </div>
+        
         <div class="form-group row">
             <div class="col-sm-10 offset-sm-2">
                 <button type="submit" class="btn btn-primary">Update</button>
+
+                <!-- <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addSkillModal">Add Skill</button> -->
+
             </div>
         </div>
     </form>
@@ -116,7 +136,7 @@
                         <label for="proficiency2" class="col-sm-4 col-form-label">Proficiency Level</label>
                         <div class="col-sm-8">
                             <div class="proficiency-wrapper">
-                                <input type="range" class="form-control-range" id="proficiency2" name="proficiency2" min="1" max="10" value="5" oninput="updateProficiencyValue(2)">
+                                <input type="range" class="form-control-range" id="proficiency2" name="proficiency2" min="1" max="10" step="1" value="5" oninput="updateProficiencyValue(2)">
                                 <span id="proficiencyValue2" class="proficiency-value">5</span>
                             </div>
                         </div>
@@ -132,6 +152,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     function toggleOtherSoftSkill() {
@@ -151,8 +172,22 @@
     }
 </script>
 
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function updateProficiencyValue(number) {
+        var rangeInput = document.getElementById('proficiency' + number);
+        var valueDisplay = document.getElementById('proficiencyValue' + number);
+        valueDisplay.textContent = rangeInput.value;
+    }
+
+    // Initialize the span value on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateProficiencyValue(1);
+        updateProficiencyValue(2);
+    });
+</script>
 
 {% endblock %}
