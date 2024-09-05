@@ -13,11 +13,16 @@
         </ol>
     </nav>
     <form class="mt-4">
-        <div class="row">
-            <div class="col-6">
+        <div class="row mb-4">
+            <div class="col-md-6">
                 <div class="form-group">
+<<<<<<< HEAD
                     <label for="skill1" class="col-sm-2 col-form-label">Computer Skill</label>
                     <select class="form-control" id="skill1" name="skill1" onchange="toggleOtherSkill()">
+=======
+                    <label for="skill1" class="col-form-label">Computer Skill</label>
+                    <select class="form-control" id="skill1" name="skill1">
+>>>>>>> df1ca294feaea2829cb584075845bd61da8ad4ac
                         <option value="">Select a skill</option>
                         <option value="Software Development">Software Development</option>
                         <option value="Degrees & Certificates">Degrees & Certificates</option>
@@ -31,6 +36,7 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
+<<<<<<< HEAD
                 <div class="form-group" id="other-skill-group" style="display: none;">
                     <label for="otherSkill">Please specify:</label>
                     <input type="text" class="form-control" id="otherSkill" name="otherSkill">
@@ -55,20 +61,46 @@
                         <small>{{ skill.level }}</small>
                     </a>
                     {% endfor %}
+=======
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="proficiency1" class="col-form-label">Proficiency Level</label>
+                    <div class="d-flex align-items-center">
+                        <input type="range" class="form-control-range" id="proficiency1" name="proficiency1" min="1" max="10" step="1" value="5" oninput="updateProficiencyValue()">
+                        <span id="proficiencyValue1" class="ml-2">5</span>
+                    </div>
+>>>>>>> df1ca294feaea2829cb584075845bd61da8ad4ac
                 </div>
             </div>
         </div>
+
         <div class="form-group row">
-            <div class="col-sm-10 offset-sm-2">
-                <button type="button" onclick="handle_update_skill_button_click()" class="btn btn-primary">Update</button>
+            <div class="col-md-12 text-center">
+                <button type="button" onclick="handle_update_skill_button_click()" class="btn btn-primary">Update Skills</button>
             </div>
         </div>
     </form>
 </div>
 
+<<<<<<< HEAD
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+=======
+<script>
+    function updateProficiencyValue() {
+        var rangeInput = document.getElementById('proficiency1');
+        var valueDisplay = document.getElementById('proficiencyValue1');
+        valueDisplay.textContent = rangeInput.value;
+    }
+
+    // Initialize the span value on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateProficiencyValue();
+    });
+</script>
+>>>>>>> df1ca294feaea2829cb584075845bd61da8ad4ac
 
 <script>
 function toggleOtherSkill() {
