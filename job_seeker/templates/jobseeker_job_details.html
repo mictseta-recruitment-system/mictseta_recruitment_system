@@ -14,7 +14,7 @@
 <div class="card">
   <div class="card-header">
     <!-- Filter Form -->
-<form method="GET" action="{% url 'jobseeker.job_details' %}">
+<form method="GET" action="{% url 'job_details' %}">
     <div class="filter-options">
         <label for="job_type">Job Type:</label>
         <select id="job_type" name="job_type">
@@ -59,14 +59,15 @@
   <div class="card-body">
     <!-- Job Details List -->
         <div class="job-details">
+          <a href="{% url 'job_information' %}" class="card-link" disabled>see more</a>
             {% if job_list %}
                 {% for job in job_list %}
                    <div class="card mt-5 ">
                           <div class="card-body">
-                            <h5 class="card-title">{{ job.title|capfirst }}</h5>
-                            <h6 class="card-subtitle mb-2 "><b>Location:</b> <span class="text-muted">{{ job.location|capfirst }}</span> 
-                            | <b>Industry:</b> <span class="text-muted">{{ job.job_industry|capfirst }}</span> | <b>Job Type:</b> <span class="text-muted">{{ job.job_type|capfirst }}</span></h6>
-                            <p class="card-text">{{ job.description|capfirst }}</p>
+                            <h5 class="card-title">{{ job.title }}</h5>
+                            <h6 class="card-subtitle mb-2 "><b>Location:</b> <span class="text-muted">{{ job.location }}</span> 
+                            | <b>Industry:</b> <span class="text-muted">{{ job.industry }}</span> | <b>Job Type:</b> <span class="text-muted">{{ job.job_type }}</span></h6>
+                            <p class="card-text">{{ job.description }}</p>
                             <a href="#" class="card-link text-muted" disabled>Application End Date: {{ job.end_date }}</a>
                             <a href="{% url 'job_information' job.id %}" class="card-link" disabled>see more</a>
                             
