@@ -96,6 +96,7 @@ def jobs_home(request):
 @csrf_protect
 def job_application(request, jobID):
 	if request.user.is_authenticated:
+     
 		
 		job = JobPost.objects.filter(id=jobID).first()
 		exists = JobApplication.objects.filter(user=request.user, job_id=job).exists()
@@ -107,7 +108,7 @@ def job_application(request, jobID):
 	
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
-	return 
+	
 
 
 
@@ -858,3 +859,5 @@ def approve_job(request):
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
