@@ -30,38 +30,15 @@
             <input type="file" class="form-control-file" id="drivers-license" name="drivers-license">
         </div>
         <div class="form-group">
-            <label for="document-choice">Choose ID or Passport</label>
-            <select class="form-control" id="document-choice">
-                <option value="id">Choose ID or Passport...</option>
-                <option value="id">ID</option>
-                <option value="passport">Passport</option>
-            </select>
-        </div>
-        <div class="form-group">
             <label for="id">ID</label>
-            <input type="file" class="form-control-file" id="id" name="id" disabled>
+            <input type="file" class="form-control-file" id="id" name="id">
         </div>
         <div class="form-group">
             <label for="passport">Passport</label>
-            <input type="file" class="form-control-file" id="passport" name="passport" disabled>
+            <input type="file" class="form-control-file" id="passport" name="passport">
         </div>
         <button type="submit" class="btn btn-primary">Upload Documents</button>
     </form>
 </div>
-
-<script>
-    document.getElementById('document-choice').addEventListener('change', function() {
-        var choice = this.value;
-        if (choice === 'id') {
-            document.getElementById('id').disabled = false;
-            document.getElementById('passport').disabled = true;
-            document.getElementById('passport').value = ""; // Clear file input
-        } else if (choice === 'passport') {
-            document.getElementById('id').disabled = true;
-            document.getElementById('id').value = ""; // Clear file input
-            document.getElementById('passport').disabled = false;
-        }
-    });
-</script>
 
 {% endblock %}

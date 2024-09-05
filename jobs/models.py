@@ -97,4 +97,3 @@ class SkillValidation(models.Model):
     skill = models.CharField(max_length=100, null=True)
     level = models.CharField(max_length=15, null=True)
     category = models.CharField(max_length=20,null=True)
-    
