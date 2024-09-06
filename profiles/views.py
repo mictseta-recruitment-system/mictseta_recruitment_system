@@ -7,7 +7,7 @@ from .forms import UpdateQualificationForm, UpdateAddressInformationForm, Update
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills
+from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills,SupportingDocuments
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -127,7 +127,7 @@ def update_qualification(request):
                          return JsonResponse({'errors':{ "Qualification" : ['it Already exists']}, 'status':'error'}, status=404)
                     qualification = Qualification.objects.create(user=request.user,highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],grade=data['grade'],status=data['status'])
                     qualification.save()
-                    return JsonResponse({"message":"Added qualification information success"})
+                    return JsonResponse({"message":"Added qualification information success", 'status':'success'})
                 except Exception as e: 
                     return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
             else:
@@ -147,20 +147,22 @@ def update_language(request):
                 return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
             data = {
                 'language' : json_data.get('language'),
-                'proficiency' : json_data.get('proficiency'),
+                'reading_proficiency' : json_data.get('reading_proficiency'),
+                'writing_proficiency' : json_data.get('writing_proficiency'),
+                'speaking_proficiency' : json_data.get('speaking_proficiency'),
                 }
    
             language_data_form =  UpdateLanguageForm(data)
             if language_data_form.is_valid() : #and address_data_form.is_valid():
                 try:
-                    exists = Language.objects.filter(user=request.user,language=data['language'],proficiency=data['proficiency']).exists()
+                    exists = Language.objects.filter(user=request.user,language=data['language'],reading_proficiency=data['reading_proficiency'],writing_proficiency=data['writing_proficiency'],speaking_proficiency=data['speaking_proficiency']).exists()
                     if exists:
-                         return JsonResponse({'errors':{ "Languge" : ['it Already exists']}, 'status':'error'}, status=404)
-                    language = Language.objects.create(user=request.user,language=data['language'],proficiency=data['proficiency'])
+                         return JsonResponse({'errors':{ "Languge" : ['it Already exists']}, 'status':'error'}, status=400)
+                    language = Language.objects.create(user=request.user,language=data['language'],reading_proficiency=data['reading_proficiency'],writing_proficiency=data['writing_proficiency'],speaking_proficiency=data['speaking_proficiency'])
                     language.save()
-                    return JsonResponse({"message":"Added Language information success"})
+                    return JsonResponse({"message":"Added Language information ", 'status':'success'})
                 except Exception as e: 
-                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
+                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=400)
             else:
                return JsonResponse({"errors":language_data_form.errors, "status":"error"}, status=400) 
         else:
@@ -247,11 +249,42 @@ def update_address_info(request):
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@ensure_csrf_cookie
+def upload_supporting_document(request):
+    if request.method == 'POST':
+
+        try:
+            document = request.FILES['document']
+            document_type = request.POST['type']
+            
+            print(request.POST)
+                        # return JsonResponse({'errors': {'file' :['Bad Request']}, 'status': 'error'}, status=400)
+        except Exception as e:
+            return JsonResponse({'errors': f'{e}', 'status': 'error'}, status=400)
+        try:
+            if not document or document.name == '':
+                return JsonResponse({'errors':'No selected file', 'status': 'error'}, status=400)
+            if not document and not allowed_file(document.filename):
+                return JsonResponse({'errors':'File type not allowed', 'status': 'error'}, status=400)
+            # Verify that this is a valid image
+            # If user does not select a file, the browser submits an empty file without a filename
+            try:
+               
+                supporting_document = SupportingDocuments.objects.create(user=request.user,document=document, document_type=document_type) 
+                supporting_document.save()
+                return JsonResponse({'message': 'Image uploaded successfully', 'status': 'success'}, status=201)
+            except Exception as e:
+                return JsonResponse({'errors': e, 'status': 'error'}, status=400)
+        except (IOError, SyntaxError):
+            return JsonResponse({'errors': 'Invalid image file', 'status': 'error'}, status=400)
+        else:
+            return JsonResponse({'errors': form.errors, 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
 
 @csrf_protect
 def upload_profile_image(request):
@@ -259,7 +292,7 @@ def upload_profile_image(request):
 
         try:
             image = request.FILES['image']
-            empID = empID = request.POST['empID']
+            empID =  request.POST['empID']
             print(request.POST)
             print(empID)
             # return JsonResponse({'errors': {'file' :['Bad Request']}, 'status': 'error'}, status=400)
