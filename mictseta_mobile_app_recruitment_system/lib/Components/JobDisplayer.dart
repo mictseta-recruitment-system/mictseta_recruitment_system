@@ -10,7 +10,7 @@ class JobdisplayerPage extends StatelessWidget {
 
   final String jobDue;
   final String date;
-
+  final Function onTap;
   final String location;
 
   const JobdisplayerPage({
@@ -19,7 +19,7 @@ class JobdisplayerPage extends StatelessWidget {
     required this.jobDescription,
     required this.location,
     required this.jobDue,
-    required this.date,
+    required this.date, required this.onTap,
     // required this.icon
   });
 

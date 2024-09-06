@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'Components/TextField.dart';
+import '../Components/TextField.dart';
 
 
 class Profilepage extends StatelessWidget {

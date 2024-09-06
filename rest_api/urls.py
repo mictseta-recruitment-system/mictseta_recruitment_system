@@ -1,7 +1,5 @@
 from django.urls import path
-
-from . import views
- 
+from . import views 
 
 urlpatterns = [
     path('auth/sign-in/',views.sign_in,name="api_sign_in"),

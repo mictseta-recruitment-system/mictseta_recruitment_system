@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'Components/Table.dart';
+import '../Components/Table.dart';
 
 class FeedBackPage extends StatefulWidget {
   const FeedBackPage({super.key});

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'Components/informationData.dart';
+import '../Components/informationData.dart';
 
 class MoreInformationPage extends StatefulWidget {
   final String tabName;

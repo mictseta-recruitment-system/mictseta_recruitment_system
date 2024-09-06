@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'MainPage.dart';
-import 'Sign up files/SignUpPage.dart'; 
+import '../Sign up files/SignUpPage.dart'; 
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
