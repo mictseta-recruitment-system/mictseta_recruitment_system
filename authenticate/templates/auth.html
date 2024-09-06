@@ -242,6 +242,21 @@
     function handle_sign_up_button_click() {
         // Handle sign-up functionality here
     }
+
+    function validateSignInForm() {
+        const email = document.getElementById('lemail').value;
+        const password = document.getElementById('lpassword').value;
+        const btnSignIn = document.getElementById('btn-signin');
+        
+        btnSignIn.disabled = !email || !password;
+    }
+
+    // Add event listeners to input fields to enable/disable the button on change
+    document.getElementById('lemail').addEventListener('input', validateSignInForm);
+    document.getElementById('lpassword').addEventListener('input', validateSignInForm);
+
+    // Initial call to set the button state on page load
+    validateSignInForm();
 </script>
 
 {% endblock %}
