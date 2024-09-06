@@ -26,22 +26,46 @@
       <div class="col-6">
         <div id="card" class="card w-100">
           <div class="card-body">
-            <h2 class="card-title"><strong>{{job.title|capfirst }}</strong></h2>
+            <h3><strong>Job Information</strong></h3>
+            <hr />
+            <p class="card-title">
+              <strong>Position : </strong>{{job.title|capfirst }}
+            </p>
             <div class="details">
-              <span><strong>Location</strong> : </span> |
-              <span>South Africa</span> |
-              <span><strong>Closing Date</strong> : {{ job.end_date}}</span>
+              <p><strong>Location</strong> : South Africa</p>
+              <p><strong>Closing Date</strong> : {{ job.end_date}}</p>
+              <p><strong>Job Type :</strong> {{job.type|capfirst}}</p>
+              <p>
+                <strong>Job Description :</strong> {{job.description|capfirst}}
+              </p>
+              <hr />
+
+              <h3>Requirements</h3>
+              <p>{{job.requirements|capfirst}}</p>
+              <hr />
+              <h4>Experience</h4>
+              <p>Here will be experience details</p>
             </div>
-            <br />
-            <h4>Job description:</h4>
-            <p class="card-text">{{job.description|capfirst }}</p>
-            <h4>Requirements</h4>
-            <p></p>
+            
+            
+            {% if user.is_staff %}
             <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="button" class="btn btn-outline-success">
-                Apply Now
-              </button>
+              <a
+                href="{% url 'home' %}"
+                class="btn btn-outline-danger"
+                >Back</a
+              >
             </div>
+              {% else %}
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <a id="apply-button"
+                  href="{% url 'job_application' job.id %}"
+                  class="btn btn-outline-success"
+                  >Apply Now</a
+                >
+              </div>
+            {% endif %}
+              
           </div>
         </div>
       </div>
