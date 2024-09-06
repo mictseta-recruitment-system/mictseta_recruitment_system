@@ -5,14 +5,13 @@
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-
 <div id="academic-qualifications" class="content-section active">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
           <li class="breadcrumb-item active" aria-current="page">Academic Qualifications</li>
         </ol>
-      </nav>
+    </nav>
     <div class="card">
         <div class="card-header">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#additionalQualificationModal">
@@ -27,6 +26,7 @@
                         <th scope="col">Field of Study</th>
                         <th scope="col">Institution</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Year Started</th>
                         <th scope="col">Year Obtained</th>
                         <th scope="col">Grade</th>
                     </tr>
@@ -38,6 +38,7 @@
                         <td>{{ qualification.field_of_study }}</td>
                         <td>{{ qualification.institution }}</td>
                         <td>{{ qualification.status }}</td>
+                        <td>{{ qualification.year_started }}</td>
                         <td>{{ qualification.year_obtained }}</td>
                         <td>{{ qualification.grade }}</td>
                     </tr>
@@ -63,33 +64,86 @@
                             <label for="qualification-type" class="form-label">Qualification Type</label>
                             <select class="form-control" id="qualification-type" name="qualification-type" required>
                                 <option value="">Select Qualification Type</option>
-                                <option value="High School Diploma">High School Diploma</option>
-                                <option value="Certificate">Certificate</option>
-                                <option value="Diploma">Diploma</option>
-                                <option value="Bachelor’s Degree">Bachelor’s Degree</option>
-                                <option value="Honours Degree">Honours Degree</option>
-                                <option value="Master’s Degree">Master’s Degree</option>
-                                <option value="PhD">PhD</option>
-                                <option value="Professional Certification">Professional Certification</option>
+                                <option value="NQF Level 1">NQF Level 1</option>
+                                <option value="NQF Level 2">NQF Level 2</option>
+                                <option value="NQF Level 3">NQF Level 3</option>
+                                <option value="NQF Level 4">Grade 12</option>
+                                <option value="NQF Level 5">Higher Certificate</option>
+                                <option value="NQF Level 6">Diploma</option>
+                                <option value="NQF Level 7">Degree</option>
+                                <option value="NQF Level 8">Master's</option>
+                                <option value="NQF Level 9">Honors</option>
+                                <option value="NQF Level 10">Doctorate</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label for="field-of-study" class="form-label">Field of Study</label>
                             <select class="form-control" id="field-of-study" name="field-of-study" required>
-                                <option value="">Field of Study</option>
-                                <option value="Advertising">Advertising</option>
-                                <option value="Film and electronic Media">Film and electronic Media</option>
-                                <option value="Electronics">Electronics</option>
-                                <option value="Information Technology">Information Technology</option>
-                                <option value="Telecommunications">Telecommunications</option>
+                                <option value="">Select Field of Study</option>
+                                <option value="Agricultural Science">Agricultural Science</option>
+                                <option value="Architecture & Built Environment">Architecture & Built Environment</option>
+                                <option value="Arts & Design">Arts & Design</option>
+                                <option value="Business & Economics">Business & Economics</option>
+                                <option value="Communications & Media">Communications & Media</option>
+                                <option value="Education">Education</option>
+                                <option value="Engineering & Technology">Engineering & Technology</option>
+                                <option value="Health Sciences">Health Sciences</option>
+                                <option value="Law">Law</option>
+                                <option value="Mathematics & Statistics">Mathematics & Statistics</option>
+                                <option value="Natural Sciences">Natural Sciences</option>
+                                <option value="Social Sciences & Humanities">Social Sciences & Humanities</option>
+                                <option value="Sports & Recreation">Sports & Recreation</option>
+                                <option value="Tourism & Hospitality">Tourism & Hospitality</option>
+                                <option value="Other">Other</option>
                             </select>
-                
+                        </div>
+
+                        <!-- Textbox for entering other field of study -->
+                        <div class="form-group" id="other-field-of-study-field" style="display:none;">
+                            <label for="other-field-of-study" class="form-label">Other Field of Study</label>
+                            <input type="text" class="form-control" id="other-field-of-study" name="other-field-of-study" placeholder="Enter field of study">
                         </div>
 
                         <div class="form-group">
                             <label for="institution" class="form-label">Institution</label>
-                            <input type="text" class="form-control" id="institution" name="institution" required>
+                            <select class="form-control" id="institution" name="institution" required>
+                                <option value="">Select Institution</option>
+                                <!-- South African Universities Dropdown Options in Alphabetical Order -->
+                                <option value="Cape Peninsula University of Technology">Cape Peninsula University of Technology</option>
+                                <option value="Central University of Technology">Central University of Technology</option>
+                                <option value="Durban University of Technology">Durban University of Technology</option>
+                                <option value="Mangosuthu University of Technology">Mangosuthu University of Technology</option>
+                                <option value="Nelson Mandela Metropolitan University">Nelson Mandela Metropolitan University</option>
+                                <option value="North-West University">North-West University</option>
+                                <option value="Rhodes University">Rhodes University</option>
+                                <option value="Sefako Makgatho Health Sciences University">Sefako Makgatho Health Sciences University</option>
+                                <option value="Stellenbosch University">Stellenbosch University</option>
+                                <option value="Tshwane University of Technology">Tshwane University of Technology</option>
+                                <option value="University of Cape Town">University of Cape Town</option>
+                                <option value="University of Fort Hare">University of Fort Hare</option>
+                                <option value="University of Johannesburg">University of Johannesburg</option>
+                                <option value="University of KwaZulu-Natal">University of KwaZulu-Natal</option>
+                                <option value="University of Limpopo">University of Limpopo</option>
+                                <option value="University of Mpumalanga">University of Mpumalanga</option>
+                                <option value="University of Pretoria">University of Pretoria</option>
+                                <option value="University of South Africa">University of South Africa</option>
+                                <option value="University of the Free State">University of the Free State</option>
+                                <option value="University of the Western Cape">University of the Western Cape</option>
+                                <option value="University of the Witwatersrand">University of the Witwatersrand</option>
+                                <option value="University of Venda">University of Venda</option>
+                                <option value="University of Zululand">University of Zululand</option>
+                                <option value="Vaal University of Technology">Vaal University of Technology</option>
+                                <option value="Walter Sisulu University for Technology and Science">Walter Sisulu University for Technology and Science</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Textbox for entering other institution -->
+                        <div class="form-group" id="other-institution-field" style="display:none;">
+                            <label for="other-institution" class="form-label">Other Institution</label>
+                            <input type="text" class="form-control" id="other-institution" name="other-institution" placeholder="Enter institution name">
                         </div>
 
                         <div class="form-group">
@@ -101,31 +155,73 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label for="year-obtained" class="form-label">Year Obtained</label>
-                            <input type="number" class="form-control" id="year-obtained" name="year_obtained" placeholder="e.g., 2020" min="1000" max="9999" required>
+                        <!-- Year Started Input -->
+                        <div class="form-group" id="year-started-group">
+                            <label for="year-started" class="form-label">Year Started</label>
+                            <input type="number" class="form-control" id="year-started" name="year_started" placeholder="e.g., 2020" min="1000" max="9999">
                         </div>
 
+                                               <!-- Year Obtained Input -->
+                                               <div class="form-group" id="year-obtained-group">
+                                                <label for="year-obtained" class="form-label">Year Obtained</label>
+                                                <input type="number" class="form-control" id="year-obtained" name="year_obtained" placeholder="e.g., 2020" min="1000" max="9999">
+                                            </div>
                     
-
-                        <div class="form-group">
-                            <label for="upload-documents" class="form-label">Upload Transcript</label>
-                            <input type="file" class="form-control-file" id="upload-documents" name="upload-documents" accept=".pdf,.jpg,.jpeg,.png">
+                                            <div class="form-group">
+                                                <label for="upload-documents" class="form-label">Upload Transcript</label>
+                                                <input type="file" class="form-control-file" id="upload-documents" name="upload-documents" accept=".pdf,.jpg,.jpeg,.png">
+                                            </div>
+                    
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save Qualification</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save Qualification</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-{% endblock %}
+                    </div>
+                    
+                    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                    
+                    <script>
+                    // Show or hide "Other" field of study textbox
+                    document.getElementById('field-of-study').addEventListener('change', function() {
+                        var otherFieldOfStudyField = document.getElementById('other-field-of-study-field');
+                        if (this.value === 'Other') {
+                            otherFieldOfStudyField.style.display = 'block';
+                        } else {
+                            otherFieldOfStudyField.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show or hide "Other" institution textbox
+                    document.getElementById('institution').addEventListener('change', function() {
+                        var otherInstitutionField = document.getElementById('other-institution-field');
+                        if (this.value === 'Other') {
+                            otherInstitutionField.style.display = 'block';
+                        } else {
+                            otherInstitutionField.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show or hide Year Obtained/Year Started based on Qualification Status
+                    document.getElementById('qualification-status').addEventListener('change', function() {
+                        var yearStartedGroup = document.getElementById('year-started-group');
+                        var yearObtainedGroup = document.getElementById('year-obtained-group');
+                        if (this.value === 'In Progress') {
+                            yearStartedGroup.style.display = 'block';
+                            yearObtainedGroup.style.display = 'none';
+                        } else {
+                            yearStartedGroup.style.display = 'none';
+                            yearObtainedGroup.style.display = 'block';
+                        }
+                    });
+                    </script>
+                    
+                    {% endblock %}
+                    
