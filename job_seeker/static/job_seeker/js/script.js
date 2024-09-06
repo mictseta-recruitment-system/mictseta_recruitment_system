@@ -202,8 +202,8 @@
     }
 
 
-function uploadDocument(d_type) {
- 
+function uploadDocument(d_type, event) {
+   event.preventDefault(); 
     if(d_type === 'license'){
       const form = document.getElementById('license-upload-form');
       formData = new FormData(form);
@@ -228,12 +228,10 @@ function uploadDocument(d_type) {
     })
     .then(response => response.json())
     .then(data => {
-      if (data.errors) {
-                handleErrors(data.errors);
-              }
+    
         if (data.status === 'success') {
             showFlashMessage('document uploaded successfully ', "success");
-            location.reload()
+        
         } else {
           
             showFlashMessage('Error uploading document: ' + JSON.stringify(data.errors), "danger");

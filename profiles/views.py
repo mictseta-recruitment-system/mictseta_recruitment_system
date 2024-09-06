@@ -17,6 +17,11 @@ from authenticate.data_validator import ValidateIdNumber
 from django.contrib.auth.hashers import make_password
 from datetime import datetime
 from django.utils.timezone import now
+
+from PIL import Image
+from PyPDF2 import PdfReader
+import mimetypes
+import io
 # Create your views here.
 
 @ensure_csrf_cookie
@@ -249,32 +254,60 @@ def update_address_info(request):
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
+ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg','pdf']
 
 def allowed_file(filename):
+    print("----++--")
+    print(filename)
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@ensure_csrf_cookie
-def upload_supporting_document(request):
-    if request.method == 'POST':
+def rename_document(filename, file_type, req):
+    filename = f"{req.user.profile.idnumber}-{file_type}" + "." + filename.rsplit('.', 1)[1].lower()
+    return filename
 
+def upload_supporting_document(request):
+    
+    if request.method == 'POST':
         try:
             document = request.FILES['document']
             document_type = request.POST['type']
-            
-            print(request.POST)
-                        # return JsonResponse({'errors': {'file' :['Bad Request']}, 'status': 'error'}, status=400)
         except Exception as e:
-            return JsonResponse({'errors': f'{e}', 'status': 'error'}, status=400)
-        try:
-            if not document or document.name == '':
-                return JsonResponse({'errors':'No selected file', 'status': 'error'}, status=400)
-            if not document and not allowed_file(document.filename):
-                return JsonResponse({'errors':'File type not allowed', 'status': 'error'}, status=400)
-            # Verify that this is a valid image
-            # If user does not select a file, the browser submits an empty file without a filename
+            return JsonResponse({'errors': 'No selected file', 'status': 'error'}, status=400)
+        try: 
+            max_file_size = 3 * 1024 * 1024  # 3 MB in bytes
+            if document.size > max_file_size:
+                return JsonResponse({'errors': 'File size exceeds 3 MB limit', 'status': 'error'}, status=400)
+            # Verify if file is an image or PDF
+            allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
+            mime_type, _ = mimetypes.guess_type(document.name)
+
+            if mime_type not in allowed_mime_types:
+                return JsonResponse({'errors': 'Only image or PDF files are allowed', 'status': 'error'}, status=400)
+
+            # Verify the file format for images and PDFs
             try:
-               
+                if mime_type.startswith('image/'):
+                    # Verify the image file format
+                    img = Image.open(document)
+                    img.verify()  # Verifies that the image is valid
+                elif mime_type == 'application/pdf':
+                    # Verify the PDF file format
+                    pdf = PdfReader(io.BytesIO(document.read()))
+                    if pdf.numPages < 1:  # If no pages, it's not a valid PDF
+                        raise ValueError('Invalid PDF file')
+                else:
+                    return JsonResponse({'errors': 'Unsupported file format', 'status': 'error'}, status=400)
+            except Exception as e:
+                return JsonResponse({'errors': f'File format verification failed: {str(e)}', 'status': 'error'}, status=400)
+
+            if allowed_file(document.name) == False: 
+                return JsonResponse({'errors':'File type not allowed', 'status': 'error'}, status=400)
+            try:
+                exists = SupportingDocuments.objects.filter()
+                document.name = rename_document(document.name, document_type,request)
+                exists = SupportingDocuments.objects.filter(document="static/supportindocuments/documents/"+document.name,document_type=document_type).exists()
+                if exists:
+                    return JsonResponse({'errors': 'Document Already Exists', 'status': 'error'}, status=400)
                 supporting_document = SupportingDocuments.objects.create(user=request.user,document=document, document_type=document_type) 
                 supporting_document.save()
                 return JsonResponse({'message': 'Image uploaded successfully', 'status': 'success'}, status=201)
@@ -284,6 +317,28 @@ def upload_supporting_document(request):
             return JsonResponse({'errors': 'Invalid image file', 'status': 'error'}, status=400)
         else:
             return JsonResponse({'errors': form.errors, 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+
+@ensure_csrf_cookie
+def delete_supporting_document(request, document_id):
+    if request.method == 'GET':
+        try:
+            # Get the document instance
+            supporting_document = SupportingDocuments.objects.get(id=document_id, user=request.user)
+            
+            # Delete the file from the filesystem or cloud storage
+            supporting_document.document.delete()  # This handles deletion from storage
+            
+            # Optionally, delete the record from the database
+            supporting_document.delete()
+
+            docs = SupportingDocuments.objects.filter(user=request.user)
+            return render(request, 'supporting_documents.html',{"docs":docs})
+        
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+
     return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
 
 @csrf_protect
