@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'job_seeker',
     'task_manager',
     'easyaudit',
+    'rest_api',
+    'rest_framework',
     
 ]
 
