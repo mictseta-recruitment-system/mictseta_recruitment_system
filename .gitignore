@@ -5,3 +5,8 @@ __pycache__/
 *.pyc
 virtualenv/
 venv/
+/dashboard/__pycache__
+/jobs/migrations/__pycache__
+/jobs/migrations/__pycache__
+/users/__pycache__
+/users/__pycache__

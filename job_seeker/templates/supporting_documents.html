@@ -6,35 +6,13 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
     .content-section {
-        padding: 2rem;
+        padding: 0px;
     }
     
-    .form-group input[type="file"] {
-        display: none;
+    .form-group input, .form-group select {
+        border-radius: 0;
     }
-    
-    .form-group label {
-        font-weight: bold;
-    }
-    
-    .radio-group {
-        margin-bottom: 1rem;
-    }
-    
-    .file-preview {
-        margin-top: 1rem;
-        border: 1px solid #ddd;
-        padding: 1rem;
-        border-radius: 0.25rem;
-        background-color: #f8f9fa;
-    }
-    
-    .file-preview img {
-        max-width: 100%;
-        height: auto;
-    }
-    
-    .btn-block {
+    .form-group button {
         border-radius: 0;
     }
 </style>
@@ -42,78 +20,25 @@
 <div id="supporting-documents" class="content-section active">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Supporting Documents</li>
+          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Supporting Documents</li>
         </ol>
-    </nav>
+      </nav>
+    <form class="mt-4">
+        <div class="form-group">
+            <label for="drivers-license">Driver's License</label>
+            <input type="file" class="form-control-file" id="drivers-license" name="drivers-license">
+        </div>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="file" class="form-control-file" id="id" name="id">
+        </div>
+        <div class="form-group">
+            <label for="passport">Passport</label>
+            <input type="file" class="form-control-file" id="passport" name="passport">
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Documents</button>
+    </form>
+</div>
 
-    <div class="container">
-        <form class="mt-4" id="supporting-documents-form">
-            <div class="form-group">
-                <label for="document-type">Select Document Type</label>
-                <div class="radio-group">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="documentType" id="drivers-license-radio" value="drivers-license" checked>
-                        <label class="form-check-label" for="drivers-license-radio">
-                            Driver's License
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="documentType" id="id-radio" value="id">
-                        <label class="form-check-label" for="id-radio">
-                            ID
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="documentType" id="passport-radio" value="passport">
-                        <label class="form-check-label" for="passport-radio">
-                            Passport
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <input type="file" class="form-control-file" id="drivers-license" name="drivers-license" accept=".pdf,.jpg,.jpeg,.png">
-                <input type="file" class="form-control-file" id="id" name="id" accept=".pdf,.jpg,.jpeg,.png">
-                <input type="file" class="form-control-file" id="passport" name="passport" accept=".pdf,.jpg,.jpeg,.png">
-            </div>
-            <div class="file-preview" id="file-preview">
-                <p>No file selected</p>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Upload Document</button>
-        </form>
-    </div>
-
-    <script>
-        document.getElementById('supporting-documents-form').addEventListener('change', function(event) {
-            const selectedType = document.querySelector('input[name="documentType"]:checked').value;
-            document.querySelectorAll('.form-control-file').forEach(input => {
-                input.style.display = 'none'; // Hide all file inputs
-            });
-            document.getElementById(selectedType).style.display = 'block'; // Show selected file input
-            
-            // Update file preview
-            const fileInput = document.getElementById(selectedType);
-            const filePreview = document.getElementById('file-preview');
-            filePreview.innerHTML = ''; // Clear previous preview
-            
-            fileInput.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const fileType = file.type.split('/')[0];
-                        if (fileType === 'image') {
-                            filePreview.innerHTML = `<img src="${e.target.result}" alt="File Preview">`;
-                        } else {
-                            filePreview.innerHTML = `<p>${file.name}</p>`;
-                        }
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    filePreview.innerHTML = '<p>No file selected</p>';
-                }
-            });
-        });
-    </script>
 {% endblock %}
