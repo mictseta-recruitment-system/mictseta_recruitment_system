@@ -41,7 +41,6 @@ def update_user_profile(request):
                 json_data = json.loads(request.body)
             except Exception :
                 return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-            print(json_data)
             data = {
                 'linkedin_profile' : json_data.get('linkedin_profile'),
                 'personal_website' : json_data.get('personal_website'),
@@ -59,7 +58,6 @@ def update_user_profile(request):
                 # 'r_idnum' : f'{request.user.profile.idnumber}'
             }
             shallow_copy = data.copy()
-            print(data)
             for key,value in shallow_copy.items():
                 if value == "" or value == " " or value=='None':
                     shallow_copy[key] = "empty"
@@ -76,7 +74,7 @@ def update_user_profile(request):
                 
                 try :
                     user = User.objects.get(id=request.user.id)
-                    print(user)
+              
                     user.username = data['idnumber']
                     user.first_name = data['first_name']
                     user.last_name = data['last_name']
@@ -94,8 +92,6 @@ def update_user_profile(request):
                     user.profile.dob = ValidateIdNumber(data['idnumber']).get_gender()
                     user.profile.save()
                     user.save()
-                    print("======================")
-                    print(user.profile.phone)
                     return JsonResponse({'message':f'User profile for {user.username} is updated successfuly', 'status':'success'}, status=201) 
                 except Exception as e:
                     return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
@@ -234,7 +230,6 @@ def update_address_info(request):
                     return JsonResponse({"message":"update personal information success"})
                 except IntegrityError:
                     address_information = AddressInformation.objects.get(user_id=request.user.id)
-                    print(address_information)
                     address_information.street_address_line = address_data['street_address_line']
                     address_information.street_address_line1 = address_data['street_address_line1']
                     address_information.city = address_data['city']
@@ -242,7 +237,6 @@ def update_address_info(request):
                     address_information.postal_code = address_data['postal_code']
                    
                     address_information.save()
-                    print('=========done=========')
                     return JsonResponse({"message":"update personal information success", "status":"success"}, status=200)
                 except Exception as e: 
                     return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
@@ -257,8 +251,6 @@ def update_address_info(request):
 ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg','pdf']
 
 def allowed_file(filename):
-    print("----++--")
-    print(filename)
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def rename_document(filename, file_type, req):
@@ -348,8 +340,6 @@ def upload_profile_image(request):
         try:
             image = request.FILES['image']
             empID =  request.POST['empID']
-            print(request.POST)
-            print(empID)
             # return JsonResponse({'errors': {'file' :['Bad Request']}, 'status': 'error'}, status=400)
         except Exception as e:
             return JsonResponse({'errors': f'{e}', 'status': 'error'}, status=400)
@@ -378,7 +368,6 @@ def upload_profile_image(request):
                     files = user_profile_image.image.path.split('/')
                     files[-1] = filename
                     file_to_delete = '/'.join(files)
-                    print(file_to_delete)
                     if os.path.isfile(file_to_delete):
                         os.remove(file_to_delete)
 

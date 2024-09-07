@@ -44,7 +44,7 @@
                     <label for="id">ID</label>
                     <input type="file" class="form-control-file" id="id" name="document">
                     <input type="text" class="form-control-file"  name="type" value="id" hidden >
-                     <button class="btn btn-warning mt-1 w-100 "onclick="uploadDocument( 'id')"> Upload</button>
+                     <button class="btn btn-warning mt-1 w-100 "onclick="uploadDocument( 'id', event)"> Upload</button>
                 </div>
             </form>
             <form id="passport-upload-form" method="POST" enctype="multipart/form-data" > 
@@ -53,7 +53,7 @@
                     <label for="passport">Passport</label>
                     <input type="file" class="form-control-file" id="passport" name="document">
                     <input type="text" class="form-control-file"  name="type" value="passport" hidden >
-                     <button class="btn btn-info mt-1 w-100 "onclick="uploadDocument( 'passport')"> Upload</button>
+                     <button class="btn btn-info mt-1 w-100 "onclick="uploadDocument( 'passport', event)"> Upload</button>
                 </div>
             </form>
         </div>
