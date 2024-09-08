@@ -13,7 +13,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.hashers import make_password
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str  
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect, ensure_csrf_cookie
 import json
 
 @csrf_exempt
@@ -57,6 +57,7 @@ def get_all_jobs(request):
     serializer = JobPostSerializer(open_jobs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
  
+@cssrf_protect
 @api_view(['POST'])
 @login_required
 def apply_for_job(request, jobID):
@@ -76,6 +77,7 @@ def apply_for_job(request, jobID):
     return Response({'message': 'Your Application was submitted successfully'}, status=status.HTTP_201_CREATED)
 import json
 
+@ensure_csrf_cookie
 @api_view(['POST'])
 def sign_in(request):
     if request.user.is_authenticated:
@@ -106,7 +108,7 @@ def sign_in(request):
     else:
         return Response({'errors': 'Invalid email or password', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
     
-
+@ensure_csrf_cookie
 @api_view(['POST'])
 def sign_up(request):
     if request.user.is_authenticated:
@@ -140,7 +142,7 @@ def sign_up(request):
 
     return Response({'message': f'User profile for {new_user.username} created successfully', 'status': 'success'}, status=status.HTTP_201_CREATED)
 
-
+@csrf_exempt
 @api_view(['POST'])
 def log_out(request):
     if request.user.is_authenticated:
