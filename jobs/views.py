@@ -107,7 +107,7 @@ def job_application(request, jobID):
 	
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
-	return 
+	
 
 
 
@@ -119,8 +119,6 @@ def add_job(request):
 		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
 			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
 				return HttpResponse("<h1>Request denied: you are on leave</h1>")
-
-
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -145,12 +143,11 @@ def add_job(request):
 					if " " in value:
 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
 			try:
-				
 				date_format = "%Y-%m-%d"
 				end_date = timezone.make_aware(datetime.strptime(data['end_date'], date_format))
-				# current_date =datime.now("%Y-%m-%d")
-				# if current_date >= end_date:
-				# 	return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
+				current_date =datime.now("%Y-%m-%d")
+				if current_date >= end_date:
+					return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
 			except:
 				return JsonResponse({'errors': {'Date':'Iconccerct data format try - DD:MMM:YYYY'}, 'status':'error'}, status=404)
    
@@ -186,7 +183,6 @@ def get_jobs(request):
 			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
 				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		jobs = JobPost.objects.all()
-
 		try:
 			jobs = serialize_job_post(jobs)
 		except Exception as e:
@@ -256,13 +252,10 @@ def add_job_acedemic(request):
 				'level'			:	json_data.get('level'),
 				'qualification'	:	json_data.get('qualification'),
 				'job_post_id'	:	json_data.get('job_post_id')
-
-				
 			}
 			for key, value in data.items():
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
-   
 			form = AddJobAcademicForm(data)
 			if form.is_valid():
 				exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
@@ -281,8 +274,7 @@ def add_job_acedemic(request):
 		else:
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
-		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
-				
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)		
 
 @csrf_protect
 def add_job_expereince(request):
@@ -304,7 +296,6 @@ def add_job_expereince(request):
 			for key, value in data.items():
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
-
 			form = AddJobExperienceForm(data)
 			if form.is_valid():
 				exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
@@ -344,7 +335,6 @@ def add_job_requirements(request):
 			for key, value in data.items():
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
-
 			form = AddJobRequirementForm(data)
 			if form.is_valid():
 				exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
@@ -493,12 +483,10 @@ def update_job_acedemic(request):
 				'qualification'	:	json_data.get('qualification'),
 				'job_academic_id'	:	json_data.get('job_academic_id')
 
-				
 			}
 			for key, value in data.items():
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
-   
 			form = AddJobAcademicForm(data)
 			if form.is_valid():
 				exists = Academic.objects.filter(id=int(data['job_academic_id'])).exists()

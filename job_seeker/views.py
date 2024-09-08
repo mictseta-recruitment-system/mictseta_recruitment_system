@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from jobs.models import JobPost, SkillValidation
-
+from profiles.models import SupportingDocuments
 # Create your views here.
 def job_seeker_dashboard(request):
     return render(request, 'job_seeker_dashboard.html')
@@ -31,7 +31,8 @@ def referees(request):
     return render(request, 'referees.html')
 
 def supporting_documents(request):
-    return render(request, 'supporting_documents.html')
+    docs = SupportingDocuments.objects.filter(user=request.user)
+    return render(request, 'supporting_documents.html',{"docs":docs})
 
 def job_details(request):
     job_list = JobPost.objects.filter(status='open')

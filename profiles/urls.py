@@ -10,7 +10,8 @@ urlpatterns = [
     path('update/address_information/', views.update_address_info, name='update_address_info'),
     path('update/language_information/', views.update_language, name='update_language'),
     path('update/skill_information/', views.update_skill, name='update_skill'),
-     path('update/upload_supporting_document/', views.upload_supporting_document, name='upload_supporting_document'),
+    path('update/upload_supporting_document/', views.upload_supporting_document, name='upload_supporting_document'),
+    path('delete/delete_supporting_document/<document_id>/', views.delete_supporting_document, name='delete_supporting_document'),
 
     path('update/upload_profile_image/', views.upload_profile_image, name='upload_profile_image'),
     path('update/update_staff/', views.update_staff, name='update_staff'),

@@ -35,6 +35,10 @@ def render_auth_page(request):
 		return redirect('home')
 	return render(request, "auth.html")
 
+@ensure_csrf_cookie
+def get_csrf_token():
+	return JsonResponse({'message': 'CSRF token returned successfully'})
+
 @csrf_protect
 def sign_in(request):
 	if request.user.is_authenticated:
@@ -56,11 +60,7 @@ def sign_in(request):
 		form = UserSignInForm(data)
 		if form.is_valid() :
 			user = User.objects.get(email=email)
-			print(user)
-			print(password)
-			print(user.password)
 			user = authenticate(request, username=user.username, password=password)
-			print(user)
 			if user is not None:
 				login(request, user)
 				if user.is_staff:
