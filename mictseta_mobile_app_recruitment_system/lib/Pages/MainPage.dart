@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_final_fields
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; 
 
 import 'MICSETAFeedback.dart';
 import 'ProfilePage.dart';
@@ -24,6 +27,49 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<Widget> _widgetOptions = [HomePage(), Notificationpage(), Profilepage()];
+ Future<void> _log_out() async {
+    // if (emailController.text.isEmpty && passwordController.text.isEmpty) {
+    //   showDialog(
+    //       context: context,
+    //       builder: (context) => AlertDialog(actions: [
+    //             Buttons(
+    //               onTap: () {
+    //                 Navigator.pop(context);
+    //               },
+    //               backgroundColor: Colors.white,
+    //               foregroundColor: Colors.red[300],
+    //               child: 'Retry',
+    //             ),
+    //           ], content: Text('Please provide your credentials ')));
+    //   return;
+    // }
+    showDialog(
+        context: context,
+        builder: (context) => Center(child: CircularProgressIndicator()));
+    var url = 'http://10.0.2.2:8000/rest_api/auth/log-out/';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          
+        },
+        body: jsonEncode({}),
+      );
+
+      if (response.statusCode == 200) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
+        print('Failed to apply: ${response.statusCode}');
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +155,7 @@ class _MainPageState extends State<MainPage> {
                   color: Colors.white,
                 ),
                 title: Text('Log Out', style: TextStyle(color: Colors.white)),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
+                onTap:_log_out,
               ),
             ],
           ),

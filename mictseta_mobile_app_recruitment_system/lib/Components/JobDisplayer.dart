@@ -9,8 +9,8 @@ class JobdisplayerPage extends StatelessWidget {
   final String jobDescription;
 
   final String jobDue;
-  final String date;
-  final Function onTap;
+  // final String date;
+  // final Function onTap;
   final String location;
 
   const JobdisplayerPage({
@@ -19,7 +19,8 @@ class JobdisplayerPage extends StatelessWidget {
     required this.jobDescription,
     required this.location,
     required this.jobDue,
-    required this.date, required this.onTap,
+    //required this.date,
+    // required this.onTap,
     // required this.icon
   });
 
@@ -62,6 +63,7 @@ class JobdisplayerPage extends StatelessWidget {
                       size: 16,
                       color: Colors.blue[900],
                     ),
+                    SizedBox(width: 3),
                     Text(
                       jobDue,
                       overflow: TextOverflow.ellipsis,
@@ -69,11 +71,11 @@ class JobdisplayerPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(
-                  date,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
+                // Text(
+                //   date,
+                //   overflow: TextOverflow.ellipsis,
+                //   maxLines: 1,
+                // ),
               ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -5,12 +5,17 @@ class Buttons extends StatelessWidget {
   final Function() onTap;
   final Color backgroundColor;
   final Color foregroundColor;
-  const Buttons({super.key, required this.child, required this.onTap, required this.backgroundColor, required this.foregroundColor});
+  const Buttons(
+      {super.key,
+      required this.child,
+      required this.onTap,
+      required this.backgroundColor,
+      required this.foregroundColor});
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      onPressed:onTap,
+      onPressed: onTap,
       style: ButtonStyle(
         minimumSize: WidgetStatePropertyAll(
           Size(double.infinity, 55),
