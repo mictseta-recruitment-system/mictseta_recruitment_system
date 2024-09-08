@@ -1401,6 +1401,7 @@ function toggleVisibility(divId) {
             // Hide all divs
             const divs = ['profileinformation', 'companyinformation','infopage', 'vacanciesc', 'supporrting_documents'];
             divs.forEach(function(id) {
+                console .log(id);
                 document.getElementById(id).style.display = 'none';
             });
 
@@ -1416,3 +1417,32 @@ function toggleVisibility(divId) {
         window.onload = function() {
             toggleVisibility(null);
         };*/
+
+function toggleV(divId) {
+            // Hide all divs
+            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved'];
+            divs.forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+                console .log(id);
+            });
+            // Show the selected div
+            const div = document.getElementById(divId);
+            console.log()
+            div.style.display = 'block';
+        }
+
+function handleItemClick(event) {
+
+  const items = document.querySelectorAll('#applicants li');
+  items.forEach(item => {
+    item.classList.remove('active');
+  });
+
+
+  event.currentTarget.classList.add('active');
+}
+
+
+document.querySelectorAll('#applicants li').forEach(item => {
+  item.addEventListener('click', handleItemClick);
+});
