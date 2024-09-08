@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile, ProfileImage
+from .models import Profile, ProfileImage, SupportingDocuments
 from authenticate.data_validator import *
 
 class UpdateProfileInformationForm(forms.Form):
@@ -212,8 +212,10 @@ class UpdateQualificationForm(forms.Form):
 	
 class UpdateLanguageForm(forms.Form):
 	language = forms.CharField(max_length=225)
-	proficiency = forms.CharField(max_length=225)
-	
+	reading_proficiency = forms.CharField(max_length=225)
+	writing_proficiency = forms.CharField(max_length=225)
+	speaking_proficiency = forms.CharField(max_length=225)
+
 	def validate_names(self,name):
 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
 		matches = re.findall(pattern, name)
@@ -231,9 +233,16 @@ class UpdateLanguageForm(forms.Form):
 		language = self.cleaned_data.get('language')
 		return self.validate_names(language)
 
-	def clean_proficiency(self):
-		proficiency = self.cleaned_data.get('proficiency')
-		return self.validate_names(proficiency)
+	def clean_writing_proficiency(self):
+		writing_proficiency = self.cleaned_data.get('writing_proficiency')
+		return self.validate_names(writing_proficiency)
+	def clean_reading_proficiency(self):
+		reading_proficiency = self.cleaned_data.get('reading_proficiency')
+		return self.validate_names(reading_proficiency)
+	def clean_speaking_proficiency(self):
+		speaking_proficiency = self.cleaned_data.get('speaking_proficiency')
+		return self.validate_names(speaking_proficiency)
+
 
 class UpdateSkillsForm(forms.Form):
 	skill = forms.CharField(max_length=225)
@@ -305,6 +314,11 @@ class ImageUploadForm(forms.ModelForm):
 	class Meta:
 		model = ProfileImage
 		fields = ['image']
+
+class DocumentUploadForm(forms.ModelForm):
+	class Meta:
+		model = SupportingDocuments
+		fields = ['document','document_type']
 
 
 

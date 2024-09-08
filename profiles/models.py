@@ -39,7 +39,10 @@ class Qualification(models.Model):
 class Language(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='languages')
 	language = models.CharField(max_length=225)
-	proficiency = models.CharField(max_length=225)
+	reading_proficiency = models.CharField(max_length=225)
+	writing_proficiency = models.CharField(max_length=225)
+	speaking_proficiency = models.CharField(max_length=225)
+	
 	def __str__(self):
 		return f"{self.user.email} Language and proficiency information"
 
@@ -86,6 +89,17 @@ class ProfileImage(models.Model):
 	uploaded_at = models.DateTimeField(auto_now_add=True)
 	def __str__(self):
 		return f"{self.user.email} Profile Image"
+
+
+
+class SupportingDocuments(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	document = models.ImageField(upload_to='static/supportindocuments/documents/')
+	uploaded_at = models.DateTimeField(auto_now_add=True)
+	document_type = models.CharField(max_length=225, null=False)
+	def __str__(self):
+		return f"{self.user.email} ID or Drivers Liscence or passport"
+
 
 	
 # =======================================================================================

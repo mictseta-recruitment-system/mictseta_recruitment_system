@@ -24,21 +24,34 @@
           <li class="breadcrumb-item active" aria-current="page">Supporting Documents</li>
         </ol>
       </nav>
-    <form class="mt-4">
+    <form class="mt-4 " id="license-upload-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="form-group">
             <label for="drivers-license">Driver's License</label>
-            <input type="file" class="form-control-file" id="drivers-license" name="drivers-license">
+            <input type="file" class="form-control-file" id="drivers-license" name="document">
+            <input type="text" class="form-control-file"  name="type" value="license" hidden >
+            <button class="btn btn-primary "onclick="uploadDocument( 'license')"> Upload</button>
         </div>
+    </form>
+    <form id="id-upload-form" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="form-group">
             <label for="id">ID</label>
-            <input type="file" class="form-control-file" id="id" name="id">
+            <input type="file" class="form-control-file" id="id" name="document">
+            <input type="text" class="form-control-file"  name="type" value="id" hidden >
+             <button class="btn btn-primary "onclick="uploadDocument( 'id')"> Upload</button>
         </div>
+    </form>
+    <form id="passport-upload-form" method="POST" enctype="multipart/form-data" > 
+        {% csrf_token %}
         <div class="form-group">
             <label for="passport">Passport</label>
-            <input type="file" class="form-control-file" id="passport" name="passport">
+            <input type="file" class="form-control-file" id="passport" name="document">
+            <input type="text" class="form-control-file"  name="type" value="passport" hidden >
+             <button class="btn btn-primary "onclick="uploadDocument( 'passport')"> Upload</button>
         </div>
-        <button type="submit" class="btn btn-primary">Upload Documents</button>
     </form>
+    
 </div>
 
 {% endblock %}

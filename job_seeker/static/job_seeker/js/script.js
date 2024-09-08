@@ -116,11 +116,15 @@
   function handle_update_language_button_click() {
        
         const language = document.getElementById("language").value;
-        const proficiency = document.getElementById("proficiency").value;
+        const reading = document.getElementById("reading").value;
+        const writing = document.getElementById("writing").value;
+        const speaking = document.getElementById("speaking").value;
         
         const language_information = {
             language : language,
-            proficiency : proficiency,
+            reading_proficiency : reading,
+            writing_proficiency : writing,
+            speaking_proficiency : speaking,
         };
         
         fetch("http://127.0.0.1:8000/profile/update/language_information/", {
@@ -196,6 +200,53 @@
             console.error("Error:", error);
           });
     }
+
+
+function uploadDocument(d_type) {
+ 
+    if(d_type === 'license'){
+      const form = document.getElementById('license-upload-form');
+      formData = new FormData(form);
+    }
+     if(d_type === 'id'){
+      const form = document.getElementById('id-upload-form');
+      formData = new FormData(form);
+    }
+     if(d_type === 'passport'){
+      const form = document.getElementById('passport-upload-form');
+      formData = new FormData(form);
+    }
+    
+    console.log(formData);
+
+    fetch('http://127.0.0.1:8000/profile/update/upload_supporting_document/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken') // Include CSRF token if needed
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.errors) {
+                handleErrors(data.errors);
+              }
+        if (data.status === 'success') {
+            showFlashMessage('document uploaded successfully ', "success");
+            location.reload()
+        } else {
+          
+            showFlashMessage('Error uploading document: ' + JSON.stringify(data.errors), "danger");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFlashMessage(error, "danger");
+    });
+}
+
+
+
     // Setting the auto Progress
     function updateProgress(percentage) {
       const progressCircle = document.querySelector('.progress-circle');

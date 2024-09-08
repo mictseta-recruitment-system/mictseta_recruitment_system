@@ -1,9 +1,13 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:mictseta_mobile_app_recruitment_system/Components/Buttons.dart';
 
 import 'MainPage.dart';
-import '../Sign up files/SignUpPage.dart'; 
+import '../Sign up files/SignUpPage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +19,51 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  Future<void> _sign_in(String email, String password) async {
+    if (emailController.text.isEmpty && passwordController.text.isEmpty) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(actions: [
+                Buttons(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color.fromARGB(255, 13, 72, 160),
+                  child: '',
+                ),
+              ], content: Text('Please provide your credentials ')));
+      return;
+    }
+    showDialog(
+        context: context,
+        builder: (context) => Center(child: CircularProgressIndicator()));
+    var url = 'http://10.0.2.2:8000/rest_api/auth/sign-in/';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          
+        },
+        body: jsonEncode({"email": email, "password": password}),
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        print(data['token']);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MainPage()));
+      } else {
+        Navigator.pop(context);
+        print('Failed to apply: ${response.statusCode}');
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: Column( 
+          child: Column(
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(125),
@@ -92,7 +141,9 @@ class _LoginPageState extends State<LoginPage> {
                 height: 10,
               ),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _sign_in(emailController.text, passwordController.text);
+                },
                 style: ButtonStyle(
                   minimumSize: WidgetStatePropertyAll(
                     Size(double.infinity, 55),
