@@ -259,6 +259,22 @@ def update_staff(request, staffID):
 	else:
 		return redirect('render_auth_page')
 
+def jobsekeer_details(request, seekerID):
+	if request.user.is_authenticated:
+		
+		seeker = User.objects.get(profile__uuid=seekerID)
+		if request.user.is_staff:
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+			print(seeker.profile.age)
+			print(seeker.profile.gender)
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len})
+		else:
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
 
 def employee_details(request, empID):
 	if request.user.is_authenticated:

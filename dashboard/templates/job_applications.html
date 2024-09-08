@@ -42,7 +42,7 @@
                             <td>{{application.job_id.job_type}}</td>
                             <td>{{application.date}}</td>
                             <td>{{application.status}}</td>
-                            <td> <button type="button" class="btn btn-primary">action</button> </td>
+                            <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}">View</a> </td>
                         </tr>
                         {% endfor %}
                       

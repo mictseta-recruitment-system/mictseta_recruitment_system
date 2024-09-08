@@ -1399,7 +1399,7 @@ function handleErrors(errors, jobID, spinner) {
 
 function toggleVisibility(divId) {
             // Hide all divs
-            const divs = ['profileinformation', 'companyinformation','infopage', 'vacanciesc', 'attendance'];
+            const divs = ['profileinformation', 'companyinformation','infopage', 'vacanciesc', 'supporrting_documents'];
             divs.forEach(function(id) {
                 document.getElementById(id).style.display = 'none';
             });
