@@ -95,7 +95,7 @@ def view_staff(request):
 def job_applications(request):
 	if request.user.is_authenticated:
 		applications = JobApplication.objects.all()
-		return render(request, 'job_applications.html', {'total':JobApplication, 'applications':applications})
+		return render(request, 'job_applications.html', {'applications':applications})
 	else:
 		return redirect('render_auth_page')
 
