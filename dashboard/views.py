@@ -95,9 +95,20 @@ def view_staff(request):
 def job_applications(request):
 	if request.user.is_authenticated:
 		applications = JobApplication.objects.all()
-		return render(request, 'job_applications.html', {'applications':applications})
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		print(applied_jobs)
+		return render(request, 'job_applications.html', {'applications':applications, 'applied_jobs':applied_jobs})
 	else:
 		return redirect('render_auth_page')
+@csrf_protect
+def filter_job_application(request,jobID):
+	if request.user.is_authenticated:
+		job_applications = JobApplication.objects.filter(job__id=jobID)
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs})
+	else:
+		return redirect('render_auth_page')
+
 
 @csrf_protect
 def add_job(request):

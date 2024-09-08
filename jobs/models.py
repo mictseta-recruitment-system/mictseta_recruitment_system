@@ -88,7 +88,7 @@ class Notification(models.Model):
 
 class JobApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="applications")
-    job_id = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, null=False)
 

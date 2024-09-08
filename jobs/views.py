@@ -110,7 +110,6 @@ def job_application(request, jobID):
 	
 
 
-
 @csrf_protect
 def add_job(request):
 	if request.user.is_authenticated:

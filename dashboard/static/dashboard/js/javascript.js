@@ -797,6 +797,43 @@ function deleteJob(jobID) {
     showFlashMessage(error.message, "danger");
   });
 }
+
+function FilterJob() {
+  const url = 'http://127.0.0.1:8000/job/filter_job_application/';
+  
+    const name = document.getElementById('filter_by').value;
+ fetch(url, { // Replace with your URL
+  method: 'POST',
+   headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken'),
+    },
+  body: JSON.stringify({
+    name: name,
+   
+  })
+})
+.then(response => {
+  // Check if the response is HTML by inspecting the Content-Type
+  if (response.headers.get('Content-Type').includes('text/html')) {
+    return response.text(); // Handle HTML content
+  } else {
+    throw new Error('Unexpected response type');
+  }
+})
+.then(html => {
+  // Replace the current page content with HTML
+  document.open();
+  document.write(html);
+  document.close();
+})
+.catch(error => {
+  console.error('There was a problem with your fetch operation:', error);
+});
+
+
+  
+}
 /*===================================END JOB FUNCTIONS  ===============================================================*/
  function addStaff(){
              const url = 'http://127.0.0.1:8000/profile/add/add_staff/';

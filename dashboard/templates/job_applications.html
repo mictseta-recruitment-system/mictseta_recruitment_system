@@ -8,14 +8,19 @@
  {% endblock %}
 
 {% block content %}
-<div class="input-group  mt-3  border border-info">
-  <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-    <option selected>Filter by job : </option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </select>
-  <button class="btn btn-info" type="button">Button</button>
+<div class="  mt-3 ">
+       <a href="{% url 'dashboard.job_applications' %}" class="btn btn-info m-1">filter by : ALL
+       </a>
+    {% for applied_job in applied_jobs %}
+
+      {% if applied_job.status == "closed" %}
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title}}</a>
+      {% else %}
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title}}
+       </a>
+      {% endif %}
+    {% endfor %}
+ 
 </div>
        <div class="row justify-content-center">
          <div class="col-9 mt-2">
@@ -35,7 +40,7 @@
                                   <th class="bg-dark text-white">ID No </th>
                                   <th class="bg-dark text-white">Job Title</th>
                                   <th class="bg-dark text-white">Job type</th>
-                                  <th class="bg-dark text-white">Status</th>
+                                  <th class="bg-dark text-white">Job status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
@@ -44,14 +49,20 @@
                           <tbody> 
                                
                           {% for application in applications %}
+                          {% if application.status == "pending" %}
                            <tr class="text-dark">
                               <td>{{application.user.profile.idnumber}}</td>
-                              <td>{{application.job_id.title}}</td>
-                              <td>{{application.job_id.job_type}}</td>
-                              <td>{{application.job_id.status}}</td>
+                              <td>{{application.job.title}}</td>
+                              <td>{{application.job.job_type}}</td>
+                              {% if application.job.status == 'closed' %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% else %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% endif %}
                               <td>{{application.date}}</td>
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1"><i class="fa fa-eye"> </i> view</a> <a class="btn btn-success p-1"><i class="fa fa-plus"> </i> interview</a></td>
                           </tr>
+                          {% endif%}
                               {% endfor %}                 
                           </tbody>
                           <tfoot>
@@ -82,7 +93,7 @@
                     <table id="shortlist-table" class="table table-striped table-hover" style="width:100%">
                           <thead>
                               <tr>
-                                  <th class="bg-dark text-white">ID No </th>
+                                  <th class="bg-dark text-white">ID No</th>
                                   <th class="bg-dark text-white">Job Title</th>
                                   <th class="bg-dark text-white">Job type</th>
                                   <th class="bg-dark text-white">Job Status</th>
@@ -94,14 +105,20 @@
                           <tbody> 
                                
                           {% for application in applications %}
+                          {% if application.status == "short_list" %}
                            <tr class="text-dark">
                               <td>{{application.user.profile.idnumber}}</td>
-                              <td>{{application.job_id.title}}</td>
-                              <td>{{application.job_id.job_type}}</td>
-                              <td>{{application.job_id.status}}</td>
+                              <td>{{application.job.title}}</td>
+                              <td>{{application.job.job_type}}</td>
+                              {% if application.job.status == 'closed' %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% else %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% endif %}
                               <td>{{application.date}}</td>
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-success p-1"><i class="fa fa-plus"></i> interview</a> <a class="btn btn-danger p-1"><i class="fa fa-trash"></i> </a></td>
                           </tr>
+                          {% endif %}
                               {% endfor %}                 
                           </tbody>
                           <tfoot>
@@ -145,14 +162,20 @@
                           <tbody> 
                                
                           {% for application in applications %}
+                          {% if application.status == "interview" %}
                            <tr class="text-dark">
                               <td>{{application.user.profile.idnumber}}</td>
-                              <td>{{application.job_id.title}}</td>
-                              <td>{{application.job_id.job_type}}</td>
+                              <td>{{application.job.title}}</td>
+                              <td>{{application.job.job_type}}</td>
                               <td>{{application.date}}</td>
-                              <td>{{application.status}}</td>
+                              {% if application.job.status == 'closed' %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% else %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% endif %}
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}">View</a> </td>
                           </tr>
+                          {% endif %}
                               {% endfor %}                 
                           </tbody>
                           <tfoot>
@@ -196,14 +219,20 @@
                           <tbody> 
                                
                           {% for application in applications %}
+                          {% if application.status == "on_hold" %}
                            <tr class="text-dark">
                               <td>{{application.user.profile.idnumber}} </td>
-                              <td>{{application.job_id.title}}</td>
-                              <td>{{application.job_id.job_type}}</td>
+                              <td>{{application.job.title}}</td>
+                              <td>{{application.job.job_type}}</td>
                               <td>{{application.date}}</td>
-                              <td>{{application.status}}</td>
+                              {% if application.job.status == 'closed' %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% else %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% endif %}
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}">View</a> </td>
                           </tr>
+                          {% endif %}
                               {% endfor %}                 
                           </tbody>
                           <tfoot>
@@ -247,14 +276,21 @@
                           <tbody> 
                                
                           {% for application in applications %}
+                          {% if application.status == "approved" %}
                            <tr class="text-dark">
                               <td>{{application.user.profile.idnumber}} </td>
-                              <td>{{application.job_id.title}}</td>
-                              <td>{{application.job_id.job_type}}</td>
+                              <td>{{application.job.title}}</td>
+                              <td>{{application.job.job_type}}</td>
                               <td>{{application.date}}</td>
-                              <td>{{application.status}}</td>
+                              {% if application.job.status == 'closed' %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% else %}
+                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
+                              {% endif %}
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}">View</a> </td>
+                          
                           </tr>
+                          {% endif %}
                               {% endfor %}                 
                           </tbody>
                           <tfoot>
@@ -281,7 +317,7 @@
 
 
          <div class="col-3 mt-4">
-           <div class="card p-3 shadow mb-5  rounded" s>
+           <div class="card p- shadow mb-5  rounded" >
       <div class="card-body">
         
       <ul id="applicants" class="list-group list-group-flush " style="cursor: pointer;">
