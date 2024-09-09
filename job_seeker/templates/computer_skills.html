@@ -4,6 +4,30 @@
 
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .content-section {
+        padding: 0px;
+    }
+    .form-group input, .form-group select {
+        border-radius: 0;
+    }
+    .form-group button {
+        border-radius: 0;
+    }
+    .proficiency-wrapper {
+        display: flex;
+        align-items: center;
+    }
+    .proficiency-wrapper input[type="range"] {
+        flex-grow: 1;
+    }
+    .proficiency-value {
+        margin-left: 10px;
+        width: 40px;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
 
 <div id="computer-skills" class="content-section active">
     <nav aria-label="breadcrumb">
@@ -13,48 +37,30 @@
         </ol>
     </nav>
     <form class="mt-4">
-        <div class="row">
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="skill1" class="col-sm-2 col-form-label">Computer Skill</label>
-                    <select class="form-control" id="skill1" name="skill1" onchange="toggleOtherSkill()">
-                        <option value="">Select a skill</option>
-                        <option value="Software Development">Software Development</option>
-                        <option value="Degrees & Certificates">Degrees & Certificates</option>
-                        <option value="Artificial Intelligence">Artificial Intelligence</option>
-                        <option value="Networking & Wireless">Networking & Wireless</option>
-                        <option value="SEO / SEM Marketing">SEO / SEM Marketing</option>
-                        <option value="Business Analysis">Business Analysis</option>
-                        <option value="Machine Learning">Machine Learning</option>
-                        <option value="Cybersecurity">Cybersecurity</option>
-                        <option value="Data Analysis">Data Analysis</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group" id="other-skill-group" style="display: none;">
-                    <label for="otherSkill">Please specify:</label>
-                    <input type="text" class="form-control" id="otherSkill" name="otherSkill">
-                </div>
-                <div class="form-group">
-                    <label for="proficiency">Proficiency Level:</label>
-                    <select id="level" class="form-control">
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="list-group">
-                    {% for skill in user.skills.all %}
-                    <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ skill.skill }}</h5>
-                            <span class="badge rounded-pill"><i class="fas fa-trash fa-2x text-danger"></i></span>
-                        </div>
-                        <small>{{ skill.level }}</small>
-                    </a>
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label for="skill1" class="col-form-label">Computer Skill</label>
+                <select class="form-control" id="skill1" name="skill1" onchange="toggleOtherSkill()">
+                    <option value="">Select a skill</option>
+                    {% for skill in computer_skills %}
+                        <option value="{{ skill.skill_name }}">{{ skill.skill_name }}</option>
                     {% endfor %}
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row" id="other-skill-group" style="display: none;">
+            <label for="otherSkill" class="col-sm-4 col-form-label">Specify Skill</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="otherSkill" name="otherSkill">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="proficiency1" class="col-sm-2 col-form-label">Proficiency Level</label>
+            <div class="col-sm-4">
+                <div class="proficiency-wrapper">
+                    <input type="range" class="form-control-range" id="proficiency1" name="proficiency1" min="1" max="10" value="5" oninput="updateProficiencyValue(1)">
+                    <span id="proficiencyValue1" class="proficiency-value">5</span>
                 </div>
             </div>
         </div>
@@ -64,6 +70,18 @@
             </div>
         </div>
     </form>
+
+    <div class="list-group mt-4">
+        {% for skill in user.skills.all %}
+        <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ skill.skill }}</h5>
+                <span class="badge rounded-pill"><i class="fas fa-trash fa-2x text-danger"></i></span>
+            </div>
+            <small>{{ skill.level }}</small>
+        </a>
+        {% endfor %}
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -79,6 +97,12 @@ function toggleOtherSkill() {
     } else {
         otherSkillGroup.style.display = 'none';
     }
+}
+
+function updateProficiencyValue(id) {
+    const slider = document.getElementById('proficiency' + id);
+    const output = document.getElementById('proficiencyValue' + id);
+    output.textContent = slider.value;
 }
 </script>
 

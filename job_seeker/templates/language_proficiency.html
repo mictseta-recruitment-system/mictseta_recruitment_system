@@ -17,17 +17,9 @@
                 <label for="language">Language:</label>
                 <select id="language" class="form-control">
                     <option value="">Select a language...</option>
-                    <option value="afrikaans">Afrikaans</option>
-                    <option value="english">English</option>
-                    <option value="isindebele">IsiNdebele</option>
-                    <option value="isixhosa">IsiXhosa</option>
-                    <option value="isizulu">IsiZulu</option>
-                    <option value="sesotho">Sesotho</option>
-                    <option value="sesothosa">Sesotho sa Leboa</option>
-                    <option value="setswana">Setswana</option>
-                    <option value="siswati">SiSwati</option>
-                    <option value="tshivenda">Tshivenda</option>
-                    <option value="xitsonga">Xitsonga</option>
+                    {% for lang in languages %}
+                        <option value="{{ lang.id }}">{{ lang.name }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -35,12 +27,9 @@
                 <label for="reading">Reading Proficiency level:</label>
                 <select id="reading" class="form-control">
                     <option value="">Choose an option</option>
-                    <option value="poor">Poor</option>
                     <option value="fair">Fair</option>
                     <option value="good">Good</option>
-                    <option value="fluent">Fluent</option>
-                    <option value="native">Native</option>
-                    <option value="expert">Expert</option>
+                    <option value="fluent">Very Good</option>
                 </select>
             </div>
 
@@ -48,12 +37,9 @@
                 <label for="writing">Writing Proficiency level:</label>
                 <select id="writing" class="form-control">
                     <option value="">Choose an option</option>
-                    <option value="poor">Poor</option>
                     <option value="fair">Fair</option>
                     <option value="good">Good</option>
-                    <option value="fluent">Fluent</option>
-                    <option value="native">Native</option>
-                    <option value="expert">Expert</option>
+                    <option value="fluent">Very Good</option>
                 </select>
             </div>
 
@@ -61,12 +47,9 @@
                 <label for="speaking">Speaking Proficiency level:</label>
                 <select id="speaking" class="form-control">
                     <option value="">Choose an option</option>
-                    <option value="poor">Poor</option>
                     <option value="fair">Fair</option>
                     <option value="good">Good</option>
-                    <option value="fluent">Fluent</option>
-                    <option value="native">Native</option>
-                    <option value="expert">Expert</option>
+                    <option value="fluent">Very Good</option>
                 </select>
             </div>
 
@@ -77,13 +60,13 @@
                 {% for language in user.languages.all %}
                   <a href="#" class="list-group-item list-group-item-action" aria-current="true">
                     <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">{{language.language}}</h5>
+                      <h5 class="mb-1">{{ language.language }}</h5>
                      <span class="badge rounded-pill"><i class="fas fa-trash fa-2x text-danger"></i></span>
                     </div>
                     
-                    <small>Reading: {{language.reading_proficiency}}</small><br>
-                    <small>Writing: {{language.writing_proficiency}}</small><br>
-                    <small>Speaking: {{language.speaking_proficiency}}</small>
+                    <small>Reading: {{ language.reading_proficiency }}</small><br>
+                    <small>Writing: {{ language.writing_proficiency }}</small><br>
+                    <small>Speaking: {{ language.speaking_proficiency }}</small>
                   </a>
               {% endfor %}
             </div>

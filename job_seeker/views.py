@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from jobs.models import JobPost, SkillValidation
+from jobs.models import JobPost, SkillList, LanguageList
 from profiles.models import SupportingDocuments
 # Create your views here.
 def job_seeker_dashboard(request):
@@ -14,15 +14,18 @@ def academic_qualifications(request):
     return render(request, 'academic_qualifications.html')
 
 def language_proficiency(request):
-    return render(request, 'language_proficiency.html')
+    languages = LanguageList.objects.all()  
+    return render(request, 'language_proficiency.html', {'languages': languages})
 
 def soft_skills(request):
-    skills = SkillValidation.objects.filter(category="soft")
+    soft_skills = SkillList.objects.filter(skill_type="Soft skills")
 
-    return render(request, 'soft_skills.html', {'skills':skills})
+    return render(request, 'soft_skills.html', {'soft_skills':soft_skills})
 
 def computer_skills(request):
-    return render(request, 'computer_skills.html')
+    computer_skills = SkillList.objects.filter(skill_type="Computer skills")
+    
+    return render(request, 'computer_skills.html', {'computer_skills': computer_skills})
 
 def working_experience(request):
     return render(request, 'working_experience.html')
