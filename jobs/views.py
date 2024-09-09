@@ -98,7 +98,7 @@ def jobs_home(request):
 def job_application(request, jobID):
 	if request.user.is_authenticated:
 		job = JobPost.objects.filter(id=jobID).first()
-		exists = JobApplication.objects.filter(user=request.user, job_id=job).exists()
+		exists = JobApplication.objects.filter(user=request.user, job=job).exists()
 		if exists:
 			return JsonResponse({'errors': {'Application' : ['Application already exists']}, 'status': 'error'}, status=400)
 		new_application = JobApplication.objects.create(user=request.user, job=job, status="pending")
