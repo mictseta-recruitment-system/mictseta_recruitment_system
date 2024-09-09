@@ -27,6 +27,7 @@ urlpatterns = [
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
     path('approve_interview/', views.approve_interview, name='approve_interview'),
     path('reject_interview/', views.reject_interview, name='reject_interview'),
+     path('purge/', views.purge, name='purge'),
 
 
 

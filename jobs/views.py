@@ -227,6 +227,25 @@ def approve_interview(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
+@csrf_protect
+def purge(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				applicants = JobApplication.objects.filter(job__status="closed")
+				for applicant in applicants:
+					applicant.delete()
+				return JsonResponse({'message': ' Applications Purged successfully', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
 @csrf_protect
 def reject_interview(request):
 	if request.user.is_authenticated:
