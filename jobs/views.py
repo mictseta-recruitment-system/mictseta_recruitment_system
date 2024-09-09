@@ -10,6 +10,7 @@ import re
 from datetime import datetime
 from django.utils.timezone import now
 from django.utils import timezone
+from .custom_decorators import check_leave, change_application_status
 
 
 # Create your views here.
@@ -96,12 +97,11 @@ def jobs_home(request):
 @csrf_protect
 def job_application(request, jobID):
 	if request.user.is_authenticated:
-		
 		job = JobPost.objects.filter(id=jobID).first()
 		exists = JobApplication.objects.filter(user=request.user, job_id=job).exists()
 		if exists:
 			return JsonResponse({'errors': {'Application' : ['Application already exists']}, 'status': 'error'}, status=400)
-		new_application = JobApplication.objects.create(user=request.user, job_id=job, status="pending")
+		new_application = JobApplication.objects.create(user=request.user, job=job, status="pending")
 		new_application.save()
 		return JsonResponse({'message': 'Job Application submitted successfully', 'status': 'success'}, status=201)
 	
@@ -109,15 +109,10 @@ def job_application(request, jobID):
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 	
 
-
+@check_leave
 @csrf_protect
 def add_job(request):
 	if request.user.is_authenticated:
-
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -142,13 +137,14 @@ def add_job(request):
 					if " " in value:
 						return JsonResponse({'errors':{f'{key}':['spaces not allowed']}, 'status':'error'}, status=404)
 			try:
+
 				date_format = "%Y-%m-%d"
-				end_date = timezone.make_aware(datetime.strptime(data['end_date'], date_format))
-				current_date =datime.now("%Y-%m-%d")
+				end_date = datetime.strptime(data['end_date'], date_format)
+				current_date =datetime.now(None)
 				if current_date >= end_date:
 					return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
-			except:
-				return JsonResponse({'errors': {'Date':'Iconccerct data format try - DD:MMM:YYYY'}, 'status':'error'}, status=404)
+			except Exception as e:
+				return JsonResponse({'errors': {'Date':f'{e}'}, 'status':'error'}, status=404)
    
 			form = AddJobForm(data)
 			if form.is_valid():
@@ -174,32 +170,89 @@ def add_job(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
 @csrf_protect
 def get_jobs(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		jobs = JobPost.objects.all()
 		try:
 			jobs = serialize_job_post(jobs)
 		except Exception as e:
 			return JsonResponse({'errors': {'serialize' : [f'{e}']}, 'status': 'error'}, status=401)
-
 		return JsonResponse({'message': 'Job Lists fetched','jobs':jobs, 'status': 'success'}, status=201)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
+@csrf_protect
+def move_to_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			try:
+				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
+				applicant.status = "interview"
+				applicant.save()
+				return JsonResponse({'message': f'{applicant.user.email} moved to interview stage', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+@check_leave
+@csrf_protect
+def approve_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			try:
+				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
+				applicant.status ="approved"
+				applicant.save()
+				return JsonResponse({'message': f'{applicant.user.email} Application is approved', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+@csrf_protect
+def reject_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			try:
+				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
+				applicant.status ="rejected"
+				applicant.save()
+				return JsonResponse({'message': f'{applicant.user.email} Application is rejected', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
 
+@check_leave
 @csrf_protect
 def add_job_skill(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -234,14 +287,10 @@ def add_job_skill(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
-
+@check_leave
 @csrf_protect
 def add_job_acedemic(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -275,13 +324,10 @@ def add_job_acedemic(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)		
 
+@check_leave
 @csrf_protect
 def add_job_expereince(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -315,13 +361,10 @@ def add_job_expereince(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
 @csrf_protect				
 def add_job_requirements(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -355,13 +398,10 @@ def add_job_requirements(request):
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
 #=============================================================================================================================================
+@check_leave
 @csrf_protect
 def update_job(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -389,8 +429,9 @@ def update_job(request):
 			try:
 				date_format = "%Y-%m-%d"
 				end_date = datetime.strptime(data['end_date'], date_format)
-				# if current_date >= end_date:
-				# 	return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
+				current_date =datetime.now(None)
+				if current_date >= end_date:
+					return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
 			except:
 				return JsonResponse({'errors': {'Date':['Iconccerct data format try - MM:DD:YYYY']}, 'status':'error'}, status=404)
    
@@ -425,13 +466,10 @@ def update_job(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
 @csrf_protect
 def update_job_skill(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -580,13 +618,10 @@ def update_job_requirements(request):
 
 
 #==============================================================================================================================================================================
+@check_leave
 @csrf_protect
 def delete_job(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -617,13 +652,10 @@ def delete_job(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
 @csrf_protect
 def delete_job_skill(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -656,13 +688,10 @@ def delete_job_skill(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400).objects.filter(title=data['title'], industry=data['industry'], company_name=data['company_name']).exists()
 
+@check_leave
 @csrf_protect
 def delete_job_acedemic(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -693,13 +722,10 @@ def delete_job_acedemic(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
 @csrf_protect
 def delete_job_expereince(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -730,13 +756,10 @@ def delete_job_expereince(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
 @csrf_protect				
 def delete_job_requirements(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -768,14 +791,10 @@ def delete_job_requirements(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
-
+@check_leave
 @csrf_protect	
 def complete_job(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)
@@ -807,14 +826,10 @@ def complete_job(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
-
+@check_leave
 @csrf_protect	
 def approve_job(request):
 	if request.user.is_authenticated:
-		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		if request.method == 'POST':
 			try:
 				json_data = json.loads(request.body)

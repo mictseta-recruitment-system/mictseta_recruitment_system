@@ -13,6 +13,7 @@ from task_manager.models import Category, Task
 import json
 from django.db.models import Q
 from easyaudit.models import CRUDEvent, LoginEvent
+from jobs.custom_decorators import check_leave, change_application_status
 
 @ensure_csrf_cookie
 def panel(request):
@@ -91,6 +92,7 @@ def view_staff(request):
 	else:
 		return redirect('render_auth_page')
 
+@change_application_status
 @csrf_protect
 def job_applications(request):
 	if request.user.is_authenticated:
@@ -100,6 +102,7 @@ def job_applications(request):
 		return render(request, 'job_applications.html', {'applications':applications, 'applied_jobs':applied_jobs})
 	else:
 		return redirect('render_auth_page')
+
 @csrf_protect
 def filter_job_application(request,jobID):
 	if request.user.is_authenticated:
@@ -142,6 +145,7 @@ def update_job(request):
 	else:
 		return redirect('render_auth_page')
 
+@change_application_status
 @csrf_protect
 def view_jobs(request):
 	if request.user.is_authenticated:

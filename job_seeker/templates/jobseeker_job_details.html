@@ -14,7 +14,7 @@
 <div class="card">
   <div class="card-header">
     <!-- Filter Form -->
-<form method="GET" action="{% url 'job_details' %}">
+<form method="GET">
     <div class="filter-options">
         <label for="job_type">Job Type:</label>
         <select id="job_type" name="job_type">
@@ -59,7 +59,7 @@
   <div class="card-body">
     <!-- Job Details List -->
         <div class="job-details">
-          <a href="{% url 'job_information' %}" class="card-link" disabled>see more</a>
+          <a href="" class="card-link" disabled>see more</a>
             {% if job_list %}
                 {% for job in job_list %}
                    <div class="card mt-5 ">
