@@ -41,7 +41,6 @@ class Academic(models.Model):
         return f'Academic for {self.job_post.title} - {self.level} at {self.institution}'
 
 
-
 class Experience(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='experiences')
     name = models.CharField(max_length=225, unique=False, null=False)
@@ -59,16 +58,6 @@ class Notification(models.Model):
     is_seen = models.BooleanField(null=False, default=False)
     def __str__(self):
         return f'Notification for {self.job_title} Job Vacancy'
-# class Requirement(models.Model):
-#     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
-#     cv = models.BooleanField(default=False, null=False)
-#     proof_of_residence = models.BooleanField(default=False, null=False)
-#     id_copy = models.BooleanField(default=False, null=False)
-#     other_documents = models.BooleanField(null=True)  # Added field for other documents
-
-#     def __str__(self):
-#         return f'Requirements for {self.job_post.title} Job Post'
-
 
 class JobApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="applications")
@@ -107,3 +96,4 @@ class VacancyLanguage(models.Model):
     vacancy = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     language = models.ForeignKey(LanguageList, on_delete=models.CASCADE)
     proficiency_required = models.CharField(max_length=10, choices=UserLanguage.PROFICIENCY_CHOICES)
+
