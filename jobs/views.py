@@ -305,7 +305,7 @@ def set_interview(request):
 						"start_time" : json_data.get('start_time'),
 						"end_time": json_data.get('end_time')
 				}
-				print(data)
+			
 			except Exception:
 				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
 			
@@ -319,10 +319,14 @@ def set_interview(request):
 				if current_date >= end_date:
 					return JsonResponse({'errors': {'Date':'Interview date cannot older than the current date'}, 'status':'error'}, status=404)
 				time_format = "%H:%M"
+				
 				start_time = datetime.strptime(data['start_time'], time_format)
 				end_time = datetime.strptime(data['end_time'], time_format)
-				start_datetime = datetime.combine(date, start_time.time())
-				end_datetime = datetime.combine(date, end_time.time())
+				print(data)
+				start_datetime = datetime.combine(end_date, start_time.time())
+				print(data)
+				end_datetime = datetime.combine(end_date, end_time.time())
+				print(data)
 				if start_datetime > end_datetime:
 					return JsonResponse({'errors': {'Time': 'Interview start time must be earlier than the end time'},'status': 'error'},status=404)
 			except Exception as e:
@@ -376,8 +380,8 @@ def reschedule_interview(request):
 				time_format = "%H:%M"
 				start_time = datetime.strptime(data['start_time'], time_format)
 				end_time = datetime.strptime(data['end_time'], time_format)
-				start_datetime = datetime.combine(date, start_time.time())
-				end_datetime = datetime.combine(date, end_time.time())
+				start_datetime = datetime.combine(end_date, start_time.time())
+				end_datetime = datetime.combine(end_date, end_time.time())
 				if start_datetime > end_datetime:
 					return JsonResponse({'errors': {'Time': 'Interview start time must be earlier than the end time'},'status': 'error'},status=404)
 

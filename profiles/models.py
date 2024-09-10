@@ -8,7 +8,7 @@ import uuid
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     idnumber = models.CharField(max_length=13, unique=True)
-    phone = models.CharField(max_length=10, unique=True, null=True, default=" ")
+    phone = models.CharField(max_length=10, null=True, default=" ")
     dob = models.CharField(max_length=6,null=False )
     gender = models.CharField(max_length=6, null=False)
     age = models.CharField(max_length=6, null=False)
