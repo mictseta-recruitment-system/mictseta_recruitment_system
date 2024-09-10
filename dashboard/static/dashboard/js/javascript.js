@@ -797,6 +797,157 @@ function deleteJob(jobID) {
     showFlashMessage(error.message, "danger");
   });
 }
+
+
+function move_to_interview(appID) {
+  const url = 'http://127.0.0.1:8000/job/move_to_interview/';
+  
+  const jsonData = {
+    appID: appID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function approve_interview(appID) {
+  const url = 'http://127.0.0.1:8000/job/approve_interview/';
+  
+  const jsonData = {
+    appID: appID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function reject_interview(appID) {
+  const url = 'http://127.0.0.1:8000/job/reject_interview/';
+  
+  const jsonData = {
+    appID: appID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function purge() {
+  const url = 'http://127.0.0.1:8000/job/purge/';
+  
+ 
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: {}
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 /*===================================END JOB FUNCTIONS  ===============================================================*/
  function addStaff(){
              const url = 'http://127.0.0.1:8000/profile/add/add_staff/';
@@ -1399,8 +1550,9 @@ function handleErrors(errors, jobID, spinner) {
 
 function toggleVisibility(divId) {
             // Hide all divs
-            const divs = ['profileinformation', 'companyinformation','infopage', 'vacanciesc', 'attendance'];
+            const divs = ['profileinformation', 'companyinformation','infopage', 'vacanciesc', 'supporrting_documents'];
             divs.forEach(function(id) {
+                console .log(id);
                 document.getElementById(id).style.display = 'none';
             });
 
@@ -1416,3 +1568,32 @@ function toggleVisibility(divId) {
         window.onload = function() {
             toggleVisibility(null);
         };*/
+
+function toggleV(divId) {
+            // Hide all divs
+            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved'];
+            divs.forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+                console .log(id);
+            });
+            // Show the selected div
+            const div = document.getElementById(divId);
+            console.log()
+            div.style.display = 'block';
+        }
+
+function handleItemClick(event) {
+
+  const items = document.querySelectorAll('#applicants li');
+  items.forEach(item => {
+    item.classList.remove('active');
+  });
+
+
+  event.currentTarget.classList.add('active');
+}
+
+
+document.querySelectorAll('#applicants li').forEach(item => {
+  item.addEventListener('click', handleItemClick);
+});

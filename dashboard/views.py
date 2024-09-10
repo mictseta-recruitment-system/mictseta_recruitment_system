@@ -13,6 +13,7 @@ from task_manager.models import Category, Task
 import json
 from django.db.models import Q
 from easyaudit.models import CRUDEvent, LoginEvent
+from jobs.custom_decorators import check_leave, change_application_status
 
 @ensure_csrf_cookie
 def panel(request):
@@ -91,13 +92,26 @@ def view_staff(request):
 	else:
 		return redirect('render_auth_page')
 
+@change_application_status
 @csrf_protect
 def job_applications(request):
 	if request.user.is_authenticated:
 		applications = JobApplication.objects.all()
-		return render(request, 'job_applications.html', {'total':JobApplication, 'applications':applications})
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		print(applied_jobs)
+		return render(request, 'job_applications.html', {'applications':applications, 'applied_jobs':applied_jobs})
 	else:
 		return redirect('render_auth_page')
+
+@csrf_protect
+def filter_job_application(request,jobID):
+	if request.user.is_authenticated:
+		job_applications = JobApplication.objects.filter(job__id=jobID)
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs})
+	else:
+		return redirect('render_auth_page')
+
 
 @csrf_protect
 def add_job(request):
@@ -131,6 +145,7 @@ def update_job(request):
 	else:
 		return redirect('render_auth_page')
 
+@change_application_status
 @csrf_protect
 def view_jobs(request):
 	if request.user.is_authenticated:
@@ -259,6 +274,22 @@ def update_staff(request, staffID):
 	else:
 		return redirect('render_auth_page')
 
+def jobsekeer_details(request, seekerID):
+	if request.user.is_authenticated:
+		
+		seeker = User.objects.get(profile__uuid=seekerID)
+		if request.user.is_staff:
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+			print(seeker.profile.age)
+			print(seeker.profile.gender)
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len})
+		else:
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
 
 def employee_details(request, empID):
 	if request.user.is_authenticated:
