@@ -25,9 +25,12 @@ urlpatterns = [
     path('get_jobs/', views.get_jobs, name='get_jobs'),
     path('job_application/<int:jobID>', views.job_application, name='job_application'),
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
+    path('move_to_shortlist/', views.move_to_shortlist, name='move_to_shortlist'),
     path('approve_interview/', views.approve_interview, name='approve_interview'),
-    path('reject_interview/', views.reject_interview, name='reject_interview'),
-     path('purge/', views.purge, name='purge'),
+    path('reject_applicantion/', views.reject_applicantion, name='reject_applicantion'),
+    path('purge/', views.purge, name='purge'),
+    path('set_interview/', views.set_interview, name='set_interview'),
+    path('reschedule_interview/', views.reschedule_interview, name='reschedule_interview'),
 
 
 

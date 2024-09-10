@@ -91,6 +91,14 @@ class JobApplication(models.Model):
     job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, null=False)
+    
+
+class Interview(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="applicant")
+    application = models.ForeignKey(JobApplication, on_delete=models.CASCADE, related_name="application")
+    date = models.CharField(max_length=225,null=False)
+    start_time = models.CharField(max_length=225,null=False)
+    end_time = models.CharField(max_length=225,null=False)
 
 
 class SkillValidation(models.Model):

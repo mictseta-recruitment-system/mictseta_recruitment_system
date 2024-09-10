@@ -837,6 +837,45 @@ function move_to_interview(appID) {
   });
 }
 
+
+function move_to_shortlist(appID) {
+  const url = 'http://127.0.0.1:8000/job/move_to_shortlist/';
+  
+  const jsonData = {
+    appID: appID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
 function approve_interview(appID) {
   const url = 'http://127.0.0.1:8000/job/approve_interview/';
   
@@ -875,8 +914,8 @@ function approve_interview(appID) {
   });
 }
 
-function reject_interview(appID) {
-  const url = 'http://127.0.0.1:8000/job/reject_interview/';
+function reject_applicantion(appID) {
+  const url = 'http://127.0.0.1:8000/job/reject_applicantion/';
   
   const jsonData = {
     appID: appID,
@@ -937,6 +976,95 @@ function purge() {
    
       showFlashMessage(data.message, "success");
       location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function set_interview(appID) {
+  const url = 'http://127.0.0.1:8000/job/set_interview/';
+  const datess = document.getElementById('date_time'+appID).value;
+   const start_timess= document.getElementById('date_start_time'+appID).value;
+    const end_timess = document.getElementById('date_end_time'+appID).value;
+   
+  const jsonData = {
+    appID: appID,
+    date:datess,
+    start_time:start_timess,
+    end_time:end_timess,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function reschedule_interview(interviewID) {
+  const url = 'http://127.0.0.1:8000/job/reschedule_interview/';
+  const datess = document.getElementById('date_times'+interviewID).value;
+   const start_timess= document.getElementById('date_start_times'+interviewID).value;
+    const end_timess = document.getElementById('date_end_times'+interviewID).value;
+   
+
+  const jsonData = {
+    interviewID: interviewID,
+    date:datess,
+    start_time:start_timess,
+    end_time:end_timess,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");

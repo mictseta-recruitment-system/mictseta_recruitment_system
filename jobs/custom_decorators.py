@@ -1,14 +1,16 @@
 from django.utils.timezone import now
-from .models import  JobApplication
+from .models import  JobApplication, Interview
 
 def change_application_status(function=None):
 	def decorator(view_func):
 		def _wrapper(request, *args, **kwargs):
 			applications = JobApplication.objects.all()
+			interviews = Interview.objects.all()
 			for application in applications:
 				if application.job.status=="closed":
 					application.status = 'rejected'
 					application.save()
+					cleened = [interview.delete() for interview in interviews if interview.application == application]
 			return view_func(request,*args,**kwargs)
 
 		return _wrapper
