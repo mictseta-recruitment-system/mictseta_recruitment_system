@@ -1,11 +1,27 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'MICSETAFeedback.dart';
 
-class Notificationpage extends StatelessWidget {
-  const Notificationpage({super.key});
+class Notificationpage extends StatefulWidget {
+  // final String? token;
+  const Notificationpage({super.key, });
+
+  @override
+  State<Notificationpage> createState() => _NotificationpageState();
+}
+
+class _NotificationpageState extends State<Notificationpage> {
+  
+String token='';
+final storage = FlutterSecureStorage();
+@override
+void initState() async{
+  super.initState();
+  token =await storage.read(key:'auth_token') as String;
+}
 
   @override
   Widget build(BuildContext context) {

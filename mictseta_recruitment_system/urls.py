@@ -27,5 +27,8 @@ urlpatterns = [
     path('dashboard/', include("dashboard.urls")),
     path('jobseeker/', include("job_seeker.urls")),
     path('taskmanager/', include("task_manager.urls")),
-    path('rest_api/',include('rest_api.urls'))
+    path('rest_api/',include('rest_api.urls')),
+    path('rest_api/api/auth/', include('dj_rest_auth.urls')),
+    path('rest_api/api/auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('accounts/', include('allauth.urls')),
 ]

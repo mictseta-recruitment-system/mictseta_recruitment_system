@@ -10,3 +10,4 @@ venv/
 /jobs/migrations/__pycache__
 /users/__pycache__
 /users/__pycache__
+*.sqlite3

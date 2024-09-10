@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../Components/TextField.dart';
 
 
-class Profilepage extends StatelessWidget {
-  const Profilepage({super.key});
+class Profilepage extends StatefulWidget {
+  // final String? token;
+  const Profilepage({super.key,   });
+
+  @override
+  State<Profilepage> createState() => _ProfilepageState();
+}
+
+class _ProfilepageState extends State<Profilepage> {
+  
+String token='';
+final storage = FlutterSecureStorage();
+@override
+void initState() async{
+  super.initState();
+  token =await storage.read(key:'auth_token') as String;
+}
 
   @override
   Widget build(BuildContext context) {

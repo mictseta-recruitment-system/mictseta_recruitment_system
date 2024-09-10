@@ -3,15 +3,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 
 import 'MICSETAFeedback.dart';
 import 'ProfilePage.dart';
 import 'home-page.dart';
 import 'more_information_page.dart';
-import 'notificationPage.dart'; 
+import 'notificationPage.dart';
+
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final String? token;
+  const MainPage({
+    super.key,
+    required this.token,
+  });
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -27,22 +32,10 @@ class _MainPageState extends State<MainPage> {
   }
 
   List<Widget> _widgetOptions = [HomePage(), Notificationpage(), Profilepage()];
- Future<void> _log_out() async {
-    // if (emailController.text.isEmpty && passwordController.text.isEmpty) {
-    //   showDialog(
-    //       context: context,
-    //       builder: (context) => AlertDialog(actions: [
-    //             Buttons(
-    //               onTap: () {
-    //                 Navigator.pop(context);
-    //               },
-    //               backgroundColor: Colors.white,
-    //               foregroundColor: Colors.red[300],
-    //               child: 'Retry',
-    //             ),
-    //           ], content: Text('Please provide your credentials ')));
-    //   return;
-    // }
+  
+  
+  void _log_out(String token) async {
+   
     showDialog(
         context: context,
         builder: (context) => Center(child: CircularProgressIndicator()));
@@ -51,10 +44,7 @@ class _MainPageState extends State<MainPage> {
     try {
       final response = await http.post(
         Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          
-        },
+        headers: {'Content-Type': 'application/json', 'Authorization':'Bearer $token'},
         body: jsonEncode({}),
       );
 
@@ -155,7 +145,9 @@ class _MainPageState extends State<MainPage> {
                   color: Colors.white,
                 ),
                 title: Text('Log Out', style: TextStyle(color: Colors.white)),
-                onTap:_log_out,
+                onTap: () {
+                  _log_out(widget.token!);
+                },
               ),
             ],
           ),
@@ -193,6 +185,7 @@ class _MainPageState extends State<MainPage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      // _token=widget.token!;
     });
   }
 }
