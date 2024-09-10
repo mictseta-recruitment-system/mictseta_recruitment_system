@@ -1,13 +1,12 @@
 // ignore_for_file: sized_box_for_whitespace, prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mictseta_mobile_app_recruitment_system/Components/Buttons.dart';
-
 import 'MainPage.dart';
-import '../Sign up files/SignUpPage.dart';
+import '../Sign up files/SignUpPage.dart';  
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +18,21 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
+  String? extractCsrfToken(String? cookieHeader) {
+    final cookies = cookieHeader!.split(',');
+
+    for (final cookie in cookies) {
+      if (cookie.contains('csrftoken=')) {
+        final parts = cookie.split(';');
+        final csrfTokenPart = parts[0].trim();
+        final csrfToken = csrfTokenPart.split('=')[1].trim();
+        return csrfToken;
+      }
+    }
+    return null;
+  }
+final storage = FlutterSecureStorage();
   Future<void> _sign_in(String email, String password) async {
     if (emailController.text.isEmpty && passwordController.text.isEmpty) {
       showDialog(
@@ -30,9 +44,28 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   backgroundColor: Colors.white,
                   foregroundColor: const Color.fromARGB(255, 13, 72, 160),
-                  child: '',
+                  child: 'Retry',
                 ),
               ], content: Text('Please provide your credentials ')));
+      return;
+    } else if (email == 'admin@mictseta.com' ||
+        email == 'humanresources@mictseta.com' ||
+        email == 'manager@mictseta.com') {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                  actions: [
+                    Buttons(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color.fromARGB(255, 13, 72, 160),
+                      child: 'Okay',
+                    ),
+                  ],
+                  content: Text(
+                      'This credentials are not allowed on this platform.')));
       return;
     }
     showDialog(
@@ -45,16 +78,17 @@ class _LoginPageState extends State<LoginPage> {
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
-          
         },
         body: jsonEncode({"email": email, "password": password}),
       );
 
       if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        print(data['token']);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MainPage()));
+        String? token = extractCsrfToken(response.headers['set-cookie']);
+        
+  await storage.write(key: 'auth_token',value:token!);
+       print('token saved...');
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => MainPage(token: token!)));
       } else {
         Navigator.pop(context);
         print('Failed to apply: ${response.statusCode}');
@@ -173,7 +207,8 @@ class _LoginPageState extends State<LoginPage> {
                   print('in the next page');
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(
+                        builder: (context) => MainPage(token: '')),
                   );
                 },
                 style: ButtonStyle(

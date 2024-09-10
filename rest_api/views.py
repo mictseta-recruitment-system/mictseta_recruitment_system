@@ -57,7 +57,7 @@ def get_all_jobs(request):
     serializer = JobPostSerializer(open_jobs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
  
-@cssrf_protect
+@csrf_protect
 @api_view(['POST'])
 @login_required
 def apply_for_job(request, jobID):
@@ -75,7 +75,7 @@ def apply_for_job(request, jobID):
     new_application.save()
 
     return Response({'message': 'Your Application was submitted successfully'}, status=status.HTTP_201_CREATED)
-import json
+
 
 @ensure_csrf_cookie
 @api_view(['POST'])
