@@ -17,6 +17,21 @@
         <div class="row">
             <!-- Personal Details Section -->
             <div class="col-md-6">
+                <!-- Title Dropdown -->
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <select class="form-control" id="title" name="title" onchange="toggleOtherTitleInput(this)">
+                        <option value="" {% if not user.profile.title %}selected{% endif %}>Select Title</option>
+                        <option value="Mr" {% if user.profile.title == "Mr" %}selected{% endif %}>Mr</option>
+                        <option value="Mrs" {% if user.profile.title == "Mrs" %}selected{% endif %}>Mrs</option>
+                        <option value="Ms" {% if user.profile.title == "Ms" %}selected{% endif %}>Ms</option>
+                        <option value="Dr" {% if user.profile.title == "Dr" %}selected{% endif %}>Dr</option>
+                        <option value="Prof" {% if user.profile.title == "Prof" %}selected{% endif %}>Prof</option>
+                        <option value="Other" {% if user.profile.title == "Other" %}selected{% endif %}>Other</option>
+                    </select>
+                    <input type="text" class="form-control mt-2" id="title_other_input" name="title_other" style="display: {% if user.profile.title == 'Other' %}block{% else %}none{% endif %};" placeholder="Please specify">
+                </div>
+
                 <div class="form-group">
                     <label for="id-number">ID Number</label>
                     <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}" disabled>
@@ -40,6 +55,7 @@
                         <option value="{{user.profile.marital_status}}" selected>{{user.profile.marital_status}}</option>
                         <option value="Married">Married</option>
                         <option value="Single">Single</option>
+                        <option value="Dirvoced">Divorced</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -61,7 +77,6 @@
                     <label for="disability">Disability</label>
                     <select class="form-control" id="disability" name="disability" onchange="toggleOtherInput(this, 'disability_other')">
                         <option value="{{user.profile.disability}}" selected>{{user.profile.disability}}</option>
-                
                         <option value="Hearing">Hearing</option>
                         <option value="Vision">Vision</option>
                         <option value="Mobility">Mobility</option>
@@ -79,7 +94,7 @@
                     <input type="text" class="form-control" id="email" name="email" value="{{user.email}}">
                 </div>
                 <div class="form-group">
-                    <label for="telephone">Phon Number <span class="text-danger">*</span></label>
+                    <label for="telephone">Phone Number <span class="text-danger">*</span></label>
                     <input type="tel" class="form-control" id="phone" name="phone" value="{{user.profile.phone}}">
                 </div>
                 <div class="form-group">
@@ -90,8 +105,6 @@
                     <label for="personal-website">Personal Website</label>
                     <input type="url" class="form-control" id="personal_website" name="personal_website" value="{{user.profile.personal_website}}">
                 </div>
-
-                
             </div>
         </div>
         <button type="button" role="button" onclick="handle_update_profile_info_button_click()" class="btn btn-primary">Update</button>
@@ -101,6 +114,16 @@
 <script>
     function toggleOtherInput(selectElement, otherInputId) {
         var otherInput = document.getElementById(otherInputId);
+        if (selectElement.value === "Other") {
+            otherInput.style.display = "block";
+        } else {
+            otherInput.style.display = "none";
+        }
+    }
+
+    // Show or hide "Other" title input
+    function toggleOtherTitleInput(selectElement) {
+        var otherInput = document.getElementById("title_other_input");
         if (selectElement.value === "Other") {
             otherInput.style.display = "block";
         } else {

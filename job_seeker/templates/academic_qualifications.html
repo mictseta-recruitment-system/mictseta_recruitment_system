@@ -4,15 +4,15 @@
 
 {% block content %}
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
 
 <div id="academic-qualifications" class="content-section active">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Academic Qualifications</li>
+            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Academic Qualifications</li>
         </ol>
-      </nav>
+    </nav>
     <div class="card">
         <div class="card-header">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#additionalQualificationModal">
@@ -23,22 +23,25 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">Qualification Type</th>
+                        <th scope="col">Qualification Name</th>
                         <th scope="col">Field of Study</th>
+                        <th scope="col">NQF Level</th>
                         <th scope="col">Institution</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Year Obtained</th>
+                        <th scope="col">Year Obtained / Started</th>
                         <th scope="col">Grade</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for qualification in user.qualifications.all %}
                     <tr>
-                        <td>{{ qualification.highest_qualification }}</td>
+                        <td>{{ qualification.qualification_name }}</td>
                         <td>{{ qualification.field_of_study }}</td>
+                        <td>{{ qualification.nqf_level }}</td>
                         <td>{{ qualification.institution }}</td>
                         <td>{{ qualification.status }}</td>
                         <td>{{ qualification.year_obtained }}</td>
+                        <td>{{ qualification.year_started }}</td>
                         <td>{{ qualification.grade }}</td>
                     </tr>
                     {% endfor %}
@@ -59,73 +62,248 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <!-- Qualification Name -->
                         <div class="form-group">
-                            <label for="qualification-type" class="form-label">Qualification Type</label>
-                            <select class="form-control" id="qualification-type" name="qualification-type" required>
-                                <option value="">Select Qualification Type</option>
-                                <option value="High School Diploma">High School Diploma</option>
-                                <option value="Certificate">Certificate</option>
-                                <option value="Diploma">Diploma</option>
-                                <option value="Bachelor’s Degree">Bachelor’s Degree</option>
-                                <option value="Honours Degree">Honours Degree</option>
-                                <option value="Master’s Degree">Master’s Degree</option>
-                                <option value="PhD">PhD</option>
-                                <option value="Professional Certification">Professional Certification</option>
-                            </select>
+                            <label for="qualification-name" class="form-label">Qualification Name</label>
+                            <input type="text" class="form-control" id="qualification-name" name="qualification-name" placeholder="e.g., BSc in Computer Science" required>
                         </div>
 
+                        <!-- Field of Study -->
                         <div class="form-group">
                             <label for="field-of-study" class="form-label">Field of Study</label>
-                            <select class="form-control" id="field-of-study" name="field-of-study" required>
-                                <option value="">Field of Study</option>
-                                <option value="Advertising">Advertising</option>
-                                <option value="Film and electronic Media">Film and electronic Media</option>
-                                <option value="Electronics">Electronics</option>
+                            <select class="form-control" id="field-of-study" name="field-of-study" required onchange="toggleOtherField(this)">
+                                <option value="">Select Field of Study</option>
+                                <option value="Engineering">Engineering</option>
                                 <option value="Information Technology">Information Technology</option>
-                                <option value="Telecommunications">Telecommunications</option>
+                                <option value="Business Administration">Business Administration</option>
+                                <option value="Education">Education</option>
+                                <option value="Health Sciences">Health Sciences</option>
+                                <option value="Other">Other</option>
                             </select>
-                
+                            <input type="text" class="form-control mt-2" id="other-field-of-study" name="other-field-of-study" placeholder="Please specify field of study" style="display:none;">
                         </div>
 
+                        <!-- NQF Level -->
                         <div class="form-group">
-                            <label for="institution" class="form-label">Institution</label>
-                            <input type="text" class="form-control" id="institution" name="institution" required>
+                            <label for="nqf-level" class="form-label">NQF Level</label>
+                            <select class="form-control" id="nqf-level" name="nqf-level" required>
+                                <option value="">Select NQF Level</option>
+                                <option value="1">NQF 1 (General Certificate, Grade 9)</option>
+                                <option value="2">NQF 2 (Grade 10 or National Certificates level 2)</option>
+                                <option value="3">NQF 3 (Grade 11 or National Certificates level 3)</option>
+                                <option value="4">NQF 4 (Grade 12 or National Certificate level 4)</option>
+                                <option value="5">NQF 5 (Higher Certificate)</option>
+                                <option value="6">NQF 6 (National Diploma and Advanced certificates)</option>
+                                <option value="7">NQF 7 (Bachelor’s Degree, Advanced Diploma)</option>
+                                <option value="8">NQF 8 (Honours Degree and Post Graduate Diploma)</option>
+                                <option value="9">NQF 9 (Master’s Degree)</option>
+                                <option value="10">NQF 10 (Doctorate)</option>
+                            </select>
                         </div>
 
+                        <!-- Institution Type -->
                         <div class="form-group">
-                            <label for="qualification-status" class="form-label">Qualification Status</label>
-                            <select class="form-control" id="qualification-status" name="qualification-status" required>
+                            <label for="institution-type" class="form-label">Institution Type</label>
+                            <select class="form-control" id="institution-type" name="institution-type" required onchange="toggleInstitutionOptions(this)">
+                                <option value="">Select Institution Type</option>
+                                <option value="University">University</option>
+                                <option value="College">College</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Institution Name -->
+                        <div class="form-group">
+                            <label for="institution" class="form-label">Institution Name</label>
+                            <select class="form-control" id="institution" name="institution" disabled>
+                                <option value="">Select Institution</option>
+                                <!-- University Options -->
+                                <option class="university" value="Cape Peninsula University of Technology">Cape Peninsula University of Technology</option>
+                                <option class="university" value="Central University of Technology">Central University of Technology</option>
+                                <option class="university" value="Durban University of Technology">Durban University of Technology</option>
+                                <option class="university" value="Mangosuthu University of Technology">Mangosuthu University of Technology</option>
+                                <option class="university" value="Nelson Mandela University">Nelson Mandela University</option>
+                                <option class="university" value="North-West University">North-West University</option>
+                                <option class="university" value="Rhodes University">Rhodes University</option>
+                                <option class="university" value="Sefako Makgatho Health Sciences University">Sefako Makgatho Health Sciences University</option>
+                                <option class="university" value="Sol Plaatje University">Sol Plaatje University</option>
+                                <option class="university" value="Tshwane University of Technology">Tshwane University of Technology</option>
+                                <option class="university" value="Universiteit Stellenbosch">Universiteit Stellenbosch</option>
+                                <option class="university" value="University of Cape Town">University of Cape Town</option>
+                                <option class="university" value="University of Fort Hare">University of Fort Hare</option>
+                                <option class="university" value="University of Johannesburg">University of Johannesburg</option>
+                                <option class="university" value="University of KwaZulu-Natal">University of KwaZulu-Natal</option>
+                                <option class="university" value="University of Limpopo">University of Limpopo</option>
+                                <option class="university" value="University of Mpumalanga">University of Mpumalanga</option>
+                                <option class="university" value="University of Pretoria">University of Pretoria</option>
+                                <option class="university" value="University of the Free State">University of the Free State</option>
+                                <option class="university" value="University of the Western Cape">University of the Western Cape</option>
+                                <option class="university" value="University of the Witwatersrand">University of the Witwatersrand</option>
+                                <option class="university" value="University of Venda">University of Venda</option>
+                                <option class="university" value="University of Zululand">University of Zululand</option>
+                                <option class="university" value="Vaal University of Technology">Vaal University of Technology</option>
+                                <option class="university" value="Walter Sisulu University">Walter Sisulu University</option>
+                                <!-- College Options -->
+                                <option class="college" value="Boland TVET College">Boland TVET College</option>
+                                <option class="college" value="Buffalo City TVET College">Buffalo City TVET College</option>
+                                <option class="college" value="Capricorn TVET College">Capricorn TVET College</option>
+                                <option class="college" value="Central Johannesburg TVET College">Central Johannesburg TVET College</option>
+                                <option class="college" value="Coastal TVET College">Coastal TVET College</option>
+                                <option class="college" value="College of Cape Town">College of Cape Town</option>
+                                <option class="college" value="Ekurhuleni East TVET College">Ekurhuleni East TVET College</option>
+                                <option class="college" value="Ekurhuleni West TVET College">Ekurhuleni West TVET College</option>
+                                <option class="college" value="Esayidi TVET College">Esayidi TVET College</option>
+                                <option class="college" value="Gert Sibande TVET College">Gert Sibande TVET College</option>
+                                <option class="college" value="Goldfields TVET College">Goldfields TVET College</option>
+                                <option class="college" value="Kathu TVET College">Kathu TVET College</option>
+                                <option class="college" value="Mthashana TVET College">Mthashana TVET College</option>
+                                <option class="college" value="Nkangala TVET College">Nkangala TVET College</option>
+                                <option class="college" value="Northern Cape Rural TVET College">Northern Cape Rural TVET College</option>
+                                <option class="college" value="Northern Cape Urban TVET College">Northern Cape Urban TVET College</option>
+                                <option class="college" value="Sedibeng TVET College">Sedibeng TVET College</option>
+                                <option class="college" value="South Cape TVET College">South Cape TVET College</option>
+                                <option class="college" value="Tshwane North TVET College">Tshwane North TVET College</option>
+                                <option class="college" value="Tshwane South TVET College">Tshwane South TVET College</option>
+                                <option class="college" value="West Coast TVET College">West Coast TVET College</option>
+                                <option class="college" value="Westcol TVET College">Westcol TVET College</option>
+                                <!-- Other -->
+                                <option class="other" value="">Other</option>
+                            </select>
+                            <input type="text" class="form-control mt-2" id="other-institution" name="other-institution" placeholder="Please specify institution" style="display:none;">
+                        </div>
+
+                        <!-- Status -->
+                        <div class="form-group">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-control" id="status" name="status" required onchange="toggleYearFields(this)">
                                 <option value="">Select Status</option>
                                 <option value="Completed">Completed</option>
                                 <option value="In Progress">In Progress</option>
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        <!-- Year Obtained -->
+                        <div class="form-group" id="year-obtained-group" style="display:none;">
                             <label for="year-obtained" class="form-label">Year Obtained</label>
-                            <input type="number" class="form-control" id="year-obtained" name="year_obtained" placeholder="e.g., 2020" min="1000" max="9999" required>
+                            <select class="form-control" id="year-obtained" name="year-obtained">
+                                <!-- Dynamic year options will be populated here -->
+                            </select>
                         </div>
 
-                    
+                        <!-- Year Started -->
+                        <div class="form-group" id="year-started-group" style="display:none;">
+                            <label for="year-started" class="form-label">Year Started</label>
+                            <select class="form-control" id="year-started" name="year-started">
+                                <!-- Dynamic year options will be populated here -->
+                            </select>
+                        </div>
 
+                        <!-- Grade -->
                         <div class="form-group">
-                            <label for="upload-documents" class="form-label">Upload Transcript</label>
-                            <input type="file" class="form-control-file" id="upload-documents" name="upload-documents" accept=".pdf,.jpg,.jpeg,.png">
-                        </div>
+                            <label for="grade" class="form-label">Grade</label>
+                            <select class="form-control" id="grade" name="grade" required>
+                                <option value="">Select Grade</option>
+                                <option value="A">A (Excellent:	80-100%)</option>
+                                <option value="B">B (Very Good:	70-79%)</option>
+                                <option value="C">C (Good: 60-69%)</option>
+                                <option value="D">D (Satisfactory: 50-59%)</option>
+                              
                     
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save Qualification</button>
+                            </select>
                         </div>
+
+                        <button type="submit" class="btn btn-primary">Save Qualification</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    function toggleInstitutionOptions(select) {
+        var value = select.value;
+        var institutionDropdown = document.getElementById('institution');
+        var otherInstitutionInput = document.getElementById('other-institution');
+        
+        if (value === 'University') {
+            institutionDropdown.disabled = false;
+            otherInstitutionInput.style.display = 'none';
+            institutionDropdown.querySelectorAll('option').forEach(function(option) {
+                if (option.classList.contains('university')) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        } else if (value === 'College') {
+            institutionDropdown.disabled = false;
+            otherInstitutionInput.style.display = 'none';
+            institutionDropdown.querySelectorAll('option').forEach(function(option) {
+                if (option.classList.contains('college')) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        } else if (value === 'Other') {
+            institutionDropdown.disabled = true;
+            institutionDropdown.value = ''; // Clear selected value
+            otherInstitutionInput.style.display = 'block';
+        } else {
+            institutionDropdown.disabled = true;
+            institutionDropdown.value = ''; // Clear selected value
+            otherInstitutionInput.style.display = 'none';
+        }
+    }
+
+    function toggleYearFields(select) {
+        var value = select.value;
+        var yearObtainedGroup = document.getElementById('year-obtained-group');
+        var yearStartedGroup = document.getElementById('year-started-group');
+        var yearObtainedSelect = document.getElementById('year-obtained');
+        var yearStartedSelect = document.getElementById('year-started');
+
+        if (value === 'Completed') {
+            yearObtainedGroup.style.display = 'block';
+            yearStartedGroup.style.display = 'none';
+        } else if (value === 'In Progress') {
+            yearObtainedGroup.style.display = 'none';
+            yearStartedGroup.style.display = 'block';
+        } else {
+            yearObtainedGroup.style.display = 'none';
+            yearStartedGroup.style.display = 'none';
+        }
+
+        populateYearOptions(yearObtainedSelect);
+        populateYearOptions(yearStartedSelect);
+    }
+
+    function populateYearOptions(select) {
+        var currentYear = new Date().getFullYear();
+        var startYear = currentYear - 100; // For example, 100 years back
+        select.innerHTML = ''; // Clear existing options
+
+        for (var year = startYear; year <= currentYear; year++) {
+            var option = document.createElement('option');
+            option.value = year;
+            option.text = year;
+            select.appendChild(option);
+        }
+    }
+
+    $(document).ready(function() {
+        $('#institution').select2(); // Initialize select2 for institution dropdown
+        $('#institution-type').select2();
+        $('#field-of-study').select2();
+        $('#status').select2();
+        $('#grade').select2();
+    });
+</script>
+
 {% endblock %}

@@ -3,41 +3,94 @@
 {% block title %}Job Information{% endblock %}
 
 {% block content %}
-
 <!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-<h2>Job Information</h2>
-<p>
-    Position: Software Engineer<br>
-    Location: Gauteng<br>
-    Type: Full-time<br>
-    Application Deadline: 30 August 2024<br>
-</p>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+    .underline {
+        text-decoration: underline;
+    }
+    .section-title {
+        margin-bottom: 1rem;
+    }
+    h2, h3 {
+        font-weight: 500;
+    }
+    p {
+        font-weight: 400;
+    }
+</style>
 
-<h2>Requirements</h2>
-<ul>
-    <li>Bachelor's degree in Computer Science, Software Engineering, or a related field.</li>
-    <li>Proficiency in programming languages such as Python, Java, or C++.</li>
-    <li>Strong analytical and problem-solving skills.</li>
-    <li>Experience with data structures, algorithms, and software design patterns.</li>
-    <li>Excellent communication and organizational skills.</li>
-    <li>Experience with version control systems like Git.</li>
-</ul>
+<div class="container mt-4">
+    <h2 class="mb-4">Job Information</h2>
 
-<h2>Experience</h2>
-<ul>
-    <li>Minimum of 2 years of experience in software development or a related field.</li>
-    <li>Experience with software testing and debugging.</li>
-    <li>Experience in building and maintaining software systems.</li>
-    <li>Knowledge of software development life cycle (SDLC) and agile methodologies is preferred.</li>
-</ul>
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="font-weight-bold">Position:</h4>
+            <p>Software Engineer</p>
+            <h4 class="font-weight-bold">Location:</h4>
+            <p>Gauteng</p>
+            <h4 class="font-weight-bold">Type:</h4>
+            <p>Full-time</p>
+            <h4 class="font-weight-bold">Application Deadline:</h4>
+            <p>30 August 2024</p>
+            <h4 class="font-weight-bold">Reference Number:</h4>
+            <p>#SE2024G123</p>
+        </div>
+        
+        <div class="col-md-6">
+            <h3 class="font-weight-bold mb-3">Introduction</h3>
+            <p>This position is for a skilled Software Engineer to join our dynamic team in Gauteng. You will be responsible for designing, developing, and maintaining high-quality software applications. We are looking for a proactive individual with a passion for technology and a drive to deliver innovative solutions.</p>
+        </div>
+    </div>
 
-     <a href="{% url 'job_application' jobs.id %}" class="btn btn-primary">Apply</a>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <h3 class="underline section-title">Requirements</h3>
+            <ul class="list-unstyled">
+                <li>Bachelor's degree in Computer Science, Software Engineering, or a related field.</li>
+                <li>Proficiency in programming languages such as Python, Java, or C++.</li>
+                <li>Strong analytical and problem-solving skills.</li>
+                <li>Experience with data structures, algorithms, and software design patterns.</li>
+                <li>Excellent communication and organizational skills.</li>
+                <li>Experience with version control systems like Git.</li>
+            </ul>
+        </div>
+
+        <div class="col-md-4">
+            <h3 class="underline section-title">Experience</h3>
+            <ul class="list-unstyled">
+                <li>Minimum of 2 years of experience in software development or a related field.</li>
+                <li>Experience with software testing and debugging.</li>
+                <li>Experience in building and maintaining software systems.</li>
+                <li>Knowledge of software development life cycle (SDLC) and agile methodologies is preferred.</li>
+            </ul>
+        </div>
+
+        <div class="col-md-4">
+            <h3 class="underline section-title">Duties and Responsibilities</h3>
+            <ul class="list-unstyled">
+                <li>Design, develop, and maintain software applications and systems.</li>
+                <li>Collaborate with cross-functional teams to define and implement new features.</li>
+                <li>Write clean, scalable, and efficient code while adhering to best practices.</li>
+                <li>Debug and troubleshoot software issues, providing timely resolutions.</li>
+                <li>Participate in code reviews and contribute to the improvement of development processes.</li>
+                <li>Keep up to date with the latest industry trends and technologies to ensure the software remains current and competitive.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'job_application' jobs.id %}" class="btn btn-primary">Apply Now</a>
+    </div>
+</div>
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 {% endblock %}
