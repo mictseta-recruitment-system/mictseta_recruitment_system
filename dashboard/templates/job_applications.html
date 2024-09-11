@@ -60,8 +60,9 @@
                               <td><button class="btn btn-success p-0">{{application.job.status}}</button></td>
                               {% endif %}
                               <td>{{application.date}}</td>
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1"><i class="fa fa-eye"> </i> view</a>
-                               <a onclick="move_to_interview({{application.id}})" class="btn btn-success p-1"><i class="fa fa-plus"> </i> interview</a></td>
+                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                <i class="fa fa-eye"> </i></a>
+                               <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td>
                           </tr>
                           {% endif%}
                               {% endfor %}                 
@@ -117,7 +118,15 @@
                               <td><button class="btn btn-success p-0">{{application.job.status}}</button></td>
                               {% endif %}
                               <td>{{application.date}}</td>
-                              <td> <a  onclick="move_to_interview({{application.id}})" class="btn btn-success p-1"><i class="fa fa-plus"></i> interview</a> <a class="btn btn-danger p-1"><i class="fa fa-trash"></i> </a></td>
+                              <td> 
+                                     <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
+                               <i class="fa fa-plus"></i> interview
+                              </button>
+
+                                <a class="btn btn-danger p-1" onclick="reject_applicantion({{application.id}})" data-bs-placement="top" title="Reject application">
+                                  <i class="fa fa-trash"></i> 
+                                </a>
+                              </td>
                           </tr>
                           {% endif %}
                               {% endfor %}                 
@@ -138,13 +147,53 @@
 
               </script>
             </div>
+             {% for application in applications %}
+                         <!-- Your modal structure -->
+    <div class="modal fade" id="interview{{application.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog ">
+        <div class="modal-content ">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Set Interview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Title</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" value="{{application.user.first_name}} {{application.user.last_name}} - {{application.user.email}}" disabled>
+            </div>
+            <div class="form-group w-100">
+              <label for="endDate">Select Date</label>
+              <input type="date" value="" class="form-control" id="date_time{{application.id}}">
+            </div>
+            <div class="d-flex justify-content-between">
+              <div class="form-group w-100 m-1" style="position:relative;">
+                <label for="start_time">Start Time:</label>
+                <input class="form-control" value="" type="time" id="date_start_time{{application.id}}" value="" />
+              </div>
+              <div class="form-group w-100 m-1 " style="position:relative;" value="">
+                <label for="end_time">End Time:</label>
+                <input class="form-control" type="time" value="" id="date_end_time{{application.id}}" value="" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="set_interview({{application.id}})">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+                        {% endfor %}
            </div>   
        
 
         <div id="interview" style="display:none;">
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
-                  <h6>ALL Inerview Candidate List</h6> 
+                  <h6>ALL Interview Candidate List</h6> 
                 </div>
 
                 <div class="card-body" style="overflow-x: scroll;"> 
@@ -155,48 +204,131 @@
                                   <th class="bg-dark text-white">Job Title</th>
                         
                                   <th class="bg-dark text-white">Interview Date</th>
-                                  <th class="bg-dark text-white">Status</th>
+                                  <th class="bg-dark text-white">start time</th>
+                                  <th class="bg-dark text-white">end time</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
                               </tr>
                           </thead>
                           <tbody> 
                                
-                          {% for application in applications %}
-                          {% if application.status == "interview" %}
+                          {% for interview in interviews %}
+                          {% if interview.application.status == "interview" %}
                            <tr class="text-dark">
-                              <td>{{application.user.email}}</td>
-                              <td>{{application.job.title}}</td>
-                          
-                              <td>Not Set</td>
-                              {% if application.job.status == 'closed' %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% else %}
-                              <td><button class="btn btn-success p-0">{{application.job.status}}</button></td>
-                              {% endif %}
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary">View</a> 
-                              <a href="#" class="btn btn-warning">Set Date</a>
-                              <a onclick="approve_interview({{application.id}})" class="btn btn-success">approve</a>
-                              <a onclick="reject_interview({{application.id}})" class="btn btn-danger">reject</a>
-                              reject_interview
+                              <td>{{interview.user.email}}</td>
+                              <td>{{interview.application.job.title}}</td>
+                              <td>{{interview.date}}</td>
+                              <td><b>{{interview.start_time}}</b></td>
+                              <td><b>{{interview.end_time}}</b></td>
+                              <td> 
+                              <button type="button" class="btn btn-warning p-1 mb-1 mx-2" onclick="openModal1('interviews{{interview.id}}','{{interview.id}}')" data-bs-placement="top" title="Schedule interview">
+                               <i class="fa fa-edit"> </i>
+                               Reschedule
+                              </button>
+                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid %}" class="btn btn-primary p-1 mx-2" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
+
+                              <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-2" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
+                              <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-2" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
+                            
                               </td>
                           </tr>
                           {% endif %}
+                           <div class="modal fade" id="interviews{{interview.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog ">
+        <div class="modal-content ">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Reschedule Interview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Title</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" value="{{interview.application.user.first_name}} {{interview.application.user.last_name}} - {{interview.application.user.email}}" disabled>
+            </div>
+            <div class="form-group w-100">
+              <label for="endDate">Select Date</label>
+              <input type="date" value="{{interview.date}}" class="form-control" id="date_times{{interview.id}}">
+            </div>
+            <div class="d-flex justify-content-between">
+              <div class="form-group w-100 m-1" style="position:relative;">
+                <label for="start_time">Start Time:</label>
+                <input class="form-control" value="{{interview.start_time}}" type="time" id="date_start_times{{interview.id}}" value="" />
+              </div>
+              <div class="form-group w-100 m-1 " style="position:relative;" value="">
+                <label for="end_time">End Time:</label>
+                <input class="form-control" type="time" value="{{interview.end_time}}" id="date_end_times{{interview.id}}" value="" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="reschedule_interview({{interview.id}})">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
                               {% endfor %}                 
                           </tbody>
                           <tfoot>
-                            <tr>      
+                            <tr>  
+
                             </tr>
                           </tfoot>
                         </table>
+                       
+                       
                 </div>
+          
+                
                 <script >
                 
                 $(document).ready(function (){
 
                   new DataTable('#interview-table');
 
+
                 });
+
+                  function openModal(modalId,appId) {
+      var modalElement = document.getElementById(modalId);
+      var modal = new bootstrap.Modal(modalElement);
+       flatpickr("#date_end_time"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+                  flatpickr("#date_start_time"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+      // Show the modal
+      modal.show();
+
+      // Initialize datetimepicker once the modal is fully shown
+     
+    }
+     function openModal1(modalId,appId) {
+      var modalElement = document.getElementById(modalId);
+      var modal = new bootstrap.Modal(modalElement);
+       flatpickr("#date_end_times"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+                  flatpickr("#date_start_times"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+      // Show the modal
+      modal.show();
+
+      // Initialize datetimepicker once the modal is fully shown
+     
+    }
+                
+                
 
               </script>
             </div>
@@ -237,7 +369,11 @@
                               {% else %}
                               <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
                               {% endif %}
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}">View</a> </td>
+                              move_to_shortlist
+                              <td> 
+                                <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
+                                <a onclick="move_to_shortlist({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">short-list</a>
+                              </td>
                           </tr>
                           {% endif %}
                               {% endfor %}                 
@@ -294,7 +430,7 @@
                               {% else %}
                               <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
                               {% endif %}
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}">View</a> </td>
+                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}"><i class="fa fa-eye"></i></a> </td>
                           
                           </tr>
                           {% endif %}

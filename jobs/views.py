@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, Skill, Experience, Requirement, Notification, JobApplication
+from .models import JobPost, Academic, Skill, Experience, Requirement, Notification, JobApplication, Interview
 import re
 from datetime import datetime
 from django.utils.timezone import now
@@ -183,6 +183,8 @@ def get_jobs(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+
+#not used
 @check_leave
 @csrf_protect
 def move_to_interview(request):
@@ -205,6 +207,27 @@ def move_to_interview(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
+@csrf_protect
+def move_to_shortlist(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			try:
+				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
+				applicant.status = "short_list"
+				applicant.save()
+				return JsonResponse({'message': f'{applicant.user.email} moved to short-list stage', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
 @check_leave
 @csrf_protect
 def approve_interview(request):
@@ -245,9 +268,9 @@ def purge(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
-
+@check_leave
 @csrf_protect
-def reject_interview(request):
+def reject_applicantion(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':
 			try:
@@ -258,7 +281,123 @@ def reject_interview(request):
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status ="rejected"
 				applicant.save()
+				interview = Interview.objects.get(application=applicant)
+				if interview:
+					interview.delete()
 				return JsonResponse({'message': f'{applicant.user.email} Application is rejected', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+@check_leave
+@csrf_protect
+def set_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+				data = {
+						"date":json_data.get('date'),
+						"start_time" : json_data.get('start_time'),
+						"end_time": json_data.get('end_time')
+				}
+			
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+			try:
+				date_format = "%Y-%m-%d"
+				end_date = datetime.strptime(data['date'], date_format)
+				current_date =datetime.now(None)
+				if current_date >= end_date:
+					return JsonResponse({'errors': {'Date':'Interview date cannot older than the current date'}, 'status':'error'}, status=404)
+				time_format = "%H:%M"
+				
+				start_time = datetime.strptime(data['start_time'], time_format)
+				end_time = datetime.strptime(data['end_time'], time_format)
+				print(data)
+				start_datetime = datetime.combine(end_date, start_time.time())
+				print(data)
+				end_datetime = datetime.combine(end_date, end_time.time())
+				print(data)
+				if start_datetime > end_datetime:
+					return JsonResponse({'errors': {'Time': 'Interview start time must be earlier than the end time'},'status': 'error'},status=404)
+			except Exception as e:
+				return JsonResponse({'errors': {'Date':f'Choose the correct date or time'}, 'status':'error'}, status=404)
+
+			try:
+				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
+				user = applicant.user 
+				exists = Interview.objects.filter(user=user,application=applicant).first()
+				if exists:
+					return JsonResponse({"errors":{'Interview ':['Applicant aleady set for an interview']}, "status":"error"}, status=400)
+				interview = Interview.objects.create(user=user,application=applicant,date=data['date'],start_time=data['start_time'],end_time=data['end_time'])
+				interview.save()
+				applicant.status = "interview"
+				applicant.save()
+				return JsonResponse({'message': ' Interview Scheduled successfully', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@check_leave
+@csrf_protect
+def reschedule_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+				data = {
+						"date":json_data.get('date'),
+						"start_time" : json_data.get('start_time'),
+						"end_time": json_data.get('end_time')
+				}
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+			try:
+
+				date_format = "%Y-%m-%d"
+				end_date = datetime.strptime(data['date'], date_format)
+				current_date =datetime.now(None)
+				if current_date >= end_date:
+					return JsonResponse({'errors': {'Date':'Interview date cannot older than the current date'}, 'status':'error'}, status=404)
+				time_format = "%H:%M"
+				start_time = datetime.strptime(data['start_time'], time_format)
+				end_time = datetime.strptime(data['end_time'], time_format)
+				start_datetime = datetime.combine(end_date, start_time.time())
+				end_datetime = datetime.combine(end_date, end_time.time())
+				if start_datetime > end_datetime:
+					return JsonResponse({'errors': {'Time': 'Interview start time must be earlier than the end time'},'status': 'error'},status=404)
+
+			except Exception as e:
+				return JsonResponse({'errors': {'Date':f'Choose the correct date'}, 'status':'error'}, status=404)
+
+			try:
+				exists = Interview.objects.filter(id=int(json_data.get('interviewID'))).first()
+				if not exists:
+					return JsonResponse({"errors":{'Interview ':['Interview does not exist']}, "status":"error"}, status=400)
+				interview = Interview.objects.get(id=int(json_data.get('interviewID')))
+				interview.date = data['date']
+				interview.start_time = data['start_time']
+				interview.end_time = data['end_time']
+				interview.save()
+				return JsonResponse({'message': ' Interview rescheduled successfully', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 
@@ -695,7 +834,7 @@ def delete_job_skill(request):
 			try:
 				job_skill = Skill.objects.get(id=int(data['job_skill_id']))
 				job_skill.delete()
-				print(job_skill)
+				
 				job_post = JobPost.objects.get(id=int(data['job_post_id']))
 				skills = Skill.objects.filter(job_post=job_post)
 				return JsonResponse({'message': 'Job skills remved Successfully','skills':serialize_job_skills(skills), 'status': 'success'}, status=201)

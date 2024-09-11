@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication
+from jobs.models import JobPost, Notification, JobApplication,Interview
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -98,8 +98,8 @@ def job_applications(request):
 	if request.user.is_authenticated:
 		applications = JobApplication.objects.all()
 		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
-		print(applied_jobs)
-		return render(request, 'job_applications.html', {'applications':applications, 'applied_jobs':applied_jobs})
+		interview = Interview.objects.all()
+		return render(request, 'job_applications.html', {'applications':applications,'interviews':interview, 'applied_jobs':applied_jobs})
 	else:
 		return redirect('render_auth_page')
 
@@ -108,7 +108,8 @@ def filter_job_application(request,jobID):
 	if request.user.is_authenticated:
 		job_applications = JobApplication.objects.filter(job__id=jobID)
 		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
-		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs})
+		cnt=0
+		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt})
 	else:
 		return redirect('render_auth_page')
 
