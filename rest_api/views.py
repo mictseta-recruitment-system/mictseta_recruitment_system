@@ -78,10 +78,10 @@ def get_all_jobs(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @permission_classes([IsAuthenticated])
+
 def apply_for_job(request, jobID):
     user = request.user
-    
-    # Check if the user is authenticated
+     
     if not request.user.is_authenticated:
         return Response({'errors': {'Authentication': ['User is not authenticated']}}, status=status.HTTP_401_UNAUTHORIZED)
     
@@ -90,21 +90,22 @@ def apply_for_job(request, jobID):
     if not job:
         return Response({'errors': {'Job': ['Job not found']}}, status=status.HTTP_404_NOT_FOUND)
 
-    exists = JobApplication.objects.filter(user=user, job_id=job).exists()
+    exists = JobApplication.objects.filter(user=user, job_id=job.id).exists()
     if exists:
         return Response({'errors': {'Application': ['Application already exists']}}, status=status.HTTP_400_BAD_REQUEST)
 
-    new_application = JobApplication.objects.create(user=user, job_id=job, status="pending")
+    new_application = JobApplication.objects.create(user=user, job_id=job.id, status="pending")
     new_application.save()
-    send_mail(
-            'Application sent successfully',
-            f'Please note that you application have been sent successfully.',
-            settings.DEFAULT_FROM_EMAIL,
-            request.user.data['email'],
-            fail_silently=False,
-        )
-    return Response({'message': 'Your Application was submitted successfully'}, status=status.HTTP_201_CREATED)
 
+    send_mail(
+        'Application sent successfully',
+        'Please note that your application has been sent successfully.',
+        settings.DEFAULT_FROM_EMAIL,
+        [request.user.email],  
+        fail_silently=False,
+    )
+
+    return Response({'message': 'Your Application was submitted successfully'}, status=status.HTTP_201_CREATED)
 
 def send_verification_email(name,email):
     global verification_code
@@ -187,3 +188,4 @@ def log_out(request):
         return Response({'message': 'Logged out successfully', 'status': 'success'}, status=status.HTTP_200_OK)
     except Token.DoesNotExist:
         return Response({'errors': 'Token not found, user is not logged in', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+    
