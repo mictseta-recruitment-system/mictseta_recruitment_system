@@ -482,6 +482,45 @@
          </div>
        </div>
         
+       <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to set the minimum date and time
+            function setMinDateTime() {
+                // Get the current date and time
+                var now = new Date();
+    
+                // Format the date in YYYY-MM-DD format
+                var today = now.toISOString().split('T')[0];
+    
+                // Get the current time in HH:MM format
+                var time = now.toTimeString().split(' ')[0].slice(0, 5);
+    
+                // Set the min attribute for the date input
+                var dateInput = document.querySelector('input[type="date"]');
+                if (dateInput) {
+                    dateInput.setAttribute('min', today);
+                }
+    
+                // Set the min attribute for the start time input
+                var startTimeInput = document.querySelector('input[type="time"]#date_start_times{{interview.id}}');
+                if (startTimeInput) {
+                    startTimeInput.setAttribute('min', time);
+                }
+    
+                // Set the min attribute for the end time input
+                var endTimeInput = document.querySelector('input[type="time"]#date_end_times{{interview.id}}');
+                if (endTimeInput) {
+                    // If end time should be after the start time, set it accordingly
+                    // This example assumes the end time should be after the start time
+                    endTimeInput.setAttribute('min', time);
+                }
+            }
+    
+            // Call the function to set the minimum date and time
+            setMinDateTime();
+        });
+    </script>
+    
 {% endblock %}
 
 

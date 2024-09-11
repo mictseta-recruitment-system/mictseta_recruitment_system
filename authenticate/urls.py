@@ -13,3 +13,4 @@ urlpatterns = [
 	path('find_account/',views.find_account, name='find_account'),
 	path('reset_link/', views.reset_link, name='reset_link')
 ]
+
