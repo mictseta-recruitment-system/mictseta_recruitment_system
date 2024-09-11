@@ -100,6 +100,13 @@ class Interview(models.Model):
     start_time = models.CharField(max_length=225,null=False)
     end_time = models.CharField(max_length=225,null=False)
 
+class FeedBack(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    message = models.CharField(max_length=225,null=False)
+    status = models.CharField(max_length=225,null=False)
+
 
 class SkillValidation(models.Model):
     skill = models.CharField(max_length=100, null=True)
