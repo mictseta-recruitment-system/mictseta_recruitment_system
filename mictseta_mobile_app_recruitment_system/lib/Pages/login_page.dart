@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mictseta_mobile_app_recruitment_system/Components/Buttons.dart';
 import 'MainPage.dart';
-import '../Sign up files/SignUpPage.dart';  
+import '../Sign up files/SignUpPage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,7 +31,8 @@ class _LoginPageState extends State<LoginPage> {
     }
     return null;
   }
-final storage = FlutterSecureStorage();
+
+  final storage = FlutterSecureStorage();
   Future<void> _sign_in(String email, String password) async {
     if (emailController.text.isEmpty && passwordController.text.isEmpty) {
       showDialog(
@@ -82,16 +82,17 @@ final storage = FlutterSecureStorage();
         body: jsonEncode({"email": email, "password": password}),
       );
 
-      if (response.statusCode == 200) {
-        String? token = extractCsrfToken(response.headers['set-cookie']);
-        
-  await storage.write(key: 'auth_token',value:token!);
-       print('token saved...');
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        print('cookie: ${response.headers['set-cookie']}');
+        final token = responseData['token'];
+        await storage.write(key: 'auth_token', value: token!);
+        print('token saved...');
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => MainPage(token: token!)));
       } else {
         Navigator.pop(context);
-        print('Failed to apply: ${response.statusCode}');
+        print('Failed to signin: ${response.statusCode}');
       }
     } catch (e) {
       Navigator.pop(context);
