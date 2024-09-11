@@ -61,7 +61,7 @@ class _JobdetailsPageState extends State<JobdetailsPage> {
 
       Navigator.pop(context); // Close the dialog once response is received
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print('Application submitted successfully');
       } else if (response.statusCode == 302) {
         var redirectUrl = response.headers['location'];
@@ -122,9 +122,6 @@ class _JobdetailsPageState extends State<JobdetailsPage> {
               'Requirements:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            SizedBox(height: 5),
-            Text(
-                '- Java\n- JavaScript\n- Python\n- Ruby\n- HTML\n- PHP\n- CSS'),
             SizedBox(height: 10),
             Buttons(
               onTap: () {
