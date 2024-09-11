@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, Skill, Experience, Requirement, Notification, JobApplication, Interview
+from .models import JobPost, Academic, Experience, Notification, JobApplication, Interview, SkillList, LanguageList, UserLanguage, VacancyLanguage, JobHistory, Referee
 import re
 from datetime import datetime
 from django.utils.timezone import now
@@ -36,19 +36,6 @@ def serialize_job_post(Jobs):
 	return jobs
 
 
-def serialize_job_skills(Skills):
-	skills = []
-	for Skill in Skills:
-		skill= {
-			'name'		:	Skill.name,
-			'level'		:	Skill.level,
-			'id'		:	Skill.id
-			
-				# 'application_deadline' :	json_data.get('application_deadline')            
-		}
-		skills.append(skill)
-	return skills
-
 def serialize_job_academics(Academics):
 	academics = []
 	for Academic_ in Academics:
@@ -75,17 +62,6 @@ def serialize_job_experience(Experiences):
 		experiences.append(experience)
 	return experiences
 
-def serialize_job_requirements(Requirements):
-	requirements = []
-	for Requirement_ in Requirements:
-		requirement= {
-			'description'		:	Requirement_.description,
-			'id'		:	Requirement_.id
-			
-				# 'application_deadline' :	json_data.get('application_deadline')            
-		}
-		requirements.append(requirement)
-	return requirements
 
 
 

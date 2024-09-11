@@ -36,19 +36,6 @@ class Academic(models.Model):
         return f'Academic for {self.job_post.title} Job Vacancy'
 
 
-class Skill(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE,  related_name='skills')
-    name = models.CharField(max_length=225, unique=False, null=False)
-    LEVEL_CHOICES = [
-        ('Beginner', 'Beginner'),
-        ('Intermediate', 'Intermediate'),
-        ('Advanced', 'Advanced')
-    ]
-    level = models.CharField(max_length=50, choices=LEVEL_CHOICES, null=False)
-
-    def __str__(self):
-         return f'Skill for {self.job_post.title} Job Vacancy'
-
 
 class Experience(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='experiences')
@@ -58,12 +45,6 @@ class Experience(models.Model):
     def __str__(self):
         return f'Experience for {self.job_post.title} Job Vacancy'
 
-class Requirement(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='requirements')
-    description = models.CharField(max_length=225, unique=False, null=False)
-
-    def __str__(self):
-        return f'Requirements for {self.job_post.title} Job Vacancy'
 
 
 class Notification(models.Model):
@@ -75,15 +56,6 @@ class Notification(models.Model):
     is_seen = models.BooleanField(null=False, default=False)
     def __str__(self):
         return f'Notification for {self.job_title} Job Vacancy'
-# class Requirement(models.Model):
-#     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE)
-#     cv = models.BooleanField(default=False, null=False)
-#     proof_of_residence = models.BooleanField(default=False, null=False)
-#     id_copy = models.BooleanField(default=False, null=False)
-#     other_documents = models.BooleanField(null=True)  # Added field for other documents
-
-#     def __str__(self):
-#         return f'Requirements for {self.job_post.title} Job Post'
 
 
 class JobApplication(models.Model):
@@ -99,9 +71,54 @@ class Interview(models.Model):
     date = models.CharField(max_length=225,null=False)
     start_time = models.CharField(max_length=225,null=False)
     end_time = models.CharField(max_length=225,null=False)
-
-
+    
 class SkillValidation(models.Model):
     skill = models.CharField(max_length=100, null=True)
     level = models.CharField(max_length=15, null=True)
     category = models.CharField(max_length=20,null=True)
+
+    
+class SkillList(models.Model):
+    skill_name = models.CharField(max_length=255)
+    skill_type = models.CharField(max_length=255)
+
+class LanguageList(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return self.name
+    
+class UserLanguage(models.Model):
+    PROFICIENCY_CHOICES = [
+        ('Fair', 'Fair'),
+        ('Good', 'Good'),
+        ('Very Good', 'Very Good'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    language = models.ForeignKey(LanguageList, on_delete=models.CASCADE)
+    reading_proficiency = models.CharField(max_length=10, choices=PROFICIENCY_CHOICES)
+    writing_proficiency = models.CharField(max_length=10, choices=PROFICIENCY_CHOICES)
+    speaking_proficiency = models.CharField(max_length=10, choices=PROFICIENCY_CHOICES)
+    
+    
+class VacancyLanguage(models.Model):
+    vacancy = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    language = models.ForeignKey(LanguageList, on_delete=models.CASCADE)
+    proficiency_required = models.CharField(max_length=10, choices=UserLanguage.PROFICIENCY_CHOICES)
+
+class JobHistory(models.Model):
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='job_histories')
+    closed_date = models.DateTimeField(auto_now_add=True)
+    reason_for_closure = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.job_post.title} - Closed on {self.closed_date}'
+    
+class Referee(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='referees')
+    full_name = models.CharField(max_length=255)
+    contact_info = models.CharField(max_length=100)  
+    relationship = models.CharField(max_length=100)  
+
+    def __str__(self):
+        return f'{self.full_name} - {self.relationship}'
