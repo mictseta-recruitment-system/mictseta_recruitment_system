@@ -8,25 +8,57 @@
     .content-section {
         padding: 0px;
     }
-    
-    .form-group input, .form-group select {
+
+    .form-group input,
+    .form-group select {
         border-radius: 0;
     }
+
     .form-group button {
         border-radius: 0;
     }
+
     .proficiency-wrapper {
         display: flex;
         align-items: center;
     }
+
     .proficiency-wrapper input[type="range"] {
         flex-grow: 1;
+        appearance: none;
+        width: 100%;
+        height: 8px;
+        background: linear-gradient(to right, red, blue, green);
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
     }
+
+    .proficiency-wrapper input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: green; /* Default */
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .proficiency-wrapper input[type="range"]::-moz-range-thumb {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: green; /* Default */
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
     .proficiency-value {
         margin-left: 10px;
         width: 40px;
         text-align: center;
         font-weight: bold;
+        transition: color 0.3s ease;
     }
 </style>
 
@@ -55,7 +87,6 @@
                     <option value="Creativity">Creativity</option>
                     <option value="Flexibility">Flexibility</option>
                     <option value="Other">Other</option>
-
                 </select>
             </div>
         </div>
@@ -70,7 +101,7 @@
             <div class="col-sm-4">
                 <div class="proficiency-wrapper">
                     <input type="range" class="form-control-range" id="proficiency1" name="proficiency1" min="1" max="10" value="5" oninput="updateProficiencyValue(1)">
-                    <span id="proficiencyValue1" class="proficiency-value">5</span>
+                    <span id="proficiencyValue1" class="proficiency-value" style="color: blue;">5</span>
                 </div>
             </div>
         </div>
@@ -117,7 +148,7 @@
                         <div class="col-sm-8">
                             <div class="proficiency-wrapper">
                                 <input type="range" class="form-control-range" id="proficiency2" name="proficiency2" min="1" max="10" value="5" oninput="updateProficiencyValue(2)">
-                                <span id="proficiencyValue2" class="proficiency-value">5</span>
+                                <span id="proficiencyValue2" class="proficiency-value" style="color: blue;">5</span>
                             </div>
                         </div>
                     </div>
@@ -148,6 +179,25 @@
         const slider = document.getElementById('proficiency' + id);
         const output = document.getElementById('proficiencyValue' + id);
         output.textContent = slider.value;
+
+        // Update color based on proficiency value
+        let proficiency = slider.value;
+        let color = 'green'; // Default color
+
+        if (proficiency <= 3) {
+            color = 'red';
+        } else if (proficiency <= 6) {
+            color = 'blue';
+        } else {
+            color = 'green';
+        }
+
+        // Update the number color
+        output.style.color = color;
+
+        // Update the thumb color dynamically
+        slider.style.setProperty('--webkit-slider-thumb', color);
+        slider.style.setProperty('--moz-range-thumb', color);
     }
 </script>
 
