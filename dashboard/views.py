@@ -103,6 +103,28 @@ def job_applications(request):
 	else:
 		return redirect('render_auth_page')
 
+@change_application_status
+@csrf_protect
+def calender(request):
+	if request.user.is_authenticated:
+		interviews = Interview.objects.all()
+		interview_list = []
+		for interview in interviews:
+			add_to_list = {
+
+						'groupID':'999',
+						'id':f'{interview.id}',
+        				'title': f'{interview.user.email}',
+        				'start': f'{interview.date}T{interview.start_time}',
+        				'end': f'{interview.date}T{interview.end_time}'
+     		}
+			interview_list.append(add_to_list)
+
+		interview_list_json = json.dumps(interview_list)
+		return render(request, 'calender.html',{'interviews':interview_list_json})
+	else:
+		return redirect('render_auth_page')
+
 @csrf_protect
 def filter_job_application(request,jobID):
 	if request.user.is_authenticated:

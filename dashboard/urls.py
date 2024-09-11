@@ -27,6 +27,8 @@ urlpatterns = [
     path('crud_events/', views.crud_events, name="dashboard.crud_events"),
     path('login_events/', views.login_events, name="dashboard.login_events"),
     path('job_applications/', views.job_applications, name="dashboard.job_applications"),
+    path('calender/', views.calender, name="dashboard.calender"),
+    
     path('jobsekeer_details/<seekerID>', views.jobsekeer_details, name="dashboard.jobsekeer_details"),
      path('filter_job_application/<int:jobID>', views.filter_job_application, name='filter_job_application'),
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),

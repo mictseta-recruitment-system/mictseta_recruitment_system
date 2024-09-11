@@ -354,6 +354,62 @@ def set_interview(request):
 
 @check_leave
 @csrf_protect
+def calender_reschedule_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+				data = {
+						"id":json_data.get('interviewID'),
+						"start_time" : json_data.get('start_time'),
+						"end_time": json_data.get('end_time')
+				}
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			print(data)
+			print('------------------------')
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+			try:
+
+				date_format = "%Y-%m-%d"
+				end_date = datetime.strptime(data['date'], date_format)
+				current_date =datetime.now(None)
+				if current_date >= end_date:
+					return JsonResponse({'errors': {'Date':'Interview date cannot older than the current date'}, 'status':'error'}, status=404)
+				time_format = "%H:%M"
+				start_time = datetime.strptime(data['start_time'], time_format)
+				end_time = datetime.strptime(data['end_time'], time_format)
+				start_datetime = datetime.combine(end_date, start_time.time())
+				end_datetime = datetime.combine(end_date, end_time.time())
+				if start_datetime > end_datetime:
+					return JsonResponse({'errors': {'Time': 'Interview start time must be earlier than the end time'},'status': 'error'},status=404)
+
+			except Exception as e:
+				return JsonResponse({'errors': {'Date':f'Choose the correct date'}, 'status':'error'}, status=404)
+
+			try:
+				exists = Interview.objects.filter(id=int(json_data.get('interviewID'))).first()
+				if not exists:
+					return JsonResponse({"errors":{'Interview ':['Interview does not exist']}, "status":"error"}, status=400)
+				interview = Interview.objects.get(id=int(json_data.get('interviewID')))
+				interview.date = data['date']
+				interview.start_time = data['start_time']
+				interview.end_time = data['end_time']
+				interview.save()
+				return JsonResponse({'message': ' Interview rescheduled successfully', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@check_leave
+@csrf_protect
 def reschedule_interview(request):
 	if request.user.is_authenticated:
 		if request.method == 'POST':

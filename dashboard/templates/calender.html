@@ -1,0 +1,61 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+ {% block breadcrumbs %}
+       <li class="breadcrumb-item active" aria-current="page"> Jobs/Vacancy </li>
+      <li class="breadcrumb-item active" aria-current="page"> Calender </li>
+     {% endblock %}
+
+{% block content %}
+
+
+<div class="container shadow shadow-sm p-5 mt-3" style="background-color:whitesmoke ;">
+     
+     <div  class="p-4 shadow shadow-md" id="calendar">
+          
+     </div>
+</div>
+     
+
+
+
+
+<script >
+     document.addEventListener('DOMContentLoaded', function() {
+          
+     let interviewList = JSON.parse('{{ interviews|escapejs }}');
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    initialDate: '2024-08-07',
+    headerToolbar: {
+      left: 'prev today next',
+      center: 'title',
+      right: 'list dayGridMonth , timeGridWeek , timeGridDay'
+    },
+    initialView: 'dayGridMonth',
+  selectable: true,
+  editable: true,
+    events:interviewList,
+     editable: true,
+     eventDrop: function(event) {
+                    // Optional: Customize how events are rendered
+               var start_time = event.start;
+               var end_time = event.end;
+               var id = event.id;
+               console.log("---------------")
+                 console.log(event)
+                   console.log(end_time)
+                     console.log(id)
+                   console.log("---------------")
+               calender_reschedule_interview(id,start_time,end_time);
+                }
+  });
+
+  calendar.render();
+});
+</script>
+
+{% endblock%}
