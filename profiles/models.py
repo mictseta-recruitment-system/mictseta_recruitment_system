@@ -8,7 +8,7 @@ import uuid
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     idnumber = models.CharField(max_length=13, unique=True)
-    phone = models.CharField(max_length=10, unique=True, null=True, default=" ")
+    phone = models.CharField(max_length=10, null=True, default="")
     dob = models.CharField(max_length=6,null=False )
     gender = models.CharField(max_length=6, null=False)
     age = models.CharField(max_length=6, null=False)
@@ -19,6 +19,7 @@ class Profile(models.Model):
     linkedin_profile = models.CharField(max_length=225, default=" ")
     personal_website = models.CharField(max_length=225, default=" ")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    verification_token = models.CharField(max_length=32, blank=True, null=True)
     
 
     def __str__(self):

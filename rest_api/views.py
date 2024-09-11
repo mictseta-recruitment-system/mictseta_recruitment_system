@@ -15,8 +15,25 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str  
 from django.views.decorators.csrf import csrf_exempt, csrf_protect, ensure_csrf_cookie
 import json
+from rest_framework.authtoken.models import Token
+from django.shortcuts import get_object_or_404
+from .serializers import UserSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
+from django.http import JsonResponse 
+import random
+from rest_framework import status
+from django.core.mail import send_mail
+from django.conf import settings
+
+verification_code = None
 
 @csrf_exempt
+@permission_classes([AllowAny])
 @api_view(['POST'])
 def reset_password(request, uidb64, token):
     try: 
@@ -46,6 +63,7 @@ def reset_password(request, uidb64, token):
 
  
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def get_all_jobs(request):
     current_time = now()
     jobs = JobPost.objects.filter(is_approved=True)
@@ -56,12 +74,17 @@ def get_all_jobs(request):
     open_jobs = JobPost.objects.filter(status="open")
     serializer = JobPostSerializer(open_jobs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
- 
-@csrf_protect
+  
 @api_view(['POST'])
-@login_required
+@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def apply_for_job(request, jobID):
     user = request.user
+    
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        return Response({'errors': {'Authentication': ['User is not authenticated']}}, status=status.HTTP_401_UNAUTHORIZED)
+    
     job = JobPost.objects.filter(id=jobID).first()
 
     if not job:
@@ -73,80 +96,94 @@ def apply_for_job(request, jobID):
 
     new_application = JobApplication.objects.create(user=user, job_id=job, status="pending")
     new_application.save()
-
+    send_mail(
+            'Application sent successfully',
+            f'Please note that you application have been sent successfully.',
+            settings.DEFAULT_FROM_EMAIL,
+            request.user.data['email'],
+            fail_silently=False,
+        )
     return Response({'message': 'Your Application was submitted successfully'}, status=status.HTTP_201_CREATED)
 
 
-@ensure_csrf_cookie
-@api_view(['POST'])
-def sign_in(request):
-    if request.user.is_authenticated:
-        return Response({'message': f"Already logged in as {request.user.username}", 'status': 'warning'}, status=status.HTTP_200_OK)
-
-    try:
-        json_data = json.loads(request.body)
-    except Exception:
-        return Response({'errors': 'Supply a valid JSON object: check documentation for more info', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
-
-    email = json_data.get('email')
-    password = json_data.get('password')
- 
-    if not email or not password:
-        return Response({'errors': 'Email and password are required', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
- 
-    try:
-        user = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return Response({'errors': 'User not found', 'status': 'error'}, status=status.HTTP_404_NOT_FOUND)
-
-    user = authenticate(request, username=user.username, password=password)
-
-    if user is not None:
-        login(request, user)
-        user_type = 'Staff member' if user.is_staff else 'Job Seaker'
-        return Response({'message': f'Welcome back {user.username}', 'status': 'success', 'user_type': user_type}, status=status.HTTP_200_OK)
-    else:
-        return Response({'errors': 'Invalid email or password', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+def send_verification_email(name,email):
+    global verification_code
+    verification_code = random.randint(100000, 999999)
     
-@ensure_csrf_cookie
+    send_mail(
+            'Verify Your Email Address',
+            f'Hello {name},We are aware that you a trying to create an account with MICTSETA.\nYour verification code is: {verification_code}',
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+    return verification_code
+
+
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def sign_up(request):
-    if request.user.is_authenticated:
-        return Response({'message': 'Already logged in', 'status': 'warning'}, status=status.HTTP_200_OK)
+    try: 
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"detail": "Invalid JSON data"}, status=status.HTTP_400_BAD_REQUEST)
 
-    try:
-        json_data = json.loads(request.body)
-    except Exception:
-        return Response({'errors': 'Supply a valid JSON object: check documentation for more info', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
-
-    email = json_data.get('email')
-    password = json_data.get('password') 
-    idnumber = json_data.get('idnumber')
- 
-    if not email or not password or not idnumber:
-        return Response({'errors': 'All fields are required!', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
- 
+    serializer = UserSerializer(data=request.data)
+    # global verification_code
     
-    if User.objects.filter(email=email).exists():
-        return Response({'errors': 'Email already exists', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+    if serializer.is_valid():
+        # verification_cod= send_verification_email(request.data['username'],request.data['email'])
+        # if verification_code==verification_cod:
+        serializer.save()
+        user = User.objects.get(username=data['username'])
+        token = Token.objects.create(user=user)
+        idnumber = request.data.get('idnumber')
+    
+        if idnumber: 
+            age = ValidateIdNumber(idnumber).get_age()
+            gender = ValidateIdNumber(idnumber).get_gender()
+            dob = ValidateIdNumber(idnumber).get_birthdate()
+
+            
+            profile, created = Profile.objects.get_or_create(user=user)
+            profile.idnumber = idnumber
+            profile.age = age
+            profile.gender = gender
+            profile.dob = dob
+            profile.save()
+        return Response({"token": token.key, "User": serializer.data})
+        # else:
+        #     return Response({"Detail":"The verification code is incorrect!"})
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
  
-    new_user = User.objects.create_user(email=email, password=password, username=idnumber)
-    profile = Profile.objects.create(
-        user=new_user,
-        idnumber=idnumber,
-        age=ValidateIdNumber(idnumber).get_age(),
-        gender=ValidateIdNumber(idnumber).get_gender(),
-        dob=ValidateIdNumber(idnumber).get_birthdate()
-    )
-    profile.save()
-
-    return Response({'message': f'User profile for {new_user.username} created successfully', 'status': 'success'}, status=status.HTTP_201_CREATED)
-
-@csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])
+def sign_in(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    
+    if not email or not password:
+        return Response({"details": "Email and password required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = get_object_or_404(User, email=email)
+    if not user.check_password(password):
+        return Response({"details": "Invalid email or password."}, status=status.HTTP_400_BAD_REQUEST)
+
+    token, created = Token.objects.get_or_create(user=user)
+    serializer = UserSerializer(instance=user)
+
+    return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  
 def log_out(request):
-    if request.user.is_authenticated:
+    try: 
+        token = Token.objects.get(user=request.user)
+        token.delete() 
         logout(request)
+
         return Response({'message': 'Logged out successfully', 'status': 'success'}, status=status.HTTP_200_OK)
-    else:
-        return Response({'errors': 'You are not logged in', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
+    except Token.DoesNotExist:
+        return Response({'errors': 'Token not found, user is not logged in', 'status': 'error'}, status=status.HTTP_400_BAD_REQUEST)
