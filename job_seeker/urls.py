@@ -21,4 +21,4 @@ urlpatterns = [
 
     path('logout/', views.logout, name='logout'),
     path('job_information/<int:jobID>', views.job_information, name='job_information'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
