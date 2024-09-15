@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-+5d78i2gower*d@*0r3cl-q^r&@n=y8(m!kau8-4)q0-rw073$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['058a-102-64-32-230.ngrok-free.app','127.0.0.1', '192.168.1.195','localhost','10.0.2.2']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -124,16 +124,16 @@ CSRF_TRUSTED_ORIGINS = [
  ]
 
 # # Ensure CSRF_USE_SESSIONS is True to use CSRF tokens stored in session
-# CSRF_USE_SESSIONS = True
+CSRF_USE_SESSIONS = True
 
 # # Ensure CSRF_FAILURE_VIEW is set to handle CSRF failures
 # # CSRF_FAILURE_VIEW = 'your_app.views.csrf_failure'  # Replace with your actual view name
 
 # # Ensure CSRF_COOKIE_SAMESITE is 'Strict' or 'Lax' based on your requirements
-# CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_SAMESITE = 'Strict'
 
 CORS_ORIGIN_ALLOW_ALL = True
-# # CSRF_TRUSTED_ORIGINS = ['https://058a-102-64-32-230.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['*']
 
 # # settings.py
 
