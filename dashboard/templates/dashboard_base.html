@@ -41,7 +41,7 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     
 
 
@@ -77,7 +77,7 @@
              background: radial-gradient(circle at 74.2% 50.9%, rgb(14, 72, 222) 5.2%, rgb(3, 22, 65) 75.3%);
             }
              .navbar{
-              z-index: 1;
+              z-index: 2000;
               position: fixed;
               width:100%;
               /*background: linear-gradient(rgb(52, 102, 174) 0%, rgb(83, 144, 241) 100%);*/
@@ -345,6 +345,7 @@
       
       <a href="{% url 'dashboard.view_jobs' %}" class="pl-4"><i class="fa fa-cog" aria-hidden="true"></i> Jobs/Vacancy</a>
        <a href="{% url 'dashboard.job_applications' %}" class="pl-4"><i class="fa fa-fax" aria-hidden="true"></i> Applications</a>
+       <a href="{% url 'dashboard.calender' %}" class="pl-4"><i class="fa fa-calendar-minus-o" aria-hidden="true"></i> Calender</a>
      
     </div>
     <hr>

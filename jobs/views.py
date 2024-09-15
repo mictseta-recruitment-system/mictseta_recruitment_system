@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, Skill, Experience, Requirement, Notification, JobApplication, Interview
+from .models import JobPost, Academic, Skill, Experience, Requirement, Notification, JobApplication, Interview,FeedBack
 import re
 from datetime import datetime
 from django.utils.timezone import now
@@ -103,6 +103,11 @@ def job_application(request, jobID):
 			return JsonResponse({'errors': {'Application' : ['Application already exists']}, 'status': 'error'}, status=400)
 		new_application = JobApplication.objects.create(user=request.user, job=job, status="pending")
 		new_application.save()
+		try:
+			feed_back = FeedBack(user=request.user,job=new_application.job,message="your application is being processed",status="pending")
+			feed_back.save()
+		except Exception as e:
+			print(e)
 		return JsonResponse({'message': 'Job Application submitted successfully', 'status': 'success'}, status=201)
 	
 	else:
@@ -198,6 +203,9 @@ def move_to_interview(request):
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status = "interview"
 				applicant.save()
+				
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to interview stage",status="Processing")
+				feed_back.save()
 				return JsonResponse({'message': f'{applicant.user.email} moved to interview stage', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -220,6 +228,9 @@ def move_to_shortlist(request):
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status = "short_list"
 				applicant.save()
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to Short-List stage",status="Short-List")
+				feed_back.save()
+				print(feed_back)
 				return JsonResponse({'message': f'{applicant.user.email} moved to short-list stage', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -241,6 +252,9 @@ def approve_interview(request):
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status ="approved"
 				applicant.save()
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application successully approved we will contact you",status="approved")
+				feed_back.save()
+				print(feed_back)
 				return JsonResponse({'message': f'{applicant.user.email} Application is approved', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -284,6 +298,8 @@ def reject_applicantion(request):
 				interview = Interview.objects.get(application=applicant)
 				if interview:
 					interview.delete()
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application Rejected",status="rejected")
+				feed_back.save()
 				return JsonResponse({'message': f'{applicant.user.email} Application is rejected', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -342,7 +358,65 @@ def set_interview(request):
 				interview.save()
 				applicant.status = "interview"
 				applicant.save()
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application set for interview",status="Interview")
+				feed_back.save()
 				return JsonResponse({'message': ' Interview Scheduled successfully', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@check_leave
+@csrf_protect
+def calender_reschedule_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+				data = {
+						"id":json_data.get('interviewID'),
+						"start_time" : json_data.get('start_time'),
+						"end_time": json_data.get('end_time')
+				}
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			print(data)
+			print('------------------------')
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+			try:
+
+				date_format = "%Y-%m-%d"
+				end_date = datetime.strptime(data['date'], date_format)
+				current_date =datetime.now(None)
+				if current_date >= end_date:
+					return JsonResponse({'errors': {'Date':'Interview date cannot older than the current date'}, 'status':'error'}, status=404)
+				time_format = "%H:%M"
+				start_time = datetime.strptime(data['start_time'], time_format)
+				end_time = datetime.strptime(data['end_time'], time_format)
+				start_datetime = datetime.combine(end_date, start_time.time())
+				end_datetime = datetime.combine(end_date, end_time.time())
+				if start_datetime > end_datetime:
+					return JsonResponse({'errors': {'Time': 'Interview start time must be earlier than the end time'},'status': 'error'},status=404)
+
+			except Exception as e:
+				return JsonResponse({'errors': {'Date':f'Choose the correct date'}, 'status':'error'}, status=404)
+
+			try:
+				exists = Interview.objects.filter(id=int(json_data.get('interviewID'))).first()
+				if not exists:
+					return JsonResponse({"errors":{'Interview ':['Interview does not exist']}, "status":"error"}, status=400)
+				interview = Interview.objects.get(id=int(json_data.get('interviewID')))
+				interview.date = data['date']
+				interview.start_time = data['start_time']
+				interview.end_time = data['end_time']
+				interview.save()
+				return JsonResponse({'message': ' Interview rescheduled successfully', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 
@@ -397,6 +471,8 @@ def reschedule_interview(request):
 				interview.start_time = data['start_time']
 				interview.end_time = data['end_time']
 				interview.save()
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application interview Re-scheduled",status="Interview")
+				feed_back.save()
 				return JsonResponse({'message': ' Interview rescheduled successfully', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)

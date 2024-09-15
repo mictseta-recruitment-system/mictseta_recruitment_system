@@ -31,7 +31,7 @@ urlpatterns = [
     path('purge/', views.purge, name='purge'),
     path('set_interview/', views.set_interview, name='set_interview'),
     path('reschedule_interview/', views.reschedule_interview, name='reschedule_interview'),
-
+    path('calender_reschedule_interview/', views.calender_reschedule_interview, name='calender_reschedule_interview'),
 
 
     # path('delete_user/', views.delete_user, name='delete_user')

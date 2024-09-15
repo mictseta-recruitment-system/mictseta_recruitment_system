@@ -221,14 +221,14 @@
                               <td><b>{{interview.start_time}}</b></td>
                               <td><b>{{interview.end_time}}</b></td>
                               <td> 
-                              <button type="button" class="btn btn-warning p-1 mb-1 mx-2" onclick="openModal1('interviews{{interview.id}}','{{interview.id}}')" data-bs-placement="top" title="Schedule interview">
+                              <button type="button" class="btn btn-warning p-1 mb-1 mx-1" onclick="openModal1('interviews{{interview.id}}','{{interview.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-edit"> </i>
                                Reschedule
                               </button>
-                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid %}" class="btn btn-primary p-1 mx-2" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
+                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
 
-                              <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-2" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
-                              <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-2" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
+                              <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-1" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
+                              <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-1" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
                             
                               </td>
                           </tr>

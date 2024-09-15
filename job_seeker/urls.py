@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 from django.urls import path
 
@@ -16,6 +18,9 @@ urlpatterns = [
     path('application_tracking/', views.application_tracking, name='application_tracking'),
     path('interviews/', views.interviews, name='interviews'),
     path('feedback/', views.feedback, name='feedback'),
+    path('delete_feadback/<int:feedbackID>', views.delete_feadback, name='delete_feadback'),
+
+
     path('logout/', views.logout, name='logout'),
     path('job_information/<int:jobID>', views.job_information, name='job_information'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

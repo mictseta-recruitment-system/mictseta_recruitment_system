@@ -48,26 +48,26 @@ class _JobdetailsPageState extends State<JobdetailsPage> {
     );
 
     var url = 'http://10.0.2.2:8000/rest_api/jobs/apply/$id/';
-
+    print('Here is token: $token');
     try {
       final response = await http.post(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token' // Use token with Bearer
+          'Authorization': 'Bearer $token',
         },
         body: jsonEncode({}),
       );
 
       Navigator.pop(context); // Close the dialog once response is received
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print('Application submitted successfully');
       } else if (response.statusCode == 302) {
         var redirectUrl = response.headers['location'];
         print('Redirected to: $redirectUrl');
       } else {
-        print('Failed to apply: ${response.statusCode}');
+        print('Failed to apply: ${response.body}');
       }
     } catch (e) {
       Navigator.pop(context); // Close the dialog on error
@@ -88,7 +88,8 @@ class _JobdetailsPageState extends State<JobdetailsPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Center(
               child: Image.asset(
                 'assets/image.png',
@@ -121,9 +122,6 @@ class _JobdetailsPageState extends State<JobdetailsPage> {
               'Requirements:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            SizedBox(height: 5),
-            Text(
-                '- Java\n- JavaScript\n- Python\n- Ruby\n- HTML\n- PHP\n- CSS'),
             SizedBox(height: 10),
             Buttons(
               onTap: () {

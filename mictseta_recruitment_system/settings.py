@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+5d78i2gower*d@*0r3cl-q^r&@n=y8(m!kau8-4)q0-rw073$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['058a-102-64-32-230.ngrok-free.app','127.0.0.1', '192.168.1.195','localhost','10.0.2.2']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -85,7 +85,6 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES':('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication', 
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -218,10 +217,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = 'staticfiles/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "static")
+
 ]
 
 
@@ -247,14 +247,20 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'setamict@gmail.com'
 EMAIL_HOST_PASSWORD = 'owwa msaz ueit juum'
+DEFAULT_FROM_EMAIL = 'setamict@gmail.com'
 
+#after the user have registered an account it will direct the user to this endpoint 
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'rest_api/auth/login/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'rest_api/auth/login/' 
+
+#after the user clicks on the link this will happen  
 
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-
+ACCOUNT_AUTHENTICATION_METHOD = 'email' 
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True  
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True 
 # AUTH_USER_MODEL ='authenticate.Users'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

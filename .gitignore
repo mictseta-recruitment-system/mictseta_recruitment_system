@@ -1,5 +1,5 @@
-
-*.sqlite3
+deploy_venv/
+sqlite3
 .vscode
 __pycache__/
 *.pyc
@@ -10,4 +10,4 @@ venv/
 /jobs/migrations/__pycache__
 /users/__pycache__
 /users/__pycache__
-*.sqlite3
+sqlite3

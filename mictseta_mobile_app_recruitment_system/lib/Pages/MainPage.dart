@@ -146,6 +146,7 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('Log Out', style: TextStyle(color: Colors.white)),
                 onTap: () {
+                  
                   _log_out(widget.token!);
                 },
               ),

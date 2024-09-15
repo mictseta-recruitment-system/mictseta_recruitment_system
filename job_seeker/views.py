@@ -1,13 +1,19 @@
 from django.shortcuts import render
-from jobs.models import JobPost, SkillValidation
+from jobs.models import JobPost, SkillValidation, FeedBack,Interview
 from profiles.models import SupportingDocuments
 # Create your views here.
 def job_seeker_dashboard(request):
     return render(request, 'job_seeker_dashboard.html')
 
 def personal_details(request):
+
+
+
     return render(request, 'personal_details.html')
+
+
 def address_details(request):
+
     return render(request, 'address_details.html')
 
 def academic_qualifications(request):
@@ -48,8 +54,21 @@ def job_information(request, jobID):
     jobs = JobPost.objects.filter(id=jobID).first()
     return render(request, 'job_information.html', {'jobs':jobs})
 
+def delete_feadback(request,feedbackID):
+    if request.user.is_authenticated:
+        feed_back = FeedBack.objects.filter(user=request.user)
+        feed_back_delete = FeedBack.objects.filter(id=int(feedbackID)).first()
+        feed_back_delete.delete()
+    return render(request, 'feedback.html',{'feedback_list':feed_back})
+
+
 def feedback(request):
-    return render(request, 'feedback.html')
+    if request.user.is_authenticated:
+        feed_back = FeedBack.objects.filter(user=request.user)
+        interviews = Interview.objects.filter(user=request.user)
+        print(feed_back)
+    return render(request, 'feedback.html',{'feedback_list':feed_back, 'interviews':interviews})
+
 
 def logout(request):
     return render(request, 'logout.html')
