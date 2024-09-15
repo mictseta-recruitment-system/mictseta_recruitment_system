@@ -138,7 +138,10 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-#CSRF_TRUSTED_ORIGINS = ['*']
+CORS_ALLOWED_ORIGINS = [
+    'https://mictsetarecruitmentsystem-production.up.railway.app',
+    'https://your-frontend-domain.com',
+]
 
 # # settings.py
 
