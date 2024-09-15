@@ -19,7 +19,7 @@ function handle_sign_in_button_click() {
     /*csrftoken:csrftoken,
           jeff:"jeff"*/
   };
-  fetch("hhttps://mictsetarecruitmentsystem-production.up.railway.app/auth/sign_in/", {
+  fetch("https://mictsetarecruitmentsystem-production.up.railway.app/auth/sign_in/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
