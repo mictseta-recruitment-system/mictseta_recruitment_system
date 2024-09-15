@@ -1,4 +1,4 @@
-
+deploy_venv/
 sqlite3
 .vscode
 __pycache__/
