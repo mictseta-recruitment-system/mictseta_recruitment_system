@@ -1,2 +1,1 @@
-web: gunicorn
-mictseta_recruitment_system.wsgi
+web: gunicorn your_project_name.wsgi --log-file -
