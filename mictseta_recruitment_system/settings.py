@@ -118,7 +118,7 @@ CORS_ALLOW_METHODS = [
 # CSRF_COOKIE_SECURE = True
 
 # # Set CSRF_TRUSTED_ORIGINS if you have specific trusted origins
-CORS_ALLOW_ALL_ORIGINS = True
+
 
 CSRF_TRUSTED_ORIGINS = [
     'https://mictsetarecruitmentsystem-production.up.railway.app',
@@ -128,15 +128,15 @@ CSRF_TRUSTED_ORIGINS = [
  ]
 
 # # Ensure CSRF_USE_SESSIONS is True to use CSRF tokens stored in session
-CSRF_USE_SESSIONS = True
+#CSRF_USE_SESSIONS = True
 
 # # Ensure CSRF_FAILURE_VIEW is set to handle CSRF failures
 # # CSRF_FAILURE_VIEW = 'your_app.views.csrf_failure'  # Replace with your actual view name
 
 # # Ensure CSRF_COOKIE_SAMESITE is 'Strict' or 'Lax' based on your requirements
-CSRF_COOKIE_SAMESITE = 'Strict'
+#CSRF_COOKIE_SAMESITE = 'Strict'
 
-#CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 #CSRF_TRUSTED_ORIGINS = ['*']
 
