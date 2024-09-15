@@ -11,7 +11,6 @@ class UpdateProfileInformationForm(forms.Form):
 	phone = forms.CharField(max_length=10)
 	maritial_status = forms.CharField(max_length=10)
 	race = forms.CharField(max_length=15)
-	disability = forms.CharField(max_length=30)
 	r_phone = forms.CharField(max_length=10)
 	
 	def validate_names(self,name):
@@ -66,10 +65,6 @@ class UpdateProfileInformationForm(forms.Form):
 		return self.validate_names(race)
 
 	def clean_disability(self):
-		disability = self.cleaned_data.get('disability')
-		if ' ' in disability :
-			raise forms.ValidationError("Spaces not allowed in disability")
-		
 		linkedin_profile = self.cleaned_data.get('linkedin_profile')
 		
 		if linkedin_profile == "none" or linkedin_profile =="" or linkedin_profile == None or linkedin_profile ==" ":

@@ -99,6 +99,7 @@ class Interview(models.Model):
     date = models.CharField(max_length=225,null=False)
     start_time = models.CharField(max_length=225,null=False)
     end_time = models.CharField(max_length=225,null=False)
+ 
 
 class FeedBack(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

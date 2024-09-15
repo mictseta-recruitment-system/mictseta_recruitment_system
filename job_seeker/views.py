@@ -45,7 +45,9 @@ def job_details(request):
     return render(request, 'jobseeker_job_details.html', {'job_list':job_list})
 
 def application_tracking(request):
-    return render(request, 'application_tracking.html')
+    if request.user.is_authenticated:
+        feed_back = FeedBack.objects.filter(user=request.user)
+    return render(request, 'application_tracking.html',{'feedback_list':feed_back})
 
 def interviews(request):
     return render(request, 'interviews.html')
@@ -64,10 +66,9 @@ def delete_feadback(request,feedbackID):
 
 def feedback(request):
     if request.user.is_authenticated:
-        feed_back = FeedBack.objects.filter(user=request.user)
         interviews = Interview.objects.filter(user=request.user)
-        print(feed_back)
-    return render(request, 'feedback.html',{'feedback_list':feed_back, 'interviews':interviews})
+    
+    return render(request, 'feedback.html',{ 'interviews':interviews})
 
 
 def logout(request):
