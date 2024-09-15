@@ -100,6 +100,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
     'csrfmiddlewaretoken',
     'csrftoken',
+    'X-CSRFToken',
 ]
 
 CORS_ALLOW_METHODS = [
@@ -117,8 +118,10 @@ CORS_ALLOW_METHODS = [
 # CSRF_COOKIE_SECURE = True
 
 # # Set CSRF_TRUSTED_ORIGINS if you have specific trusted origins
+CORS_ALLOW_ALL_ORIGINS = True
+
 CSRF_TRUSTED_ORIGINS = [
-    'https://058a-102-64-32-230.ngrok-free.app',
+    'https://mictsetarecruitmentsystem-production.up.railway.app',
     'http://192.168.1.195:8000',
      'http://127.0.0.1:8000'
 
@@ -133,7 +136,8 @@ CSRF_USE_SESSIONS = True
 # # Ensure CSRF_COOKIE_SAMESITE is 'Strict' or 'Lax' based on your requirements
 CSRF_COOKIE_SAMESITE = 'Strict'
 
-CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_ALLOW_ALL = True
+
 #CSRF_TRUSTED_ORIGINS = ['*']
 
 # # settings.py
