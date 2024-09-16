@@ -35,7 +35,7 @@ async function sleeper(jobID, mod, spinner, content) {
 /*===================================JOB FUNCTIONS  ===============================================================*/
 function addJob() {
   // Replace with your actual endpoint URL
-  const url = 'http://127.0.0.1:8000/job/add_job/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/add_job/';
 
   // Extract values from input fields
   title = document.getElementById('title').value;
@@ -116,7 +116,7 @@ function addJob() {
 /********************UPDATE JOB********************/
 function updateJob(jobID,spinner,content) {
   // Replace with your actual endpoint URL
-  const url = 'http://127.0.0.1:8000/job/update_job/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/update_job/';
   document.getElementById('spinner' + jobID).style.display = 'block';
   document.getElementById('editJob' + jobID).style.display = 'none';
 
@@ -201,7 +201,7 @@ function updateJob(jobID,spinner,content) {
 /*****************************************************************************/
 
 function addJobSkill(jobID, spinner, content, modal) {
-  const url = 'http://127.0.0.1:8000/job/add_job_skill/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/add_job_skill/';
  
   const skillListElement = document.getElementById('skillList' + jobID);
 
@@ -262,7 +262,7 @@ function addJobSkill(jobID, spinner, content, modal) {
 }
 
 function deleteSkill(jobID, spinner, content, modal, skillID) {
-  const url = 'http://127.0.0.1:8000/job/delete_job_skill/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/delete_job_skill/';
   const skillListElement = document.getElementById('skillList' + jobID);
 
   const jsonData = {
@@ -319,7 +319,7 @@ function deleteSkill(jobID, spinner, content, modal, skillID) {
 /*****************************************************************************/
 
 function addEducation(jobID, spinner, content, modal) {
-  const url = 'http://127.0.0.1:8000/job/add_job_acedemic/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/add_job_acedemic/';
   
   const skillListElement = document.getElementById('educationList' + jobID);
 
@@ -381,7 +381,7 @@ function addEducation(jobID, spinner, content, modal) {
 }
 
 function deleteEducation(jobID, spinner, content, modal, educationID) {
-  const url = 'http://127.0.0.1:8000/job/delete_job_acedemic/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/delete_job_acedemic/';
   
   const skillListElement = document.getElementById('educationList' + jobID);
 
@@ -440,7 +440,7 @@ function deleteEducation(jobID, spinner, content, modal, educationID) {
 
 
 function addExperience(jobID, spinner, content, modal) {
-  const url = 'http://127.0.0.1:8000/job/add_job_expereince/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/add_job_expereince/';
   
   const skillListElement = document.getElementById('experienceList' + jobID);
 
@@ -500,7 +500,7 @@ function addExperience(jobID, spinner, content, modal) {
 }
 
 function deleteExperience(jobID, spinner, content, modal, experienceID) {
-  const url = 'http://127.0.0.1:8000/job/delete_job_expereince/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/delete_job_expereince/';
   
   const experinceElement = document.getElementById('experienceList' + jobID);
 
@@ -558,7 +558,7 @@ function deleteExperience(jobID, spinner, content, modal, experienceID) {
 
 /*****************************************************************************************************************************************************/
 function addRequirements(jobID, spinner, content, modal) {
-  const url = 'http://127.0.0.1:8000/job/add_job_requirements/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/add_job_requirements/';
  
   const skillListElement = document.getElementById('requirementsList' + jobID);
 
@@ -617,7 +617,7 @@ function addRequirements(jobID, spinner, content, modal) {
 }
 
 function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
-  const url = 'http://127.0.0.1:8000/job/delete_job_requirements/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/delete_job_requirements/';
   const experinceElement = document.getElementById('requirementsList' + jobID);
 
   const jsonData = {
@@ -673,7 +673,7 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
 }
 /*************************************************************************************************************************************************************/
 function completeJob(jobID, spinner, content, modal) {
-  const url = 'http://127.0.0.1:8000/job/complete_job/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/complete_job/';
   /*document.getElementById(spinner + jobID).style.display = 'block';
   document.getElementById(content + jobID).style.display = 'none';*/
  
@@ -717,7 +717,7 @@ function completeJob(jobID, spinner, content, modal) {
 
 /***************************************************************************************************************************************************/
 function ApproveJob(jobID) {
-  const url = 'http://127.0.0.1:8000/job/approve_job/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/approve_job/';
   /*document.getElementById(spinner + jobID).style.display = 'block';
   document.getElementById(content + jobID).style.display = 'none';*/
  
@@ -758,7 +758,7 @@ function ApproveJob(jobID) {
 }
 /***************************************************************************************************************************************************/
 function deleteJob(jobID) {
-  const url = 'http://127.0.0.1:8000/job/delete_job/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/delete_job/';
   /*document.getElementById(spinner + jobID).style.display = 'block';
   document.getElementById(content + jobID).style.display = 'none';*/
  
@@ -800,7 +800,7 @@ function deleteJob(jobID) {
 
 
 function move_to_interview(appID) {
-  const url = 'http://127.0.0.1:8000/job/move_to_interview/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/move_to_interview/';
   
   const jsonData = {
     appID: appID,
@@ -839,7 +839,7 @@ function move_to_interview(appID) {
 
 
 function move_to_shortlist(appID) {
-  const url = 'http://127.0.0.1:8000/job/move_to_shortlist/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/move_to_shortlist/';
   
   const jsonData = {
     appID: appID,
@@ -877,7 +877,7 @@ function move_to_shortlist(appID) {
 }
 
 function approve_interview(appID) {
-  const url = 'http://127.0.0.1:8000/job/approve_interview/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/approve_interview/';
   
   const jsonData = {
     appID: appID,
@@ -915,7 +915,7 @@ function approve_interview(appID) {
 }
 
 function reject_applicantion(appID) {
-  const url = 'http://127.0.0.1:8000/job/reject_applicantion/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/reject_applicantion/';
   
   const jsonData = {
     appID: appID,
@@ -953,7 +953,7 @@ function reject_applicantion(appID) {
 }
 
 function purge() {
-  const url = 'http://127.0.0.1:8000/job/purge/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/purge/';
   
  
 
@@ -989,7 +989,7 @@ function purge() {
 }
 
 function set_interview(appID) {
-  const url = 'http://127.0.0.1:8000/job/set_interview/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/set_interview/';
   const datess = document.getElementById('date_time'+appID).value;
    const start_timess= document.getElementById('date_start_time'+appID).value;
     const end_timess = document.getElementById('date_end_time'+appID).value;
@@ -1033,7 +1033,7 @@ function set_interview(appID) {
 }
 
 function reschedule_interview(interviewID) {
-  const url = 'http://127.0.0.1:8000/job/reschedule_interview/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/reschedule_interview/';
   const datess = document.getElementById('date_times'+interviewID).value;
    const start_timess= document.getElementById('date_start_times'+interviewID).value;
     const end_timess = document.getElementById('date_end_times'+interviewID).value;
@@ -1077,7 +1077,7 @@ function reschedule_interview(interviewID) {
   });
 }
 function calender_reschedule_interview(interviewID,start,end) {
-  const url = 'http://127.0.0.1:8000/job/calender_reschedule_interview/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/job/calender_reschedule_interview/';
  
 
   const jsonData = {
@@ -1118,7 +1118,7 @@ function calender_reschedule_interview(interviewID,start,end) {
 }
 /*===================================END JOB FUNCTIONS  ===============================================================*/
  function addStaff(){
-             const url = 'http://127.0.0.1:8000/profile/add/add_staff/';
+             const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/profile/add/add_staff/';
 
             let formData = {
                 username: document.getElementById('username').value,
@@ -1173,7 +1173,7 @@ function calender_reschedule_interview(interviewID,start,end) {
 
 
 function UpdateStaff(){
-             const url = 'http://127.0.0.1:8000/profile/update/update_staff/';
+             const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/update_staff/';
 
             let formData = {
                 username: document.getElementById('username').value,
@@ -1227,7 +1227,7 @@ function UpdateStaff(){
 
 /*==================================================================================*/
 function sendLeave(){
-    const url = 'http://127.0.0.1:8000/profile/add/leave/';
+    const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/profile/add/leave/';
     const leaveType = document.getElementById('leave_type').value;
     const message = document.getElementById('message').value;
     const startTime = document.getElementById('start_date').value;
@@ -1272,7 +1272,7 @@ function sendLeave(){
 
 
 function backup_database(){
-   const url = 'http://127.0.0.1:8000/dashboard/backup_db/';
+   const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/dashboard/backup_db/';
    fetch(url, {
         method: 'GET',
         headers: {
@@ -1305,7 +1305,7 @@ function backup_database(){
 }
 
 function restore_database(id){
-   const url = 'http://127.0.0.1:8000/dashboard/restore_db/'+id+'/';
+   const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/dashboard/restore_db/'+id+'/';
    fetch(url, {
         method: 'GET',
         headers: {
@@ -1339,7 +1339,7 @@ function restore_database(id){
 }
 
 function delete_database(id){
-   const url = 'http://127.0.0.1:8000/dashboard/delete_db/'+id+'/';
+   const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/dashboard/delete_db/'+id+'/';
    fetch(url, {
         method: 'GET',
         headers: {
@@ -1373,7 +1373,7 @@ function delete_database(id){
 }
 
 function addTask() {
-  const url = 'http://127.0.0.1:8000/taskmanager/create_task/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/taskmanager/create_task/';
   
 
   const name = document.getElementById('task_name').value;
@@ -1423,7 +1423,7 @@ function addTask() {
 }
 
 function updateTask(taskID) {
-  const url = 'http://127.0.0.1:8000/taskmanager/update_task/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/taskmanager/update_task/';
   
 
   const name = document.getElementById('task_name'+ taskID).value;
@@ -1474,7 +1474,7 @@ function updateTask(taskID) {
 }
 
 function deleteTask(taskid) {
-  const url = 'http://127.0.0.1:8000/taskmanager/delete_task/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/taskmanager/delete_task/';
   
   const jsonData = {
     taskID: taskid,
@@ -1511,7 +1511,7 @@ function deleteTask(taskid) {
   });
 }
 function checkTask(taskid) {
-  const url = 'http://127.0.0.1:8000/taskmanager/check_task/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/taskmanager/check_task/';
   
   const jsonData = {
     taskID: taskid,
@@ -1549,7 +1549,7 @@ function checkTask(taskid) {
 }
 
 function addCategory() {
-  const url = 'http://127.0.0.1:8000/taskmanager/create_category/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/taskmanager/create_category/';
   
 
   const name = document.getElementById('category_name').value;
@@ -1592,7 +1592,7 @@ function addCategory() {
 
 
 function updateCategory(categoryID) {
-  const url = 'http://127.0.0.1:8000/taskmanager/update_category/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/taskmanager/update_category/';
   
 
   const name = document.getElementById('category_name'+ categoryID).value;
@@ -1635,7 +1635,7 @@ function updateCategory(categoryID) {
 }
 
 function deleteCategory(catid) {
-  const url = 'http://127.0.0.1:8000/taskmanager/delete_category/';
+  const url = 'https://mictsetarecruitmentsystem-production.up.railway.app/taskmanager/delete_category/';
   
   const jsonData = {
     categoryID: catid,

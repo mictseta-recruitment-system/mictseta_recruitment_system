@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+5d78i2gower*d@*0r3cl-q^r&@n=y8(m!kau8-4)q0-rw073$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -70,6 +70,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,6 +100,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
     'csrfmiddlewaretoken',
     'csrftoken',
+    'X-CSRFToken',
 ]
 
 CORS_ALLOW_METHODS = [
@@ -116,24 +118,30 @@ CORS_ALLOW_METHODS = [
 # CSRF_COOKIE_SECURE = True
 
 # # Set CSRF_TRUSTED_ORIGINS if you have specific trusted origins
+
+
 CSRF_TRUSTED_ORIGINS = [
-    'https://058a-102-64-32-230.ngrok-free.app',
+    'https://mictsetarecruitmentsystem-production.up.railway.app',
     'http://192.168.1.195:8000',
      'http://127.0.0.1:8000'
 
  ]
 
 # # Ensure CSRF_USE_SESSIONS is True to use CSRF tokens stored in session
-# CSRF_USE_SESSIONS = True
+#CSRF_USE_SESSIONS = True
 
 # # Ensure CSRF_FAILURE_VIEW is set to handle CSRF failures
 # # CSRF_FAILURE_VIEW = 'your_app.views.csrf_failure'  # Replace with your actual view name
 
 # # Ensure CSRF_COOKIE_SAMESITE is 'Strict' or 'Lax' based on your requirements
-# CSRF_COOKIE_SAMESITE = 'Strict'
+#CSRF_COOKIE_SAMESITE = 'Strict'
 
 CORS_ORIGIN_ALLOW_ALL = True
-# # CSRF_TRUSTED_ORIGINS = ['https://058a-102-64-32-230.ngrok-free.app']
+
+CORS_ALLOWED_ORIGINS = [
+    'https://mictsetarecruitmentsystem-production.up.railway.app',
+    'https://your-frontend-domain.com',
+]
 
 # # settings.py
 
@@ -218,12 +226,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = 'staticfiles/'
+STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-
+    os.path.join(BASE_DIR, "static"),
 ]
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

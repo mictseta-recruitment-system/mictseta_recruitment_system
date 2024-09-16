@@ -30,7 +30,7 @@
            
         };
        
-        fetch("http://127.0.0.1:8000/profile/update/profile_information/", {
+        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/profile_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -81,7 +81,7 @@
         };
         
 
-        fetch("http://127.0.0.1:8000/profile/update/update_qualification/", {
+        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/update_qualification/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -127,7 +127,7 @@
             speaking_proficiency : speaking,
         };
         
-        fetch("http://127.0.0.1:8000/profile/update/language_information/", {
+        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/language_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -169,7 +169,7 @@
             level : level,
         };
         
-        fetch("http://127.0.0.1:8000/profile/update/skill_information/", {
+        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/skill_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -219,7 +219,7 @@ function uploadDocument(d_type, event) {
     
     console.log(formData);
 
-    fetch('http://127.0.0.1:8000/profile/update/upload_supporting_document/', {
+    fetch('https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/upload_supporting_document/', {
         method: 'POST',
         body: formData,
         headers: {

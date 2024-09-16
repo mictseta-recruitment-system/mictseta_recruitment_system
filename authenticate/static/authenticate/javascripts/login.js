@@ -19,7 +19,7 @@ function handle_sign_in_button_click() {
     /*csrftoken:csrftoken,
           jeff:"jeff"*/
   };
-  fetch("http://127.0.0.1:8000/auth/sign_in/", {
+  fetch("https://mictsetarecruitmentsystem-production.up.railway.app/auth/sign_in/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -96,7 +96,7 @@ function handle_sign_up_button_click() {
     password2: password2,
   };
 
-  fetch("http://127.0.0.1:8000/auth/sign_up/", {
+  fetch("https://mictsetarecruitmentsystem-production.up.railway.app/auth/sign_up/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -135,7 +135,7 @@ function handle_forgot_button_click() {
   const data1 = {
     email: femail,
   };
-  fetch("http://127.0.0.1:8000/auth/reset_password_link/", {
+  fetch("https://mictsetarecruitmentsystem-production.up.railway.app/auth/reset_password_link/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -166,25 +166,23 @@ function handle_forgot_button_click() {
     });
 }
 
-function handleErrors(errors) {
+function handleErrors(errors, jobID, spinner) {
+  document.getElementById('flash-message-container').innerHTML = '';
   for (const key in errors) {
-    //to ensure it makes the container Empty before displaying the next error
-    document.getElementById("flash-message-container").innerHTML = ``;
-    //the next error
     if (errors.hasOwnProperty(key)) {
       const error = errors[key];
       if (Array.isArray(error)) {
         error.forEach((errorMessage) => {
-          if (key == "email") {
-            showFlashMessage(`Email is not registered`, "danger");
-          } else if (key == "password") {
-            document.getElementById("flash-message-container").innerHTML = ``;
-            showFlashMessage(`Incorrect credentials`, "danger");
+          showFlashMessage(`${key}: ${errorMessage}`, "danger");
+          if (spinner){
+          document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-exclamation-triangle fa-5x text-danger"></i><p><b>' + `${key}` + '</b>:' + ` ${errorMessage}` + '</p>';
           }
         });
       } else {
-        document.getElementById("flash-message-container").innerHTML = ``;
-        showFlashMessage(`${error}`, "danger");
+        showFlashMessage(`${key}: ${error}`, "danger");
+        if (spinner){
+           document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-exclamation-triangle fa-5x text-danger"></i><p><b>' + `${key} ` + '</b> :' + ` ${error}` + '</p>';  
+        }
       }
     }
   }
