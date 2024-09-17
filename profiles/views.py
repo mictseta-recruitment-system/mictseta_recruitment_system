@@ -277,8 +277,7 @@ def update_address_info(request):
     except Exception :
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
     address_data = {
-        'street_address_line' : json_data.get('street_address_line'),
-        'street_address_line1' : json_data.get('street_address_line1'),
+        'street_address_line' : json_data.get('street'),
         'city'  : json_data.get('city'),
         'province' : json_data.get('province'),
         'postal_code' : json_data.get('postal_code')
@@ -288,13 +287,12 @@ def update_address_info(request):
     if not address_data_form.is_valid() : 
         return JsonResponse({"errors":address_data_form.errors, "status":"error"}, status=400)      
     try:        
-        address_info = AddressInformation.objects.create(user=request.user, street_address_line=address_data['street_address_line'], street_address_line1=address_data['street_address_line1'], city=address_data['city'], province=address_data['province'], postal_code=address_data['postal_code'] )
+        address_info = AddressInformation.objects.create(user=request.user, street_address_line=address_data['street_address_line'], city=address_data['city'], province=address_data['province'], postal_code=address_data['postal_code'] )
         address_info.save()     
-        return JsonResponse({"message":"update personal information success"})
+        return JsonResponse({"message":"update personal information success", "status":"success"}, status=200)
     except IntegrityError:
         address_information = AddressInformation.objects.get(user_id=request.user.id)
         address_information.street_address_line = address_data['street_address_line']
-        address_information.street_address_line1 = address_data['street_address_line1']
         address_information.city = address_data['city']
         address_information.province = address_data['province']
         address_information.postal_code = address_data['postal_code']         

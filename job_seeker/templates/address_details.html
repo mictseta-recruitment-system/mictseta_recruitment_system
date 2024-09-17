@@ -16,7 +16,7 @@
         <div class="row">
             <!-- Residential Address Section -->
             <div class="col-md-6">
-                <h4>Residential Address (Optional)</h4>
+                <h4>Residential Address </h4>
                 <div class="mb-3">
                     <label for="residential_street_address" class="form-label">Street Address</label>
                     <input type="text" class="form-control" id="residential_street_address" name="residential_street_address">
@@ -48,47 +48,17 @@
 
             <!-- Postal Address Section -->
             <div class="col-md-6">
-                <h4>Postal Address (Required)</h4>
-                <div class="mb-3">
-                    <label for="postal_street_address" class="form-label">Street Address / P.O. Box</label>
-                    <input type="text" class="form-control" id="postal_street_address" name="postal_street_address" required>
-                </div>
-                <div class="mb-3">
-                    <label for="postal_city" class="form-label">City</label>
-                    <input list="postal_city_list" class="form-control" id="postal_city" name="postal_city" required>
-                    <datalist id="postal_city_list">
-                        <!-- Add all postal cities in South Africa here -->
-                        <option value="Cape Town"></option>
-                        <option value="Johannesburg"></option>
-                        <option value="Durban"></option>
-                        <option value="Pretoria"></option>
-                        <!-- Add more cities as needed -->
-                    </datalist>
-                </div>
-                <div class="mb-3">
-                    <label for="postal_province" class="form-label">Province</label>
-                    <label for="residential_province" class="form-label">Province</label>
-                    <select class="form-control" id="postal_province" name="residential_province">
-                        <option value="">Select Province</option>
-                        <option value="Eastern Cape">Eastern Cape</option>
-                        <option value="Free State">Free State</option>
-                        <option value="Gauteng">Gauteng</option>
-                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-                        <option value="Limpopo">Limpopo</option>
-                        <option value="Mpumalanga">Mpumalanga</option>
-                        <option value="Northern Cape">Northern Cape</option>
-                        <option value="North West">North West</option>
-                        <option value="Western Cape">Western Cape</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="postal_postal_code" class="form-label">Postal Code</label>
-                    <input type="text" class="form-control" id="postal_postal_code" name="postal_postal_code" required>
-                </div>
+                {% if user.address  %}
+               <p> street : {{user.address.street_address_line}}</p>
+               <p> city : {{user.address.city}}</p>
+               <p> province : {{user.address.province}}</p>
+               <p> postal code : {{user.address.postal_code}}</p>
+               <p> street address : {{user.address.street_address_line}}</p>
+                {% endif %}
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Address</button>
+        <button type="button" onclick="handle_update_address_button_click()" class="btn btn-primary">Save Address</button>
     </form>
 </div>
 {% endblock %}

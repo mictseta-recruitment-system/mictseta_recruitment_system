@@ -243,6 +243,51 @@
           });
     }
 
+function handle_update_address_button_click() {
+       
+        const street = document.getElementById("residential_street_address").value;
+        const city = document.getElementById("residential_city").value; 
+        const province = document.getElementById("residential_province").value;
+        const postal_code = document.getElementById("residential_postal_code").value;
+        const address = {
+            street : street,
+            city : city,
+            province : province,
+            postal_code : postal_code
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/address_information/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(address),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
+
 
 function uploadDocument(d_type, event) {
    event.preventDefault(); 

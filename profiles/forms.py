@@ -266,7 +266,6 @@ class UpdateQualificationForm(forms.Form):
 
 class UpdateAddressInformationForm(forms.Form):
 	street_address_line = forms.CharField(max_length=225)
-	street_address_line1 = forms.CharField(max_length=225)
 	city = forms.CharField(max_length=225)
 	province = forms.CharField(max_length=225)
 	postal_code = forms.CharField(max_length=6)
