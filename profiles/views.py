@@ -8,7 +8,7 @@ from config.models import LanguageList, SpeakingProficiencyList,ReadingProficien
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills,SupportingDocuments
+from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills, SoftSkills,SupportingDocuments
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -229,7 +229,7 @@ def update_computer_skill(request):
         return JsonResponse({'errors':{ "Skill" : ['it Already exists']}, 'status':'error'}, status=404)
     skill = ComputerSkills.objects.create(user=request.user,skill=skill,proficiency=proficiency)
     skill.save()
-    return JsonResponse({"message":"Added Skill information success"})
+    return JsonResponse({"message":"Added Skill information success", 'status':'success'})
 
 @csrf_protect
 def update_soft_skill(request):
@@ -247,7 +247,7 @@ def update_soft_skill(request):
         'level' : json_data.get('level'),
     }
     skill = SoftSkillsList.objects.get(id=int(data['skill']))
-    proficiency = SoftSkillsList.objects.get(id=int(data['level']))
+    proficiency = SoftProficiency.objects.get(id=int(data['level']))
 
     #skill_data_form =  UpdateSkillsForm(data)
             # if skill_data_form.is_valid() : #and address_data_form.is_valid():
@@ -258,7 +258,7 @@ def update_soft_skill(request):
         return JsonResponse({'errors':{ "Skill" : ['it Already exists']}, 'status':'error'}, status=404)
     skill = SoftSkills.objects.create(user=request.user,skill=skill,proficiency=proficiency)
     skill.save()
-    return JsonResponse({"message":"Added Skill information success"})
+    return JsonResponse({"message":"Added Skill information success", 'status':'success'})
 
 
 @csrf_protect

@@ -17,17 +17,11 @@
                 <label for="language">Language:</label>
                 <select id="language" class="form-control">
                     <option value="">Select a language...</option>
-                    <option value="afrikaans">Afrikaans</option>
-                    <option value="english">English</option>
-                    <option value="isindebele">IsiNdebele</option>
-                    <option value="isixhosa">IsiXhosa</option>
-                    <option value="isizulu">IsiZulu</option>
-                    <option value="sesotho">Sesotho</option>
-                    <option value="sesothosa">Sesotho sa Leboa</option>
-                    <option value="setswana">Setswana</option>
-                    <option value="siswati">SiSwati</option>
-                    <option value="tshivenda">Tshivenda</option>
-                    <option value="xitsonga">Xitsonga</option>
+
+                    {% for language in languages %}
+                        <option value="{{language.id}}">{{language.name}}</option>
+                    {% endfor %}
+                   
                 </select>
             </div>
 
@@ -35,12 +29,10 @@
                 <label for="reading">Reading Proficiency level:</label>
                 <select id="reading" class="form-control">
                     <option value="">Choose an option</option>
-                    <option value="poor">Poor</option>
-                    <option value="fair">Fair</option>
-                    <option value="good">Good</option>
-                    <option value="fluent">Fluent</option>
-                    <option value="native">Native</option>
-                    <option value="expert">Expert</option>
+                    
+                    {% for reading in readings %}
+                        <option value="{{reading.id}}">{{reading.proficiency}}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -48,12 +40,10 @@
                 <label for="writing">Writing Proficiency level:</label>
                 <select id="writing" class="form-control">
                     <option value="">Choose an option</option>
-                    <option value="poor">Poor</option>
-                    <option value="fair">Fair</option>
-                    <option value="good">Good</option>
-                    <option value="fluent">Fluent</option>
-                    <option value="native">Native</option>
-                    <option value="expert">Expert</option>
+                    
+                    {% for writing in writings %}
+                        <option value="{{writing.id}}">{{writing.proficiency}}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -61,12 +51,10 @@
                 <label for="speaking">Speaking Proficiency level:</label>
                 <select id="speaking" class="form-control">
                     <option value="">Choose an option</option>
-                    <option value="poor">Poor</option>
-                    <option value="fair">Fair</option>
-                    <option value="good">Good</option>
-                    <option value="fluent">Fluent</option>
-                    <option value="native">Native</option>
-                    <option value="expert">Expert</option>
+                    
+                    {% for speaking in speakings %}
+                        <option value="{{speaking.id}}">{{speaking.proficiency}}</option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -74,7 +62,7 @@
         </div>
         <div class="col-6">
             <div class="list-group">
-                {% for language in user.languages.all %}
+                {% for language in user.language_set.all %}
                   <a href="#" class="list-group-item list-group-item-action" aria-current="true">
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1">{{language.language}}</h5>
