@@ -31,12 +31,10 @@
                 <div class="form-group">
                     <label for="proficiency">Proficiency Level:</label>
                     <select id="level2" class="form-control">
-                        {% for proficiency in proficiencys%}
+                        {% for proficiency in proficiencys %}
                             <option value="{{proficiency.id}}">{{proficiency.proficiency}}</option>
                         {% endfor %}
-                        {% for proficiency in proficiencys%}
-                            <option value="{{proficiency.id}}">{{proficiency.proficiency}}</option>
-                        {% endfor %}
+                        
                     </select>
                 </div>
             </div>
