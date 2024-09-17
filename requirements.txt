@@ -17,7 +17,7 @@ cssselect2==0.7.0
 cycler==0.12.1
 distlib==0.3.8
 dj-rest-auth==6.0.0
-Django==4.2
+Django==4.2.15
 django-allauth==64.2.1
 django-cors-headers==4.4.0
 django-dbbackup==1.9.0
