@@ -3,11 +3,12 @@ from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UpdateQualificationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm, UpdateLanguageForm,UpdateSkillsForm
+from .forms import UpdateQualificationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills,SupportingDocuments
+from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills, SoftSkills,SupportingDocuments
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -31,223 +32,6 @@ def render_profile_page(request):
     else:
         return redirect('render_auth_page')
 
-        
-@csrf_protect
-def update_user_profile(request):
-    if request.user.is_authenticated:
-
-        if request.method == 'POST':
-            try:
-                json_data = json.loads(request.body)
-            except Exception :
-                return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-            data = {
-                'linkedin_profile' : json_data.get('linkedin_profile'),
-                'personal_website' : json_data.get('personal_website'),
-                'first_name' : json_data.get('first_name'),
-                'last_name' : json_data.get('last_name'),
-                'email' : json_data.get('email'),
-                'phone' : json_data.get('phone'),
-                'idnumber': json_data.get('idnumber'),
-                'maritial_status' : json_data.get('maritial_status'),
-                'race' : json_data.get('race'),
-                'disability' : json_data.get('disability'),
-                'r_username' : f'{request.user.username}',
-                'r_email' : f'{request.user.email}',
-                'r_phone' : 'False',
-                # 'r_idnum' : f'{request.user.profile.idnumber}'
-            }
-            shallow_copy = data.copy()
-            for key,value in shallow_copy.items():
-                if value == "" or value == " " or value=='None':
-                    shallow_copy[key] = "empty"
-            form = UpdateProfileInformationForm(data)
-            if form.is_valid() : 
-                exist = User.objects.filter(email=data['email']).exists()
-                if exist:
-                    user = User.objects.get(email=data['email'])
-                    if user.email == request.user.email:
-                        pass
-                    else:
-                        raise forms.ValidationError(f"Email: {email} is already taken")
-
-                
-                try :
-                    user = User.objects.get(id=request.user.id)
-              
-                    user.username = data['idnumber']
-                    user.first_name = data['first_name']
-                    user.last_name = data['last_name']
-                    user.email = data['email']
-                    # user.password = data['password']
-                   
-                    user.profile.idnumber = data['idnumber']
-                    user.profile.phone = data['phone']
-                    user.profile.maritial_status = data['maritial_status']
-                    user.profile.race = data['race']
-                    user.profile.disability = data['disability']
-
-                    user.profile.age = ValidateIdNumber(data['idnumber']).get_age()
-                    user.profile.gender = ValidateIdNumber(data['idnumber']).get_gender()
-                    user.profile.dob = ValidateIdNumber(data['idnumber']).get_gender()
-                    user.profile.save()
-                    user.save()
-                    return JsonResponse({'message':f'User profile for {user.username} is updated successfuly', 'status':'success'}, status=201) 
-                except Exception as e:
-                    return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
-            else:
-                return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
-        else:
-            return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
-    else:       
-        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-
-
-@csrf_protect
-def update_qualification(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            try:
-                json_data = json.loads(request.body)
-            except Exception :
-                return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-            data = {
-                'highest_qualification' : json_data.get('highest_qualification'),
-                'field_of_study' : json_data.get('field_of_study'),
-                'institution'  : json_data.get('institution'),
-                'year_obtained' : json_data.get('year_obtained'),
-                'status' : json_data.get('status'),
-                'grade' : json_data.get('grade')
-                }
-
-            qualification_data_form =  UpdateQualificationForm(data)
-            if qualification_data_form.is_valid() : #and address_data_form.is_valid():
-                try:
-                    exists = Qualification.objects.filter(highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],status=data['status']).exists()
-                    if exists:
-                         return JsonResponse({'errors':{ "Qualification" : ['it Already exists']}, 'status':'error'}, status=404)
-                    qualification = Qualification.objects.create(user=request.user,highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],grade=data['grade'],status=data['status'])
-                    qualification.save()
-                    return JsonResponse({"message":"Added qualification information success", 'status':'success'})
-                except Exception as e: 
-                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
-            else:
-               return JsonResponse({"errors":qualification_data_form.errors, "status":"error"}, status=400) 
-        else:
-            return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
-    else:       
-        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-
-@csrf_protect
-def update_language(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            try:
-                json_data = json.loads(request.body)
-            except Exception :
-                return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-            data = {
-                'language' : json_data.get('language'),
-                'reading_proficiency' : json_data.get('reading_proficiency'),
-                'writing_proficiency' : json_data.get('writing_proficiency'),
-                'speaking_proficiency' : json_data.get('speaking_proficiency'),
-                }
-   
-            language_data_form =  UpdateLanguageForm(data)
-            if language_data_form.is_valid() : #and address_data_form.is_valid():
-                try:
-                    exists = Language.objects.filter(user=request.user,language=data['language'],reading_proficiency=data['reading_proficiency'],writing_proficiency=data['writing_proficiency'],speaking_proficiency=data['speaking_proficiency']).exists()
-                    if exists:
-                         return JsonResponse({'errors':{ "Languge" : ['it Already exists']}, 'status':'error'}, status=400)
-                    language = Language.objects.create(user=request.user,language=data['language'],reading_proficiency=data['reading_proficiency'],writing_proficiency=data['writing_proficiency'],speaking_proficiency=data['speaking_proficiency'])
-                    language.save()
-                    return JsonResponse({"message":"Added Language information ", 'status':'success'})
-                except Exception as e: 
-                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=400)
-            else:
-               return JsonResponse({"errors":language_data_form.errors, "status":"error"}, status=400) 
-        else:
-            return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
-    else:       
-        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-
-@csrf_protect
-def update_skill(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            try:
-                json_data = json.loads(request.body)
-            except Exception :
-                return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-            data = {
-                'skill' : json_data.get('skill'),
-                'level' : json_data.get('level'),
-                }
-   
-            skill_data_form =  UpdateSkillsForm(data)
-            if skill_data_form.is_valid() : #and address_data_form.is_valid():
-                try:
-                    exists = ComputerSkills.objects.filter(user=request.user,skill=data['skill'],level=data['level']).exists()
-                    if exists:
-                         return JsonResponse({'errors':{ "Skill" : ['it Already exists']}, 'status':'error'}, status=404)
-                    skill = ComputerSkills.objects.create(user=request.user,skill=data['skill'],level=data['level'])
-                    skill.save()
-                    return JsonResponse({"message":"Added Skill information success"})
-                except Exception as e: 
-                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
-            else:
-
-                return JsonResponse({"errors":skill_data_form.errors, "status":"error"}, status=400) 
-        else:
-            return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
-    else:       
-        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-
-
-@csrf_protect
-def update_address_info(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            try:
-                json_data = json.loads(request.body)
-            except Exception :
-                return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-            address_data = {
-                'street_address_line' : json_data.get('street_address_line'),
-                'street_address_line1' : json_data.get('street_address_line1'),
-                'city'  : json_data.get('city'),
-                'province' : json_data.get('province'),
-                'postal_code' : json_data.get('postal_code')
-                
-                }
-            
-            address_data_form =  UpdateAddressInformationForm(address_data)
-            if address_data_form.is_valid() : #and address_data_form.is_valid():
-                try:
-            
-                    address_info = AddressInformation.objects.create(user=request.user, street_address_line=address_data['street_address_line'], street_address_line1=address_data['street_address_line1'], city=address_data['city'], province=address_data['province'], postal_code=address_data['postal_code'] )
-                    address_info.save()     
-                    return JsonResponse({"message":"update personal information success"})
-                except IntegrityError:
-                    address_information = AddressInformation.objects.get(user_id=request.user.id)
-                    address_information.street_address_line = address_data['street_address_line']
-                    address_information.street_address_line1 = address_data['street_address_line1']
-                    address_information.city = address_data['city']
-                    address_information.province = address_data['province']
-                    address_information.postal_code = address_data['postal_code']
-                   
-                    address_information.save()
-                    return JsonResponse({"message":"update personal information success", "status":"success"}, status=200)
-                except Exception as e: 
-                    return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
-            else:
-               return JsonResponse({"errors":address_data_form.errors, "status":"error"}, status=400) 
-        else:
-            return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
-    else:       
-        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-
-
 ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg','pdf']
 
 def allowed_file(filename):
@@ -256,87 +40,335 @@ def allowed_file(filename):
 def rename_document(filename, file_type, req):
     filename = f"{req.user.profile.idnumber}-{file_type}" + "." + filename.rsplit('.', 1)[1].lower()
     return filename
-
-def upload_supporting_document(request):
+def calculate_working_hours(start_time, end_time): 
+    time_format = "%H:%M:%S"
+    try:
+        start = datetime.strptime(start_time, time_format)
+        end = datetime.strptime(end_time, time_format)
+    except ValueError:
+        
+        return JsonResponse({'errors':{'time' :["Time format should be HH:mm:ss"]}, 'status':'error'})
     
-    if request.method == 'POST':
-        try:
-            document = request.FILES['document']
-            document_type = request.POST['type']
-        except Exception as e:
-            return JsonResponse({'errors': 'No selected file', 'status': 'error'}, status=400)
-        try: 
-            max_file_size = 3 * 1024 * 1024  # 3 MB in bytes
-            if document.size > max_file_size:
-                return JsonResponse({'errors': 'File size exceeds 3 MB limit', 'status': 'error'}, status=400)
-            # Verify if file is an image or PDF
-            allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
-            mime_type, _ = mimetypes.guess_type(document.name)
+    if end <= start:
+        return JsonResponse({'errors':{'time' :["End time must be greater than start time"]}, 'status':'error'})
+    delta = end - start
+    working_hours = delta.total_seconds() / 3600.0  # Convert seconds to hours
 
-            if mime_type not in allowed_mime_types:
-                return JsonResponse({'errors': 'Only image or PDF files are allowed', 'status': 'error'}, status=400)
+    return round(working_hours)
+
+def calculate_salary(rate, working_hours):
+    salary = rate * working_hours * 20
+    return salary
+
+def get_late(shift_start):
+    # Convert the first time to minutes since midnight
+    hours1, minutes1, seconds1 = map(int, shift_start.split(":"))
+    total_minutes1 = hours1 * 60 + (minutes1+10) + seconds1 / 60
+    # Get the current time
+    now = datetime.now()
+    # Convert the current time to minutes since midnight
+    total_minutes_now = now.hour * 60 + now.minute + now.second / 60
+    # Clculate the difference
+    difference = total_minutes_now - total_minutes1
+    if difference > 0 :
+        late = True
+    else:
+        late = False
+        difference = 0
+    return (late, round(difference))
+
+@csrf_protect
+def update_user_profile(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+    data = {
+        'linkedin_profile' : json_data.get('linkedin_profile'),
+        'personal_website' : json_data.get('personal_website'),
+        'first_name' : json_data.get('first_name'),
+        'last_name' : json_data.get('last_name'),
+        'email' : json_data.get('email'),
+        'phone' : json_data.get('phone'),
+        'idnumber': json_data.get('idnumber'),
+        'maritial_status' : json_data.get('maritial_status'),
+        'race' : json_data.get('race'),
+        'disability' : json_data.get('disability'),
+        'r_username' : f'{request.user.username}',
+        'r_email' : f'{request.user.email}',
+        'r_phone' : 'False',
+        }
+    shallow_copy = data.copy()
+    for key,value in shallow_copy.items():
+        if value == "" or value == " " or value=='None':
+            shallow_copy[key] = "empty"
+    form = UpdateProfileInformationForm(data)
+    if not form.is_valid() : 
+        return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+    exist = User.objects.filter(email=data['email']).exists()
+    if exist:
+        user = User.objects.get(email=data['email'])
+        if not user.email == request.user.email:
+            raise forms.ValidationError(f"Email: {email} is already taken")
+    try :
+        user = User.objects.get(id=request.user.id)
+        user.username = data['idnumber']
+        user.first_name = data['first_name']
+        user.last_name = data['last_name']
+        user.email = data['email']
+        user.profile.idnumber = data['idnumber']
+        user.profile.phone = data['phone']
+        user.profile.maritial_status = data['maritial_status']
+        user.profile.race = data['race']
+        user.profile.disability = data['disability']
+        user.profile.age = ValidateIdNumber(data['idnumber']).get_age()
+        user.profile.gender = ValidateIdNumber(data['idnumber']).get_gender()
+        user.profile.dob = ValidateIdNumber(data['idnumber']).get_gender()
+        user.profile.save()
+        user.save()
+        return JsonResponse({'message':f'User profile for {user.username} is updated successfuly', 'status':'success'}, status=201) 
+    except Exception as e:
+        return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
+    
+
+@csrf_protect
+def update_qualification(request):
+    if not request.user.is_authenticated:      
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+    data = {
+        'highest_qualification' : json_data.get('highest_qualification'),
+        'field_of_study' : json_data.get('field_of_study'),
+        'institution'  : json_data.get('institution'),
+        'year_obtained' : json_data.get('year_obtained'),
+        'status' : json_data.get('status'),
+        'grade' : json_data.get('grade')
+    }
+
+    qualification_data_form =  UpdateQualificationForm(data)
+    if not qualification_data_form.is_valid() : #and address_data_form.is_valid():
+        return JsonResponse({"errors":qualification_data_form.errors, "status":"error"}, status=400) 
+    try:
+        exists = Qualification.objects.filter(highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],status=data['status']).exists()
+        if exists:
+            return JsonResponse({'errors':{ "Qualification" : ['it Already exists']}, 'status':'error'}, status=404)
+        qualification = Qualification.objects.create(user=request.user,highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],grade=data['grade'],status=data['status'])
+        qualification.save()
+        return JsonResponse({"message":"Added qualification information success", 'status':'success'})
+    except Exception as e: 
+        return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
+  
+
+@csrf_protect
+def update_language(request):
+    if not request.user.is_authenticated:       
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+    
+    data = {
+        'language' : json_data.get('language'),
+        'reading_proficiency' : json_data.get('reading_proficiency'),
+        'writing_proficiency' : json_data.get('writing_proficiency'),
+        'speaking_proficiency' : json_data.get('speaking_proficiency'),
+    }
+            
+    language = LanguageList.objects.get(id=int(data['language']))
+    reading_proficiency = ReadingProficiencyList.objects.get(id=int(data['reading_proficiency']))
+    writing_proficiency = WritingProficiencyList.objects.get(id=int(data['writing_proficiency']))
+    speaking_proficiency = SpeakingProficiencyList.objects.get(id=int(data['speaking_proficiency']))
+
+    exists = Language.objects.filter(user=request.user,language=language,reading_proficiency=reading_proficiency,writing_proficiency=writing_proficiency,speaking_proficiency=speaking_proficiency).exists()
+    if exists:
+        return JsonResponse({'errors':{ "Languge" : ['it Already exists']}, 'status':'error'}, status=400)
+    # ##language_data_form =  UpdateLanguageForm(data)
+    # if not language_data_form.is_valid() : 
+    #            return JsonResponse({"errors":language_data_form.errors, "status":"error"}, status=400) 
+               
+    language = Language.objects.create(user=request.user,language=language,reading_proficiency=reading_proficiency,writing_proficiency=writing_proficiency,speaking_proficiency=speaking_proficiency)
+    language.save()
+    return JsonResponse({"message":"Added Language information ", 'status':'success'})
+           
+
+@csrf_protect
+def update_computer_skill(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+            
+    data = {
+        'skill' : json_data.get('skill'),
+        'level' : json_data.get('level'),
+    }
+    skill = ComputerSkillsList.objects.get(id=int(data['skill']))
+    proficiency = ComputerProficiency.objects.get(id=int(data['level']))
+    #skill_data_form =  UpdateSkillsForm(data)
+            # if skill_data_form.is_valid() : #and address_data_form.is_valid():
+            # else:
+            #     return JsonResponse({"errors":skill_data_form.errors, "status":"error"}, status=400) 
+    exists = ComputerSkills.objects.filter(user=request.user,skill=skill,proficiency=proficiency).exists()
+    if exists:
+        return JsonResponse({'errors':{ "Skill" : ['it Already exists']}, 'status':'error'}, status=404)
+    skill = ComputerSkills.objects.create(user=request.user,skill=skill,proficiency=proficiency)
+    skill.save()
+    return JsonResponse({"message":"Added Skill information success", 'status':'success'})
+
+@csrf_protect
+def update_soft_skill(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+            
+    data = {
+        'skill' : json_data.get('skill'),
+        'level' : json_data.get('level'),
+    }
+    skill = SoftSkillsList.objects.get(id=int(data['skill']))
+    proficiency = SoftProficiency.objects.get(id=int(data['level']))
+
+    #skill_data_form =  UpdateSkillsForm(data)
+            # if skill_data_form.is_valid() : #and address_data_form.is_valid():
+            # else:
+            #     return JsonResponse({"errors":skill_data_form.errors, "status":"error"}, status=400) 
+    exists = SoftSkills.objects.filter(user=request.user,skill=skill,proficiency=proficiency).exists()
+    if exists:
+        return JsonResponse({'errors':{ "Skill" : ['it Already exists']}, 'status':'error'}, status=404)
+    skill = SoftSkills.objects.create(user=request.user,skill=skill,proficiency=proficiency)
+    skill.save()
+    return JsonResponse({"message":"Added Skill information success", 'status':'success'})
+
+
+@csrf_protect
+def update_address_info(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)      
+
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+    address_data = {
+        'street_address_line' : json_data.get('street_address_line'),
+        'street_address_line1' : json_data.get('street_address_line1'),
+        'city'  : json_data.get('city'),
+        'province' : json_data.get('province'),
+        'postal_code' : json_data.get('postal_code')
+    }
+            
+    address_data_form =  UpdateAddressInformationForm(address_data)
+    if not address_data_form.is_valid() : 
+        return JsonResponse({"errors":address_data_form.errors, "status":"error"}, status=400)      
+    try:        
+        address_info = AddressInformation.objects.create(user=request.user, street_address_line=address_data['street_address_line'], street_address_line1=address_data['street_address_line1'], city=address_data['city'], province=address_data['province'], postal_code=address_data['postal_code'] )
+        address_info.save()     
+        return JsonResponse({"message":"update personal information success"})
+    except IntegrityError:
+        address_information = AddressInformation.objects.get(user_id=request.user.id)
+        address_information.street_address_line = address_data['street_address_line']
+        address_information.street_address_line1 = address_data['street_address_line1']
+        address_information.city = address_data['city']
+        address_information.province = address_data['province']
+        address_information.postal_code = address_data['postal_code']         
+        address_information.save()
+        return JsonResponse({"message":"update personal information success", "status":"success"}, status=200)
+    except Exception as e: 
+            return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
+            
+       
+def upload_supporting_document(request):
+    if request.method == 'POST':
+       return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+    try:
+        document = request.FILES['document']
+        document_type = request.POST['type']
+    except Exception as e:
+        return JsonResponse({'errors': 'No selected file', 'status': 'error'}, status=400)
+    try: 
+        max_file_size = 3 * 1024 * 1024  # 3 MB in bytes
+        if document.size > max_file_size:
+            return JsonResponse({'errors': 'File size exceeds 3 MB limit', 'status': 'error'}, status=400)
+        # Verify if file is an image or PDF
+        allowed_mime_types = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf']
+        mime_type, _ = mimetypes.guess_type(document.name)
+
+        if mime_type not in allowed_mime_types:
+            return JsonResponse({'errors': 'Only image or PDF files are allowed', 'status': 'error'}, status=400)
 
             # Verify the file format for images and PDFs
-            try:
-                if mime_type.startswith('image/'):
-                    # Verify the image file format
-                    img = Image.open(document)
-                    img.verify()  # Verifies that the image is valid
-                elif mime_type == 'application/pdf':
-                    # Verify the PDF file format
-                    pdf = PdfReader(io.BytesIO(document.read()))
-                    if pdf.numPages < 1:  # If no pages, it's not a valid PDF
-                        raise ValueError('Invalid PDF file')
-                else:
-                    return JsonResponse({'errors': 'Unsupported file format', 'status': 'error'}, status=400)
-            except Exception as e:
-                return JsonResponse({'errors': f'File format verification failed: {str(e)}', 'status': 'error'}, status=400)
+        try:
+            if mime_type.startswith('image/'):
+                # Verify the image file format
+                img = Image.open(document)
+                img.verify()  # Verifies that the image is valid
+            elif mime_type == 'application/pdf':
+                # Verify the PDF file format
+                pdf = PdfReader(io.BytesIO(document.read()))
+                if pdf.numPages < 1:  # If no pages, it's not a valid PDF
+                    raise ValueError('Invalid PDF file')
+            else:
+                return JsonResponse({'errors': 'Unsupported file format', 'status': 'error'}, status=400)
+        except Exception as e:
+            return JsonResponse({'errors': f'File format verification failed: {str(e)}', 'status': 'error'}, status=400)
 
-            if allowed_file(document.name) == False: 
-                return JsonResponse({'errors':'File type not allowed', 'status': 'error'}, status=400)
-            try:
-                exists = SupportingDocuments.objects.filter()
-                document.name = rename_document(document.name, document_type,request)
-                exists = SupportingDocuments.objects.filter(document="static/supportindocuments/documents/"+document.name,document_type=document_type).exists()
-                if exists:
-                    return JsonResponse({'errors': 'Document Already Exists', 'status': 'error'}, status=400)
-                supporting_document = SupportingDocuments.objects.create(user=request.user,document=document, document_type=document_type) 
-                supporting_document.save()
-                return JsonResponse({'message': 'Image uploaded successfully', 'status': 'success'}, status=201)
-            except Exception as e:
-                return JsonResponse({'errors': e, 'status': 'error'}, status=400)
-        except (IOError, SyntaxError):
-            return JsonResponse({'errors': 'Invalid image file', 'status': 'error'}, status=400)
-        else:
-            return JsonResponse({'errors': form.errors, 'status': 'error'}, status=400)
-    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+        if allowed_file(document.name) == False: 
+            return JsonResponse({'errors':'File type not allowed', 'status': 'error'}, status=400)
+        try:
+            exists = SupportingDocuments.objects.filter()
+            document.name = rename_document(document.name, document_type,request)
+            exists = SupportingDocuments.objects.filter(document="static/supportindocuments/documents/"+document.name,document_type=document_type).exists()
+            if exists:
+                return JsonResponse({'errors': 'Document Already Exists', 'status': 'error'}, status=400)
+            supporting_document = SupportingDocuments.objects.create(user=request.user,document=document, document_type=document_type) 
+            supporting_document.save()
+            return JsonResponse({'message': 'Image uploaded successfully', 'status': 'success'}, status=201)
+        except Exception as e:
+            return JsonResponse({'errors': e, 'status': 'error'}, status=400)
+    except (IOError, SyntaxError):
+        return JsonResponse({'errors': 'Invalid image file', 'status': 'error'}, status=400)
+   
 
 
 @ensure_csrf_cookie
 def delete_supporting_document(request, document_id):
     if request.method == 'GET':
         try:
-            # Get the document instance
             supporting_document = SupportingDocuments.objects.get(id=document_id, user=request.user)
-            
-            # Delete the file from the filesystem or cloud storage
-            supporting_document.document.delete()  # This handles deletion from storage
-            
-            # Optionally, delete the record from the database
+            supporting_document.document.delete() 
             supporting_document.delete()
-
             docs = SupportingDocuments.objects.filter(user=request.user)
             return render(request, 'supporting_documents.html',{"docs":docs})
-        
         except Exception as e:
             return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
-
     return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
 
 @csrf_protect
 def upload_profile_image(request):
     if request.method == 'POST':
-
         try:
             image = request.FILES['image']
             empID =  request.POST['empID']
@@ -387,107 +419,76 @@ def upload_profile_image(request):
 #==================================================================================================================================
 
 
-def calculate_working_hours(start_time, end_time): 
-    time_format = "%H:%M:%S"
-    try:
-        start = datetime.strptime(start_time, time_format)
-        end = datetime.strptime(end_time, time_format)
-    except ValueError:
-        
-        return JsonResponse({'errors':{'time' :["Time format should be HH:mm:ss"]}, 'status':'error'})
-    
-    if end <= start:
-        return JsonResponse({'errors':{'time' :["End time must be greater than start time"]}, 'status':'error'})
-    delta = end - start
-    working_hours = delta.total_seconds() / 3600.0  # Convert seconds to hours
-
-    return round(working_hours)
-
-def calculate_salary(rate, working_hours):
-    salary = rate * working_hours * 20
-    return salary
-
 @csrf_protect
 def add_staff(request):
-    if request.user.is_authenticated:
-        current_time = now()
-        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-            if leave.start_date <= current_time <= leave.end_date:
-                return HttpResponse("Request denied: you are on leave")
-        if request.user.is_superuser:
- 
-            if request.method == 'POST':
-                try:
-                    json_data = json.loads(request.body)
-                except Exception :
-                    return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
-                print(json_data)
-                data = {
-                    'username' : json_data.get('username'),
-                    'first_name' : json_data.get('first_name'),
-                    'last_name' : json_data.get('last_name'),
-                    'email' : json_data.get('email'),
-                    'phone' : json_data.get('phone'),
-                    'idnumber': json_data.get('idnumber'),
-                    'job_title' : json_data.get('job_title'),
-                    'department' : json_data.get('department'),
-                    'password' : json_data.get('password'),
-                    'password2' : json_data.get('password'),
-                    'is_superuser' : json_data.get('super'),
-                    'is_staff' : json_data.get('staff'),
-                    'salary' : json_data.get('salary'),
-                    'rate' : json_data.get('rate'),
-                    'start_time' : json_data.get('start_time'),
-                    'end_time' : json_data.get('end_time'),
-                   
-                    # 'r_idnum' : f'{request.user.profile.idnumber}'
-                }
-                for key, value in data.items():
-                    if key == None or value == None:
-                        return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
-                
-                if data['is_superuser'] == 'True':
-                    is_user_superuser = True
-                else:
-                    is_user_superuser = False
-                
-                if data['is_staff'] == 'True':
-                    is_user_staff = True
-                else:
-                     is_user_staff = False
-
-
-                form = AddStaffForm(data)
-                if form.is_valid() : 
-                    exist = User.objects.filter(email=data['email']).exists()
-                    if exist:
-                        raise forms.ValidationError(f"Email: {email} is already taken")
-
-                    exist = User.objects.filter(username=data['username']).exists()
-                    if exist:
-                        raise forms.ValidationError(f"Username:{username} is already taken")
-                    try :
-
-                        user = User.objects.create(username=data['username'], email=data['email'], first_name=data['first_name'], last_name=data['last_name'],password=make_password(data['password']), is_superuser=is_user_superuser, is_staff=is_user_staff)
-
-                        staff = StaffProfile.objects.create(user=user,job_title=data['job_title'],department=data['department'],salary=calculate_salary(int(data['rate']), calculate_working_hours(data['start_time'], data['end_time'])),phone=data['phone'], idnumber=data['idnumber'], gender=ValidateIdNumber(data['idnumber']).get_gender(),age=ValidateIdNumber(data['idnumber']).get_age(), dob=ValidateIdNumber(data['idnumber']).get_birthdate())
-                        shift = Shift.objects.create(employee=user,rate=data['rate'],start_time=data['start_time'],end_time=data['end_time'], working_hours=calculate_working_hours(data['start_time'], data['end_time']))
-
-                        user.save()
-                        staff.save()
-                        shift.save()
-                        return JsonResponse({'message':f'Staff profile for {user.first_name} {user.last_name} is updated successfuly', 'status':'success'}, status=201) 
-                    except Exception as e:
-                        return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
-                else:
-                    return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
-            else:
-                return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
-        else:       
-            return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-    else:
+    if not request.user.is_authenticated:    
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.user.is_superuser:
         return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
 
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+        
+    current_time = now()
+    for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+        if leave.start_date <= current_time <= leave.end_date:
+            return HttpResponse("Request denied: you are on leave")
+    
+    data = {
+        'username' : json_data.get('username'),
+        'first_name' : json_data.get('first_name'),
+        'last_name' : json_data.get('last_name'),
+        'email' : json_data.get('email'),
+        'phone' : json_data.get('phone'),
+        'idnumber': json_data.get('idnumber'),
+        'job_title' : json_data.get('job_title'),
+        'department' : json_data.get('department'),
+        'password' : json_data.get('password'),
+        'password2' : json_data.get('password'),
+        'is_superuser' : json_data.get('super'),
+        'is_staff' : json_data.get('staff'),
+        'salary' : json_data.get('salary'),
+        'rate' : json_data.get('rate'),
+        'start_time' : json_data.get('start_time'),
+        'end_time' : json_data.get('end_time'),
+        }
+    for key, value in data.items():
+        if key == None or value == None:
+            return JsonResponse({'errors': f'{key} field is required ', 'status':'error'}, status=404)
+                
+    if data['is_superuser'] == 'True':
+        is_user_superuser = True
+    else:
+        is_user_superuser = False   
+    if data['is_staff'] == 'True':
+        is_user_staff = True
+    else:
+        is_user_staff = False
+
+    form = AddStaffForm(data)
+    if not form.is_valid() : 
+        return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+    email_exist = User.objects.filter(email=data['email']).exists()
+    if email_exist:
+        return JsonResponse({'errors': f'Email: {email_exist} is already taken', 'status':'error'}, status=404)
+    username_exist = User.objects.filter(username=data['username']).exists()
+    if username_exist:
+        return JsonResponse({'errors': f'Username:{username_exist} is already taken', 'status':'error'}, status=404)
+    try :
+        user = User.objects.create(username=data['username'], email=data['email'], first_name=data['first_name'], last_name=data['last_name'],password=make_password(data['password']), is_superuser=is_user_superuser, is_staff=is_user_staff)
+        staff = StaffProfile.objects.create(user=user,job_title=data['job_title'],department=data['department'],salary=calculate_salary(int(data['rate']), calculate_working_hours(data['start_time'], data['end_time'])),phone=data['phone'], idnumber=data['idnumber'], gender=ValidateIdNumber(data['idnumber']).get_gender(),age=ValidateIdNumber(data['idnumber']).get_age(), dob=ValidateIdNumber(data['idnumber']).get_birthdate())
+        shift = Shift.objects.create(employee=user,rate=data['rate'],start_time=data['start_time'],end_time=data['end_time'], working_hours=calculate_working_hours(data['start_time'], data['end_time']))
+        user.save()
+        staff.save()
+        shift.save()
+        return JsonResponse({'message':f'Staff profile for {user.first_name} {user.last_name} is updated successfuly', 'status':'success'}, status=201) 
+    except Exception as e:
+        return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
+   
 
 @csrf_protect
 def update_staff(request):
@@ -609,22 +610,7 @@ def update_staff(request):
     else:
         return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
 
-def get_late(shift_start):
-    # Convert the first time to minutes since midnight
-    hours1, minutes1, seconds1 = map(int, shift_start.split(":"))
-    total_minutes1 = hours1 * 60 + (minutes1+10) + seconds1 / 60
-    # Get the current time
-    now = datetime.now()
-    # Convert the current time to minutes since midnight
-    total_minutes_now = now.hour * 60 + now.minute + now.second / 60
-    # Clculate the difference
-    difference = total_minutes_now - total_minutes1
-    if difference > 0 :
-        late = True
-    else:
-        late = False
-        difference = 0
-    return (late, round(difference))
+
 
 def mark_attendence(request, empID):
     if request.user.is_authenticated:
@@ -717,9 +703,7 @@ def leave(request):
                     return JsonResponse({'message':f'Leave request submited successfuly waiting managers approval', 'status':'success'}, status=201) 
                     
                 else:
-                    return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
-
-                
+                    return JsonResponse({"errors":form.errors, "status":"error"}, status=400) 
             else:
                 return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
         else:       
@@ -729,83 +713,70 @@ def leave(request):
 
 def close_leave(request, leaveID):
     if request.user.is_authenticated:
-        current_time = now()
-        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-                return HttpResponse("<h1>Request denied: you are on leave</h1>")
-        if request.user.is_staff:
-
-            try:
-                leave = Leave.objects.get(id=int(leaveID))
-                leave.status = "Closed"
-                leave.save()
-                return redirect(request.META.get('HTTP_REFERER', '/'))
-
-            except Exception as e:
-                return HttpResponse(f'close leave : {e}')
-        else:       
-            return HttpResponse('You dont have the The Permission to make this request')
-    else:
         return HttpResponse('you are required to log')
+    if request.user.is_staff:
+        return HttpResponse('You dont have the The Permission to make this request')
+    current_time = now()
+    for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+        if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+            return HttpResponse("<h1>Request denied: you are on leave</h1>")
+    try:
+        leave = Leave.objects.get(id=int(leaveID))
+        leave.status = "Closed"
+        leave.save()
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    except Exception as e:
+        return HttpResponse(f'close leave : {e}')
 
 def approve_leave(request, leaveID):
     if request.user.is_authenticated:
-        current_time = now()
-        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-                return HttpResponse("<h1>Request denied: you are on leave</h1>")
-        if request.user.is_staff:
-
-            try:
-                leave = Leave.objects.get(id=int(leaveID))
-                leave.status = "Approved"
-                leave.save()
-                return redirect(request.META.get('HTTP_REFERER', '/'))
-
-            except Exception as e:
-                return HttpResponse(f'approve leave : {e}')
-        else:       
-            return HttpResponse('You dont have the The Permission to make this request')
-    else:
         return HttpResponse('you are required to log')
+    if request.user.is_staff:
+        return HttpResponse('You dont have the The Permission to make this request')
+    current_time = now()
+    for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+        if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+            return HttpResponse("<h1>Request denied: you are on leave</h1>")
+    try:
+        leave = Leave.objects.get(id=int(leaveID))
+        leave.status = "Approved"
+        leave.save()
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    except Exception as e:
+        return HttpResponse(f'approve leave : {e}')
 
 def reject_leave(request, leaveID):
     if request.user.is_authenticated:
-        current_time = now()
-        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-                return HttpResponse("<h1>Request denied: you are on leave</h1>")
-        if request.user.is_staff:
-
-            try:
-                leave = Leave.objects.get(id=int(leaveID))
-                leave.status = "Rejected"
-                leave.save()
-                return redirect(request.META.get('HTTP_REFERER', '/'))
-
-            except Exception as e:
-                return HttpResponse(f'reject leave : {e}')
-        else:       
-            return HttpResponse('You dont have the The Permission to make this request')
-    else:
         return HttpResponse('you are required to log')
+    if request.user.is_staff:
+        return HttpResponse('You dont have the The Permission to make this request')
+    current_time = now()
+    for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+        if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+            return HttpResponse("<h1>Request denied: you are on leave</h1>")
+    try:
+        leave = Leave.objects.get(id=int(leaveID))
+        leave.status = "Rejected"
+        leave.save()
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    except Exception as e:
+        return HttpResponse(f'reject leave : {e}')
+
 
 def seen_leave(request, leaveID):
     if request.user.is_authenticated:
-        current_time = now()
-        for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-            if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-                return HttpResponse("<h1>Request denied: you are on leave</h1>")
-        if request.user.is_staff:
-            try:
-                leave = Leave.objects.get(id=int(leaveID))
-                leave.seen = True
-                leave.save()
-                return redirect(request.META.get('HTTP_REFERER', '/'))
-
-            except Exception as e:
-                return HttpResponse(f'seen leave : {e}')
-        else:       
-            return HttpResponse('You dont have the The Permission to make this request')
-    else:
         return HttpResponse('you are required to log')
+    if request.user.is_staff:
+        return HttpResponse('You dont have the The Permission to make this request')
+    current_time = now()
+    for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+        if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+            return HttpResponse("<h1>Request denied: you are on leave</h1>")
+    try:
+        leave = Leave.objects.get(id=int(leaveID))
+        leave.seen = True
+        leave.save()
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    except Exception as e:
+        return HttpResponse(f'seen leave : {e}')
+             

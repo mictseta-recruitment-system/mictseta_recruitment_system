@@ -30,7 +30,7 @@
            
         };
        
-        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/profile_information/", {
+        fetch("http://127.0.0.1:8000/profile/update/profile_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -81,7 +81,7 @@
         };
         
 
-        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/update_qualification/", {
+        fetch("http://127.0.0.1:8000/profile/update/update_qualification/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -127,7 +127,7 @@
             speaking_proficiency : speaking,
         };
         
-        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/language_information/", {
+        fetch("http://127.0.0.1:8000/profile/update/language_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -159,9 +159,9 @@
           });
     }
 
-  function handle_update_skill_button_click() {
+  function handle_update_computer_skill_button_click() {
        
-        const skill = document.getElementById("skill1").value;
+        const skill = document.getElementById("skill3").value;
         const level = document.getElementById("level").value;
         
         const skill_information = {
@@ -169,7 +169,49 @@
             level : level,
         };
         
-        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/skill_information/", {
+        fetch("http://127.0.0.1:8000/profile/update/computer_skill_information/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(skill_information),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
+
+  function handle_update_soft_skill_button_click() {
+       
+        const skill = document.getElementById("softskill1").value;
+        const level = document.getElementById("proficiency1").value;
+        
+        const skill_information = {
+            skill : skill,
+            level : level,
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/soft_skill_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -219,7 +261,7 @@ function uploadDocument(d_type, event) {
     
     console.log(formData);
 
-    fetch('https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/upload_supporting_document/', {
+    fetch('http://127.0.0.1:8000/profile/update/upload_supporting_document/', {
         method: 'POST',
         body: formData,
         headers: {

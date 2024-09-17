@@ -9,7 +9,8 @@ urlpatterns = [
     path('update/update_qualification/', views.update_qualification, name='update_qualification'),
     path('update/address_information/', views.update_address_info, name='update_address_info'),
     path('update/language_information/', views.update_language, name='update_language'),
-    path('update/skill_information/', views.update_skill, name='update_skill'),
+    path('update/computer_skill_information/', views.update_computer_skill, name='update_computer_skill'),
+    path('update/soft_skill_information/', views.update_soft_skill, name='update_soft_skill'),
     path('update/upload_supporting_document/', views.upload_supporting_document, name='upload_supporting_document'),
     path('delete/delete_supporting_document/<document_id>/', views.delete_supporting_document, name='delete_supporting_document'),
 
@@ -24,8 +25,4 @@ urlpatterns = [
     path('add/mark_attendence/<empID>/', views.mark_attendence, name='mark_attendence'),
     path('add/end_attendace/<empID>/', views.end_attendace, name='end_attendace'),
 
-
-   
-    # path('', views.home, name='home')
-    # path('', views.home, name='home')
 ] 

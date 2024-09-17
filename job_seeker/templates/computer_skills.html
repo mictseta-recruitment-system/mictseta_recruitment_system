@@ -16,6 +16,7 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
+
                     <label for="skill2" class="col-sm-2 col-form-label">Computer Skill</label>
                     <select class="form-control" id="skill1" name="skill1" onchange="toggleOtherSkill()">
                         <option value="">Select a skill</option>
@@ -30,23 +31,23 @@
                 </div>
                 <div class="form-group">
                     <label for="proficiency">Proficiency Level:</label>
-                    <select id="level2" class="form-control">
+
+                    <select id="level" class="form-control">
                         {% for proficiency in proficiencys %}
-                            <option value="{{proficiency.id}}">{{proficiency.proficiency}}</option>
+                            <option value="{{proficiency.id}}">{{proficiency.level}}</option>
                         {% endfor %}
-                        
                     </select>
                 </div>
             </div>
             <div class="col-6">
                 <div class="list-group">
-                    {% for skill in user.skills.all %}
+                    {% for skill in user.computerskills_set.all %}
                     <a href="#" class="list-group-item list-group-item-action" aria-current="true">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">{{ skill.skill }}</h5>
                             <span class="badge rounded-pill"><i class="fas fa-trash fa-2x text-danger"></i></span>
                         </div>
-                        <small>{{ skill.level }}</small>
+                        <small>{{ skill.proficiency.level }}</small>
                     </a>
                     {% endfor %}
                 </div>
@@ -54,7 +55,7 @@
         </div>
         <div class="form-group row">
             <div class="col-sm-10 offset-sm-2">
-                <button type="button" onclick="handle_update_skill_button_click()" class="btn btn-primary">Update</button>
+                <button type="button" onclick="handle_update_computer_skill_button_click()" class="btn btn-primary">Update</button>
             </div>
         </div>
     </form>
