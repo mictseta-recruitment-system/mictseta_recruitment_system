@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
 
 # Create your models here.
 
@@ -19,50 +20,48 @@ class Profile(models.Model):
     linkedin_profile = models.CharField(max_length=225, default=" ")
     personal_website = models.CharField(max_length=225, default=" ")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    
-
     def __str__(self):
-
         return f'{self.user.email} Profile Information'
 
-class Qualification(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='qualifications')
-	highest_qualification = models.CharField(max_length=225, null=True)
-	field_of_study = models.CharField(max_length=225, null=True)
-	institution = models.CharField(max_length=225,null=True) 
-	year_obtained =  models.CharField(max_length=225, null=True)
-	status =  models.CharField(max_length=225, null=True)
-	grade = models.CharField(max_length=100, null=True)
-	def __str__(self):
-		return f"{self.user.email} Qualification information"
-
 class Language(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='languages')
-	language = models.CharField(max_length=225)
-	reading_proficiency = models.CharField(max_length=225)
-	writing_proficiency = models.CharField(max_length=225)
-	speaking_proficiency = models.CharField(max_length=225)
-	
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	language = models.ForeignKey(LanguageList, on_delete=models.CASCADE)
+	reading_proficiency = models.ForeignKey(ReadingProficiencyList, on_delete=models.CASCADE)
+	writing_proficiency = models.ForeignKey(WritingProficiencyList, on_delete=models.CASCADE)
+	speaking_proficiency = models.ForeignKey(SpeakingProficiencyList, on_delete=models.CASCADE)
 	def __str__(self):
-		return f"{self.user.email} Language and proficiency information"
-
-class ComputerSkills(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skills')
-	skill = models.CharField(max_length=225)
-	level = models.CharField(max_length=225)
-	def __str__(self):
-		return f"{self.user.email} Computer Skills information"
+		return f" Language and proficiency information"
 
 class SoftSkills(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	skill = models.CharField(max_length=225)
-	level = models.CharField(max_length=225)
+	skill = models.ForeignKey(SoftSkillsList, on_delete=models.CASCADE)
+	proficiency = models.ForeignKey(SoftProficiency, on_delete=models.CASCADE)
 	def __str__(self):
 		return f"{self.user.email} Soft Skills information"
 
+class ComputerSkills(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	skill = models.ForeignKey(ComputerSkillsList, on_delete=models.CASCADE)
+	proficiency = models.ForeignKey(ComputerProficiency, on_delete=models.CASCADE)
+	
+	def __str__(self):
+		return f"{self.user.email} Computer Skills information"
+
+class Qualification(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='qualifications')
+	institution = models.ForeignKey(Institution, on_delete=models.CASCADE) 
+	field_of_study = models.ForeignKey(Qualification, on_delete=models.CASCADE) 
+	nqf_level = models.CharField(max_length=225, null=True)
+	start_date = models.CharField(max_length=225, null=True)
+	end_date =  models.CharField(max_length=225, null=True)
+	status =  models.CharField(max_length=225, null=True)
+	def __str__(self):
+		return f"{self.user.email} Qualification information"
+
+
 class WorkingExpereince(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	job_title = models.CharField(max_length=225)
+	job_title = models.ForeignKey(JobTitle, on_delete=models.CASCADE)
 	company = models.CharField(max_length=225)
 	location = models.CharField(max_length=225)
 	start_date = models.CharField(max_length=225)

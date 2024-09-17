@@ -205,64 +205,64 @@ class UpdateQualificationForm(forms.Form):
 			raise forms.ValidationError("academic status cannot be empty")
 		return self.validate_names(status)
 	
-class UpdateLanguageForm(forms.Form):
-	language = forms.CharField(max_length=225)
-	reading_proficiency = forms.CharField(max_length=225)
-	writing_proficiency = forms.CharField(max_length=225)
-	speaking_proficiency = forms.CharField(max_length=225)
+# class UpdateLanguageForm(forms.Form):
+# 	language = forms.CharField(max_length=225)
+# 	reading_proficiency = forms.CharField(max_length=225)
+# 	writing_proficiency = forms.CharField(max_length=225)
+# 	speaking_proficiency = forms.CharField(max_length=225)
 
-	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
-		matches = re.findall(pattern, name)
-		if matches:
-			raise forms.ValidationError("No special characters allowed")
-		if len(name) < 2:
-			raise forms.ValidationError(f"Name:{name} is too short")
-		try:
-			str(name)
-		except Exception as e:
-			raise forms.ValidationError(e)
-		return name
+# 	def validate_names(self,name):
+# 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+# 		matches = re.findall(pattern, name)
+# 		if matches:
+# 			raise forms.ValidationError("No special characters allowed")
+# 		if len(name) < 2:
+# 			raise forms.ValidationError(f"Name:{name} is too short")
+# 		try:
+# 			str(name)
+# 		except Exception as e:
+# 			raise forms.ValidationError(e)
+# 		return name
 
-	def clean_language(self):
-		language = self.cleaned_data.get('language')
-		return self.validate_names(language)
+# 	def clean_language(self):
+# 		language = self.cleaned_data.get('language')
+# 		return self.validate_names(language)
 
-	def clean_writing_proficiency(self):
-		writing_proficiency = self.cleaned_data.get('writing_proficiency')
-		return self.validate_names(writing_proficiency)
-	def clean_reading_proficiency(self):
-		reading_proficiency = self.cleaned_data.get('reading_proficiency')
-		return self.validate_names(reading_proficiency)
-	def clean_speaking_proficiency(self):
-		speaking_proficiency = self.cleaned_data.get('speaking_proficiency')
-		return self.validate_names(speaking_proficiency)
+# 	def clean_writing_proficiency(self):
+# 		writing_proficiency = self.cleaned_data.get('writing_proficiency')
+# 		return self.validate_names(writing_proficiency)
+# 	def clean_reading_proficiency(self):
+# 		reading_proficiency = self.cleaned_data.get('reading_proficiency')
+# 		return self.validate_names(reading_proficiency)
+# 	def clean_speaking_proficiency(self):
+# 		speaking_proficiency = self.cleaned_data.get('speaking_proficiency')
+# 		return self.validate_names(speaking_proficiency)
 
 
-class UpdateSkillsForm(forms.Form):
-	skill = forms.CharField(max_length=225)
-	level = forms.CharField(max_length=225)
+# class UpdateSkillsForm(forms.Form):
+# 	skill = forms.CharField(max_length=225)
+# 	level = forms.CharField(max_length=225)
 	
-	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
-		matches = re.findall(pattern, name)
-		if matches:
-			raise forms.ValidationError("No special characters allowed")
-		if len(name) < 2:
-			raise forms.ValidationError(f"Name:{name} is too short")
-		try:
-			str(name)
-		except Exception as e:
-			raise forms.ValidationError(e)
-		return name
+# 	def validate_names(self,name):
+# 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+# 		matches = re.findall(pattern, name)
+# 		if matches:
+# 			raise forms.ValidationError("No special characters allowed")
+# 		if len(name) < 2:
+# 			raise forms.ValidationError(f"Name:{name} is too short")
+# 		try:
+# 			str(name)
+# 		except Exception as e:
+# 			raise forms.ValidationError(e)
+# 		return name
 
-	def clean_skill(self):
-		skill = self.cleaned_data.get('skill')
-		return self.validate_names(skill)
+# 	def clean_skill(self):
+# 		skill = self.cleaned_data.get('skill')
+# 		return self.validate_names(skill)
 		
-	def clean_level(self):
-		level = self.cleaned_data.get('level')
-		return self.validate_names(level)
+# 	def clean_level(self):
+# 		level = self.cleaned_data.get('level')
+# 		return self.validate_names(level)
 
 class UpdateAddressInformationForm(forms.Form):
 	street_address_line = forms.CharField(max_length=225)

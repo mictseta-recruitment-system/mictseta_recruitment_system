@@ -1,37 +1,46 @@
 from django.shortcuts import render
 from jobs.models import JobPost, SkillValidation, FeedBack,Interview
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
 from profiles.models import SupportingDocuments
 # Create your views here.
 def job_seeker_dashboard(request):
     return render(request, 'job_seeker_dashboard.html')
 
 def personal_details(request):
-
-
-
     return render(request, 'personal_details.html')
 
 
 def address_details(request):
-
     return render(request, 'address_details.html')
 
 def academic_qualifications(request):
-    return render(request, 'academic_qualifications.html')
+    institution = Institution.objects.all()
+    qualification = Qualification.objects.all()
+    return render(request, 'academic_qualifications.html', {'institutions':institution, 'qualifications':qualification})
 
 def language_proficiency(request):
-    return render(request, 'language_proficiency.html')
+    language = LanguageList.objects.all()
+    reading = ReadingProficiencyList.objects.all()
+    speaking = SpeakingProficiencyList.objects.all()
+    writing = WritingProficiencyList.objects.all()
+    print(language)
+    print(reading)
+    print(speaking)
+    return render(request, 'language_proficiency.html',{'languages':language,'readings':reading, 'speakings':speaking, 'writings':writing})
 
 def soft_skills(request):
-    skills = SkillValidation.objects.filter(category="soft")
-
-    return render(request, 'soft_skills.html', {'skills':skills})
+    soft = SoftSkillsList.objects.all()
+    proficiency = SoftProficiency.objects.all()
+    return render(request, 'soft_skills.html', {'softs':soft, 'proficiencys':proficiency})
 
 def computer_skills(request):
-    return render(request, 'computer_skills.html')
+    computer = ComputerSkillsList.objects.all()
+    proficiency = ComputerProficiency.objects.all()
+    return render(request, 'computer_skills.html', {'computers':computer, 'proficiencys':proficiency})
 
 def working_experience(request):
-    return render(request, 'working_experience.html')
+    job_title = JobTitle.objects.all()
+    return render(request, 'working_experience.html', {'job_titles':job_title})
 
 def referees(request):
     return render(request, 'referees.html')
