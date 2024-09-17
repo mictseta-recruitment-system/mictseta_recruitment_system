@@ -16,11 +16,12 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
-                    <label for="skill3" class="col-sm-2 col-form-label">Computer Skill</label>
-                    <select class="form-control" id="skill3" name="skill3">
-                        
+                    <label for="skill2" class="col-sm-2 col-form-label">Computer Skill</label>
+                    <select class="form-control" id="skill1" name="skill1" >
+                        <option value="">Select a skill</option>
                         {% for computer in computers %}
-                            <option value="{{computer.id}}">{{computer.id}}</option>
+                            <option value="{{Computer.id}}">{{computer.skill}}</option>
+
                        {% endfor %}
                     </select>
                 </div>
@@ -30,6 +31,7 @@
                 </div>
                 <div class="form-group">
                     <label for="proficiency">Proficiency Level:</label>
+
                     <select id="level" class="form-control">
                         {% for proficiency in proficiencys %}
                             <option value="{{proficiency.id}}">{{proficiency.level}}</option>

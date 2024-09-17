@@ -25,7 +25,7 @@ class WritingProficiencyList(models.Model):
 		return f"{self.proficiency}"
 #========================================================================
 
-
+ 
 
 #Computer skills models
 #========================================================================
@@ -65,6 +65,12 @@ class Qualification(models.Model):
 	name = models.CharField(max_length=225)
 	def __str__(self):
 		return f"{self.name}"
+
+class NQF(models.Model):
+	level = models.CharField(max_length=225)
+	def __str__(self):
+		return f"{self.level}"
+
 
 class JobTitle(models.Model):
 	title = models.CharField(max_length=225)

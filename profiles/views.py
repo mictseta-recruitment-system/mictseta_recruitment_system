@@ -4,11 +4,11 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import UpdateQualificationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
-from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency,NQF, Institution, Qualification, JobTitle
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Qualification,Language,ComputerSkills, SoftSkills,SupportingDocuments
+from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Education,Language,ComputerSkills, SoftSkills,SupportingDocuments
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -139,30 +139,34 @@ def update_user_profile(request):
 def update_qualification(request):
     if not request.user.is_authenticated:      
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-    if request.method == 'POST':
+    if not request.method == 'POST':
         return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
     try:
         json_data = json.loads(request.body)
     except Exception :
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
     data = {
-        'highest_qualification' : json_data.get('highest_qualification'),
-        'field_of_study' : json_data.get('field_of_study'),
         'institution'  : json_data.get('institution'),
-        'year_obtained' : json_data.get('year_obtained'),
-        'status' : json_data.get('status'),
-        'grade' : json_data.get('grade')
+        'field_of_study' : json_data.get('field_of_study'),
+        'nqf_level' : json_data.get('nqf_level'),
+        'start_date' : json_data.get('start_date'),
+        'end_date' : json_data.get('end_date'),
+        'status' : json_data.get('status')
     }
 
-    qualification_data_form =  UpdateQualificationForm(data)
-    if not qualification_data_form.is_valid() : #and address_data_form.is_valid():
-        return JsonResponse({"errors":qualification_data_form.errors, "status":"error"}, status=400) 
+    # qualification_data_form =  UpdateQualificationForm(data)
+    # if not qualification_data_form.is_valid() : #and address_data_form.is_valid():
+    #     return JsonResponse({"errors":qualification_data_form.errors, "status":"error"}, status=400) 
+    institution = Institution.objects.get(id=int(data['institution']))
+    field_of_study = Qualification.objects.get(id=int(data['field_of_study']))
+    nqf_level = NQF.objects.get(id=int(data['nqf_level']))
+
     try:
-        exists = Qualification.objects.filter(highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],status=data['status']).exists()
+        exists = Education.objects.filter(institution=institution,user=request.user).exists()
         if exists:
             return JsonResponse({'errors':{ "Qualification" : ['it Already exists']}, 'status':'error'}, status=404)
-        qualification = Qualification.objects.create(user=request.user,highest_qualification=data['highest_qualification'],field_of_study=data['field_of_study'],institution=data['institution'],year_obtained=data['year_obtained'],grade=data['grade'],status=data['status'])
-        qualification.save()
+        education = Education.objects.create(user=request.user,institution=institution,field_of_study=field_of_study,nqf_level=nqf_level,start_date=data['start_date'],end_date=data['end_date'],status=data['status'])
+        education.save()
         return JsonResponse({"message":"Added qualification information success", 'status':'success'})
     except Exception as e: 
         return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)

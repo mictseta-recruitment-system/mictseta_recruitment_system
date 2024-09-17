@@ -63,20 +63,20 @@
     }
   function handle_update_qualification_button_click() {
        
-        const highest_qualification = document.getElementById("highest_qualification").value;
-        const field_of_study = document.getElementById("field_of_study").value;
         const institution = document.getElementById("institution").value;
-        const year_obtained = document.getElementById("year_obtained").value;
+        const field_of_study = document.getElementById("field").value;
+        const nqf_level = document.getElementById("nqf").value;
+        const start_date = document.getElementById("start_date").value;
+        const end_date = document.getElementById("end_date").value;
          const status = document.getElementById("status").value;
-        const grade = document.getElementById("grade").value;
        
         const personal_information = {
 
-            highest_qualification : highest_qualification,
-            field_of_study : field_of_study,
             institution : institution, 
-            year_obtained : year_obtained, 
-            grade : grade,
+            field_of_study : field_of_study,
+            nqf_level : nqf_level,
+            start_date : start_date, 
+            end_date : end_date,
              status : status
         };
         

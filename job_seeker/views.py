@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from jobs.models import JobPost, SkillValidation, FeedBack,Interview
-from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from profiles.models import SupportingDocuments
 # Create your views here.
 def job_seeker_dashboard(request):
@@ -16,7 +16,8 @@ def address_details(request):
 def academic_qualifications(request):
     institution = Institution.objects.all()
     qualification = Qualification.objects.all()
-    return render(request, 'academic_qualifications.html', {'institutions':institution, 'qualifications':qualification})
+    nqf = NQF.objects.all()
+    return render(request, 'academic_qualifications.html', {'institutions':institution, 'qualifications':qualification,'nqfs':nqf})
 
 def language_proficiency(request):
     language = LanguageList.objects.all()

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
-from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
+from config.models import NQF, LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
 
 # Create your models here.
 
@@ -47,11 +47,11 @@ class ComputerSkills(models.Model):
 	def __str__(self):
 		return f"{self.user.email} Computer Skills information"
 
-class Qualification(models.Model):
+class Education(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='qualifications')
 	institution = models.ForeignKey(Institution, on_delete=models.CASCADE) 
 	field_of_study = models.ForeignKey(Qualification, on_delete=models.CASCADE) 
-	nqf_level = models.CharField(max_length=225, null=True)
+	nqf_level = models.ForeignKey(NQF, on_delete=models.CASCADE) 
 	start_date = models.CharField(max_length=225, null=True)
 	end_date =  models.CharField(max_length=225, null=True)
 	status =  models.CharField(max_length=225, null=True)
