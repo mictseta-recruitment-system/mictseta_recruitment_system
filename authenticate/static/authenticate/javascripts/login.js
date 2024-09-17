@@ -19,7 +19,7 @@ function handle_sign_in_button_click() {
     /*csrftoken:csrftoken,
           jeff:"jeff"*/
   };
-  fetch("http://127.0.0.1:8000/auth/sign_in/", {
+  fetch("https://mictsetarecruitmentsystem-production.up.railway.app/auth/sign_in/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -96,7 +96,7 @@ function handle_sign_up_button_click() {
     password2: password2,
   };
 
-  fetch("http://127.0.0.1:8000/auth/sign_up/", {
+  fetch("https://mictsetarecruitmentsystem-production.up.railway.app/auth/sign_up/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -135,7 +135,7 @@ function handle_forgot_button_click() {
   const data1 = {
     email: femail,
   };
-  fetch("http://127.0.0.1:8000/auth/reset_password_link/", {
+  fetch("https://mictsetarecruitmentsystem-production.up.railway.app/auth/reset_password_link/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

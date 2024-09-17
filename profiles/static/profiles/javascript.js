@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         };
         console.log(address_info)
 
-        fetch("http://127.0.0.1:8000/profile/update/address_information/", {
+        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/address_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
            
         };
        
-        fetch("http://127.0.0.1:8000/profile/update/profile_information/", {
+        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/profile_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         };
         
 
-        fetch("http://127.0.0.1:8000/profile/update/update_qualification/", {
+        fetch("https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/update_qualification/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -193,7 +193,7 @@ function uploadImage() {
     const form = document.getElementById('image-upload-form');
     const formData = new FormData(form);
 
-    fetch('http://127.0.0.1:8000/profile/update/upload_profile_image/', {
+    fetch('https://mictsetarecruitmentsystem-production.up.railway.app/profile/update/upload_profile_image/', {
         method: 'POST',
         body: formData,
         headers: {

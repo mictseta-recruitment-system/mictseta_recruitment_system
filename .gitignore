@@ -6,8 +6,8 @@ __pycache__/
 virtualenv/
 venv/
 /dashboard/__pycache__
-/jobs/migrations/__pycache__
-/jobs/migrations/__pycache__
-/users/__pycache__
-/users/__pycache__
+/*/migrations/__pycache__
+/*/migrations/__pycache__
+/*/__pycache__
+/*/__pycache__
 sqlite3
