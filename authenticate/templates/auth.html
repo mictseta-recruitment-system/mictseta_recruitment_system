@@ -5,18 +5,30 @@
 {% block content %}
 {% load static %}
 <style>
+    @font-face {
+        font-family: 'Round Gothic';
+        src: url('{% static 'fonts/RoundGothic.woff2' %}') format('woff2'),
+             url('{% static 'fonts/RoundGothic.woff' %}') format('woff');
+    }
+
+    @font-face {
+        font-family: 'Myriad Pro';
+        src: url('{% static 'fonts/MyriadPro.woff2' %}') format('woff2'),
+             url('{% static 'fonts/MyriadPro.woff' %}') format('woff');
+    }
+
     body {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         background-color: #f4f6f9;
         margin: 0;
         height: 100vh;
         overflow: hidden;
     }
-    .main{
+
+    .main {
         height: 100vh;
         overflow: hidden;
         display: flex;
-
     }
     
     .left-section, .filled-right-section {
@@ -26,7 +38,8 @@
         align-items: center;
         padding: 20px;
     }
-    .filled-right-section{
+
+    .filled-right-section {
         display: grid;
     }
     
@@ -34,12 +47,13 @@
         background-color: #b0b0b0;
         color: #ffffff;
         text-align: center;
+        font-family: 'Round Gothic', sans-serif; /* Apply Round Gothic font */
     }
     
     .left-section img {
         max-width: 60%;
         height: auto;
-        border: none; /* Added to remove any border */
+        border: none;
     }
     
     .right-section {
@@ -48,7 +62,7 @@
         align-items: center;
     }
     
-    .form-container { 
+    .form-container {
         width: 100%;
     }
     
@@ -56,6 +70,7 @@
         font-size: 40px;
         text-align: center;
         margin-bottom: 25px;
+        font-family: 'Myriad Pro', serif; /* Apply Myriad Pro font */
     }
     
     h6 {
@@ -63,6 +78,7 @@
         color: #0693e3;
         text-align: center;
         margin-bottom: 30px;
+        font-family: 'Open Sans', sans-serif; /* Apply Open Sans font */
     }
     
     .input-group {
@@ -127,85 +143,80 @@
     .right-section h1 {
         color: black;
     }
+
+    .welcome-heading {
+        font-family: 'Round Gothic', sans-serif; /* Apply Round Gothic font */
+        font-size: 34pt;
+        font-weight: bold;
+        color: #0566EB; /* Corrected color code */
+    }
+
 </style>
 
 <div class="main">
-
     <div class="left-section">
         <div>
             <img src="{% static 'authenticate/images/image.png' %}" alt="Company Logo or Image">
-            <h1>Welcome to MICTSETA</h1>
+            <h1 class="welcome-heading">Welcome to MICTSETA</h1>
             <p>Shaping skills, Pioneering Industries, Empowering Futures.</p>
         </div>
     </div>
      
-    
     <div class="filled-right-section">
-        
-            <div id="flash-message-container"></div>
-         <div class="right-section">
-        <div class="form-container" id="form-container">
-    
-            <div class="wrapper" id="wrapper-sign-in">
-    
-                <form action="" id="login-form" method="POST" style="width: 400px;">
-                    {% csrf_token %}
-                    <h1>Login</h1>
-                    <div class="spinner"></div>
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="Email Address" id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
-                        <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <div class="remember-forgot">
-                        <label><input type="checkbox"> Remember Me</label>
-                        <a href="{% url 'find_account' %}">Forgot Password?</a>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
-                    <div class="register-link">
-                        <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
-                    </div>
-                </form>
+        <div id="flash-message-container"></div>
+        <div class="right-section">
+            <div class="form-container" id="form-container">
+                <div class="wrapper" id="wrapper-sign-in">
+                    <form action="" id="login-form" method="POST" style="width: 400px;">
+                        {% csrf_token %}
+                        <h1>Login</h1>
+                        <div class="spinner"></div>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Email Address" id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
+                            <i class="eye-icon" id="toggle-password-login">&#128065;</i>
+                        </div>
+                        <div class="remember-forgot">
+                            <label><input type="checkbox"> Remember Me</label>
+                            <a href="{% url 'find_account' %}">Forgot Password?</a>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
+                        <div class="register-link">
+                            <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
+                        </div>
+                    </form>
+                </div>
+                <div class="wrapper" id="wrapper-sign-up" style="display: none;">
+                    <form action="" id="signup-form" method="POST">
+                        <h1>Sign Up</h1>
+                        <h6>Add your details to create an account and start preparing your documents.</h6>
+                        <div class="input-group mb-3">
+                            <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                            <i class="eye-icon" id="toggle-password-signup1">&#128065;</i>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
+                            <i class="eye-icon" id="toggle-password-signup2">&#128065;</i>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
+                        <div class="register-link">
+                            <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
+                        </div>
+                    </form>
+                </div>
             </div>
-    
-            <div class="wrapper" id="wrapper-sign-up" style="display: none;">
-                <form action="" id="signup-form" method="POST">
-                    <h1>Sign Up</h1>
-                    <h6>Add your details to create an account and start preparing your documents.</h6>
-    
-
-                    <div class="input-group mb-3">
-                        <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
-                    </div>
-    
-                  
-    
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-                        <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
-                        <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
-                    <div class="register-link">
-                        <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
-                    </div>
-                </form>
-            </div>
-    
         </div>
     </div>
-    
-    </div>
-   
 </div>
+
 <script>
     document.getElementById('btn-sign-up').addEventListener('click', function(e) {
         e.preventDefault();
