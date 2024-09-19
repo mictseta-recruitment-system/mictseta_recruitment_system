@@ -304,6 +304,43 @@ class UpdateAddressInformationForm(forms.Form):
 		except:
 			raise forms.ValidationError("Postal code must integers")
 
+class UpdateWorkingExpereinceForm(forms.Form):
+	job_title = forms.CharField(max_length=225)
+	company = forms.CharField(max_length=225)
+	location = forms.CharField(max_length=225)
+	description = forms.CharField(max_length=6)
+
+	def validate_names(self,name):
+		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 3:
+			raise forms.ValidationError(f" Address :{name} is too short")
+		return name
+
+	def clean_job_title(self):
+		job_title = self.cleaned_data.get('job_title')
+		return self.validate_names(job_title)
+
+	def clean_street_address_line1(self):
+		street_address_line = self.cleaned_data.get('street_address_line')
+		return self.validate_names(street_address_line)
+
+	def clean_company(self):
+		company = self.cleaned_data.get('company')
+		return self.validate_names(company)
+
+	def clean_location(self):
+		location = self.cleaned_data.get('location')
+		return self.validate_names(location)
+
+	def clean_description(self):
+		description = self.cleaned_data.get('description')
+		if len(description) < 3 :
+			raise forms.ValidationError(" job description too short")
+		return self.validate_names(clean_description)
+
 class ImageUploadForm(forms.ModelForm):
 	class Meta:
 		model = ProfileImage

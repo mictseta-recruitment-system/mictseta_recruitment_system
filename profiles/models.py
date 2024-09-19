@@ -66,7 +66,7 @@ class WorkingExpereince(models.Model):
 	location = models.CharField(max_length=225)
 	start_date = models.CharField(max_length=225)
 	end_date = models.CharField(max_length=225)
-	years_of_expreince = models.CharField(max_length=225)
+	description = models.CharField(max_length=225)
 	def __str__(self):
 		return f"{self.user.email} Working Expereince information"
 

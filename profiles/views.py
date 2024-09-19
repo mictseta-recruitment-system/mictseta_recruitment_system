@@ -3,12 +3,12 @@ from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-from .forms import UpdateQualificationForm, UpdateAddressInformationForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
+from .forms import UpdateQualificationForm, UpdateAddressInformationForm,UpdateWorkingExpereinceForm, UpdateProfileInformationForm, ImageUploadForm, AddStaffForm, UpdateStaffForm, LeaveForm
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency,NQF, Institution, Qualification, JobTitle
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Education,Language,ComputerSkills, SoftSkills,SupportingDocuments
+from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Education,Language,ComputerSkills, SoftSkills,SupportingDocuments,WorkingExpereince
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -300,8 +300,47 @@ def update_address_info(request):
         return JsonResponse({"message":"update personal information success", "status":"success"}, status=200)
     except Exception as e: 
             return JsonResponse({'errors':f'{e}', 'status':'error'}, status=404)
+
+@csrf_protect
+def update_working_experince(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)      
+
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+    working_experience = {
+        'job_title' : json_data.get('job_title'),
+        'company'  : json_data.get('company'),
+        'location' : json_data.get('location'),
+        'start_date' : json_data.get('start_date'),
+        'end_date' : json_data.get('end_date'),
+        'description' : json_data.get('description')
+    }
             
-       
+    working_experience_form =  UpdateWorkingExpereinceForm(working_experience)
+    if not form.is_valid() : 
+        return JsonResponse({'errors': form.errors, 'status': 'error'}, status=400)
+    job_tilte = JobTitle.objects.get(id=int(working_experience['job_title']))
+
+    exists = WorkingExpereince.objects.filter(job_title=job_title, user=request.user).exists()
+    if exists:
+        return JsonResponse({'errors':"workinh experince already exists",'status':'error'}, status=400)
+    wk = WorkingExpereince.objects.create(
+        job_title=job_title, 
+        user=request.user, 
+        company=working_experience['company'],
+        location=working_experience['location'],
+        start_date=working_experience['start_date'],
+        end_date=working_experience['end_date'],
+        description=working_experience['description']
+        )   
+    wk.save()
+    return JsonResponse({"message":"update working experince information success", "status":"success"}, status=200)
+
 def upload_supporting_document(request):
     if request.method == 'POST':
        return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)

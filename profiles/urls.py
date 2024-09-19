@@ -13,7 +13,8 @@ urlpatterns = [
     path('update/soft_skill_information/', views.update_soft_skill, name='update_soft_skill'),
     path('update/upload_supporting_document/', views.upload_supporting_document, name='upload_supporting_document'),
     path('delete/delete_supporting_document/<document_id>/', views.delete_supporting_document, name='delete_supporting_document'),
-
+    path('update/update_working_experince/', views.update_working_experince, name='update_working_experince'),
+    
     path('update/upload_profile_image/', views.upload_profile_image, name='upload_profile_image'),
     path('update/update_staff/', views.update_staff, name='update_staff'),
     path('add/add_staff/', views.add_staff, name='add_staff'),
