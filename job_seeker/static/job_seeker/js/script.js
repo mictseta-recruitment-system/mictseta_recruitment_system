@@ -289,6 +289,64 @@ function handle_update_address_button_click() {
     }
 
 
+
+function handle_update_working_experince_button_click() {
+       
+        const job_title = document.getElementById("job_title").value;
+        const company = document.getElementById("company").value; 
+        const location = document.getElementById("location").value;
+        const start_date = document.getElementById("start_date").value;
+       var end_date =  document.getElementById("end_date").value;
+        const description = document.getElementById("description").value;
+        const checkbox = document.getElementById("myCheckbox");
+
+        if (checkbox.checked) {
+            end_date = 'currentley working there ';
+        } else {
+            end_date = document.getElementById("end_date").value;
+        }
+        const working_experince = {
+            job_title : job_title,
+            company : company,
+            location : location,
+            start_date : start_date,
+            end_date : end_date,
+            description : description
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/update_working_experince/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(working_experince),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
+
+
 function uploadDocument(d_type, event) {
    event.preventDefault(); 
     if(d_type === 'license'){

@@ -20,17 +20,21 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="job-title1" class="form-label">Job Title</label>
-                    <input type="text" class="form-control" id="job-title1" name="job-title1" placeholder="Enter job title" required>
+                     <select class="form-control" id="job_title" name="location1" required>
+                        {% for job_title in job_titles %}
+                            <option value="{{job_title.id}}">{{job_title.title}}</option>
+                        {% endfor %}
+                     </select>
                 </div>
                 <div class="col-md-6">
                     <label for="company1" class="form-label">Company</label>
-                    <input type="text" class="form-control" id="company1" name="company1" placeholder="Enter company name" required>
+                    <input type="text" class="form-control" id="company" name="company1" placeholder="Enter company name" required>
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="location1" class="form-label">Location</label>
-                    <select class="form-control" id="location1" name="location1" required>
+                    <select class="form-control" id="location" name="location1" required>
                         <option value="">Select Location</option>
                         <option value="Johannesburg">Johannesburg</option>
                         <option value="Cape Town">Cape Town</option>
@@ -48,25 +52,41 @@
                 </div>
                 <div class="col-md-3">
                     <label for="start-date1" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="start-date1" name="start-date1" required>
+                    <input type="date" class="form-control" id="start_date" name="start-date1" required>
                 </div>
                 <div class="col-md-3">
                     <label for="end-date1" class="form-label">End Date</label>
-                    <input type="date" class="form-control" id="end-date1" name="end-date1">
+                    <input type="date" class="form-control" id="end_date" name="end-date1">
                 </div>
             </div>
-            <div class="row mb-3">
+              <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="years-experience2" class="form-label">Job Descripton</label>
+                            <textarea type="number" class="form-control" id="description" placeholder="tell us about your experince" >
+                            </textarea>
+                        </div>
                 <div class="col-md-6">
-                    <label for="years-experience1" class="form-label">Years of Experience</label>
-                    <input type="number" class="form-control" id="years-experience1" name="years-experience1" min="0" placeholder="e.g., 3" required>
+                    <input type="checkbox" id="myCheckbox"> i currently work there 
                 </div>
-            </div>
+                </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save Experience</button>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addExperienceModal">Add Another Experience</button>
+                <button type="button" class="btn btn-primary" onclick="handle_update_working_experince_button_click()">Save Experience</button>
+               <!--  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addExperienceModal">Add Another Experience</button> -->
             </div>
         </fieldset>
     </form>
+
+    <div> 
+        {% for expereince in user.working_expereince.all %}
+        <hr>
+        <p>Job Title : {{expereince.job_title.title}}</p>
+        <p>Company : {{expereince.company}}</p>
+        <p>location : {{expereince.location}}</p>
+        <p> start date: {{expereince.start_date}}</p>
+        <p>End date : {{expereince.end_date}}</p>
+        <p>Description : {{expereince.description}}</p>
+        {% endfor %}
+    </div>
 </div>
 
 <!-- Modal for Adding Additional Work Experience -->

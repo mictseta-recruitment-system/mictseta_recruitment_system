@@ -60,7 +60,7 @@ class Education(models.Model):
 
 
 class WorkingExpereince(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="working_expereince")
 	job_title = models.ForeignKey(JobTitle, on_delete=models.CASCADE)
 	company = models.CharField(max_length=225)
 	location = models.CharField(max_length=225)

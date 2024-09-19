@@ -321,14 +321,22 @@ def update_working_experince(request):
         'description' : json_data.get('description')
     }
             
-    working_experience_form =  UpdateWorkingExpereinceForm(working_experience)
-    if not form.is_valid() : 
-        return JsonResponse({'errors': form.errors, 'status': 'error'}, status=400)
-    job_tilte = JobTitle.objects.get(id=int(working_experience['job_title']))
+    #working_experience_form =  UpdateWorkingExpereinceForm(working_experience)
+    #if not working_experience_form.is_valid() : 
+    #    return JsonResponse({'errors': working_experience_form.errors, 'status': 'error'}, status=400)
+    job_title = JobTitle.objects.get(id=int(working_experience['job_title']))
 
     exists = WorkingExpereince.objects.filter(job_title=job_title, user=request.user).exists()
     if exists:
-        return JsonResponse({'errors':"workinh experince already exists",'status':'error'}, status=400)
+        wk = WorkingExpereince.objects.get(job_title=job_title, user=request.user)
+        wk.job_title = job_title
+        wk.company = working_experience['company']
+        wk.location = working_experience['location']
+        wk.start_date = working_experience['start_date']
+        wk.end_date = working_experience['end_date']
+        wk.description=working_experience['description']
+        wk.save()
+        return JsonResponse({'message':"working experince updated successfully",'status':'success'}, status=201)
     wk = WorkingExpereince.objects.create(
         job_title=job_title, 
         user=request.user, 
