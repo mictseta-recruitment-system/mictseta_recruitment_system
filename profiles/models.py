@@ -81,6 +81,15 @@ class AddressInformation(models.Model):
 	def __str__(self):
 		return f"{self.user.email} Address Information"
 
+class Reference(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reference")
+	working_experince = models.ForeignKey(WorkingExpereince, on_delete=models.CASCADE, related_name="ref_exp" )
+	full_name = models.CharField(max_length=225,null=True )
+	phone = models.CharField(max_length=225,null=True)
+	position = models.CharField(max_length=60,null=True )	
+	def __str__(self):
+		return f"{self.working_experince.job_title} refernce"
+
 
 class ProfileImage(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -88,6 +97,7 @@ class ProfileImage(models.Model):
 	uploaded_at = models.DateTimeField(auto_now_add=True)
 	def __str__(self):
 		return f"{self.user.email} Profile Image"
+
 
 
 

@@ -22,28 +22,49 @@
         <fieldset class="border p-4 mb-4">
             <legend class="w-auto px-2">References </legend>
             <div class="form-group mb-3">
+                <label for="referee1-contact" class="form-label">Work experience</label>
+                <select type="text" class="form-control" id="working_expereince" >
+                    {% for wexp in user.working_expereince.all %}
+                        <option value="{{wexp.id}}">{{wexp.job_title}}</option>
+                    {% endfor %}
+
+                </select>
+            </div>
+            <div class="form-group mb-3">
                 <label for="referee1-name" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="referee1-name" name="referee1-name" placeholder="Enter full name" required>
+                <input type="text" class="form-control" id="full_name" name="referee1-name" placeholder="Enter full name" required>
             </div>
             <div class="form-group mb-3">
                 <label for="referee1-contact" class="form-label">Contact Information</label>
-                <input type="text" class="form-control" id="referee1-contact" name="referee1-contact" placeholder="Phone number or email" required>
+                <input type="text" class="form-control" id="phone" name="referee1-contact" placeholder="Phone number or email" required>
             </div>
             <div class="form-group mb-3">
                 <label for="referee1-position" class="form-label">Position/Relationship</label>
-                <input type="text" class="form-control" id="referee1-position" name="referee1-position" placeholder="e.g., Manager, Mentor, etc." required>
+                <input type="text" class="form-control" id="position" name="referee1-position" placeholder="e.g., Manager, Mentor, etc." required>
             </div>
         </fieldset>
         
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addRefereeModal">Add Another Reference</button>
+            <button type="button" onclick="handle_update_reference_button_click()" class="btn btn-primary">Save</button>
+           <!--  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addRefereeModal">Add Another Reference</button> -->
         </div>
     </form>
+
+    <div>
+        {% for ref in user.reference.all %}
+        <hr>
+        <p> work experince :{{ref.working_experince.job_title}}</p>
+        <p> Full Name :{{ref.full_name}}</p>
+        <p> phone :{{ref.phone}}</p>
+        <p> postion :{{ref.position}}</p>
+        
+        {% endfor %}
+
+    </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="addRefereeModal" tabindex="-1" role="dialog" aria-labelledby="addRefereeModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="addRefereeModal" tabindex="-1" role="dialog" aria-labelledby="addRefereeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -74,7 +95,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

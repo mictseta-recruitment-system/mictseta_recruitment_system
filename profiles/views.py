@@ -8,7 +8,7 @@ from config.models import LanguageList, SpeakingProficiencyList,ReadingProficien
 
 from django.contrib.auth.models import User
 from authenticate.data_validator import ValidateIdNumber
-from .models import Profile, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Education,Language,ComputerSkills, SoftSkills,SupportingDocuments,WorkingExpereince
+from .models import Profile,Reference, AddressInformation, ProfileImage, StaffProfile, Shift, Leave, Attendance, Education,Language,ComputerSkills, SoftSkills,SupportingDocuments,WorkingExpereince
 from django.db.utils import IntegrityError
 from PIL import Image as PilImage
 import os
@@ -349,6 +349,37 @@ def update_working_experince(request):
         )   
     wk.save()
     return JsonResponse({"message":"update working experince information success", "status":"success"}, status=200)
+
+@csrf_protect
+def update_reference(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})    
+    data = {
+        'working_expereince': json_data.get('working_expereince'),
+        'full_name' : json_data.get('full_name'),
+        'phone' : json_data.get('phone'),
+        'position' : json_data.get('position'),
+    }
+    working_expereince = WorkingExpereince.objects.get(id=int(data['working_expereince']))
+    exists = Reference.objects.filter(user=request.user,working_experince=working_expereince).exists()
+    if exists:
+        reference = Reference.objects.get(user=request.user,working_experince=working_expereince)
+        reference.full_name = data['full_name']
+        reference.phone = data['phone']
+        reference.position = data['position']
+        reference.save()
+        return JsonResponse({"message":"updated Reference information success", 'status':'success'}, status=200)
+    reference = Reference.objects.create(user=request.user,working_experince=working_expereince, full_name=data['full_name'], phone=data['phone'], position=data['position'])
+    reference.save()
+    return JsonResponse({"message":"Added Reference information success", 'status':'success'}, status=201)
+
+
 
 def upload_supporting_document(request):
     if request.method == 'POST':

@@ -347,6 +347,51 @@ function handle_update_working_experince_button_click() {
           });
     }
 
+function handle_update_reference_button_click() {
+       
+        const working_expereince = document.getElementById("working_expereince").value;
+        const full_name = document.getElementById("full_name").value; 
+        const phone = document.getElementById("phone").value;
+        const position = document.getElementById("position").value;
+        const working_experince = {
+            working_expereince : working_expereince,
+            full_name : full_name,
+            phone : phone,
+            position : position,
+            
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/update_reference/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(working_experince),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
 
 function uploadDocument(d_type, event) {
    event.preventDefault(); 
