@@ -19,6 +19,7 @@ class Profile(models.Model):
     is_verified = models.BooleanField(default=False, null=False)
     linkedin_profile = models.CharField(max_length=225, default=" ")
     personal_website = models.CharField(max_length=225, default=" ")
+    cover_letter = models.CharField(max_length=225, default=" ")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     def __str__(self):
         return f'{self.user.email} Profile Information'

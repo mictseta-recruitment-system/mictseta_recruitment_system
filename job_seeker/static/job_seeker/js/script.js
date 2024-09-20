@@ -12,7 +12,7 @@
         const disability = document.getElementById("disability").value;
         const linkedin_profile = document.getElementById("linkedin_profile").value;
         const personal_website = document.getElementById("personal_website").value;
-        
+        const cover_letter = document.getElementById("cover_letter").value;
 
 
         const data2 = {
@@ -27,6 +27,7 @@
             maritial_status : maritial_status,
             race : race,
             disability : disability,
+            cover_letter:cover_letter
            
         };
        

@@ -98,6 +98,7 @@ def update_user_profile(request):
         'maritial_status' : json_data.get('maritial_status'),
         'race' : json_data.get('race'),
         'disability' : json_data.get('disability'),
+        'cover_letter':json_data.get('cover_letter'),
         'r_username' : f'{request.user.username}',
         'r_email' : f'{request.user.email}',
         'r_phone' : 'False',
@@ -106,9 +107,9 @@ def update_user_profile(request):
     for key,value in shallow_copy.items():
         if value == "" or value == " " or value=='None':
             shallow_copy[key] = "empty"
-    form = UpdateProfileInformationForm(data)
-    if not form.is_valid() : 
-        return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+    #form = UpdateProfileInformationForm(data)
+    #if not form.is_valid() : 
+        #return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
     exist = User.objects.filter(email=data['email']).exists()
     if exist:
         user = User.objects.get(email=data['email'])
