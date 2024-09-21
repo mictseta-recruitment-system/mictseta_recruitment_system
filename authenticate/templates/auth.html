@@ -7,77 +7,102 @@
 <style>
     body {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        background-color: #f4f6f9;
+        background-color: #164b9a;
         margin: 0;
         height: 100vh;
         overflow: hidden;
     }
-    .main{
+    .main {
         height: 100vh;
         overflow: hidden;
         display: flex;
+        justify-content: center; /* Center content horizontally */
+        align-items: center; /* Center content vertically */
+    }
 
+    .oval-background {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 130%; /* Extend beyond the section */
+        height: 165%; /* Make it taller for a more oval shape */
+        background: linear-gradient(to right, #0693e3, #b0b0b0); /* Blue to Gray gradient */
+        border-radius: 50%; /* Makes the background oval */
+        transform: translate(50%, -15%); /* Adjust position to center */
+        z-index: -1; /* Send it behind other elements */
     }
-    
-    .left-section, .filled-right-section {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+
+    @keyframes changeColorSignIn {
+        0% { background-color: rgba(255, 255, 255, 0.9); }
+        50% { background-color: rgba(240, 240, 240, 0.9); }
+        100% { background-color: rgba(255, 255, 255, 0.9); }
     }
-    .filled-right-section{
-        display: grid;
+
+    @keyframes changeColorSignUp {
+        0% { background-color: rgba(255, 255, 255, 0.9); }
+        50% { background-color: rgba(220, 240, 220, 0.9); }
+        100% { background-color: rgba(255, 255, 255, 0.9); }
     }
-    
-    .left-section {
-        background-color: #b0b0b0;
-        color: #ffffff;
-        text-align: center;
+
+    .form-container {
+        width: 600px; /* Increased width */
+        background-color: rgba(255, 255, 255, 0.9); /* Initial background */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        padding: 20px; /* Padding inside the container */
+        position: relative; /* For positioning the oval background */
+        animation: changeColorSignIn 0.5s forwards; /* Initial animation */
     }
-    
-    .left-section img {
-        max-width: 60%;
-        height: auto;
-        border: none; /* Added to remove any border */
-    }
-    
-    .right-section {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .form-container { 
-        width: 100%;
-    }
-    
+
     h1 {
         font-size: 40px;
         text-align: center;
         margin-bottom: 25px;
     }
-    
+
     h6 {
         font-size: 18px;
         color: #0693e3;
         text-align: center;
         margin-bottom: 30px;
     }
-    
+
     .input-group {
         margin-bottom: 20px;
         position: relative;
     }
-    
+
     .input-group input {
         width: calc(100% - 40px); 
         padding: 15px;
         border: none; 
         border-radius: 5px;
         font-size: 16px;
+        transition: all 0.3s ease; /* Transition for animation */
     }
-    
+
+    .input-group input:focus {
+        border: 2px solid #0693e3; /* Change border color on focus */
+        background-color: #f0f8ff; /* Change background color on focus */
+    }
+
+    .input-group label {
+        position: absolute;
+        top: 5px; /* Adjusted to position label slightly above input */
+        left: 15px;
+        font-size: 16px;
+        color: #999;
+        transition: all 0.1s ease; /* Transition for label animation */
+    }
+
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+        top: -15px; /* Adjusted to move label higher when focused or not empty */
+        left: 10px;
+        font-size: 12px;
+        color: #0693e3; /* Change label color when focused */
+    }
+
     .input-group .eye-icon {
         position: absolute;
         right: 10px;
@@ -87,29 +112,29 @@
         font-size: 18px;
         color: #333;
     }
-    
+
     .remember-forgot {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
     }
-    
+
     .remember-forgot label {
         font-size: 14px;
         color: #333333;
     }
-    
+
     .remember-forgot a {
         font-size: 14px;
         color: #0693e3;
         text-decoration: none;
     }
-    
+
     .remember-forgot a:hover {
         text-decoration: underline;
     }
-    
+
     .btn {
         width: 100%;
         padding: 12px;
@@ -119,11 +144,11 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-    
+
     .btn-primary {
         background-color: #0693e3;
     }
- 
+
     .right-section h1 {
         color: black;
     }
@@ -131,92 +156,88 @@
 
 <div class="main">
 
-    <div class="left-section">
-        <div>
-            <img src="{% static 'authenticate/images/image.png' %}" alt="Company Logo or Image">
-            <h1>Welcome to MICTSETA</h1>
-            <p>Shaping skills, Pioneering Industries, Empowering Futures.</p>
-        </div>
-    </div>
-     
-    
     <div class="filled-right-section">
-        
-            <div id="flash-message-container"></div>
-         <div class="right-section">
-        <div class="form-container" id="form-container">
+        <div class="oval-background"></div> <!-- Oval Background with Gradient -->
+        <div id="flash-message-container"></div>
+        <div class="right-section">
+            <div class="form-container" id="form-container">
+                <div class="wrapper" id="wrapper-sign-in">
+                    <form action="" id="login-form" method="POST">
+                        {% csrf_token %}
+                        <h1>Login</h1>
+                        <div class="spinner"></div>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder=" " id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
+                            <label for="lemail">Email Address</label> <!-- Label for animation -->
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" id="lpassword" class="form-control" placeholder=" " required>
+                            <label for="lpassword">Password</label> <!-- Label for animation -->
+                            <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
+                        </div>
+                        <div class="remember-forgot">
+                            <label><input type="checkbox"> Remember Me</label>
+                            <a href="{% url 'find_account' %}">Forgot Password?</a>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
+                        <div class="register-link">
+                            <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
+                        </div>
+                    </form>
+                </div>
     
-            <div class="wrapper" id="wrapper-sign-in">
-    
-                <form action="" id="login-form" method="POST" style="width: 400px;">
-                    {% csrf_token %}
-                    <h1>Login</h1>
-                    <div class="spinner"></div>
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="Email Address" id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="lpassword" class="form-control" placeholder="Password" required>
-                        <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <div class="remember-forgot">
-                        <label><input type="checkbox"> Remember Me</label>
-                        <a href="{% url 'find_account' %}">Forgot Password?</a>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
-                    <div class="register-link">
-                        <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
-                    </div>
-                </form>
+                <div class="wrapper" id="wrapper-sign-up" style="display: none;">
+                    <form action="" id="signup-form" method="POST">
+                        <h1>Sign Up</h1>
+                        <h6>Add your details to create an account and start preparing your documents.</h6>
+                        <div class="input-group mb-3">
+                            <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder=" " required>
+                            <label for="idnumber">ID Number</label> <!-- Label for animation -->
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" id="email" class="form-control" placeholder=" " required>
+                            <label for="email">Email Address</label> <!-- Label for animation -->
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password" id="password" class="form-control" placeholder=" " required>
+                            <label for="password">Password</label> <!-- Label for animation -->
+                            <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="password" name="password2" id="password2" class="form-control" placeholder=" " required>
+                            <label for="password2">Confirm Password</label> <!-- Label for animation -->
+                            <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
+                        <div class="register-link">
+                            <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
+                        </div>
+                    </form>
+                </div>
             </div>
-    
-            <div class="wrapper" id="wrapper-sign-up" style="display: none;">
-                <form action="" id="signup-form" method="POST">
-                    <h1>Sign Up</h1>
-                    <h6>Add your details to create an account and start preparing your documents.</h6>
-    
-
-                    <div class="input-group mb-3">
-                        <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder="ID Number" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" id="email" class="form-control" placeholder="Email Address" required>
-                    </div>
-    
-                  
-    
-                    <div class="input-group mb-3">
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-                        <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="password" name="password2" id="password2" class="form-control" placeholder="Confirm Password" required>
-                        <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
-                    <div class="register-link">
-                        <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
-                    </div>
-                </form>
-            </div>
-    
         </div>
     </div>
-    
-    </div>
-   
 </div>
+
 <script>
     document.getElementById('btn-sign-up').addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('wrapper-sign-in').style.display = 'none';
         document.getElementById('wrapper-sign-up').style.display = 'block';
+
+        // Change container color to sign-up animation
+        const container = document.getElementById('form-container');
+        container.style.animation = 'changeColorSignUp 0.5s forwards';
     });
 
     document.getElementById('btn-sign-in').addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('wrapper-sign-in').style.display = 'block';
         document.getElementById('wrapper-sign-up').style.display = 'none';
+
+        // Change container color to sign-in animation
+        const container = document.getElementById('form-container');
+        container.style.animation = 'changeColorSignIn 0.5s forwards';
     });
 
     document.getElementById('toggle-password-login').addEventListener('click', function() {
