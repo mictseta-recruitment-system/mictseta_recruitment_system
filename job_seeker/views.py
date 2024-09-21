@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from jobs.models import JobPost, SkillValidation, FeedBack,Interview
+from jobs.models import JobPost,FeedBack,Interview
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from profiles.models import SupportingDocuments
 # Create your views here.

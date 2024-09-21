@@ -14,6 +14,8 @@ import json
 from django.db.models import Q
 from easyaudit.models import CRUDEvent, LoginEvent
 from jobs.custom_decorators import check_leave, change_application_status
+from config.models import JobTitle, Industry
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 
 @ensure_csrf_cookie
 def panel(request):
@@ -131,7 +133,7 @@ def filter_job_application(request,jobID):
 		job_applications = JobApplication.objects.filter(job__id=jobID)
 		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
 		cnt=0
-		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt})
+		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt,'filtered':True})
 	else:
 		return redirect('render_auth_page')
 
@@ -152,7 +154,9 @@ def add_job(request):
 			employees = User.objects.filter(is_staff=True)
 		else:
 			employees = User.objects.filter(id=request.user.id)
-		return render(request,'add_job.html',{'notify_len':notify_len,'employees':employees})
+		job_title = JobTitle.objects.all()
+		industry = Industry.objects.all()
+		return render(request,'add_job.html',{'notify_len':notify_len,'employees':employees, 'job_titles':job_title, 'industries':industry})
 	else:
 		return redirect('render_auth_page')
 
@@ -198,7 +202,34 @@ def view_jobs(request):
 			employees = User.objects.filter(is_staff=True)
 		else:
 			employees = User.objects.filter(id=request.user.id)
-		return render(request,'view_job.html',{'employees':employees,'notify_len':notify_len,'jobs':jobs, 'all_jobs':all_jobs,'open_jobs':open_jobs, 'pending_jobs':pending_jobs,'closed_jobs':closed_jobs})
+		job_title = JobTitle.objects.all()
+		industry = Industry.objects.all()
+
+		computer_skills = ComputerSkillsList.objects.all()
+		computer_prof = ComputerProficiency.objects.all()
+		soft_skill = SoftSkillsList.objects.all()
+		soft_prof = SoftProficiency.objects.all()
+		qualification = Qualification.objects.all()
+		nqf_level = NQF.objects.all()
+		return render(request,'view_job.html',
+			{
+			'employees':employees,
+			'notify_len':notify_len,
+			'jobs':jobs, 
+			'all_jobs':all_jobs,
+			'open_jobs':open_jobs, 
+			'pending_jobs':pending_jobs,
+			'closed_jobs':closed_jobs, 
+			'job_titles':job_title, 
+			'industries':industry,
+			'computer_skills':computer_skills,
+			'computer_profs':computer_prof,
+			'soft_skills':soft_skill,
+			'soft_profs':soft_prof,
+			'nqf_levels' : nqf_level,
+			'qualifications':qualification
+			},
+			status=200)
 	else:
 		return redirect('render_auth_page')
 

@@ -16,7 +16,6 @@
       Job Title: <span id="jobTitle">{{job.title}}</span>
     </div>
     <div class="card-body">
-      <h5 class="card-title">Company: <span id="companyName">{{job.company_name}}</span></h5>
       <p class="card-text">
         <strong>Description:</strong> <span id="jobDescription">{{job.description}}</span>
       </p>
@@ -54,8 +53,8 @@
                 {% for education in job.educations.all %}
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
-                      <div class="fw-bold">{{education.level}}</div>
-                       {{education.qualification}}
+                      <div class="fw-bold">{{education.field_of_study}}</div>
+                       {{education.nqf_level}}
                     </div>    
                 </li>
                 
@@ -72,11 +71,21 @@
     </div>
     <div class="card-body">
       <ul class="list-group list-group-flush">
-                {% for skill in job.skills.all %}
+                {% for skill in job.C_skills.all %}
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
-                      <div class="fw-bold">{{skill.name}}</div>
-                      {{skill.level}}
+                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+                      {{skill.level}} 
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+                {% for skill in job.S_skills.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+                      {{skill.level}} 
                     </div>
                     
                 </li>
@@ -99,7 +108,8 @@
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
                       <div class="fw-bold">{{experience.name}}</div>
-                       {{experience.duration}}
+                       {{experience.duration}} years
+                       
                     </div>
                     
                 </li>

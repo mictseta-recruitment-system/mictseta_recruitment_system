@@ -5,7 +5,10 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, Skill, Experience, Requirement, Notification, JobApplication, Interview,FeedBack
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement, Notification, JobApplication, Interview,FeedBack
+from config.models import JobTitle, Industry
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
+from .filters import ApplicationFilter
 import re
 from datetime import datetime
 from django.utils.timezone import now
@@ -28,7 +31,6 @@ def serialize_job_post(Jobs):
 			'salary_range'	:	Job.salary_range,
 			'job_type'		:	Job.job_type,
 			'industry'		:	Job.industry,
-			'company_name'	:	Job.company_name,
 			'assigned_to'	: 	Job.assigned_to.email
 				# 'application_deadline' :	json_data.get('application_deadline')            
 		}
@@ -40,11 +42,9 @@ def serialize_job_skills(Skills):
 	skills = []
 	for Skill in Skills:
 		skill= {
-			'name'		:	Skill.name,
-			'level'		:	Skill.level,
-			'id'		:	Skill.id
-			
-				# 'application_deadline' :	json_data.get('application_deadline')            
+			'name'		:	Skill.name.skill,
+			'level'		:	Skill.level.level,
+			'id'		:	Skill.id         
 		}
 		skills.append(skill)
 	return skills
@@ -53,8 +53,8 @@ def serialize_job_academics(Academics):
 	academics = []
 	for Academic_ in Academics:
 		academic= {
-			'level'		:	Academic_.level,
-			'qualification'		:	Academic_.qualification,
+			'level'		:	Academic_.nqf_level.level,
+			'qualification'		:Academic_.field_of_study.name	,
 			'id'		:	Academic_.id
 			
 				# 'application_deadline' :	json_data.get('application_deadline')            
@@ -131,7 +131,6 @@ def add_job(request):
 				'salary_range'	:	json_data.get('salary_range'),
 				'job_type'		:	json_data.get('job_type'),
 				'industry'		:	json_data.get('industry'),
-				'company_name'	:	json_data.get('company_name'),
 				'assigned_to'	:	json_data.get('job_assigned_to')
 			}
 			for key, value in data.items():
@@ -150,10 +149,11 @@ def add_job(request):
 					return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
 			except Exception as e:
 				return JsonResponse({'errors': {'Date':f'{e}'}, 'status':'error'}, status=404)
-   
+			industry = Industry.objects.get(id=int(data['industry']))
+			title = JobTitle.objects.get(id=int(data['title']))
 			form = AddJobForm(data)
 			if form.is_valid():
-				exists = JobPost.objects.filter(title=data['title'], industry=data['industry'], company_name=data['company_name']).exists()
+				exists = JobPost.objects.filter(title=title, industry=industry).exists()
 				if exists:
 					return JsonResponse({'errors': {'job post':['Job Post already exists']}, 'status': 'error'}, status=400)
 				exist = User.objects.filter(email=data['assigned_to']).exists()
@@ -161,7 +161,17 @@ def add_job(request):
 					return JsonResponse({'errors': {'User':'Assigned user does not exist'}, 'status':'error'}, status=404)
 				user = User.objects.get(email=data['assigned_to'])
 				try:
-					add_job_post = JobPost.objects.create(user=request.user,assigned_to=user, title=data['title'],description=data['description'],location=data['location'], salary_range=data['salary_range'], job_type=data['job_type'], industry=data['industry'], company_name=data['company_name'], end_date=end_date)
+					add_job_post = JobPost.objects.create(
+						user=request.user,
+						assigned_to=user, 
+						title=title,
+						description=data['description'],
+						location=data['location'], 
+						salary_range=data['salary_range'], 
+						job_type=data['job_type'], 
+						industry=industry, 
+						end_date=end_date
+						)
 					add_job_post.save()
 					noty = Notification.objects.create(user=request.user, action="Created New Job ad", job_title=add_job_post.title, status=add_job_post.status)
 					noty.save()
@@ -239,6 +249,31 @@ def move_to_shortlist(request):
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+
+@check_leave
+@csrf_protect
+def auto_shortlist(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	filters = json_data.get('filter')		
+	if filters == "all":
+		applications = JobApplication.objects.all()
+		applications = ApplicationFilter(applications)
+		applications.reset_filter()
+		applications.filter_by_incomplete_profile()
+		applications.filter_by_computer_skill()
+		applications.filter_by_soft_skill()
+		applications.apply_filter()
+	
+	return JsonResponse({'message': f'{applications.get_total()} applications filtered', 'status': 'success'}, status=201)
+
+
 @check_leave
 @csrf_protect
 def approve_interview(request):
@@ -495,27 +530,52 @@ def add_job_skill(request):
 			data = {
 				'level'			:	json_data.get('level'),
 				'name'	:	json_data.get('name'),
-				'job_post_id'	:	json_data.get('job_post_id')	
+				'job_post_id'	:	json_data.get('job_post_id'),
+				'is_required' : json_data.get('is_required')	
 			}
 			for key, value in data.items():
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
-   
-			form = AddJobSkillForm(data)
-			if form.is_valid():
-				exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
-				if not exists:
-					return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			is_required = False 
+			if data['is_required'] == 'true':
+				is_required = True
+
+			exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			try:
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
 				try:
-					job_post = JobPost.objects.get(id=int(data['job_post_id']))
-					add_job_academic_post = Skill.objects.create(job_post=job_post, level=data['level'], name=data['name'])
-					add_job_academic_post.save()
-					skills = Skill.objects.filter(job_post=job_post)
-					return JsonResponse({'message': 'Job skills updated Successfully','skills':serialize_job_skills(skills), 'status': 'success'}, status=201)
-				except Exception as e:
-					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
-			else:
-				return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+					name = ComputerSkillsList.objects.get(skill=data['name'])
+					level = ComputerProficiency.objects.get(level=data['level'])
+					exists = ComputerSkill.objects.filter(job_post=job_post, name=name).exists()
+					if exists:
+						return JsonResponse({'errors': {'Skill':[f'{name} skill already exists exist']}, 'status': 'error'}, status=400)
+					skill = ComputerSkill.objects.create(job_post=job_post, level=level, name=name, is_required=is_required )
+					skill.save()
+				except :
+					name = SoftSkillsList.objects.get(skill=data['name'])
+					level = SoftProficiency.objects.get(level=data['level'])
+					exists = SoftSkill.objects.filter(job_post=job_post, name=name).exists()
+					if exists:
+						return JsonResponse({'errors': {'Skill':[f'{name} skill already exists']}, 'status': 'error'}, status=400)
+					skill = SoftSkill.objects.create(job_post=job_post, level=level, name=name, is_required=is_required)
+					skill.save()
+
+				c_skills = ComputerSkill.objects.filter(job_post=job_post)
+				s_skills = SoftSkill.objects.filter(job_post=job_post)
+				print(c_skills)
+				print(s_skills)
+				skills = serialize_job_skills(c_skills) + serialize_job_skills(s_skills)
+				print(skills)
+				return JsonResponse({
+					'message': 'Job skills updated Successfully',
+					'skills':skills, 
+					'status': 'success'
+					}, 
+					status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 		else:
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
@@ -538,21 +598,26 @@ def add_job_acedemic(request):
 			for key, value in data.items():
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
-			form = AddJobAcademicForm(data)
-			if form.is_valid():
-				exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
-				if not exists:
-					return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
-				try:
-					job_post = JobPost.objects.get(id=int(data['job_post_id']))
-					add_job_academic_post = Academic.objects.create(job_post=job_post, level=data['level'], qualification=data['qualification'])
-					add_job_academic_post.save()
-					educations = Academic.objects.filter(job_post=job_post)
-					return JsonResponse({'message': 'Job academic transcript updated Successfully','educations':serialize_job_academics(educations), 'status': 'success'}, status=201)
-				except Exception as e:
-					return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
-			else:
-				return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+			# form = AddJobAcademicForm(data)
+			# else:
+			# 	return JsonResponse({"errors"if form.is_valid()::form.errors, "status":"error"}, status=400)
+			exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			
+			job_post = JobPost.objects.get(id=int(data['job_post_id']))
+			level = NQF.objects.get(id=int(data['level']))
+			qualification = Qualification.objects.get(id=int(data['qualification']))
+			exists = Academic.objects.filter(job_post=job_post,  field_of_study=qualification).exists()
+			if exists:
+				return JsonResponse({'errors': {'Academic':['requirements already exist']}, 'status': 'error'}, status=400)
+			try:
+				add_job_academic_post = Academic.objects.create(job_post=job_post, field_of_study=qualification, nqf_level=level)
+				add_job_academic_post.save()
+				educations = Academic.objects.filter(job_post=job_post)
+				return JsonResponse({'message': 'Job academic transcript updated Successfully','educations':serialize_job_academics(educations), 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 		else:
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
@@ -582,6 +647,9 @@ def add_job_expereince(request):
 					return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
 				try:
 					job_post = JobPost.objects.get(id=int(data['job_post_id']))
+					exists = Experience.objects.filter(job_post=job_post,name=data["name"]).exists()
+					if exists:
+						return JsonResponse({'errors': {'Experience':['Experience already exist']}, 'status': 'error'}, status=400)
 					add_job_experience_post = Experience.objects.create(job_post=job_post, name=data["name"], duration=data["duration"])
 					add_job_experience_post.save()
 					experiences = Experience.objects.filter(job_post=job_post)
@@ -649,7 +717,6 @@ def update_job(request):
 				'salary_range'	:	json_data.get('salary_range'),
 				'job_type'		:	json_data.get('job_type'),
 				'industry'		:	json_data.get('industry'),
-				'company_name'	:	json_data.get('company_name'),
 				'job_id'	:	json_data.get('job_id'),
 				'assigned_to'	:	json_data.get('assigned_to')
 			}
@@ -668,7 +735,8 @@ def update_job(request):
 					return JsonResponse({'errors': {'Date':'End date cannot be a past or currnt date'}, 'status':'error'}, status=404)
 			except:
 				return JsonResponse({'errors': {'Date':['Iconccerct data format try - MM:DD:YYYY']}, 'status':'error'}, status=404)
-   
+			industry = Industry.objects.get(id=int(data['industry']))
+			title = JobTitle.objects.get(id=int(data['title']))
 			form = AddJobForm(data)
 			if form.is_valid():
 				exists = JobPost.objects.filter(id=int(data['job_id'])).exists()
@@ -680,14 +748,14 @@ def update_job(request):
 				user = User.objects.get(email=data['assigned_to'])
 				try:
 					update_job_post = JobPost.objects.get(id=int(data['job_id']))
-					update_job_post.title = data['title']
+					update_job_post.title = title
 					update_job_post.description = data['description']
 					update_job_post.end_date = data['end_date']
 					update_job_post.location = data['location']
 					update_job_post.salary_range = data['salary_range']
 					update_job_post.job_type = data['job_type']
-					update_job_post.industry = data['industry']
-					update_job_post.company_name = data['company_name']
+					update_job_post.industry = industry
+
 					update_job_post.assigned_to = user
 					update_job_post.save()
 					return JsonResponse({'message': 'Job Post UPDATED Successfully', 'status': 'success'}, status=201)
@@ -903,19 +971,29 @@ def delete_job_skill(request):
 				if key == None or value == None:
 					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
    
-			
-			exists = Skill.objects.filter(id=int(data['job_skill_id'])).exists()
-			if not exists:
-				return JsonResponse({'errors': {'job post':['Job Skills does not exist']}, 'status': 'error'}, status=400)
+			job_post = JobPost.objects.get(id=int(data['job_post_id']))
 			try:
-				job_skill = Skill.objects.get(id=int(data['job_skill_id']))
+				name = ComputerSkillsList.objects.get(skill=data['job_skill_id'])
+				exists = ComputerSkill.objects.filter(job_post=job_post, name=name).exists()
+				if not exists:
+					return JsonResponse({'errors': {'Skill':[f'{name} skill already exists exist']}, 'status': 'error'}, status=400)
+				job_skill = ComputerSkill.objects.get(name=name)
 				job_skill.delete()
-				
-				job_post = JobPost.objects.get(id=int(data['job_post_id']))
-				skills = Skill.objects.filter(job_post=job_post)
-				return JsonResponse({'message': 'Job skills remved Successfully','skills':serialize_job_skills(skills), 'status': 'success'}, status=201)
 			except Exception as e:
-				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+				name = SoftSkillsList.objects.get(skill=data['job_skill_id'])
+				exists = SoftSkill.objects.filter(job_post=job_post, name=name).exists()
+				if not exists:
+					return JsonResponse({'errors': {'Skill':[f'{name} skill already exists']}, 'status': 'error'}, status=400)
+				job_skill = SoftSkill.objects.get(name=name)
+				job_skill.delete()
+
+			job_post = JobPost.objects.get(id=int(data['job_post_id']))
+			c_skills = ComputerSkill.objects.filter(job_post=job_post)
+			s_skills = SoftSkill.objects.filter(job_post=job_post)
+			skills = serialize_job_skills(c_skills) + serialize_job_skills(s_skills)
+			return JsonResponse({'message': 'Job skills remved Successfully','skills':skills , 'status': 'success'}, status=201)
+
+				
 			
 		else:
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
@@ -981,7 +1059,7 @@ def delete_job_expereince(request):
 				experience_post.delete()
 				job_post = JobPost.objects.get(id=int(data['job_post_id']))
 				experiences = Experience.objects.filter(job_post=job_post)
-				return JsonResponse({'message': 'Job experience updated Successfully','experiences':serialize_job_experiences(experiences), 'status': 'success'}, status=201)
+				return JsonResponse({'message': 'Job experience updated Successfully','experiences':serialize_job_experience(experiences), 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 			
@@ -1049,7 +1127,7 @@ def complete_job(request):
 				job_post.is_complete = True
 				job_post.status = "pending" 
 				job_post.save()
-				noty = Notification.objects.create(user=request.user, action="Submitted Job for Approval", job_title=job_post.title, status=job_post.status)
+				noty = Notification.objects.create(user=request.user, action="Submitted Job for Approval", job_title=job_post.title.title, status=job_post.status)
 				noty.save()
 				return JsonResponse({'message': 'Job Post submitted. waiting approval by Land Mananger', 'status': 'success'}, status=200)
 			except Exception as e:

@@ -26,12 +26,14 @@ urlpatterns = [
     path('job_application/<int:jobID>', views.job_application, name='job_application'),
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
     path('move_to_shortlist/', views.move_to_shortlist, name='move_to_shortlist'),
+    path('auto_shortlist/', views.auto_shortlist, name='auto_shortlist'),
     path('approve_interview/', views.approve_interview, name='approve_interview'),
     path('reject_applicantion/', views.reject_applicantion, name='reject_applicantion'),
     path('purge/', views.purge, name='purge'),
     path('set_interview/', views.set_interview, name='set_interview'),
     path('reschedule_interview/', views.reschedule_interview, name='reschedule_interview'),
     path('calender_reschedule_interview/', views.calender_reschedule_interview, name='calender_reschedule_interview'),
+
 
 
     # path('delete_user/', views.delete_user, name='delete_user')

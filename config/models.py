@@ -77,3 +77,7 @@ class JobTitle(models.Model):
 	def __str__(self):
 		return f"{self.title}"
 
+class Industry(models.Model):
+	name = models.CharField(max_length=225)
+	def __str__(self):
+		return f"{self.name}"

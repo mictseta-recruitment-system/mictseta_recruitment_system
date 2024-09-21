@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  NQF,LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
+from .models import  NQF,LanguageList,Industry, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification, JobTitle
 
 admin.site.register(LanguageList)
 admin.site.register(SpeakingProficiencyList)
@@ -13,3 +13,4 @@ admin.site.register(Institution)
 admin.site.register(Qualification)
 admin.site.register(JobTitle)
 admin.site.register(NQF)
+admin.site.register(Industry)

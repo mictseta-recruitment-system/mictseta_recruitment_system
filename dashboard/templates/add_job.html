@@ -41,7 +41,11 @@ Add Job Ad
            <div class="d-flex justify-content-between p-3 m-2 back-for"> 
               <div class="form-group w-100">
                 <label for="jobTitle">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="Job Title">
+                <select type="text" class="form-control" id="title" placeholder="Job Title">
+                  {% for job in job_titles %}
+                    <option value="{{job.id}}">{{job.title}}</option>
+                  {% endfor %}
+                </select>
               </div>
             </div>
           <div class="d-flex justify-content-between p-3 m-2 back-for"> 
@@ -55,11 +59,11 @@ Add Job Ad
             
             <div class="form-group w-100">
               <label for="industry">Industry</label>
-              <input type="text" class="form-control" id="industry" placeholder="Industry">
-            </div>
-            <div class="form-group w-100 ml-4">
-              <label for="companyName">Company Name</label>
-              <input type="text" class="form-control" value="MICTSETA" id="company_name"  disabled>
+              <select type="text" class="form-control" id="industry" placeholder="Industry">
+              {% for industry in industries %}
+                    <option value="{{industry.id}}">{{industry.name}}</option>
+                  {% endfor %}
+              </select>
             </div>
         </div>
           

@@ -48,9 +48,7 @@ function addJob() {
   const job_type = document.getElementById('job_type').value;
   const assigned_to = document.getElementById('assigned_to').value;
 
-
   // Extract value from company_name input field
-  company_name = document.getElementById('company_name').value;
   industry = document.getElementById('industry').value;
 
   // Form JSON data object
@@ -62,7 +60,6 @@ function addJob() {
     salary_range: salary_range,
     job_type: job_type,
     industry: industry,
-    company_name: company_name,
     job_assigned_to: assigned_to,
   };
 
@@ -132,7 +129,6 @@ function updateJob(jobID,spinner,content) {
   const assigned_to = document.getElementById('assigned_to'+ jobID).value;
 
   // Extract value from company_name input field
-  const company_name = document.getElementById('company_name'+ jobID).value;
   const industry = document.getElementById('industry'+ jobID).value;
 
   // Form JSON data object
@@ -144,7 +140,6 @@ function updateJob(jobID,spinner,content) {
     salary_range: salary_range,
     job_type: job_type,
     industry: industry,
-    company_name: company_name,
     job_id: jobID,
     assigned_to: assigned_to,
   };
@@ -207,11 +202,19 @@ function addJobSkill(jobID, spinner, content, modal) {
 
   const name = document.getElementById('name'+ jobID).value;
   const level = document.getElementById('level'+ jobID).value;
-  
+  var checkbox = document.getElementById('myCheckbox'+ jobID);
+
+  // Check if the checkbox is checked
+  if (checkbox.checked) {
+    checkbox='true';
+  } else {
+    checkbox='false';
+  }
   const jsonData = {
     name: name,
     level: level,
-    job_post_id: jobID 
+    job_post_id: jobID,
+    is_required:checkbox
   };
 
   fetch(url, {
@@ -239,11 +242,11 @@ function addJobSkill(jobID, spinner, content, modal) {
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
                 listItem.innerHTML = `
-                    <div class="ms-2 me-auto">
+                     <div class="ms-2 me-auto">
                         <div class="fw-bold">${skill.name}</div>
-                        ${skill.level}
+                        ${skill.level} 
                     </div>
-                    <i class="fa-solid fa-square-minus min-icon"></i>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.name})"></i>
                 `;
                 skillListElement.appendChild(listItem);
             });
@@ -299,7 +302,7 @@ function deleteSkill(jobID, spinner, content, modal, skillID) {
                         <div class="fw-bold">${skill.name}</div>
                         ${skill.level}
                     </div>
-                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.id})"></i>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.name})"></i>
                 `;
                 skillListElement.appendChild(listItem);
             });
@@ -479,7 +482,7 @@ function addExperience(jobID, spinner, content, modal) {
                 listItem.innerHTML = `
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">${experience.name}</div>
-                        ${experience.duration}
+                        ${experience.duration} years
                     </div>
                     <i class="fa-solid fa-square-minus min-icon" onclick="deleteExperience(${jobID},'spinnerExperience','editExperience','experienceToggle')"></i>
                 `;
@@ -739,7 +742,7 @@ function ApproveJob(jobID) {
   })
   .then(data => {
     if (data.status === "error") {
-      handleErrors(data.errors, jobID, spinner);
+      handleErrors(data.errors, jobID);
     } else if (data.status === "success") {
       location.reload();
       showFlashMessage(data.message, "success");
@@ -846,6 +849,44 @@ function move_to_shortlist(appID) {
   };
 
   fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function auto_shortlist(filter) {
+  const url = 'http://127.0.0.1:8000/job/auto_shortlist/';
+  
+  const jsonData = {
+    filter: filter,
+  };
+
+  fetch(url, { 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1739,7 +1780,7 @@ function toggleVisibility(divId) {
 
 function toggleV(divId) {
             // Hide all divs
-            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved'];
+            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved','filterd'];
             divs.forEach(function(id) {
                 document.getElementById(id).style.display = 'none';
                 console .log(id);

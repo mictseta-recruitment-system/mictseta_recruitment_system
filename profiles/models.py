@@ -102,7 +102,7 @@ class ProfileImage(models.Model):
 
 
 class SupportingDocuments(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents")
 	document = models.ImageField(upload_to='static/supportindocuments/documents/')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
 	document_type = models.CharField(max_length=225, null=False)

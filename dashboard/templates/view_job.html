@@ -216,7 +216,12 @@ View jobs
           <form>
             <div class="form-group">
               <label for="jobTitle">Title</label>
-              <input type="text" class="form-control" id="title{{job.id}}" placeholder="Job Title" value="{{job.title}}">
+              <select type="text" class="form-control" id="title{{job.id}}" placeholder="Job Title" value="{{job.title}}">
+               <option value="{{job.title.id}}" selected>{{job.title}}</option>
+               {% for jobv in job_titles %}
+                    <option value="{{jobv.id}}">{{jobv.title}}</option>
+                {% endfor %}
+                </select>
             </div>
             <div class="form-group">
               <label for="jobDescription">Description</label>
@@ -261,11 +266,12 @@ View jobs
             </div>
             <div class="form-group">
               <label for="industry">Industry</label>
-              <input type="text" class="form-control" id="industry{{job.id}}" placeholder="Industry" value="{{job.industry}}">
-            </div>
-            <div class="form-group">
-              <label for="companyName">Company Name</label>
-              <input type="text" class="form-control" id="company_name{{job.id}}" placeholder="Company Name" value="{{job.company_name}}">
+              <select type="text" class="form-control" id="industry{{job.id}}" placeholder="Industry" value="{{job.industry}}">
+               <option value="{{job.industry.id}}" selected>{{job.industry}}</option>
+              {% for industry in industries %}
+                    <option value="{{industry.id}}">{{industry.name}}</option>
+                  {% endfor %}
+                </select>
             </div>
              <div class="mb-3">
               <label for="assigned_to" class="form-label">Choose responsible HOD :</label>
@@ -314,16 +320,27 @@ View jobs
                    <form class="d-flex justify-content-between">
                       <div class="form-group">
                         <label for="Skillname">Skill name</label>
-                        <input type="text" class="form-control" id="name{{job.id}}" placeholder="Skill ">
+                        <select type="text" class="form-control" id="name{{job.id}}" placeholder="Skill ">
+                        {% for soft_skill in soft_skills %}
+                          <option value="{{soft_skill.skill}}">{{soft_skill.skill}}</option>
+                        {% endfor %}
+                        {% for c_skill in computer_skills %}
+                          <option value="{{c_skill.skill}}">{{c_skill.skill}}</option>
+                        {% endfor %}
+                        </select>
                       </div>
                       
                       <div class="form-group">
                         <label for="location">Level</label>
                         <select class="form-control" id="level{{job.id}}">
-                          <option>Beginner</option>
-                          <option>Intermediate</option>
-                          <option>Advanced</option>
-                        </select>
+                         {% for soft in soft_profs %}
+                          <option value="{{soft.level}}">{{soft.level}}</option>
+                         {% endfor %}
+                          
+                      </div>
+                      <div class="form-group">
+
+                        <input type="checkbox"  id="myCheckbox{{job.id}}">is Required
                       </div>
                     
                         <div class="form-group mt-6">
@@ -335,14 +352,25 @@ View jobs
                   <div id="skillList{{job.id}}">
                   
                     <ul class="list-group list-group-flush">
-                      {% for skill in job.skills.all %}
+                      {% for skill in job.C_skills.all %}
                       <li class="list-group-item d-flex justify-content-between align-items-start">
                           <div class="ms-2 me-auto">
-                            <div class="fw-bold">{{skill.name}}</div>
+                            <div class="fw-bold">{{skill.name}} {% if skill.is_required %}<span class="text-danger"> required </span>{% endif %}</div>
                             {{skill.level}}
                           </div>
                           
-                          <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill({{job.id}},'spinnerSkill','editSkill','skillToggle',{{skill.id}})"></i>
+                          <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill({{job.id}},'spinnerSkill','editSkill','skillToggle','{{skill.name}}')"></i>
+                      </li>
+                      
+                      {% endfor %}
+                      {% for skill in job.S_skills.all %}
+                      <li class="list-group-item d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{skill.name}} {% if skill.is_required %}<span class="text-danger"> required </span>{% endif %}</div>
+                            {{skill.level}}
+                          </div>
+                          
+                          <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill({{job.id}},'spinnerSkill','editSkill','skillToggle','{{skill.name}}')"></i>
                       </li>
                       
                       {% endfor %}
@@ -365,13 +393,21 @@ View jobs
                 <!-- <h3>EDIT Education </h3> -->
                     <form class="d-flex justify-content-between">
                       <div class="form-group ">
-                        <label for="level">Level</label>
-                        <input type="text" class="form-control" id="Elevel{{job.id}}" placeholder="eg. grade 12 or Information Technology">
+                        <label for="level">NQF Level</label>
+                        <select type="text" class="form-control" id="Elevel{{job.id}}" placeholder="eg. grade 12 or Information Technology">
+                          {% for nqf in nqf_levels %}
+                              <option value="{{nqf.id}}">{{nqf.level}} </option>
+                          {% endfor %}
+                        </select>
                       </div>
 
                       <div class="form-group mx-2">
                         <label for="qualification">qualification</label>
-                        <input type="text" class="form-control" id="qualification{{job.id}}" placeholder="eg. Matric or Diploma">
+                        <select type="text" class="form-control" id="qualification{{job.id}}" placeholder="eg. Matric or Diploma">
+                         {% for qualification in qualifications %}
+                              <option value="{{qualification.id}}">{{qualification.name}} </option>
+                          {% endfor %}
+                        </select>
                       </div>
                       <div class="form-group ">
                           <br>
@@ -385,8 +421,8 @@ View jobs
                         {% for education in job.educations.all %}
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
-                              <div class="fw-bold">{{education.level}}</div>
-                               {{education.qualification}}
+                              <div class="fw-bold">{{education.field_of_study}}</div>
+                               {{education.nqf_level}}
                             </div>
                             
                             <i class="fa-solid fa-square-minus min-icon" onclick="deleteEducation({{job.id}},'spinnerEducation','editEducation','EducationToggle',{{education.id}})"></i>
@@ -411,11 +447,22 @@ View jobs
                       <form class="d-flex justify-content-between">
                         <div class="form-group ">
                           <label for="name">Experience</label>
-                          <input type="text" class="form-control" id="Ename{{job.id}}" placeholder="Expereince in what?">
+                          <select type="text" class="form-control" id="Ename{{job.id}}" placeholder="Expereince in what?">
+                             {% for c_skill in computer_skills %}
+                              <option value="{{c_skill.skill}}">{{c_skill.skill}}</option>
+                             {% endfor %}
+                            {% for jobv in job_titles %}
+                                <option value="{{jobv.title}}">{{jobv.title}}</option>
+                            {% endfor %}
+                         </select>
                         </div>
                          <div class="form-group mx-2">
                           <label for="duration">duration</label>
-                          <input type="text" class="form-control" id="Eduration{{job.id}}" placeholder="for how long">
+                          <div class="d-flex justify-content-start">
+                            
+                              <input type="number" class="form-control w-25" id="Eduration{{job.id}}" placeholder="for how long" >
+                              <span class="mx-2"> years</span> 
+                          </div>
                         </div>
                         
                         
@@ -432,7 +479,7 @@ View jobs
                           <li class="list-group-item d-flex justify-content-between align-items-start">
                               <div class="ms-2 me-auto">
                                 <div class="fw-bold">{{experience.name}}</div>
-                                 {{experience.duration}}
+                                 {{experience.duration}} years
                               </div>
                               
                               <i class="fa-solid fa-square-minus min-icon" onclick="deleteExperience({{job.id}},'spinnerExperience','editExperience','experienceToggle',{{experience.id}})"></i>
@@ -449,7 +496,7 @@ View jobs
           <div class="col-6 mt-2">
             <div class="card">
               <div class="card-header">
-                Add Requrements & Responsibilities
+                Add Duties & Responsibilities
               </div>
               <div class="card-body">
                <div id="editRequirements{{job.id}}" class="form-container" style="display: block;">
@@ -474,7 +521,7 @@ View jobs
                       {% for requirement in job.requirements.all %}
                       <li class="list-group-item d-flex justify-content-between align-items-start">
                           <div class="ms-2 me-auto">
-                            <div class="fw-bold">{{requirement.name}}</div>
+                            <div class="fw-bold">{{requirement.description}}</div>
                              {{requirement.duration}}
                           </div>
                           

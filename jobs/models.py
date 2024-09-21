@@ -1,69 +1,61 @@
 from django.db import models
 from django.contrib.auth.models import User
+from config.models import JobTitle, Industry
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 
 class JobPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    title = models.CharField(max_length=225, unique=False, null=False)
+    title = models.ForeignKey(JobTitle, on_delete=models.CASCADE, default=1)
+    industry = models.ForeignKey(Industry, on_delete=models.CASCADE, default=1)
     description = models.TextField(null=False)
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=False)
     location = models.CharField(max_length=225, unique=False, null=False)
-    salary_range = models.CharField(max_length=100, null=True)  # Added field for salary range
-    # LEVEL_CHOICES = [
-    #     ('Remote', 'Remote'),
-    #     ('Part-Time', 'Part-Time'),
-    #     ('Full-Time', 'Full-Time'),
-    # ]
-    job_type = models.CharField(max_length=50, null=False, default='Full-time')  # Added field for job type
-    industry = models.CharField(max_length=100, null=True)  # Added field for industry
-    company_name = models.CharField(max_length=225, null=True)  # Added field for company name
+    salary_range = models.CharField(max_length=100, null=True) 
+    job_type = models.CharField(max_length=50, null=False, default='Full-time') 
     status = models.CharField(max_length=20, null=False, default="waiting")
     is_complete = models.BooleanField(null=False, default=False)
     is_approved = models.BooleanField(null=False, default=False)
-    
-   
+    is_active = models.BooleanField(null=False, default=True)
     def __str__(self):
-        return f'{self.title} Job Vacancy, owened by : {self.user.first_name} {self.user.last_name}'
-
+        return f'{self.title} '
 
 class Academic(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='educations')
-    level = models.CharField(max_length=225, unique=False, null=False)
-    qualification = models.CharField(max_length=225, unique=False, null=False)
-
+    field_of_study = models.ForeignKey(Qualification, on_delete=models.CASCADE) 
+    nqf_level = models.ForeignKey(NQF, on_delete=models.CASCADE) 
     def __str__(self):
-        return f'Academic for {self.job_post.title} Job Vacancy'
+        return f'{self.field_of_study} {self.nqf_level}'
 
-
-class Skill(models.Model):
-    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE,  related_name='skills')
-    name = models.CharField(max_length=225, unique=False, null=False)
-    LEVEL_CHOICES = [
-        ('Beginner', 'Beginner'),
-        ('Intermediate', 'Intermediate'),
-        ('Advanced', 'Advanced')
-    ]
-    level = models.CharField(max_length=50, choices=LEVEL_CHOICES, null=False)
-
+class ComputerSkill(models.Model):
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE,  related_name='C_skills')
+    name =  models.ForeignKey(ComputerSkillsList, on_delete=models.CASCADE)
+    level = models.ForeignKey(ComputerProficiency, on_delete=models.CASCADE)
+    is_required = models.BooleanField(null=False, default=False)
     def __str__(self):
-         return f'Skill for {self.job_post.title} Job Vacancy'
+         return f'{self.name} {self.level}'
 
+class SoftSkill(models.Model):
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE,  related_name='S_skills')
+    name =  models.ForeignKey(SoftSkillsList, on_delete=models.CASCADE)
+    level = models.ForeignKey(SoftProficiency, on_delete=models.CASCADE)
+    is_required = models.BooleanField(null=False, default=False)
+    def __str__(self):
+         return f'{self.name} {self.level}'
 
 class Experience(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='experiences')
     name = models.CharField(max_length=225, unique=False, null=False)
     duration = models.CharField(max_length=40, unique=False, null=False)
-
     def __str__(self):
-        return f'Experience for {self.job_post.title} Job Vacancy'
+        return f'{self.name} {self.duration}'
 
 class Requirement(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='requirements')
     description = models.CharField(max_length=225, unique=False, null=False)
-
     def __str__(self):
-        return f'Requirements for {self.job_post.title} Job Vacancy'
+        return f'{self.description} {self.job_post}'
 
 
 class Notification(models.Model):
@@ -91,7 +83,9 @@ class JobApplication(models.Model):
     job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, null=False)
-    
+    filterd_out = models.BooleanField(null=False, default=False)
+    def __str__(self):
+        return f'{self.user.email} - {self.job.title}'
 
 class Interview(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="applicant")
@@ -99,7 +93,8 @@ class Interview(models.Model):
     date = models.CharField(max_length=225,null=False)
     start_time = models.CharField(max_length=225,null=False)
     end_time = models.CharField(max_length=225,null=False)
- 
+    def __str__(self):
+        return f'{self.user.application}'
 
 class FeedBack(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -107,9 +102,7 @@ class FeedBack(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=225,null=False)
     status = models.CharField(max_length=225,null=False)
+    def __str__(self):
+        return f'{self.user.email} - {self.job.title}'
 
 
-class SkillValidation(models.Model):
-    skill = models.CharField(max_length=100, null=True)
-    level = models.CharField(max_length=15, null=True)
-    category = models.CharField(max_length=20,null=True)
