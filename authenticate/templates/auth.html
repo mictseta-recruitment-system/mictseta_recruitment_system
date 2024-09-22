@@ -155,7 +155,6 @@
 </style>
 
 <div class="main">
-
     <div class="filled-right-section">
         <div class="oval-background"></div> <!-- Oval Background with Gradient -->
         <div id="flash-message-container"></div>
@@ -208,7 +207,7 @@
                             <label for="password2">Confirm Password</label> <!-- Label for animation -->
                             <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
                         </div>
-                        <button type="button" class="btn btn-primary" onclick="handle_sign_up_button_click()">Create account</button>
+                        <button type="button" class="btn btn-primary" id="btn-sign-up" onclick="handle_sign_up_button_click()">Create account</button>
                         <div class="register-link">
                             <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
                         </div>
@@ -238,6 +237,35 @@
         // Change container color to sign-in animation
         const container = document.getElementById('form-container');
         container.style.animation = 'changeColorSignIn 0.5s forwards';
+    });
+
+    // Function to handle Enter key press
+    function handleEnterKeyPress(event, buttonId) {
+        if (event.key === 'Enter') {
+            document.getElementById(buttonId).click();
+        }
+    }
+
+    // Add event listeners for sign-in inputs
+    document.getElementById('lemail').addEventListener('keydown', function(event) {
+        handleEnterKeyPress(event, 'btn-signin');
+    });
+    document.getElementById('lpassword').addEventListener('keydown', function(event) {
+        handleEnterKeyPress(event, 'btn-signin');
+    });
+
+    // Add event listeners for sign-up inputs
+    document.getElementById('idnumber').addEventListener('keydown', function(event) {
+        handleEnterKeyPress(event, 'btn-sign-up');
+    });
+    document.getElementById('email').addEventListener('keydown', function(event) {
+        handleEnterKeyPress(event, 'btn-sign-up');
+    });
+    document.getElementById('password').addEventListener('keydown', function(event) {
+        handleEnterKeyPress(event, 'btn-sign-up');
+    });
+    document.getElementById('password2').addEventListener('keydown', function(event) {
+        handleEnterKeyPress(event, 'btn-sign-up');
     });
 
     document.getElementById('toggle-password-login').addEventListener('click', function() {
