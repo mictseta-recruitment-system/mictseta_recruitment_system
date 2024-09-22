@@ -592,41 +592,26 @@
 </div>
 
 
-   <!-- Modal for Supporting Documents -->
-<div class="modal fade" id="supportingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="supportingDocumentsModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="supportingDocumentsModalLabel">Supporting Documents</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="upload-supporting-documents" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="document-type">Select Document Type</label>
-                        <select class="form-control" id="document-type" name="type" required>
-                            <option value="">Choose...</option>
-                            <option value="license">Driver's License</option>
-                            <option value="id">ID</option>
-                            <option value="passport">Passport</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="document">Upload Document</label>
-                        <input type="file" class="form-control-file" id="document" name="document" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="uploadSupportingDocument(event)">Upload</button>
+    <!-- Modal for Supporting Documents -->
+    <div class="modal fade" id="supportingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="supportingDocumentsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="supportingDocumentsModalLabel">Supporting Documents</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Upload your supporting documents here.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
 </main>
 
 <!-- Bootstrap JS -->
