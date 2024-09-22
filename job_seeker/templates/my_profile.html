@@ -1,0 +1,638 @@
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  body {
+        background-color: #f8f9fa;
+    }
+    
+    
+    
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        transition: background-color 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .module-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .modal-dialog {
+        max-width: 800px; /* Adjust the modal width here */
+        margin: 1.rem auto; /* Centering the modal */
+    }
+    .content {
+    flex-grow: 1;
+    margin-left: 20px; /* Align content with sidebar */
+    background-color: #ffffff; /* White background for the content box */
+    padding: 0px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for content box */
+}
+    
+</style>
+
+<!-- Main Content -->
+<main class="container mt-4">
+    <div class="module-container">
+        <!-- Module 1: Personal Details -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-user"></i> Personal Details</h5>
+                    <p class="card-text">View and update your personal details.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#personalDetailsModal">Go to Personal Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 2: Address Details -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> Address Details</h5>
+                    <p class="card-text">Manage your address details.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#addressDetailsModal">Go to Address Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 3: Academic Qualifications -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-graduation-cap"></i> Academic Qualifications</h5>
+                    <p class="card-text">Provide information about your academic background.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#academicQualificationsModal">Go to Academic Qualifications</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 4: Language and Proficiency -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-language"></i> Language and Proficiency</h5>
+                    <p class="card-text">Enter details about the languages you speak.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#languageProficiencyModal">Go to Language and Proficiency</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 5: Computer Skills -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-desktop"></i> Computer Skills</h5>
+                    <p class="card-text">Highlight your computer skills.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#computerSkillsModal">Go to Computer Skills</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 6: Soft Skills -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-lightbulb"></i> Soft Skills</h5>
+                    <p class="card-text">Showcase your soft skills.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#softSkillsModal">Go to Soft Skills</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 7: Working Experience -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-briefcase"></i> Working Experience</h5>
+                    <p class="card-text">Detail your working experience.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#workingExperienceModal">Go to Working Experience</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 8: References -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-users"></i> References</h5>
+                    <p class="card-text">Add your professional references.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#referencesModal">Go to References</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 9: Supporting Documents -->
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-file-upload"></i> Supporting Documents</h5>
+                    <p class="card-text">Upload any supporting documents.</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#supportingDocumentsModal">Go to Supporting Documents</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Modal for Personal Details -->
+    <!-- Modal for Personal Details -->
+<div class="modal fade" id="personalDetailsModal" tabindex="-1" role="dialog" aria-labelledby="personalDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="personalDetailsModalLabel">Personal Details</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="id-number">ID Number</label>
+                                <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{user.profile.idnumber}}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="first-name">First Name <span class="text-danger">*</span> </label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" value="{{user.first_name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="surname">Surname <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" value="{{user.last_name}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <input class="form-control" id="gender" name="gender" value="{{user.profile.gender}}" disabled>
+                                <input type="text" class="form-control mt-2" id="gender_other" name="gender_other" style="display: none;" placeholder="Please specify">
+                            </div>
+                            <div class="form-group">
+                                <label for="marital-status">Marital Status <span class="text-danger">*</span></label>
+                                <select class="form-control" id="maritial_status" name="marital_status">
+                                    <option value="{{user.profile.marital_status}}" selected>{{user.profile.marital_status}}</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Single">Single</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="race">Select Race <span class="text-danger">*</span></label>
+                                <select class="form-control" id="race" name="race" onchange="toggleOtherInput(this, 'race_other')">
+                                    <option value="{{user.profile.race}}" selected>{{user.profile.race}}</option>
+                                    <option value="Black">Black African</option>
+                                    <option value="Coloured">Coloured</option>
+                                    <option value="White">White</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <input type="text" class="form-control mt-2" id="race_other" name="race_other" style="display: none;" placeholder="Please specify">
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth</label>
+                                <input type="text" class="form-control" id="dob" name="dob" value="{{user.profile.dob}}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="disability">Disability</label>
+                                <select class="form-control" id="disability" name="disability" onchange="toggleOtherInput(this, 'disability_other')">
+                                    <option value="{{user.profile.disability}}" selected>{{user.profile.disability}}</option>
+                            
+                                    <option value="Hearing">Hearing</option>
+                                    <option value="Vision">Vision</option>
+                                    <option value="Mobility">Mobility</option>
+                                    <option value="Cognitive">Cognitive</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <input type="text" class="form-control mt-2" id="disability_other" name="disability_other" style="display: none;" placeholder="Please specify">
+                            </div>
+                        </div>
+            
+                        <!-- Contact Details Section -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" value="{{user.email}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="telephone">Phon Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" id="phone" name="phone" value="{{user.profile.phone}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="linkedin-profile">LinkedIn Profile</label>
+                                <input type="url" class="form-control" id="linkedin_profile" name="linkedin_profile" value="{{user.profile.linkedin_profile}}">
+                            </div>
+                            <div class="form-group">
+                                <label for="personal-website">Personal Website</label>
+                                <input type="url" class="form-control" id="personal_website" name="personal_website" value="{{user.profile.personal_website}}">
+                            </div>
+            
+                             <div class="form-group">
+                                <label for="cover_letter">Cover Letter</label>
+                                <textarea type="url" class="form-control" id="cover_letter" name="cover_letter" value="{{user.profile.cover_letter}}" rows="8">
+                                {{user.profile.cover_letter}}
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="handle_update_profile_info_button_click()" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+   <!-- Modal for Address Details -->
+   <div class="modal fade" id="addressDetailsModal" tabindex="-1" role="dialog" aria-labelledby="addressDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addressDetailsModalLabel">Address Details</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <!-- Residential Address Section -->
+                        <div class="col-md-6">
+                            <h4>Residential Address </h4>
+                            <div class="mb-3">
+                                <label for="residential_street_address" class="form-label">Street Address</label>
+                                <input type="text" class="form-control" id="residential_street_address" name="residential_street_address">
+                            </div>
+                            <div class="mb-3">
+                                <label for="residential_city" class="form-label">City</label>
+                                <input type="text" class="form-control" id="residential_city" name="residential_city">
+                            </div>
+                            <div class="mb-3">
+                                <label for="residential_province" class="form-label">Province</label>
+                                <select class="form-control" id="residential_province" name="residential_province">
+                                    <option value="">Select Province</option>
+                                    <option value="Eastern Cape">Eastern Cape</option>
+                                    <option value="Free State">Free State</option>
+                                    <option value="Gauteng">Gauteng</option>
+                                    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                                    <option value="Limpopo">Limpopo</option>
+                                    <option value="Mpumalanga">Mpumalanga</option>
+                                    <option value="Northern Cape">Northern Cape</option>
+                                    <option value="North West">North West</option>
+                                    <option value="Western Cape">Western Cape</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="residential_postal_code" class="form-label">Postal Code</label>
+                                <input type="text" class="form-control" id="residential_postal_code" name="residential_postal_code">
+                            </div>
+                        </div>
+
+                        <!-- Postal Address Section -->
+                        <div class="col-md-6">
+                            {% if user.address %}
+                            <p>Street: {{user.address.street_address_line}}</p>
+                            <p>City: {{user.address.city}}</p>
+                            <p>Province: {{user.address.province}}</p>
+                            <p>Postal Code: {{user.address.postal_code}}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="handle_update_address_button_click()" class="btn btn-primary">Save Address</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal for Academic Qualifications -->
+    <div class="modal fade" id="academicQualificationsModal" tabindex="-1" role="dialog" aria-labelledby="academicQualificationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="academicQualificationsModalLabel">Academic Qualifications</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Provide your academic qualifications here.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Language and Proficiency -->
+    <!-- Modal for Language Proficiency -->
+    <div class="modal fade" id="languageProficiencyModal" tabindex="-1" role="dialog" aria-labelledby="languageProficiencyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="languageProficiencyModalLabel">Add Language Proficiency</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="language">Language:</label>
+                            <select id="language" class="form-control">
+                                <option value="">Select a language...</option>
+                                {% for language in languages %}
+                                    <option value="{{language.id}}">{{language.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reading">Reading Proficiency level:</label>
+                            <select id="reading" class="form-control">
+                                <option value="">Choose an option</option>
+                                {% for reading in readings %}
+                                    <option value="{{reading.id}}">{{reading.proficiency}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="writing">Writing Proficiency level:</label>
+                            <select id="writing" class="form-control">
+                                <option value="">Choose an option</option>
+                                {% for writing in writings %}
+                                    <option value="{{writing.id}}">{{writing.proficiency}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="speaking">Speaking Proficiency level:</label>
+                            <select id="speaking" class="form-control">
+                                <option value="">Choose an option</option>
+                                {% for speaking in speakings %}
+                                    <option value="{{speaking.id}}">{{speaking.proficiency}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" onclick="handle_update_language_button_click()" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal for Computer Skills -->
+<div class="modal fade" id="computerSkillsModal" tabindex="-1" role="dialog" aria-labelledby="computerSkillsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="computerSkillsModalLabel">Computer Skills</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="computerSkillsForm">
+                    <div class="form-group">
+                        <label for="skill1">Computer Skill</label>
+                        <select class="form-control" id="skill1" name="skill1" onchange="toggleOtherSkill()">
+                            <option value="">Select a skill</option>
+                            {% for computer in computers %}
+                                <option value="{{ computer.id }}" {% if selected_skill == computer.id %}selected{% endif %}>{{ computer.skill }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" id="other-skill-group" style="display: none;">
+                        <label for="otherSkill">Please specify:</label>
+                        <input type="text" class="form-control" id="otherSkill" name="otherSkill">
+                    </div>
+                    <div class="form-group">
+                        <label for="level">Proficiency Level:</label>
+                        <select id="level" class="form-control" name="level">
+                            {% for proficiency in proficiencys %}
+                                <option value="{{ proficiency.id }}" {% if selected_proficiency == proficiency.id %}selected{% endif %}>{{ proficiency.level }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="handleAddSkill()">Add Skill</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Modal for Soft Skills -->
+    <div class="modal fade" id="softSkillsModal" tabindex="-1" role="dialog" aria-labelledby="softSkillsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="softSkillsModalLabel">Soft Skills</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="softSkillsForm">
+                        <div class="form-group">
+                            <label for="softskill1">Soft Skill</label>
+                            <select class="form-control" id="softskill1" name="softskill1" onchange="toggleOtherSoftSkill()">
+                                <option value="">Select a skill</option>
+                                {% for soft in softs %}
+                                    <option value="{{ soft.id }}">{{ soft.skill }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group" id="other-soft-skill-group" style="display: none;">
+                            <label for="otherSoftSkill">Specify Skill</label>
+                            <input type="text" class="form-control" id="otherSoftSkill" name="otherSoftSkill">
+                        </div>
+                        <div class="form-group">
+                            <label for="proficiency1">Proficiency Level</label>
+                            <select id="proficiency1" class="form-control" name="proficiency1">
+                                {% for proficiency in proficiencys %}
+                                    <option value="{{ proficiency.id }}">{{ proficiency.level }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="handleAddSoftSkill()">Add Skill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Modal for Working Experience -->
+    <div class="modal fade" id="workingExperienceModal" tabindex="-1" role="dialog" aria-labelledby="workingExperienceModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="workingExperienceModalLabel">Working Experience</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="workingExperienceForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="jobTitle" class="form-label">Job Title</label>
+                                <select class="form-control" id="jobTitle" name="jobTitle" required>
+                                    {% for job_title in job_titles %}
+                                        <option value="{{ job_title.id }}">{{ job_title.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="company" class="form-label">Company</label>
+                                <input type="text" class="form-control" id="company" name="company" placeholder="Enter company name" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="location" class="form-label">Location</label>
+                                <select class="form-control" id="location" name="location" required>
+                                    <option value="">Select Location</option>
+                                    <option value="Johannesburg">Johannesburg</option>
+                                    <option value="Cape Town">Cape Town</option>
+                                    <option value="Durban">Durban</option>
+                                    <option value="Pretoria">Pretoria</option>
+                                    <option value="Port Elizabeth">Port Elizabeth (Gqeberha)</option>
+                                    <option value="Bloemfontein">Bloemfontein</option>
+                                    <option value="Polokwane">Polokwane</option>
+                                    <option value="Nelspruit">Nelspruit (Mbombela)</option>
+                                    <option value="Kimberley">Kimberley</option>
+                                    <option value="Rustenburg">Rustenburg</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="description" class="form-label">Job Description</label>
+                                <textarea class="form-control" id="description" name="description" placeholder="Tell us about your experience" required></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" onclick="handleUpdateWorkingExperience()">Save Experience</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Modal for References -->
+<div class="modal fade" id="referencesModal" tabindex="-1" role="dialog" aria-labelledby="referencesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="referencesModalLabel">References</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="referenceForm">
+                    <div class="form-group mb-3">
+                        <label for="refereeName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="refereeName" name="refereeName" placeholder="Enter full name" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="refereeContact" class="form-label">Contact Information</label>
+                        <input type="text" class="form-control" id="refereeContact" name="refereeContact" placeholder="Phone number or email" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="refereePosition" class="form-label">Position/Relationship</label>
+                        <input type="text" class="form-control" id="refereePosition" name="refereePosition" placeholder="e.g., Manager, Mentor, etc." required>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="handleAddReference()">Add Reference</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+   <!-- Modal for Supporting Documents -->
+<div class="modal fade" id="supportingDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="supportingDocumentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="supportingDocumentsModalLabel">Supporting Documents</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="upload-supporting-documents" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="document-type">Select Document Type</label>
+                        <select class="form-control" id="document-type" name="type" required>
+                            <option value="">Choose...</option>
+                            <option value="license">Driver's License</option>
+                            <option value="id">ID</option>
+                            <option value="passport">Passport</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="document">Upload Document</label>
+                        <input type="file" class="form-control-file" id="document" name="document" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="uploadSupportingDocument(event)">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4Agj6akHAwFqqL5bGYe40TLOe0J4pB7EuPhZZSlH/+8PcXc5mNh8" crossorigin="anonymous"></script>
+<script src="path/to/functionality.js"></script>
+
+{% endblock %}
