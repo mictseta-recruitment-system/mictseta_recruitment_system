@@ -2,12 +2,14 @@ from django.shortcuts import render
 from jobs.models import JobPost,FeedBack,Interview
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from profiles.models import SupportingDocuments
-# Create your views here.
-def job_seeker_dashboard(request):
-    return render(request, 'job_seeker_dashboard.html')
 
-def personal_details(request):
-    return render(request, 'personal_details.html')
+# Create your views here.
+
+def job_seeker_dashboard(request):
+    return render(request, 'my_profile.html')
+
+def my_profile(request):
+    return render(request, 'my_profile.html')
 
 
 def address_details(request):
@@ -37,7 +39,14 @@ def soft_skills(request):
 def computer_skills(request):
     computer = ComputerSkillsList.objects.all()
     proficiency = ComputerProficiency.objects.all()
-    return render(request, 'computer_skills.html', {'computers':computer, 'proficiencys':proficiency})
+    selected_skill = request.POST.get('skill1', '')  # Default to empty string if not set
+    selected_proficiency = request.POST.get('level', '')  # Default to empty string if not set
+    return render(request, 'computer_skills.html', {
+        'computers': computer,
+        'proficiencys': proficiency,
+        'selected_skill': selected_skill,
+        'selected_proficiency': selected_proficiency,
+    })
 
 def working_experience(request):
     job_title = JobTitle.objects.all()

@@ -5,48 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} Dashboard {% endblock %}</title>
     {% load static %}
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'job_seeker/css/style.css' %}">
     <link rel="shortcut icon" href="{% static './authenticate/images/webicon.png' %}" type="image/x-icon">
+
     <style>
+        /* Apply Open Sans font */
+        body, .navbar, .sidebar, .content {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: normal;
+        }
+
         .navbar-custom {
             background-color: #ffffff; 
         }
+
         .navbar-custom .navbar-brand, 
         .navbar-custom .nav-link {
-            color:#333333;
-            
+            color: #333333;
         }
+
         .navbar-custom .navbar-brand:hover, 
         .navbar-custom .nav-link:hover {
             color: #d5d5d5; 
         }
+
+        .sidebar {
+            background-color: #ffffff;
+            position: -webkit-sticky; /* For Safari */
+            position: sticky;
+            top: 0; /* Stick to the top */
+            max-height: 100vh; /* Limit height */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
         .sidebar ul {
             list-style-type: none;
-            padding: 0;
+            padding: 3px;
         }
+
         .sidebar ul li {
             margin: 0;
             padding: 5px 0; 
         }
+
         .sidebar ul li a {
+            margin-right: 10px;
             display: flex;
             align-items: center;
-            padding: 0px 0px; 
+            padding: 0px 0px;
+            color: black; /* Sidebar text remains black */
         }
+
         .sidebar ul li a i {
-            margin-right: 5px; 
-            color: #007bff; 
+            color: #007bff; /* Make icons blue */
+            margin-right: 8px;
         }
-        .sidebar ul li a:hover i {
-            color: #0056b3; 
+
+        .sidebar ul li a:hover {
+            color: #0056b3; /* Slight hover effect */
         }
+
+        /* Profile Box Styling */
+        .profile-box {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            padding: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0px;
+            text-align: center;
+        }
+
+        /* Profile Image Container Styling */
+        .profile-image-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(163, 76, 76, 0.1);
+        }
+
+        #imageUpload {
+            display: none;
+        }
+
+        .profile-image-container i {
+            font-size: 50px;
+            color: #007bff; /* Blue icon */
+        }
+
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+        }
+
+        .profile-image-container:hover {
+            background-color: #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: absolute;
+                height: auto;
+                z-index: 1000;
+                left: -100%;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .navbar-custom .navbar-toggler {
+                display: block;
+            }
+        }
+     /* Ensure proper alignment for the user information */
+.user-info {
+    text-align: left;
+    margin-left: 10px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2px; /* Space between ID Number and Email */
+}
+
+.info-row strong {
+    width: 100px; /* Fixed width for labels to ensure alignment */
+    font-weight: bold;
+}
+
+.info-row span {
+    flex-grow: 1;
+}
+
+
+
+
     </style>
 </head>
 <body>
@@ -62,45 +185,58 @@
             </ul>
         </div>
     </nav>
+
     <div class="container-box">
         <div class="sidebar">
+          <!-- Profile Section Box -->
+<div class="profile-box">
+    <!-- Profile Image Section -->
+    <label for="imageUpload" class="profile-image-container">
+        <i class="fas fa-user"></i>
+        <img id="profileImage" src="{% static 'job_seeker/images/default_profile.png' %}" alt="Profile Picture" style="display: none;">
+    </label>
+    <input type="file" id="imageUpload" accept="image/*" class="form-control-file">
+
+    <!-- User Information Section -->
+    <div class="user-info">
+        <div class="info-row">
+            <strong>ID Number:</strong>
+            <span>{{ user.profile.idnumber }}</span>
+        </div>
+        <div class="info-row">
+            <strong>Email:</strong>
+            <span>{{ user.email }}</span>
+        </div>
+    </div>
+</div>
+        </div>
+
+
+
             <ul>
-                <li><a href="{% url 'job_seeker_dashboard' %}"><i class="fas fa-tachometer-alt"></i><strong>Dashboard</strong></a></li>
                 <hr>
-                <li><a href="{% url 'personal_details' %}"><i class="fas fa-user"></i>Personal Details</a></li>
-                <li><a href="{% url 'address_details' %}"><i class="fas fa-map-marker-alt"></i>Address Details</a></li>
-                <li><a href="{% url 'academic_qualifications' %}"><i class="fas fa-graduation-cap"></i>Academic Qualifications</a></li>
-                <li><a href="{% url 'language_proficiency' %}"><i class="fas fa-language"></i>Language & Proficiency</a></li>
-                <li><a href="{% url 'computer_skills' %}"><i class="fas fa-desktop"></i>Computer Skills</a></li>
-                <li><a href="{% url 'soft_skills' %}"><i class="fas fa-comments"></i>Soft Skills</a></li>
-                <li><a href="{% url 'working_experience' %}"><i class="fas fa-briefcase"></i>Working Experience</a></li>
-                <li><a href="{% url 'referees' %}"><i class="fas fa-users"></i>References</a></li>
-                <li><a href="{% url 'supporting_documents' %}"><i class="fas fa-file-alt"></i>Supporting Documents</a></li>
+                <li><a href="{% url 'my_profile' %}"><i class="fas fa-user"></i> My profile</a></li>
                 <hr>
-                <li><a href="{% url 'jobseeker.job_details' %}"><i class="fas fa-info-circle"></i>Job Details</a></li>
-                <li><a href="{% url 'application_tracking' %}"><i class="fas fa-search"></i>Application Tracking</a></li>
-                <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i>Interviews</a></li>
-                <li><a href="{% url 'feedback' %}"><i class="fas fa-comments"></i>Interviews</a></li>
+                <li><a href="{% url 'jobseeker.job_details' %}"><i class="fas fa-info-circle"></i> Job Details</a></li>
+                <li><a href="{% url 'application_tracking' %}"><i class="fas fa-search"></i> Application Tracking</a></li>
+                <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i> Interviews</a></li>
+                <li><a href="{% url 'feedback' %}"><i class="fas fa-comments"></i> Feedback</a></li>
                 <hr>
                 <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </div>
+
         <div class="content">
             <div class="inner-content-box">
                 <div id="flash-message-container"></div>
                 {% block content %}
-                <h1>Progress Updates</h1>
-                <div class="container mt-5" id="progress-circle"> 
-                    <div class="progress-circle" style="--percentage: 75%;">
-                        <span>75%</span>
-                    </div>
                 {% endblock %}
             </div>
         </div>
     </div>  
-    <script src="{% static 'users/js/flash.js' %}"></script> 
+
+    <script src="{% static 'users/js/flash.js' %}"></script>
     <script src="{% static 'job_seeker/js/script.js' %}"></script> 
-    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
