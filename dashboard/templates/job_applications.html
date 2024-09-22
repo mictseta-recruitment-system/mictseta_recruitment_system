@@ -14,9 +14,9 @@
     {% for applied_job in applied_jobs %}
 
       {% if applied_job.status == "closed" %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title}}</a>
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
       {% else %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title}}
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
        </a>
       {% endif %}
     {% endfor %}

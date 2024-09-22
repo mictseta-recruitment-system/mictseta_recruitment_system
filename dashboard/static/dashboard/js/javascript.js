@@ -675,6 +675,145 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
   });
 }
 /*************************************************************************************************************************************************************/
+function addLanguage(jobID, spinner, content, modal) {
+  const url = 'http://127.0.0.1:8000/job/add_job_language/';
+  
+  const skillListElement = document.getElementById('LanguageList' + jobID);
+
+  const language = document.getElementById('language'+ jobID).value;
+  const speaking = document.getElementById('speaking'+ jobID).value;
+  const reading = document.getElementById('reading'+ jobID).value;
+  const writing = document.getElementById('writing'+ jobID).value;
+  
+  const jsonData = {
+    job_post_id: jobID,
+    language: language,
+    speaking: speaking,
+    reading: reading,
+    writing: writing,
+  };
+  
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors, jobID, spinner);
+    
+    } else if (data.status === "success") {
+    
+      showFlashMessage(data.message, "success");
+      skillListElement.innerHTML = '';
+
+            // Re-render list items based on updated data
+            data.languages.forEach(language => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+                listItem.innerHTML = `
+                           <div class="fw-bold">
+                              ${language.name}
+                            </div>
+                             <div>
+                               ${language.speaking}
+                             </div>
+                             <div>
+                                ${language.reading}
+                             </div>
+                             <div>
+                               ${language.writing}
+                             </div>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteLanguage(${jobID},'spinnerEducation','editEducation','EducationToggle',${language.id})"></i>
+                `;
+                skillListElement.appendChild(listItem);
+            });
+      
+      
+    } else if (data.status === "warning") {
+      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      showFlashMessage(data.message, "warning");
+      
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function deleteLanguage(jobID, spinner, content, modal, languageID) {
+  const url = 'http://127.0.0.1:8000/job/delete_language/';
+  const skillListElement = document.getElementById('LanguageList' + jobID);
+
+  const jsonData = {
+    job_language_id: languageID,
+    job_post_id : jobID,
+  }
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors, jobID, spinner);
+     
+    } else if (data.status === "success") {
+     
+      showFlashMessage(data.message, "success");
+      skillListElement.innerHTML = '';
+
+            // Re-render list items based on updated data
+           data.languages.forEach(language => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+                listItem.innerHTML = `
+                           <div class="fw-bold">
+                              ${language.name}
+                            </div>
+                             <div>
+                               ${language.speaking}
+                             </div>
+                             <div>
+                                ${language.reading}
+                             </div>
+                             <div>
+                               ${language.writing}
+                             </div>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteLanguage(${jobID},'spinnerEducation','editEducation','EducationToggle',${language.id})"></i>
+                `;
+                skillListElement.appendChild(listItem);
+            });
+      
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+/********************************************************************************************************************************************************8
+*/
 function completeJob(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/complete_job/';
   /*document.getElementById(spinner + jobID).style.display = 'block';

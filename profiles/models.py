@@ -31,7 +31,7 @@ class Language(models.Model):
 	writing_proficiency = models.ForeignKey(WritingProficiencyList, on_delete=models.CASCADE)
 	speaking_proficiency = models.ForeignKey(SpeakingProficiencyList, on_delete=models.CASCADE)
 	def __str__(self):
-		return f" Language and proficiency information"
+		return f" {self.language.name}"
 
 class SoftSkills(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)

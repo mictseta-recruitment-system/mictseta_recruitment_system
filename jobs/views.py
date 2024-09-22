@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement, Notification, JobApplication, Interview,FeedBack
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack
 from config.models import JobTitle, Industry
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from .filters import ApplicationFilter
@@ -87,6 +87,20 @@ def serialize_job_requirements(Requirements):
 		requirements.append(requirement)
 	return requirements
 
+def serialize_job_language(Languages):
+	languages = []
+	for Language_ in Languages:
+		requirement= {
+			'name'		:	Language_.language.name,
+			'reading'		:	Language_.reading_proficiency.proficiency,
+			'writing'		:	Language_.writing_proficiency.proficiency,
+			'speaking'		:	Language_.speaking_proficiency.proficiency,
+			'id'		:	Language_.id
+			
+				# 'application_deadline' :	json_data.get('application_deadline')            
+		}
+		languages.append(requirement)
+	return languages
 
 
 @ensure_csrf_cookie
@@ -266,11 +280,22 @@ def auto_shortlist(request):
 		applications = JobApplication.objects.all()
 		applications = ApplicationFilter(applications)
 		applications.reset_filter()
-		applications.filter_by_incomplete_profile()
-		applications.filter_by_computer_skill()
-		applications.filter_by_soft_skill()
+		applications.strict_filter_by_incomplete_profile()
+		applications.strict_filter_by_experience()
 		applications.apply_filter()
-	
+	else:
+		try:
+			filter_id = int(filters)
+			applications = JobApplication.objects.filter(job__id=filter_id).all()
+			applications = ApplicationFilter(applications)
+			applications.reset_filter()
+			applications.strict_filter_by_incomplete_profile()
+			applications.strict_filter_by_experience()
+			applications.apply_filter()
+		except Exception as e:
+			return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=500)
+
+		
 	return JsonResponse({'message': f'{applications.get_total()} applications filtered', 'status': 'success'}, status=201)
 
 
@@ -699,6 +724,55 @@ def add_job_requirements(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
+@csrf_protect				
+def add_job_language(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			data = {
+				'language'			:	json_data.get('language'),
+				'speaking'			:	json_data.get('speaking'),
+				'reading'			:	json_data.get('reading'),
+				'writing'			:	json_data.get('writing'),
+				'job_post_id'	:	json_data.get('job_post_id')
+			}
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+			#form = AddJobRequirementForm(data)
+			# if form.is_valid():
+			# else:
+			# 	return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
+			exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			language = LanguageList.objects.get(id=int(data['language']))
+			speaking = SpeakingProficiencyList.objects.get(id=int(data['speaking']))
+			reading = ReadingProficiencyList.objects.get(id=int(data['reading']))
+			writing = WritingProficiencyList.objects.get(id=int(data['writing']))
+
+			try:
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				exists = Language.objects.filter(job_post=job_post, language=language).exists()
+				print(exists)
+				if exists:
+					return JsonResponse({'errors': {'Language':['requirement already exist']}, 'status': 'error'}, status=400)
+				add_job_language_post = Language.objects.create(job_post=job_post, language=language,reading_proficiency=reading,writing_proficiency=writing,speaking_proficiency=speaking)
+				print(add_job_language)
+				add_job_language_post.save()
+				languages = Language.objects.filter(job_post=job_post)
+				return JsonResponse({'message': 'Language updated Successfully','languages':serialize_job_language(languages), 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
 #=============================================================================================================================================
 @check_leave
 @csrf_protect
@@ -1102,6 +1176,40 @@ def delete_job_requirements(request):
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+@check_leave
+@csrf_protect
+def delete_language(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			data = {
+				'job_language_id'	:	json_data.get('job_language_id'),
+				'job_post_id'		: json_data.get('job_post_id')
+			}
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+			
+			exists = Language.objects.filter(id=int(data['job_language_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Adademic transcrript does not exist']}, 'status': 'error'}, status=400)
+			try:
+				language = Language.objects.get(id=int(data['job_language_id']))
+				language.delete()
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				languages = Language.objects.filter(job_post=job_post)
+				return JsonResponse({'message': 'language  updated Successfully','languages':serialize_job_language(languages), 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
 
 @check_leave
 @csrf_protect	
