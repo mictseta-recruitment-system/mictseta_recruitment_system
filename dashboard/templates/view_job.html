@@ -150,6 +150,7 @@ View jobs
                           <a class="btn btn-success m-1 " type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-check" aria-hidden="true" style="font-size: 12px;"></i> </a>
 
                           {% endif %}
+                          <a class="btn btn-warning " data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a>
                           <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
                         </td>
                         {% else %}
@@ -536,12 +537,96 @@ View jobs
             </div>
               
           </div>
+           <div class="col-6 mt-2">
+            <div class="card">
+              <div class="card-header">
+                Add Languages
+              </div>
+              <div class="card-body">
+               <div id="editLangauge{{job.id}}" class="form-container" style="display: block;">
+                  <form class="d-flex justify-content-between">
+                    <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Language</label>
+                      <select class="form-control" id="language{{job.id}}">
+                      {% for language in languages %}
+                        <option value="{{language.id}}">{{language.name}} </option>
+                      {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Speaking</label>
+                      <select class="form-control" id="speaking{{job.id}}">
+                      {% for speaking in speakings %}
+                        <option value="{{speaking.id}}">{{speaking.proficiency}} </option>
+                      {% endfor %}
+                      </select>
+                    </div>
+                   <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Reading</label>
+                      <select class="form-control" id="reading{{job.id}}">
+                      {% for reading in readings %}
+                        <option value="{{reading.id}}">{{reading.proficiency}} </option>
+                      {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group m-1" style="width: 90%;">
+
+                      <label for="description">Writing</label>
+                      <select class="form-control" id="writing{{job.id}}">
+                      {% for writing in writings %}
+                        <option value="{{writing.id}}">{{writing.proficiency}} </option>
+                      {% endfor %}
+                      </select>
+
+                     
+                    </div>
+                    <div class="form-group ">
+                        <br>
+                        <br>
+                        <button class="btn btn-info "  type="button" role="button" onclick="addLanguage({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn" >Add</button>
+                    </div>
+                  </form>
+                   <hr>
+                  <div id="LanguageList{{job.id}}">
+                  
+                    <ul class="list-group list-group-flush">
+                      {% for langauge in job.j_languages.all %}
+                      <li class="list-group-item d-flex justify-content-between align-items-start">
+                          
+                            <div class="fw-bold">
+                              {{langauge}}
+                             
+                            </div>
+
+                             <div>
+                               {{langauge.speaking_proficiency.proficiency}}
+                                
+                             </div>
+                             <div>
+                               
+                                {{langauge.reading_proficiency.proficiency}}  
+                             </div>
+                             <div>
+                               {{langauge.writing_proficiency.proficiency}}
+                             </div>
+                              
+                          <i class="fa-solid fa-square-minus min-icon" onclick="deleteLanguage({{job.id}},'spinnerRequirements','editRequirements','requirementsToggle',{{langauge.id}})"></i>
+                      </li>
+                      
+                      {% endfor %}
+                    </ul>
+                  </div>
+              </div>
+              </div>
+            </div>
+              
+          </div>
         
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
          {% if job.is_complete %}
-              <button class="btn btn-success" data-bs-dismiss="modal">Save & Close</button>
+              <button class="btn btn-success" onclick="location.reload()">Save & Close</button>
 
               {% else %}
              <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-primary ">SUBMIT JOB AD</button>

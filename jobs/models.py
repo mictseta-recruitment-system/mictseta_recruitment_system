@@ -57,6 +57,14 @@ class Requirement(models.Model):
     def __str__(self):
         return f'{self.description} {self.job_post}'
 
+class Language(models.Model):
+    job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='j_languages')
+    language = models.ForeignKey(LanguageList, on_delete=models.CASCADE, related_name='j_language')
+    reading_proficiency = models.ForeignKey(ReadingProficiencyList, on_delete=models.CASCADE, related_name='j_reading')
+    writing_proficiency = models.ForeignKey(WritingProficiencyList, on_delete=models.CASCADE, related_name='j_writing')
+    speaking_proficiency = models.ForeignKey(SpeakingProficiencyList, on_delete=models.CASCADE, related_name='j_speaking')
+    def __str__(self):
+        return f" {self.language}"
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')

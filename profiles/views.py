@@ -129,6 +129,8 @@ def update_user_profile(request):
         user.profile.age = ValidateIdNumber(data['idnumber']).get_age()
         user.profile.gender = ValidateIdNumber(data['idnumber']).get_gender()
         user.profile.dob = ValidateIdNumber(data['idnumber']).get_gender()
+        user.profile.cover_letter = data['cover_letter']
+        user.profile.linkedin_profile = data['linkedin_profile']
         user.profile.save()
         user.save()
         return JsonResponse({'message':f'User profile for {user.username} is updated successfuly', 'status':'success'}, status=201) 

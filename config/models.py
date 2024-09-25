@@ -11,16 +11,25 @@ class LanguageList(models.Model):
 
 class SpeakingProficiencyList(models.Model):
 	proficiency = models.CharField(max_length=225)
+	score = models.IntegerField()
+	def __str__(self):
+		return f"{self.proficiency}"
+
 	def __str__(self):
 		return f"{self.proficiency}"
 
 class ReadingProficiencyList(models.Model):
 	proficiency = models.CharField(max_length=225)
+	score = models.IntegerField()
+	def __str__(self):
+		return f"{self.proficiency}"
+		
 	def __str__(self):
 		return f"{self.proficiency}"
 
 class WritingProficiencyList(models.Model):
 	proficiency = models.CharField(max_length=225)
+	score = models.IntegerField()
 	def __str__(self):
 		return f"{self.proficiency}"
 #========================================================================
@@ -36,6 +45,7 @@ class ComputerSkillsList(models.Model):
 
 class ComputerProficiency(models.Model):
 	level = models.CharField(max_length=225)
+	score = models.IntegerField()
 	def __str__(self):
 		return f"{self.level}"
 
@@ -51,6 +61,7 @@ class SoftSkillsList(models.Model):
 
 class SoftProficiency(models.Model):
 	level = models.CharField(max_length=225)
+	score = models.IntegerField()
 	def __str__(self):
 		return f"{self.level}"
 #========================================================================

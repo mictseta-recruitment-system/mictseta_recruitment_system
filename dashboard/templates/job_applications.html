@@ -14,9 +14,9 @@
     {% for applied_job in applied_jobs %}
 
       {% if applied_job.status == "closed" %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title}}</a>
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
       {% else %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title}}
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
        </a>
       {% endif %}
     {% endfor %}
@@ -29,9 +29,16 @@
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   <h6>ALL Application List</h6> 
                   {% if filtered %}
-                    <button class="btn btn-warning" onclick="auto_shortlist('{{applications.0.job.id}}')">Auto Short-list</button>
+                  <div>
+                        <button class="btn btn-danger" onclick="auto_shortlist('all','strict')">Strict filter</button>
+                        <button class="btn btn-info" onclick="auto_shortlist('{{applications.0.job.id}}','standerd')">Standard filter</button>
+                  </div>
                   {% else %}
-                    <button class="btn btn-warning" onclick="auto_shortlist('all')">Auto Short-List </button>
+                    <div> 
+                        <button class="btn btn-dark-outline" onclick="auto_shortlist('all','strict')"><i class="fa fa-cog"></i> </button>
+                        <button class="btn btn-danger" onclick="auto_shortlist('all','strict')">Strict filter</button>
+                        <button class="btn btn-info" onclick="auto_shortlist('all','standerd')">Standard filter</button>
+                    </div>
                   {% endif %}
 
                 </div>

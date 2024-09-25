@@ -65,6 +65,11 @@
   </div>
 
 
+ 
+ 
+
+
+
   <div class="card m-2 shadow mb-5 bg-body rounded">
     <div class="card-header bg-secondary">
       Skills & Knowledge Requirements
@@ -96,6 +101,29 @@
 
   </div>
 
+ <div class="card m-2 shadow mb-5 bg-body rounded">
+    <div class="card-header bg-secondary">
+     Language requirements
+    </div>
+    <div class="card-body">
+      <ul class="list-group list-group-flush d-flex justify-content-start">
+                {% for langauge in job.j_languages.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start m-2">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold"> Language : {{langauge}} </div>
+                      <span> Speaking : {{langauge.speaking_proficiency.proficiency}} </span> <br>
+                       <span> Reading :{{langauge.reading_proficiency.proficiency}}  </span> <br>
+                        <span> Writing : {{langauge.writing_proficiency.proficiency}}</span> 
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+                
+              </ul>
+    </div>
+
+  </div>
 
 
    <div class="card m-2 shadow mb-5 bg-body rounded">

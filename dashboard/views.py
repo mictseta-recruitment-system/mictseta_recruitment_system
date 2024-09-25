@@ -99,7 +99,7 @@ def view_staff(request):
 def job_applications(request):
 	if request.user.is_authenticated:
 		applications = JobApplication.objects.all()
-		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		interview = Interview.objects.all()
 		return render(request, 'job_applications.html', {'applications':applications,'interviews':interview, 'applied_jobs':applied_jobs})
 	else:
@@ -131,7 +131,7 @@ def calender(request):
 def filter_job_application(request,jobID):
 	if request.user.is_authenticated:
 		job_applications = JobApplication.objects.filter(job__id=jobID)
-		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		cnt=0
 		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt,'filtered':True})
 	else:
@@ -205,6 +205,10 @@ def view_jobs(request):
 		job_title = JobTitle.objects.all()
 		industry = Industry.objects.all()
 
+		languages = LanguageList.objects.all()
+		readings = ReadingProficiencyList.objects.all()
+		speakings = SpeakingProficiencyList.objects.all()
+		writings = WritingProficiencyList.objects.all()
 		computer_skills = ComputerSkillsList.objects.all()
 		computer_prof = ComputerProficiency.objects.all()
 		soft_skill = SoftSkillsList.objects.all()
@@ -227,7 +231,11 @@ def view_jobs(request):
 			'soft_skills':soft_skill,
 			'soft_profs':soft_prof,
 			'nqf_levels' : nqf_level,
-			'qualifications':qualification
+			'qualifications':qualification,
+			'languages' : languages,
+			'readings' : readings,
+			'writings' : writings,
+			'speakings':speakings
 			},
 			status=200)
 	else:
