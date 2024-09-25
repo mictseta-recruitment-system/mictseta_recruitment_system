@@ -14,6 +14,40 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
 <link rel="shortcut icon" href="{% static 'authenticate/images/webicon.png' %}" type="image/x-icon">  
 
 
+<style>
+  /* Custom styles */
+  body {
+      margin: 0;
+      padding: 0;
+  }
+
+  #navbar {
+      position: sticky; /* or fixed if you want it to stay visible on scroll */
+      top: 0; /* stick to the top of the page */
+      z-index: 1000; /* ensures it stays above other content */
+      width: 100%; /* make sure it spans full width */
+  }
+
+  .filterbar {
+      margin-top: 20px; /* Adjust margin as needed */
+  }
+
+  .social-media-icons ul {
+      list-style-type: none;
+      padding: 0;
+  }
+
+  .social-media-icons li {
+      display: inline;
+      margin-right: 10px;
+  }
+
+  footer {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #f8f9fa; /* Light background for the footer */
+  }
+</style>
 </head>
 <body>
 

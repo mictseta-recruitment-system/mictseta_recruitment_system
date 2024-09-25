@@ -3,36 +3,67 @@
 {% block title %}Interviews{% endblock %}
 
 {% block content %}
-<div class="interviews" style="padding: 20px; font-family: Arial, sans-serif;">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Interviews</li>
-        </ol>
-      </nav>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr style="background-color: #f8f8f8; border-bottom: 2px solid #ddd;">
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Position</th>
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Interview Date</th>
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if interviews %}
-                {% for interview in interviews %}
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 10px;">{{ interview.position }}</td>
-                    <td style="padding: 10px;">{{ interview.interview_date|date:"Y-m-d" }}</td>
-                    <td style="padding: 10px;">{{ interview.status }}</td>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my_profile' %}">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jobseeker.job_details' %}">Job Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'application_tracking' %}">Application Tracking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'interviews' %}">Interviews</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'log_out' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="interviews" style="padding: 20px; font-family: Arial, sans-serif;">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Interviews</li>
+            </ol>
+        </nav>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background-color: #f8f8f8; border-bottom: 2px solid #ddd;">
+                    <th style="padding: 10px; text-align: left; font-weight: bold;">Position</th>
+                    <th style="padding: 10px; text-align: left; font-weight: bold;">Interview Date</th>
+                    <th style="padding: 10px; text-align: left; font-weight: bold;">Status</th>
                 </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="3" style="padding: 20px; text-align: center; color: #999;">No upcoming interviews.</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% if interviews %}
+                    {% for interview in interviews %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px;">{{ interview.position }}</td>
+                        <td style="padding: 10px;">{{ interview.interview_date|date:"Y-m-d" }}</td>
+                        <td style="padding: 10px;">{{ interview.status }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="padding: 20px; text-align: center; color: #999;">No upcoming interviews.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</body>
 {% endblock %}
