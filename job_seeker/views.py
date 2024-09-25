@@ -9,48 +9,60 @@ def job_seeker_dashboard(request):
     return render(request, 'my_profile.html')
 
 def my_profile(request):
-    return render(request, 'my_profile.html')
+    institution = Institution.objects.all()
+    qualification = Qualification.objects.all()
+    nqf = NQF.objects.all()
+    language = LanguageList.objects.all()
+    reading = ReadingProficiencyList.objects.all()
+    speaking = SpeakingProficiencyList.objects.all()
+    writing = WritingProficiencyList.objects.all()
+    job_list = JobPost.objects.filter(status='open')
+    computer = ComputerSkillsList.objects.all()
+    proficiency = ComputerProficiency.objects.all()
+    selected_skill = request.POST.get('skill1', '')  # Default to empty string if not set
+    selected_proficiency = request.POST.get('level', '')  # Default to empty string if not set
+    soft = SoftSkillsList.objects.all()
+    proficiency = SoftProficiency.objects.all()
+    job_title = JobTitle.objects.all()
+    return render(request, 'my_profile.html',{
+        'institutions':institution, 
+        'qualifications':qualification,
+        'nqfs':nqf,
+        'languages':language,
+        'readings':reading, 
+        'speakings':speaking, 
+        'writings':writing,
+        'job_titles':job_title,
+        'computers': computer,
+        'proficiencys': proficiency,
+        'selected_skill': selected_skill,
+        'selected_proficiency': selected_proficiency,
+        'softs':soft, 
+        'proficiencys':proficiency
+        })
 
 
 def address_details(request):
     return render(request, 'address_details.html')
 
 def academic_qualifications(request):
-    institution = Institution.objects.all()
-    qualification = Qualification.objects.all()
-    nqf = NQF.objects.all()
-    return render(request, 'academic_qualifications.html', {'institutions':institution, 'qualifications':qualification,'nqfs':nqf})
+    
+    return render(request, 'academic_qualifications.html')
 
 def language_proficiency(request):
-    language = LanguageList.objects.all()
-    reading = ReadingProficiencyList.objects.all()
-    speaking = SpeakingProficiencyList.objects.all()
-    writing = WritingProficiencyList.objects.all()
-    print(language)
-    print(reading)
-    print(speaking)
-    return render(request, 'language_proficiency.html',{'languages':language,'readings':reading, 'speakings':speaking, 'writings':writing})
+    return render(request, 'language_proficiency.html')
 
 def soft_skills(request):
-    soft = SoftSkillsList.objects.all()
-    proficiency = SoftProficiency.objects.all()
-    return render(request, 'soft_skills.html', {'softs':soft, 'proficiencys':proficiency})
+    
+    return render(request, 'soft_skills.html')
 
 def computer_skills(request):
-    computer = ComputerSkillsList.objects.all()
-    proficiency = ComputerProficiency.objects.all()
-    selected_skill = request.POST.get('skill1', '')  # Default to empty string if not set
-    selected_proficiency = request.POST.get('level', '')  # Default to empty string if not set
-    return render(request, 'computer_skills.html', {
-        'computers': computer,
-        'proficiencys': proficiency,
-        'selected_skill': selected_skill,
-        'selected_proficiency': selected_proficiency,
-    })
+   
+    return render(request, 'computer_skills.html')
 
 def working_experience(request):
-    job_title = JobTitle.objects.all()
-    return render(request, 'working_experience.html', {'job_titles':job_title})
+    
+    return render(request, 'working_experience.html')
 
 def referees(request):
     return render(request, 'referees.html')
@@ -60,7 +72,7 @@ def supporting_documents(request):
     return render(request, 'supporting_documents.html',{"docs":docs})
 
 def job_details(request):
-    job_list = JobPost.objects.filter(status='open')
+    
     return render(request, 'jobseeker_job_details.html', {'job_list':job_list})
 
 def application_tracking(request):

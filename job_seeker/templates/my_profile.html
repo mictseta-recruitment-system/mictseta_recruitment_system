@@ -254,10 +254,11 @@
                             </div>
                             <div id="academicQualificationsDisplay" class="profile-info">
                                 {% for qualification in user.qualifications.all %}
-                                    <p><strong>Degree:</strong> {{ qualification.degree }}</p>
+                                    <p><strong>Field of study:</strong> {{ qualification.field_of_study }}</p>
                                     <p><strong>Institution:</strong> {{ qualification.institution }}</p>
-                                    <p><strong>Year Obtained:</strong> {{ qualification.year_obtained }}</p>
-                                    <p><strong>Grade:</strong> {{ qualification.grade }}</p>
+                                    <p><strong>Start date:</strong> {{ qualification.start_date }}</p>
+                                    <p><strong>End date:</strong> {{ qualification.end_date }}</p>
+                                    <p><strong>Status:</strong> {{ qualification.status }}</p>
                                     <hr>
                                 {% empty %}
                                     <p>No academic qualifications available.</p>
@@ -281,12 +282,13 @@
                                 </div>
                             </div>
                             <div id="languageProficiencyDisplay" class="profile-info">
-                                {% for language in user.languages.all %}
-                                    <p><strong>Language:</strong> {{ language.name }}</p>
-                                    <p><strong>Proficiency Level:</strong> {{ language.proficiency }}</p>
+                                {% for language in user.language_set.all %}
+                                    <p><strong>Language:</strong> {{ language.language }}</p>
+                                    <p><strong>Reading Level:</strong> {{ language.reading_proficiency }}</p>
+                                    <p><strong>Writing Level:</strong> {{ language.writing_proficiency }}</p>
+                                    <p><strong>Speaking Level:</strong> {{ language.speaking_proficiency }}</p>
                                     <hr>
-                                {% empty %}
-                                    <p>No language proficiency details available.</p>
+                               
                                 {% endfor %}
                             </div>
                         </div>
@@ -359,7 +361,7 @@
                 </div>
             </div>
             <div id="workingExperienceDisplay" class="profile-info">
-                {% for experience in user.working_experience.all %}
+                {% for experience in user.working_expereince.all %}
                     <p><strong>Job Title:</strong> {{ experience.job_title.title }}</p>
                     <p><strong>Company:</strong> {{ experience.company }}</p>
                     <p><strong>Location:</strong> {{ experience.location }}</p>
@@ -417,7 +419,7 @@
                 </div>
             </div>
             <div id="supportingDocumentsDisplay" class="profile-info">
-                {% for document in user.supporting_documents.all %}
+                {% for document in user.documents.all %}
                     <p><strong>Document Type:</strong> {{ document.document_type }}</p>
                     <p><strong>Date Uploaded:</strong> {{ document.uploaded_at }}</p>
                     <p><strong>Action:</strong>
