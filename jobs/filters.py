@@ -36,31 +36,47 @@ class ApplicationFilter:
 
 	def standerd_filter(self):
 		self.filter_by_incomplete_profile()
+		print("*********  profile filter ********")
 		print(self.filterd_apllications)
 		self.filter_by_soft_skill()
+		print("********* soft skill filter ********")
 		print(self.filterd_apllications)
 		self.filter_by_computer_skill()
+		print("*********  computer skill filter ********")
 		print(self.filterd_apllications)
 		self.filter_by_academic()
+		print("********* academics filter ********")
 		print(self.filterd_apllications)
 		self.filter_by_language()
+		print("*********language filter ********")
 		print(self.filterd_apllications)
 		self.filter_by_experience()
+		print("********* experience filter ********")
+		print(self.filterd_apllications)
+
 	
 	def strict_filter(self):
+		print("\n")
 		self.strict_filter_by_incomplete_profile()
+		print("********* strict profile filter ********")
 		print(self.filterd_apllications)
 		self.strict_filter_by_experience()
+		print("\n *********strict experience filter ********")
 		print(self.filterd_apllications)
 		self.strict_filter_by_computer_skill()
+		print("\n *********strict  computer skill filter ********")
 		print(self.filterd_apllications)
 		self.strict_filter_by_soft_skill()
+		print("\n *********strict  soft skill filter ********")
 		print(self.filterd_apllications)
 		self.strict_filter_by_academic()
+		print("\n *********strict academics filter ********")
 		print(self.filterd_apllications)
 		self.filter_by_language()
+		print("\n ********* strict language filter ********")
 		print(self.filterd_apllications)
 		self.strict_filter_by_similarity() 
+		print("\n *********strict similarity filter ********")
 
 	def get_exp_years(self, Sdate, Edate):
 		date_format = "%Y-%m-%d"
@@ -314,7 +330,9 @@ class ApplicationFilter:
 				job = application.job
 
 				score = similarity(user.profile.cover_letter,job.description)
+				print("\n")
 				print(f"threshold score : {threshold_score} ", f"user {user} score : {score}")
+				print("\n")
 				if score <= threshold_score:
 					users.append(user)
 			self.filterd_apllications =self.filterd_apllications.exclude(user__in=users)

@@ -35,11 +35,28 @@
                   </div>
                   {% else %}
                     <div> 
-                        <button class="btn btn-dark-outline" onclick="auto_shortlist('all','strict')"><i class="fa fa-cog"></i> </button>
+                        <button class="btn btn-dark-outline" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-cog"></i> </button>
                         <button class="btn btn-danger" onclick="auto_shortlist('all','strict')">Strict filter</button>
                         <button class="btn btn-info" onclick="auto_shortlist('all','standerd')">Standard filter</button>
                     </div>
                   {% endif %}
+                       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            ...
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                 </div>
 
@@ -73,7 +90,8 @@
                               <td>{{application.date}}</td>
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
-                               <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td>
+                             <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                           </td>
                           </tr>
                           {% endif%}
                               {% endfor %}                 
