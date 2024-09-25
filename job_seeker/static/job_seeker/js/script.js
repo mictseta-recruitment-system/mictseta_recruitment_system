@@ -410,7 +410,7 @@ function uploadDocument(d_type, event) {
     
     console.log(formData);
 
-    fetch('http://127.0.0.1:8000/profile/update/upload_supporting_document/', {
+      fetch('http://127.0.0.1:8000/profile/update/upload_supporting_document/', {
         method: 'POST',
         body: formData,
         headers: {
