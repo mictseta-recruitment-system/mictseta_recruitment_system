@@ -275,22 +275,33 @@ def auto_shortlist(request):
 		json_data = json.loads(request.body)
 	except Exception:
 		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
-	filters = json_data.get('filter')		
+	filters = json_data.get('filter')	
+	mode = json_data.get('mode')	
 	if filters == "all":
 		applications = JobApplication.objects.all()
 		applications = ApplicationFilter(applications)
-		applications.reset_filter()
-		applications.strict_filter_by_incomplete_profile()
-		applications.strict_filter_by_experience()
-		applications.apply_filter()
+		if mode == "strict":
+			applications.reset_filter()
+			applications.strict_filter()
+			applications.apply_filter()
+		if mode == "standerd":
+			applications.reset_filter()
+			applications.standerd_filter()
+			applications.apply_filter()
+		if mode not in ['strict','standerd']:
+			return JsonResponse({'errors': {'method':['Invalid filter mode']}, 'status': 'error'}, status=400)
 	else:
 		try:
 			filter_id = int(filters)
 			applications = JobApplication.objects.filter(job__id=filter_id).all()
 			applications = ApplicationFilter(applications)
 			applications.reset_filter()
-			applications.strict_filter_by_incomplete_profile()
-			applications.strict_filter_by_experience()
+			if mode == "strict":
+				applications.reset_filter()
+				applications.strict_filter()
+			if mode == "standerd":
+				applications.reset_filter()
+				applications.standerd_filter()
 			applications.apply_filter()
 		except Exception as e:
 			return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=500)

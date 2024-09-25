@@ -1018,11 +1018,12 @@ function move_to_shortlist(appID) {
   });
 }
 
-function auto_shortlist(filter) {
+function auto_shortlist(filter,mode) {
   const url = 'http://127.0.0.1:8000/job/auto_shortlist/';
   
   const jsonData = {
     filter: filter,
+    mode:mode,
   };
 
   fetch(url, { 
