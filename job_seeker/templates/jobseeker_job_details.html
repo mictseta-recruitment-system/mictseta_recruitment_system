@@ -3,101 +3,119 @@
 {% block title %}Job Details{% endblock %}
 
 {% block content %}
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my_profile' %}">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jobseeker.job_details' %}">Job Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'application_tracking' %}">Application Tracking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'interviews' %}">Interviews</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'log_out' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Job Details</li>
+        </ol>
+    </nav>
+    
+    <div class="card">
+        <div class="card-header">
+            <!-- Filter Form -->
+            <form method="GET">
+                <div class="filter-options">
+                    <label for="job_type">Job Type:</label>
+                    <select id="job_type" name="job_type">
+                        <option value="">All</option>
+                        <option value="full_time">Permanent</option>
+                        <option value="contract">Contract</option>
+                    </select>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Job Details</li>
-    </ol>
-  </nav>
-<div class="card">
-  <div class="card-header">
-    <!-- Filter Form -->
-<form method="GET">
-    <div class="filter-options">
-        <label for="job_type">Job Type:</label>
-        <select id="job_type" name="job_type">
-            <option value="">All</option>
-            <option value="full_time">Permanent</option>
-            <option value="contract">Contract</option>
-        </select>
+                    <label for="location">Location:</label>
+                    <select id="location" name="location">
+                        <option value="">All</option>
+                        <option value="johannesburg">Johannesburg</option>
+                        <option value="pretoria">Pretoria</option>
+                        <option value="cape_town">Cape Town</option>
+                        <option value="Kempton_Park">Kempton Park</option>
+                        <option value="Durban">Durban</option>
+                        <option value="Polokwane">Polokwane</option>
+                        <option value="Tzaneen">Tzaneen</option>
+                        <option value="Vereeniging">Vereeniging</option>
+                        <option value="Centurion">Centurion</option>
+                    </select>
 
-        <label for="location">Location:</label>
-        <select id="location" name="location">
-            <!-- locations -->
-            <option value="">All</option>
-            <option value="johannesburg">Johannesburg</option>
-            <option value="pretoria">Pretoria</option>
-            <option value="cape_town">Cape Town</option>
-            <option value="Kempton_Park">Kempton Park</option>
-            <option value="Durban">Durban</option>
-            <option value="Polokwane">Polokwane</option>
-            <option value="Tzaneen">Tzaneen</option>
-            <option value="Vereeniging">Vereeniging</option>
-            <option value="Centurion">Centurion</option>
-        </select>
+                    <label for="industry">Industry:</label>
+                    <select id="industry" name="industry">
+                        <option value="">All</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
+                        <option value="technology">Technology</option>
+                        <option value="Business and Finance">Business and Finance</option>
+                        <option value="Creative and Media">Creative and Media</option>
+                        <option value="Science and Engineering">Science and Engineering</option>
+                        <option value="Trades and Services">Trades and Services</option>
+                    </select>
 
-        <label for="industry">Industry:</label>
-        <select id="industry" name="industry">
-            <option value="">All</option>
-            <!-- industries -->
-            <option value="healthcare">Healthcare</option>
-            <option value="education">Education</option>
-            <option value="technology">Technology</option>
-            <option value="Business and Finance">Business and Finance</option>
-            <option value="Creative and Media">Creative and Media</option>
-            <option value="Science and Engineering">Science and Engineering</option>
-            <option value="Trades and Services">Trades and Services</option>
-        </select>
-
-        <button type="submit" class="btn btn-primary">Filter</button>
-    </div>
-</form>
-
-  </div>
-  <div class="card-body">
-    <!-- Job Details List -->
-        <div class="job-details">
-          <a href="" class="card-link" disabled>see more</a>
-            {% if job_list %}
-                {% for job in job_list %}
-                   <div class="card mt-5 ">
-                          <div class="card-body">
-                            <h5 class="card-title">{{ job.title }}</h5>
-                            <h6 class="card-subtitle mb-2 "><b>Location:</b> <span class="text-muted">{{ job.location }}</span> 
-                            | <b>Industry:</b> <span class="text-muted">{{ job.industry }}</span> | <b>Job Type:</b> <span class="text-muted">{{ job.job_type }}</span></h6>
-                            <p class="card-text">{{ job.description }}</p>
-                            <a href="#" class="card-link text-muted" disabled>Application End Date: {{ job.end_date }}</a>
-                            <a href="{% url 'job_information' job.id %}" class="card-link" disabled>see more</a>
-                            
-                          </div>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            <!-- Job Details List -->
+            <div class="job-details">
+                {% if job_list %}
+                    {% for job in job_list %}
+                        <div class="card mt-5">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ job.title }}</h5>
+                                <h6 class="card-subtitle mb-2">
+                                    <b>Location:</b> <span class="text-muted">{{ job.location }}</span>
+                                    | <b>Industry:</b> <span class="text-muted">{{ job.industry }}</span>
+                                    | <b>Job Type:</b> <span class="text-muted">{{ job.job_type }}</span>
+                                </h6>
+                                <p class="card-text">{{ job.description }}</p>
+                                <a href="#" class="card-link text-muted">Application End Date: {{ job.end_date }}</a>
+                                <a href="{% url 'job_information' job.id %}" class="card-link">See more</a>
+                            </div>
                         </div>
-                    
-                {% endfor %}
-            {% else %}
-                <div class="card mt-5 border-0">
-                          <div class="card-body">
+                    {% endfor %}
+                {% else %}
+                    <div class="card mt-5 border-0">
+                        <div class="card-body">
                             <div class="d-flex justify-content-center">
                                 <i class="fa-solid fa-triangle-exclamation fa-5x text-warning"></i>
-
                             </div>
-
                             <div class="d-flex justify-content-center mt-4">
                                 <h5 class="card-title">No Job/Vacancy Available</h5>
                             </div>
-                            
-                          </div>
                         </div>
-                    
-            {% endif %}
-        </div>        
-  </div>
-</div>
-
-
-
-
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
 
 {% endblock %}
 
@@ -106,10 +124,10 @@
     <nav class="footer-nav">
         <ul>
             <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'job_list' %}">Job Listings</a></li>
-        <li><a href="{% url 'about' %}">About Us</a></li>
-        <li><a href="{% url 'contact' %}">Contact Us</a></li>
-        <li><a href="{% url 'faq' %}">FAQ</a></li>
+            <li><a href="{% url 'job_list' %}">Job Listings</a></li>
+            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'contact' %}">Contact Us</a></li>
+            <li><a href="{% url 'faq' %}">FAQ</a></li>
         </ul>
     </nav>
 </footer>

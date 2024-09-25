@@ -49,6 +49,8 @@
             top: 0; /* Stick to the top */
             max-height: 100vh; /* Limit height */
             overflow-y: auto; /* Enable vertical scrolling */
+            margin: 0; /* Remove margin */
+            padding: 0; /* Remove padding */
         }
 
         .sidebar ul {
@@ -74,26 +76,21 @@
             margin-right: 8px;
         }
 
-        .sidebar ul li a:hover {
-            color: #0056b3; /* Slight hover effect */
-        }
-
-        /* Profile Box Styling */
-        .profile-box {
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        * Profile Box Styling */
+.profile-box {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5); /* Blue shadow */
+    margin-bottom: 20px;
+    text-align: center;
+}
 
         /* Profile Image Container Styling */
         .profile-image-container {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
+            width: 250px;
+            height: 140px;
             background-color: #f0f0f0;
             display: flex;
             justify-content: center;
@@ -135,6 +132,7 @@
                 height: auto;
                 z-index: 1000;
                 left: -100%;
+                transition: left 0.3s ease; /* Smooth transition */
             }
             .sidebar.active {
                 left: 0;
@@ -146,7 +144,21 @@
                 display: block;
             }
         }
-        
+
+        .content {
+            margin-left: 0; /* Ensure no margin on left */
+            padding: 20px; /* Adjust padding as needed */
+        }
+
+        /* Additional CSS for User Information */
+        .profile-box p {
+            margin: 5px 0; /* Adjust vertical spacing between lines */
+            font-size: 16px; /* Optional: Set font size */
+        }
+        /* User Information Section */
+.profile-box .text-center {
+    text-align: left; /* Left-align text */
+}
 
     </style>
 </head>
@@ -155,6 +167,9 @@
         <a class="navbar-brand" href="#">
             <img class="nav-logo" src="{% static 'authenticate/images/mict_logo.png' %}" alt="Logo">
         </a>
+        <button class="navbar-toggler" type="button" id="sidebarToggle">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
@@ -175,11 +190,14 @@
                 </label>
                 <input type="file" id="imageUpload" accept="image/*" class="form-control-file">
 
-                <!-- User Information Section -->
-                <div class="text-center mt-3">
-                    <p>ID Number: {{ user.profile.idnumber }}</p>
-                    <p>Email: {{ user.email }}</p>
-                </div>
+               <!-- User Information Section -->
+<div class="text-center mt-3">
+    <p><strong>ID Number:</strong></p>
+    <p>{{ user.profile.idnumber }}</p>
+    <p><strong>Email:</strong></p>
+    <p>{{ user.email }}</p>
+</div>
+
             </div>
 
             <ul>
@@ -191,7 +209,7 @@
                 <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i> Interviews</a></li>
                 <li><a href="{% url 'feedback' %}"><i class="fas fa-comments"></i> Feedback</a></li>
                 <hr>
-                <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="{% url 'log_out' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </div>
 
@@ -209,5 +227,12 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Toggle sidebar on navbar button click
+        document.getElementById('sidebarToggle').addEventListener('click', function () {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
