@@ -102,11 +102,12 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
                             <ul class="dropdown-menu dropdown-menu-dark">
                               
                               {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
-                               <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}">Dashboard</a></li>
-                              {% else %}
-                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashboard</a></li>
-                              {% endif %}
-                              <li><a class="dropdown-item" href="{% url 'log_out' %}">Log Out</a></li>
+                              <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}" style="color: white;">Dashboard</a></li>
+                           {% else %}
+                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}" style="color: white;">Dashboard</a></li>
+                           {% endif %}
+                           <li><a class="dropdown-item" href="{% url 'log_out' %}" style="color: white;">Log Out</a></li>
+                           
                             </ul>
                           </li>
                         </ul>
