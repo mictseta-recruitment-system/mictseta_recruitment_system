@@ -69,7 +69,10 @@ class WorkingExpereince(models.Model):
 	end_date = models.CharField(max_length=225)
 	description = models.CharField(max_length=225)
 	def __str__(self):
-		return f"{self.user.email} Working Expereince information"
+		return f"{self.company}"
+		
+	def __repr__(self):
+		return f"{self.company}"
 
 class AddressInformation(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="address")

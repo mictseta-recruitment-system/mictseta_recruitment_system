@@ -163,7 +163,7 @@
   function handle_update_computer_skill_button_click() {
        
         const skill = document.getElementById("skill3").value;
-        const level = document.getElementById("level").value;
+        const level = document.getElementById("level3").value;
         
         const skill_information = {
             skill : skill,
@@ -293,18 +293,18 @@ function handle_update_address_button_click() {
 
 function handle_update_working_experince_button_click() {
        
-        const job_title = document.getElementById("job_title").value;
-        const company = document.getElementById("company").value; 
-        const location = document.getElementById("location").value;
-        const start_date = document.getElementById("start_date").value;
-       var end_date =  document.getElementById("end_date").value;
-        const description = document.getElementById("description").value;
+        const job_title = document.getElementById("wjob_title").value;
+        const company = document.getElementById("wcompany").value; 
+        const location = document.getElementById("wlocation").value;
+        const start_date = document.getElementById("wstart_date").value;
+       var end_date =  document.getElementById("wend_date").value;
+        const description = document.getElementById("wdescription").value;
         const checkbox = document.getElementById("myCheckbox");
 
         if (checkbox.checked) {
             end_date = 'currentley working there ';
         } else {
-            end_date = document.getElementById("end_date").value;
+            end_date = document.getElementById("wend_date").value;
         }
         const working_experince = {
             job_title : job_title,
@@ -351,8 +351,8 @@ function handle_update_reference_button_click() {
        
         const working_expereince = document.getElementById("working_expereince").value;
         const full_name = document.getElementById("full_name").value; 
-        const phone = document.getElementById("phone").value;
-        const position = document.getElementById("position").value;
+        const phone = document.getElementById("rphone").value;
+        const position = document.getElementById("rposition").value;
         const working_experince = {
             working_expereince : working_expereince,
             full_name : full_name,

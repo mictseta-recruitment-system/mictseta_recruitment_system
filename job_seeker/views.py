@@ -1,12 +1,48 @@
 from django.shortcuts import render
 from jobs.models import JobPost,FeedBack,Interview
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
-from profiles.models import SupportingDocuments
+from profiles.models import SupportingDocuments, WorkingExpereince
 
 # Create your views here.
 
 def job_seeker_dashboard(request):
-    return render(request, 'my_profile.html')
+    institution = Institution.objects.all()
+    qualification = Qualification.objects.all()
+    nqf = NQF.objects.all()
+    language = LanguageList.objects.all()
+    reading = ReadingProficiencyList.objects.all()
+    speaking = SpeakingProficiencyList.objects.all()
+    writing = WritingProficiencyList.objects.all()
+   
+    computer = ComputerSkillsList.objects.all()
+    proficiency = ComputerProficiency.objects.all()
+    selected_skill = request.POST.get('skill1', '')  # Default to empty string if not set
+    selected_proficiency = request.POST.get('level', '')  # Default to empty string if not set
+    soft = SoftSkillsList.objects.all()
+    proficiency = SoftProficiency.objects.all()
+    job_title = JobTitle.objects.all()
+
+    working_experience = WorkingExpereince.objects.filter(user=request.user).all()
+
+    print('--------------------------------------------------')
+    print(institution)
+    return render(request, 'my_profile.html',{
+        'institutions':institution, 
+        'qualifications':qualification,
+        'nqfs':nqf,
+        'languages':language,
+        'readings':reading, 
+        'speakings':speaking, 
+        'writings':writing,
+        'job_titles':job_title,
+        'computers': computer,
+        'proficiencys': proficiency,
+        'selected_skill': selected_skill,
+        'selected_proficiency': selected_proficiency,
+        'softs':soft, 
+        'proficiencys':proficiency,
+        'working_experiences':working_experience
+        })
 
 def my_profile(request):
     institution = Institution.objects.all()
@@ -24,6 +60,9 @@ def my_profile(request):
     soft = SoftSkillsList.objects.all()
     proficiency = SoftProficiency.objects.all()
     job_title = JobTitle.objects.all()
+    working_experience = WorkingExpereince.objects.filter(user=request.user).all()
+    print('--------------------------------------------------')
+    print(institution)
     return render(request, 'my_profile.html',{
         'institutions':institution, 
         'qualifications':qualification,
@@ -38,7 +77,8 @@ def my_profile(request):
         'selected_skill': selected_skill,
         'selected_proficiency': selected_proficiency,
         'softs':soft, 
-        'proficiencys':proficiency
+        'proficiencys':proficiency,
+       'working_experiences':working_experience
         })
 
 

@@ -444,10 +444,89 @@ def delete_supporting_document(request, document_id):
             supporting_document.document.delete() 
             supporting_document.delete()
             docs = SupportingDocuments.objects.filter(user=request.user)
-            return render(request, 'supporting_documents.html',{"docs":docs})
+            return redirect('my_profile')
         except Exception as e:
             return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
     return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+@ensure_csrf_cookie
+def delete_reference(request,reference_id):
+    if request.method == 'GET':
+        try:
+            reference = Reference.objects.get(id=reference_id)
+            reference.delete()
+            return redirect('my_profile')
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+@ensure_csrf_cookie
+def delete_working_experince(request,working_experince_id):
+    if request.method == 'GET':
+        try:
+            working_experince = WorkingExpereince.objects.get(id=working_experince_id)
+            working_experince.delete()
+            return redirect('my_profile')
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+@ensure_csrf_cookie
+def delete_address_info(request,address_info_id):
+    if request.method == 'GET':
+        try:
+            address_info = AddressInformation.objects.get(id=address_info_id)
+            address_info.delete()
+            return redirect('my_profile')
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+@ensure_csrf_cookie
+def delete_soft_skill(request,soft_skill_id):
+    if request.method == 'GET':
+        try:
+            soft_skill = SoftSkills.objects.get(id=soft_skill_id)
+            soft_skill.delete()
+            return redirect('my_profile')
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+@ensure_csrf_cookie
+def delete_computer_skill(request,computer_skill_id):
+    if request.method == 'GET':
+        try:
+            computer_skill = ComputerSkills.objects.get(id=computer_skill_id)
+            computer_skill.delete()
+            return redirect('my_profile')
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+@ensure_csrf_cookie
+def delete_qualification(request,qualification_id):
+    if request.method == 'GET':
+        try:
+            qualification = Education.objects.get(id=qualification_id)
+            qualification.delete()
+            return redirect('my_profile')
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+@ensure_csrf_cookie
+def delete_language(request,language_id):
+    if request.method == 'GET':
+        try:
+            language = Language.objects.get(id=language_id)
+            language.delete()
+            return redirect('my_profile')
+        except Exception as e:
+            return JsonResponse({'errors': str(e), 'status': 'error'}, status=400)
+    return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
+
+
 
 @csrf_protect
 def upload_profile_image(request):

@@ -38,27 +38,28 @@ def panel(request):
 @ensure_csrf_cookie
 def emp_panel(request):
 	if request.user.is_authenticated:
-		shift_start_time = request.user.shift.start_time
-		shift_end_time = request.user.shift.end_time
-		current_time =  datetime.now()
+		#### Shift Code #####
+		# shift_start_time = request.user.shift.start_time
+		# shift_end_time = request.user.shift.end_time
+		# current_time =  datetime.now()
 		
-		att = Attendance.objects.filter(employee=request.user, date=dates.date.today()).exists()
-		if att :
-			att = Attendance.objects.get(employee=request.user, date=dates.date.today())
-			status = att.active
-		else:
-			status = "Inactive"
+		# att = Attendance.objects.filter(employee=request.user, date=dates.date.today()).exists()
+		# if att :
+		# 	att = Attendance.objects.get(employee=request.user, date=dates.date.today())
+		# 	status = att.active
+		# else:
+		# 	status = "Inactive"
 
-		if current_time.month  < 10 :
+		# if current_time.month  < 10 :
 
-			start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
-			end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
-		elif current_time.day < 10 :
-			start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
-			end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
-		else:
-			start_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_start_time}" 
-			end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
+		# 	start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
+		# 	end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
+		# elif current_time.day < 10 :
+		# 	start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
+		# 	end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
+		# else:
+		# 	start_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_start_time}" 
+		# 	end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
 		
 		if request.user.is_superuser:
 			notification = Notification.objects.all()
@@ -78,7 +79,7 @@ def emp_panel(request):
 			cats.append(cat.name)
 			data.append(len(Task.objects.filter(category=cat, is_complete=False, assigned_to=request.user)))
 		
-		return render(request,'emp_panel.html', {'start_time':start_time,'end_time':end_time,'status':status, 'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data)})
+		return render(request,'emp_panel.html', {'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data)})
 	else:
 		return redirect('render_auth_page')
 
@@ -404,23 +405,24 @@ def view_leave(request):
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
 		return redirect('render_auth_page')
-
-def manage_attendance(request):
-	if request.user.is_authenticated:
-		if request.user.is_staff:
-			try:
-				attendances = Attendance.objects.all()
-				if request.user.is_superuser:
-					notify_len = len(Notification.objects.filter(is_seen=False))
-				else:
-					notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
-				return render(request,'attendance.html',{'attendances':attendances,'notify_len':notify_len})
-			except Exception as e:
-				return HttpResponse(f'view Attendance: {e}')
-		else:       
-			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
-	else:
-		return redirect('render_auth_page')
+		
+#### Shift Code #####
+# def manage_attendance(request):
+# 	if request.user.is_authenticated:
+# 		if request.user.is_staff:
+# 			try:
+# 				attendances = Attendance.objects.all()
+# 				if request.user.is_superuser:
+# 					notify_len = len(Notification.objects.filter(is_seen=False))
+# 				else:
+# 					notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+# 				return render(request,'attendance.html',{'attendances':attendances,'notify_len':notify_len})
+# 			except Exception as e:
+# 				return HttpResponse(f'view Attendance: {e}')
+# 		else:       
+# 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+# 	else:
+# 		return redirect('render_auth_page')
 
 
 

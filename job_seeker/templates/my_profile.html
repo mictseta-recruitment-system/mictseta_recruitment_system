@@ -259,6 +259,8 @@
                                     <p><strong>Start date:</strong> {{ qualification.start_date }}</p>
                                     <p><strong>End date:</strong> {{ qualification.end_date }}</p>
                                     <p><strong>Status:</strong> {{ qualification.status }}</p>
+                    <a href="{% url 'delete_qualification' qualification.id %}" class="btn btn-danger">Delete</a>
+                                    
                                     <hr>
                                 {% empty %}
                                     <p>No academic qualifications available.</p>
@@ -287,6 +289,8 @@
                                     <p><strong>Reading Level:</strong> {{ language.reading_proficiency }}</p>
                                     <p><strong>Writing Level:</strong> {{ language.writing_proficiency }}</p>
                                     <p><strong>Speaking Level:</strong> {{ language.speaking_proficiency }}</p>
+                    <a href="{% url 'delete_language' language.id %}" class="btn btn-danger">Delete</a>
+
                                     <hr>
                                
                                 {% endfor %}
@@ -312,6 +316,8 @@
                 {% for skill in user.computerskills_set.all %}
                     <p><strong>Skill:</strong> {{ skill.skill }}</p>
                     <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
+                    <a href="{% url 'delete_computer_skill' skill.id %}" class="btn btn-danger">Delete</a>
+
                     <hr>
                 {% empty %}
                     <p>No computer skills available.</p>
@@ -338,6 +344,8 @@
                 {% for skill in user.softskills_set.all %}
                     <p><strong>Soft Skill:</strong> {{ skill.skill }}</p>
                     <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
+                    <a href="{% url 'delete_soft_skill' skill.id %}" class="btn btn-danger">Delete</a>
+
                     <hr>
                 {% empty %}
                     <p>No soft skills available.</p>
@@ -368,6 +376,8 @@
                     <p><strong>Start Date:</strong> {{ experience.start_date }}</p>
                     <p><strong>End Date:</strong> {{ experience.end_date }}</p>
                     <p><strong>Description:</strong> {{ experience.description }}</p>
+                    <a href="{% url 'delete_working_experince' experience.id %}" class="btn btn-danger">Delete</a>
+
                     <hr>
                 {% empty %}
                     <p>No working experience available.</p>
@@ -392,10 +402,12 @@
             </div>
             <div id="referencesDisplay" class="profile-info">
                 {% for reference in user.reference.all %}
-                    <p><strong>Work Experience:</strong> {{ reference.working_experience.job_title }}</p>
+                    <p><strong>Work Experience:</strong>{{ reference.working_experince }} - {{ reference.working_experince.job_title }}</p>
                     <p><strong>Full Name:</strong> {{ reference.full_name }}</p>
                     <p><strong>Contact Information:</strong> {{ reference.phone }}</p>
                     <p><strong>Position/Relationship:</strong> {{ reference.position }}</p>
+                    
+                    <a href="{% url 'delete_reference' reference.id %}" class="btn btn-danger">Delete</a>
                     <hr>
                 {% empty %}
                     <p>No references available.</p>
@@ -764,7 +776,7 @@
                 <form id="computerSkillsForm">
                     <div class="form-group">
                         <label for="skill1">Computer Skill</label>
-                        <select class="form-control" id="skill1" name="skill1" onchange="toggleOtherSkill()">
+                        <select class="form-control" id="skill3" name="skill1" onchange="toggleOtherSkill()">
                             <option value="">Select a skill</option>
                             {% for computer in computers %}
                                 <option value="{{ computer.id }}" {% if selected_skill == computer.id %}selected{% endif %}>{{ computer.skill }}</option>
@@ -777,7 +789,7 @@
                     </div>
                     <div class="form-group">
                         <label for="level">Proficiency Level:</label>
-                        <select id="level" class="form-control" name="level">
+                        <select id="level3" class="form-control" name="level">
                             {% for proficiency in proficiencys %}
                                 <option value="{{ proficiency.id }}" {% if selected_proficiency == proficiency.id %}selected{% endif %}>{{ proficiency.level }}</option>
                             {% endfor %}
@@ -787,7 +799,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="handleAddSkill()">Add Skill</button>
+                <button type="button" class="btn btn-primary" onclick="handle_update_computer_skill_button_click()">Add Skill</button>
             </div>
         </div>
     </div>
@@ -814,10 +826,10 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group" id="other-soft-skill-group" style="display: none;">
+                       <!--  <div class="form-group" id="other-soft-skill-group" style="display: none;">
                             <label for="otherSoftSkill">Specify Skill</label>
                             <input type="text" class="form-control" id="otherSoftSkill" name="otherSoftSkill">
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label for="proficiency1">Proficiency Level</label>
                             <select id="proficiency1" class="form-control" name="proficiency1">
@@ -830,7 +842,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="handleAddSoftSkill()">Add Skill</button>
+                    <button type="button" class="btn btn-primary" onclick="handle_update_soft_skill_button_click()">Add Skill</button>
                 </div>
             </div>
         </div>
@@ -852,7 +864,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="job-title2" class="form-label">Job Title</label>
-                            <select class="form-control" id="job-title2" name="job-title2">
+                            <select class="form-control" id="wjob_title" name="job-title2">
                                 {% for job_title in job_titles %}
                                     <option value="{{ job_title.id }}">{{ job_title.title }}</option>
                                 {% endfor %}
@@ -860,13 +872,13 @@
                         </div>
                         <div class="col-md-6">
                             <label for="company2" class="form-label">Company</label>
-                            <input type="text" class="form-control" id="company2" name="company2" placeholder="Enter company name" required>
+                            <input type="text" class="form-control" id="wcompany" name="company2" placeholder="Enter company name" required>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="location2" class="form-label">Location</label>
-                            <select class="form-control" id="location2" name="location2" required>
+                            <select class="form-control" id="wlocation" name="location2" required>
                                 <option value="">Select Location</option>
                                 <option value="Johannesburg">Johannesburg</option>
                                 <option value="Cape Town">Cape Town</option>
@@ -882,21 +894,26 @@
                         </div>
                         <div class="col-md-3">
                             <label for="start-date2" class="form-label">Start Date</label>
-                            <input type="date" class="form-control" id="start-date2" name="start-date2">
+                            <input type="date" class="form-control" id="wstart_date" name="start-date2">
                         </div>
                         <div class="col-md-3">
                             <label for="end-date2" class="form-label">End Date</label>
-                            <input type="date" class="form-control" id="end-date2" name="end-date2">
+                            <input type="date" class="form-control" id="wend_date" name="end-date2">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="job_description" class="form-label">Job Description</label>
-                            <textarea class="form-control" id="job_description" placeholder="Tell us about your experience"></textarea>
+                            <textarea class="form-control" id="wdescription" placeholder="Tell us about your experience"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            
+                            <input type="checkbox" id="myCheckbox" name="myCheckbox"> I Currentley work there!
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Add Experience</button>
+                        <button type="button" onclick="handle_update_working_experince_button_click()" class="btn btn-primary">Add Experience</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -919,21 +936,34 @@
             </div>
             <div class="modal-body">
                 <form id="referenceForm">
+                   
+                        
+                     <div class="form-group mb-3">
+                        <label for="refereeName" class="form-label">Working experience</label>
+                        <select class="form-control" id="working_expereince" name="working_expereince">
+                            {% for experience in working_experiences %}
+                                <option value="{{experience.id}}" selected>{{experience.company}} - {{experience.job_title}}</option>
+                            {% endfor %}
+                            
+                        </select>
+                    </div>
+
+
                     <div class="form-group mb-3">
                         <label for="refereeName" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="refereeName" name="refereeName" placeholder="Enter full name" required>
+                        <input type="text" class="form-control" id="full_name" name="refereeName" placeholder="Enter full name" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="refereeContact" class="form-label">Contact Information</label>
-                        <input type="text" class="form-control" id="refereeContact" name="refereeContact" placeholder="Phone number or email" required>
+                        <input type="text" class="form-control" id="rphone" name="refereeContact" placeholder="Phone number or email" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="refereePosition" class="form-label">Position/Relationship</label>
-                        <input type="text" class="form-control" id="refereePosition" name="refereePosition" placeholder="e.g., Manager, Mentor, etc." required>
+                        <input type="text" class="form-control" id="rposition" name="refereePosition" placeholder="e.g., Manager, Mentor, etc." required>
                     </div>
                     <div class="form-group">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="handleAddReference()">Add Reference</button>
+                        <button type="button" class="btn btn-primary" onclick="handle_update_reference_button_click()">Add Reference</button>
                     </div>
                 </form>
             </div>
