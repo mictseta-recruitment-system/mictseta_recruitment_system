@@ -194,7 +194,7 @@
                                 <p><strong>First Name:</strong> {{ user.first_name }}</p>
                                 <p><strong>Surname:</strong> {{ user.last_name }}</p>
                                 <p><strong>Gender:</strong> {{ user.profile.gender }}</p>
-                                <p><strong>Marital Status:</strong> {{ user.profile.marital_status }}</p>
+                                <p><strong>Maritial Status:</strong> {{ user.profile.maritial_status }}</p>
                                 <p><strong>Race:</strong> {{ user.profile.race }}</p>
                                 <p><strong>Date of Birth:</strong> {{ user.profile.dob }}</p>
                                 <p><strong>Disability:</strong> {{ user.profile.disability }}</p>
@@ -472,13 +472,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="gender">Gender</label>
-                                <input class="form-control" id="gender" name="gender" value="{{user.profile.gender}}" disabled>
+                                <input class="form-control" id="gender" name="gender" 
+                                       value="{% if user.profile.gender %}{{user.profile.gender}}{% else %}Not specified{% endif %}" disabled>
                                 <input type="text" class="form-control mt-2" id="gender_other" name="gender_other" style="display: none;" placeholder="Please specify">
                             </div>
+                            
                             <div class="form-group">
                                 <label for="marital-status">Marital Status <span class="text-danger">*</span></label>
-                                <select class="form-control" id="maritial_status" name="marital_status">
-                                    <option value="{{user.profile.marital_status}}" selected>{{user.profile.marital_status}}</option>
+                                <select class="form-control" id="maritial_status" name="maritial_status">
+                                    <option value="{{user.profile.maritial_status}}" selected>{{user.profile.maritial_status}}</option>
                                     <option value="Married">Married</option>
                                     <option value="Single">Single</option>
                                 </select>
@@ -999,5 +1001,54 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4Agj6akHAwFqqL5bGYe40TLOe0J4pB7EuPhZZSlH/+8PcXc5mNh8" crossorigin="anonymous"></script>
 <script src="path/to/functionality.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Define the completion percentages
+        const progressData = {
+            personalDetails: 80,
+            addressDetails: 70,
+            academicQualifications: 90,
+            languageProficiency: 60,
+            computerSkills: 50,
+            softSkills: 95,
+            supportingDocuments: 40,
+        };
+
+        // Calculate total progress
+        function calculateTotalProgress(data) {
+            let total = 0;
+            const totalModules = Object.keys(data).length;
+
+            for (let key in data) {
+                total += data[key];
+            }
+            return (total / totalModules).toFixed(2); // Returns the average
+        }
+
+        // Update progress bars
+        function updateProgressBars() {
+            for (let key in progressData) {
+                const progressBar = document.querySelector(`.progress-bar[data-completion="${progressData[key]}"]`);
+                if (progressBar) {
+                    progressBar.style.width = `${progressData[key]}%`;
+                    progressBar.setAttribute('aria-valuenow', progressData[key]);
+                    progressBar.textContent = `${progressData[key]}% ${progressBar.textContent.split(' ')[1]}`;
+                }
+            }
+
+            const totalProgress = calculateTotalProgress(progressData);
+            const totalProgressBar = document.querySelector('.progress-bar.total-progress');
+            if (totalProgressBar) {
+                totalProgressBar.style.width = `${totalProgress}%`;
+                totalProgressBar.setAttribute('aria-valuenow', totalProgress);
+                totalProgressBar.textContent = `${totalProgress}% Total Progress`;
+            }
+        }
+
+        // Initial update on page load
+        updateProgressBars();
+    });
+</script>
+
 
 {% endblock %}
