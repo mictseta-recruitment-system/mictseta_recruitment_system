@@ -22,14 +22,14 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
   }
 
   #navbar {
-      position: sticky; /* or fixed if you want it to stay visible on scroll */
-      top: 0; /* stick to the top of the page */
-      z-index: 1000; /* ensures it stays above other content */
-      width: 100%; /* make sure it spans full width */
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
   }
 
   .filterbar {
-      margin-top: 20px; /* Adjust margin as needed */
+      margin-top: 20px;
   }
 
   .social-media-icons ul {
@@ -45,7 +45,15 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
   footer {
       text-align: center;
       padding: 20px 0;
-      background-color: #f8f9fa; /* Light background for the footer */
+      background-color: #f8f9fa;
+  }
+
+  @media (max-width: 576px) {
+      .filterbar {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+      }
   }
 </style>
 </head>
@@ -59,68 +67,57 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
         </div>
               
              <div class="nav-items">
-                <button id="navbar-toggler" class="navbar-toggler" type="button" 
-                data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" 
-                aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <div class="collapse navbar-collapse" id="navbarText">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                      <li class="nav-item">
+              <button id="navbar-toggler" class="navbar-toggler" type="button" 
+              data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" 
+              aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-                     
-                      </li>
-                     
-                      <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'about_us' %}">About</a>
-                      </li>
-                      <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
-                      </li>
+                    </li>
                     {% if user.is_authenticated and not user.is_staff %}
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'job_seeker_dashboard' %}">Job Seeker</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">LogOut</a>
-                  </li>
-                    
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'job_seeker_dashboard' %}">Job Seeker</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">LogOut</a>
+                        </li>
                     {% elif not user.is_staff %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'render_auth_page' %}">Job Seeker</a>
-                  </li>
-                  {% else %}
-
-                  {% endif %}
-                  {% if user.is_authenticated and user.is_superuser %}
-                      <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-                        <ul class="navbar-nav">
-                          <li class="nav-item dropdown">
-                            <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                              Dashboard
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                              
-                              {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
-                               <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}">Dashboard</a></li>
-                              {% else %}
-                              <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}">Dashboard</a></li>
-                              {% endif %}
-                              <li><a class="dropdown-item" href="{% url 'log_out' %}">Log Out</a></li>
-                            </ul>
-                          </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'render_auth_page' %}">Job Seeker</a>
+                        </li>
+                    {% endif %}
+                    {% if user.is_authenticated and user.is_superuser %}
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dashboard
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton">
+                            {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
+                                <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}" style="color: white;">Dashboard</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}" style="color: white;">Dashboard</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'log_out' %}" style="color: white;">Log Out</a></li>
                         </ul>
-                      </div>
-                  {% elif not user.is_authenticated %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
-                    </li>
-                  {% endif %}
-                    </ul>
-                  </div>
-             </div>
+                    </div>
+                    {% elif not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
-          </nav>
+        </div>
+    </nav>
         
           <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
