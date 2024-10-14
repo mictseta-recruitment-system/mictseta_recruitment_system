@@ -16,7 +16,7 @@ def my_profile(request):
     reading = ReadingProficiencyList.objects.all()
     speaking = SpeakingProficiencyList.objects.all()
     writing = WritingProficiencyList.objects.all()
-    job_list = JobPost.objects.filter(status='open')
+   
     computer = ComputerSkillsList.objects.all()
     proficiency = ComputerProficiency.objects.all()
     selected_skill = request.POST.get('skill1', '')  # Default to empty string if not set
@@ -72,7 +72,7 @@ def supporting_documents(request):
     return render(request, 'supporting_documents.html',{"docs":docs})
 
 def job_details(request):
-    
+    job_list = JobPost.objects.filter(status='open')
     return render(request, 'jobseeker_job_details.html', {'job_list':job_list})
 
 def application_tracking(request):
