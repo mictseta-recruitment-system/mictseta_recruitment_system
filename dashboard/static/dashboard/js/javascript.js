@@ -91,8 +91,7 @@ function addJob() {
       end_date = ""
       company_name = ""
       industry = ""
-    document.getElementById('addJobPage').style.display = 'none';
-    document.getElementById('addJobPageComplete').style.display = 'block';
+   
     showFlashMessage(data.message, "success");
 
   } else if (data.status === "warning") {

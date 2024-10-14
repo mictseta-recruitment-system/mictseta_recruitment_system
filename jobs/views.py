@@ -187,7 +187,7 @@ def add_job(request):
 						end_date=end_date
 						)
 					add_job_post.save()
-					noty = Notification.objects.create(user=request.user, action="Created New Job ad", job_title=add_job_post.title, status=add_job_post.status)
+					noty = Notification.objects.create(user=request.user, action="Created New Job ad", job_title=data['title'], status=add_job_post.status)
 					noty.save()
 					return JsonResponse({'message': 'Job Post Created Successfully', 'status': 'success'}, status=201)
 				except Exception as e:

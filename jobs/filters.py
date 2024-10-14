@@ -149,28 +149,50 @@ class ApplicationFilter:
 	def filter_by_academic(self):
 		academic_study_list = []
 		academic_level_list = []
+		job_experience_list = []  
 		for application in self.filterd_apllications:
-			for academic in application.job.educations.all():
-				academic_study_list.append(academic.field_of_study)
-				academic_level_list.append(academic.nqf_level)
-		valid_applications= self.filterd_apllications.filter(user__qualifications__field_of_study__in=academic_study_list,user__qualifications__nqf_level__in=academic_level_list).distinct()
-		self.filterd_apllications = valid_applications
+			if application.job.educations.all():
+				job_experience_list.append(application)
+		print(job_experience_list)
+
+		print("&%&%&%&%&%&%&%&%&%&%&")
+		if job_experience_list:
+			for application in self.filterd_apllications:
+				for academic in application.job.educations.all():
+					academic_study_list.append(academic.field_of_study)
+					academic_level_list.append(academic.id)
+			valid_applications= self.filterd_apllications.filter(user__qualifications__field_of_study__in=academic_study_list).distinct()
+			self.filterd_apllications = valid_applications
 
 	def filter_by_experience(self):
 		experience_list = []
+		job_experience_list = []  
 		for application in self.filterd_apllications:
-			for experience in application.job.experiences.all():
-				experience_list.append(experience.name)
-		valid_applications= self.filterd_apllications.filter(user__working_expereince__job_title__title__in=experience_list).distinct()
-		self.filterd_apllications = valid_applications
+			if application.job.experiences.all():
+				job_experience_list.append(application)
+		print(job_experience_list)
+		print("&%&%&%&%&%&%&%&%&%&%&")
+		if job_experience_list:
+			for application in self.filterd_apllications:
+				for experience in application.job.experiences.all():
+					experience_list.append(experience.name)
+			valid_applications= self.filterd_apllications.filter(user__working_expereince__job_title__title__in=experience_list).distinct()
+			self.filterd_apllications = valid_applications
 
 	def filter_by_language(self):
 		language_list = []
+		job_experience_list = []  
 		for application in self.filterd_apllications:
-			for language in application.job.j_languages.all():
-				language_list.append(language.language)
-		valid_applications= self.filterd_apllications.filter(user__language__language__in=language_list).distinct()
-		self.filterd_apllications = valid_applications
+			if application.job.j_languages.all():
+				job_experience_list.append(application)
+		print(job_experience_list)
+		print("&%&%&%&%&%&%&%&%&%&%&")
+		if job_experience_list:
+			for application in self.filterd_apllications:
+				for language in application.job.j_languages.all():
+					language_list.append(language.language)
+			valid_applications= self.filterd_apllications.filter(user__language__language__in=language_list).distinct()
+			self.filterd_apllications = valid_applications
 
 	def strict_filter_by_incomplete_profile(self):
 		incomplete_users = self.applications.filter(
