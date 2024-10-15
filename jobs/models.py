@@ -92,6 +92,7 @@ class JobApplication(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, null=False)
     filterd_out = models.BooleanField(null=False, default=False)
+    is_rejected = models.BooleanField(null=False, default=False)
     def __str__(self):
         return f'{self.user.email} - {self.job.title}'
 

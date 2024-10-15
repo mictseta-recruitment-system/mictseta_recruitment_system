@@ -278,7 +278,7 @@ def auto_shortlist(request):
 	filters = json_data.get('filter')	
 	mode = json_data.get('mode')	
 	if filters == "all":
-		applications = JobApplication.objects.all()
+		applications = JobApplication.objects.filter(status="pending")
 		applications = ApplicationFilter(applications)
 		if mode == "strict":
 			applications.reset_filter()

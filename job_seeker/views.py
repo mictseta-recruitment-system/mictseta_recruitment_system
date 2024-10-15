@@ -2,7 +2,7 @@ from django.shortcuts import render
 from jobs.models import JobPost,FeedBack,Interview
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from profiles.models import SupportingDocuments, WorkingExpereince
-
+from django.db.models import Count
 # Create your views here.
 
 def job_seeker_dashboard(request):
@@ -117,7 +117,9 @@ def job_details(request):
 
 def application_tracking(request):
     feed_back = FeedBack.objects.filter(user=request.user)
-    return render(request, 'application_tracking.html',{'feedback_list':feed_back})
+    jobs = JobPost.objects.filter(jobapplication__user__id=request.user.id).annotate(feedback_count=Count('feedback')).filter(feedback_count__gt=0)
+
+    return render(request, 'application_tracking.html',{'feedback_list':feed_back, 'jobs':jobs})
 
 def interviews(request):
     return render(request, 'interviews.html')
@@ -131,7 +133,7 @@ def delete_feadback(request,feedbackID):
     feed_back = FeedBack.objects.filter(user=request.user)
     feed_back_delete = FeedBack.objects.filter(id=int(feedbackID)).first()
     feed_back_delete.delete()
-    return render(request, 'feedback.html',{'feedback_list':feed_back})
+    return render(request, 'application_tracking.html',{'feedback_list':feed_back})
 
 
 def feedback(request):

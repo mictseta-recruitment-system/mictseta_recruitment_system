@@ -1,7 +1,7 @@
 from django.db.models import Q, Count
 from datetime import datetime
 from .utils import *
-
+from .models import FeedBack
 
 class ApplicationFilter:
 	
@@ -34,25 +34,46 @@ class ApplicationFilter:
 	def get_total(self):
 		return self.total
 
+	def rejection_reason(self,reason):
+		for application in self.applications:
+			if application not in self.filterd_apllications:
+				feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{reason}",status="rejected").first()
+				if not application.is_rejected:
+					if not feed_back_exist:
+						application.is_rejected = True
+						feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{reason}",status="rejected")
+						feed_back.save()
+
 	def standerd_filter(self):
 		self.filter_by_incomplete_profile()
 		print("*********  profile filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason('incomplete profile')
+		
 		self.filter_by_soft_skill()
 		print("********* soft skill filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("DOnt have soft skills required")
+
 		self.filter_by_computer_skill()
 		print("*********  computer skill filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("Dont have computer skills required")
+
 		self.filter_by_academic()
 		print("********* academics filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("don't have qualifications required")
+
 		self.filter_by_language()
 		print("*********language filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("Dont have language required")
+
 		self.filter_by_experience()
 		print("********* experience filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("Dont have experience required")
 
 	
 	def strict_filter(self):
@@ -60,23 +81,36 @@ class ApplicationFilter:
 		self.strict_filter_by_incomplete_profile()
 		print("********* strict profile filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason('incomplete profile')
+
 		self.strict_filter_by_experience()
 		print("\n *********strict experience filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("Dont have experience required")
+
 		self.strict_filter_by_computer_skill()
 		print("\n *********strict  computer skill filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("Dont have computer skills required")
+
 		self.strict_filter_by_soft_skill()
 		print("\n *********strict  soft skill filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("DOnt have soft skills required")
+
 		self.strict_filter_by_academic()
 		print("\n *********strict academics filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("don't have qualifications required")
+
 		self.filter_by_language()
 		print("\n ********* strict language filter ********")
 		print(self.filterd_apllications)
+		self.rejection_reason("Dont have language required")
+
 		self.strict_filter_by_similarity() 
 		print("\n *********strict similarity filter ********")
+		self.rejection_reason("Dont have job description required")
 
 	def get_exp_years(self, Sdate, Edate):
 		date_format = "%Y-%m-%d"
