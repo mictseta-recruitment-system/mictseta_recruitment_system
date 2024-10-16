@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -683,3 +683,18 @@ def crud_events_generate_pdf_report(request):
 
 	pdf = render_to_pdf('pdf_crud_events.html', context)
 	return HttpResponse(pdf, content_type='application/pdf')
+
+
+def new_quiz(request, job_id):
+	if request.user.is_authenticated:
+		if request.user.is_staff:
+			job = JobPost.objects.filter(id=int(job_id)).first()
+			quiz = Quiz.objects.filter(job__id=int(job_id)).first()
+			if not job:
+				return render(request, 'new_quiz.html',{})
+
+			return render(request, 'new_quiz.html',{'job':job, 'quiz':quiz})
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')

@@ -225,6 +225,10 @@ View jobs
                         <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})">
                             <i class="fa fa-trash"></i>
                         </a>
+                         <a class="btn btn-outline-info btn-sm" type="button" href="{% url 'dashboard.new_quiz' job.id %}">
+                            <i class="fa fa-plus"></i>
+                            add Quiz
+                        </a>
                     </div>
                 {% else %}
                     {% if not job.is_approved %}
@@ -245,7 +249,7 @@ View jobs
                 
                 
                       {% if not job.is_approved %}
-                      <a class="btn btn-warning btn-sm" data-bs-toggle="modal" href="#JobToggle{{ job.id }}">
+                      <a class="btn btn-warning btn-sm" data-bs-toggle="modal" href="#quizToggle{{ job.id }}">
                           <i class="fa fa-edit"></i>
                       </a>
                       {% else %}
@@ -380,7 +384,8 @@ View jobs
                 </div>
             </div>
         </div>
-        
+
+
   <!-- =====================================Skills modal here ======================================= -->
 
 

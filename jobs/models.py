@@ -88,8 +88,11 @@ class Notification(models.Model):
 
 class JobApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="applications")
+    staff = models.ForeignKey(User, on_delete=models.CASCADE, related_name="s_applications", null=True)    
     job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    previous_stage = models.CharField(max_length=100, null=True)
+    current_stage = models.CharField(max_length=100, null=True)
     status = models.CharField(max_length=100, null=False)
     filterd_out = models.BooleanField(null=False, default=False)
     is_rejected = models.BooleanField(null=False, default=False)
@@ -115,3 +118,34 @@ class FeedBack(models.Model):
         return f'{self.user.email} - {self.job.title}'
 
 
+
+class Quiz(models.Model):
+    staff = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+
+
+    def __str__(self):
+        return self.title
+
+
+class Question(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    question_text = models.CharField(max_length=500)
+    def __str__(self):
+        return self.question_text
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    answer_text = models.CharField(max_length=200)
+    is_correct = models.BooleanField(default=False)
+
+class QuizResults(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    results =  models.CharField(max_length=225,null=False)
+
+    def __str__(self):
+        return self.title

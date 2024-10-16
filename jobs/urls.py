@@ -29,13 +29,20 @@ urlpatterns = [
     path('job_application/<int:jobID>', views.job_application, name='job_application'),
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
     path('move_to_shortlist/', views.move_to_shortlist, name='move_to_shortlist'),
-    path('auto_shortlist/', views.auto_shortlist, name='auto_shortlist'),
+    path('auto_filter/', views.auto_filter, name='auto_filter'),
     path('approve_interview/', views.approve_interview, name='approve_interview'),
     path('reject_applicantion/', views.reject_applicantion, name='reject_applicantion'),
     path('purge/', views.purge, name='purge'),
     path('set_interview/', views.set_interview, name='set_interview'),
     path('reschedule_interview/', views.reschedule_interview, name='reschedule_interview'),
-    path('calender_reschedule_interview/', views.calender_reschedule_interview, name='calender_reschedule_interview'),
+   
+    path('add_quiz/', views.add_quiz, name='add_quiz'),
+    path('delete_quiz/', views.delete_quiz, name='delete_quiz'),
+    path('add_quesion/', views.add_quesion, name='add_quesion'),
+    path('delete_question/', views.delete_question, name='delete_question'),
+    path('add_answer/', views.add_answer, name='add_answer'),
+    path('delete_answer/', views.delete_answer, name='delete_answer'),
+    path('take_quiz/', views.take_quiz, name='take_quiz'),
 
     
 

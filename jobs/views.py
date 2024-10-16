@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer
 from config.models import JobTitle, Industry
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from .filters import ApplicationFilter
@@ -115,7 +115,7 @@ def job_application(request, jobID):
 		exists = JobApplication.objects.filter(user=request.user, job=job).exists()
 		if exists:
 			return JsonResponse({'errors': {'Application' : ['Application already exists']}, 'status': 'error'}, status=400)
-		new_application = JobApplication.objects.create(user=request.user, job=job, status="pending")
+		new_application = JobApplication.objects.create(user=request.user, job=job, status="pending", current_stage="initial stage")
 		new_application.save()
 		try:
 			feed_back = FeedBack(user=request.user,job=new_application.job,message="your application is being processed",status="pending")
@@ -226,6 +226,10 @@ def move_to_interview(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status = "interview"
+				applicant.previous_stage = "short list stage"
+				applicant.current_stage = "inteveiw stage"
+				applicant.staff = request.user
+
 				applicant.save()
 				
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to interview stage",status="Processing")
@@ -251,6 +255,9 @@ def move_to_shortlist(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status = "short_list"
+				applicant.previous_stage = "auto filtering stage"
+				applicant.current_stage = "short listing stage"
+				applicant.staff = request.user
 				applicant.save()
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to Short-List stage",status="Short-List")
 				feed_back.save()
@@ -266,7 +273,7 @@ def move_to_shortlist(request):
 
 @check_leave
 @csrf_protect
-def auto_shortlist(request):
+def auto_filter(request):
 	if not request.user.is_authenticated:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
 	if not request.method == 'POST':
@@ -322,6 +329,9 @@ def approve_interview(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status ="approved"
+				applicant.previous_stage = "interview stage"
+				applicant.current_stage = "approved stage"
+				applicant.staff = request.user
 				applicant.save()
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application successully approved we will contact you",status="approved")
 				feed_back.save()
@@ -365,6 +375,9 @@ def reject_applicantion(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status ="rejected"
+				applicant.previous_stage = "short listing stage"
+				applicant.current_stage = "rejected stage"
+				applicant.staff = request.user
 				applicant.save()
 				interview = Interview.objects.get(application=applicant)
 				if interview:
@@ -428,6 +441,9 @@ def set_interview(request):
 				interview = Interview.objects.create(user=user,application=applicant,date=data['date'],start_time=data['start_time'],end_time=data['end_time'])
 				interview.save()
 				applicant.status = "interview"
+				applicant.previous_stage = "short listing stage"
+				applicant.current_stage = "interview stage"
+				applicant.staff = request.user
 				applicant.save()
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application set for interview",status="Interview")
 				feed_back.save()
@@ -1291,3 +1307,237 @@ def approve_job(request):
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@check_leave
+@csrf_protect	
+def add_quiz(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'quiz' : json_data.get('quiz'),
+    	'job_id' : json_data.get('job_id')
+    }
+    print(data)
+    if  not data['quiz'] or data['quiz'] == "":
+    	return JsonResponse({'errors':{ "Error" : ['Quiz name can not be empty']}, 'status':'error'})
+
+    exists = JobPost.objects.filter(id=int(data['job_id'])).first()
+    if not exists:
+    	return JsonResponse({'errors':'Selected job does not exist', 'status':'error'})
+
+    quiz_exists = Quiz.objects.filter(job=exists, staff=request.user).first()
+    if quiz_exists:
+    	quiz_exists.title=data['quiz']
+    	quiz_exists.save()
+    else:
+    	quiz = Quiz.objects.create(title=data['quiz'], job=exists, staff=request.user)
+    	quiz.save()
+    return JsonResponse({'message': 'Quiz Updated successfully', 'status': 'success'}, status=200)
+
+@check_leave
+@csrf_protect	
+def delete_quiz(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'quiz' : 'quiz_id'
+    }
+
+    if not data['quiz'] or data['quiz'] != "":
+    	return JsonResponse({'errors':'Quiz name can not be empty', 'status':'error'})
+
+    quiz = Quiz.objects.filter(id=int(data['quiz_id'])).first()
+    if not quiz:
+    	return JsonResponse({'errors':'Selected job does not exist', 'status':'error'})
+    quiz.delete()
+    
+    return JsonResponse({'message': 'Quiz added successfully', 'status': 'success'}, status=200)
+
+
+@check_leave
+@csrf_protect	
+def add_quesion(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'question' : json_data.get('question'),
+    	'quiz' : json_data.get('quiz_id')
+    }
+
+    if not data['quiz'] or data['quiz'] == "":
+    	return JsonResponse({'errors':'Quiz name can not be empty', 'status':'error'})
+    if not data['question'] or data['question'] == "":
+    	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})
+
+    quiz = Quiz.objects.filter(id=int(data['quiz'])).first()
+    if not quiz:
+    	return JsonResponse({'errors':'Selected Quiz was not found', 'status':'error'})
+
+    question_exist = Question.objects.filter(question_text=data['question'], quiz=quiz).first()
+    if question_exist:
+    	return JsonResponse({'errors':'the question already exists', 'status':'error'})
+    question = Question.objects.create(question_text=data['question'], quiz=quiz)
+    question.save()
+    return JsonResponse({'message': 'question added successfully', 'status': 'success'}, status=200)
+
+@check_leave
+@csrf_protect	
+def delete_question(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'question' : 'question_id'
+    }
+
+    if not data['question'] or data['question'] != "":
+    	return JsonResponse({'errors':'question name can not be empty', 'status':'error'})
+
+    question = Question.objects.filter(id=int(data['question_id'])).first()
+    if not question:
+    	return JsonResponse({'errors':'Selected Question does not exist', 'status':'error'})
+    question.delete()
+    
+    return JsonResponse({'message': 'question added successfully', 'status': 'success'}, status=200)
+
+
+@check_leave
+@csrf_protect	
+def add_answer(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'answer' : 'answer',
+    	'question' : 'question_id',
+    	'is_correct': 'is_correct'
+    }
+
+    if not data['answer'] or data['answer'] != "":
+    	return JsonResponse({'errors':'Answer name can not be empty', 'status':'error'})
+    if not data['question'] or data['question'] != "":
+    	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})
+    if not data['is_correct'] or data['is_correct'] != "":
+    	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})    	
+    
+    question = question.objects.filter(id=int(data['question'])).first()
+    if not question:
+    	return JsonResponse({'errors':'Selected Question was not found', 'status':'error'})
+
+    if data['is_correct'] == "true":
+    	answer = Answer.objects.create(answer_text=data['answer'], question=question,is_correct=True )
+    elif data['is_correct'] == "false":
+    	answer = Answer.objects.create(answer_text=data['answer'], question=question,is_correct=False )
+    else:
+    	return JsonResponse({'errors':'Error adding answer', 'status':'error'})
+    answer.save()
+    return JsonResponse({'message': 'question added successfully', 'status': 'success'}, status=200)
+
+@check_leave
+@csrf_protect	
+def delete_answer(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'answer' : 'answer_id'
+    }
+
+    if not data['answer'] or data['answer'] != "":
+    	return JsonResponse({'errors':'answer name can not be empty', 'status':'error'})
+
+    answer = answer.objects.filter(id=int(data['answer_id'])).first()
+    if not answer:
+    	return JsonResponse({'errors':'Selected answer does not exist', 'status':'error'})
+    answer.delete()
+    
+    return JsonResponse({'message': 'answer added successfully', 'status': 'success'}, status=200)
+
+
+@csrf_protect
+def take_quiz(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data ={
+		    'quiz_id':json_data.get('quiz_id'),
+		   	'quiz_data':{
+		   				'question_id':json_data.get('question_id'),
+					    'answer_id' : json_data.get("answer_id")
+		   			}
+		   }
+    score = 0
+    total = len(data)
+    quiz = Quiz.objects.filter(id=int(data['quiz_id'])).first()
+    for _, results in data.items():
+    	
+    	for key, value in results:
+    		if key == "answer_id":
+    			answer = Answer.objects.filter(id=int(value)).first()
+    			if answer.is_correct:
+    				score += 1
+
+    total_score = (score/total) * 100
+
+    if total_score >= 70.0 :
+    	quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="passed" )
+    else:
+    	quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="failed" )
+    	   
+    quiz_results.save()
+
+    # if not data['answer'] or data['answer'] != "":
+    # 	return JsonResponse({'errors':'Answer name can not be empty', 'status':'error'})
+    # if not data['question'] or data['question'] != "":
+    # 	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})
+    # if not data['is_correct'] or data['is_correct'] != "":
+    # 	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})    	
+    
+    
+    return JsonResponse({'message': 'quiz submitted successfully', 'status': 'success'}, status=200)

@@ -45,6 +45,7 @@ class ApplicationFilter:
 						feed_back.save()
 
 	def standerd_filter(self):
+		print(self.applications)
 		self.filter_by_incomplete_profile()
 		print("*********  profile filter ********")
 		print(self.filterd_apllications)

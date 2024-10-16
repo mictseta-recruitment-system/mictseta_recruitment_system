@@ -384,7 +384,7 @@ def update_reference(request):
 
 
 def upload_supporting_document(request):
-    if request.method == 'POST':
+    if request.method != 'POST':
        return JsonResponse({'errors': 'Invalid request method', 'status': 'error'}, status=400)
     try:
         document = request.FILES['document']

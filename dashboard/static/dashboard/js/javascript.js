@@ -1017,8 +1017,8 @@ function move_to_shortlist(appID) {
   });
 }
 
-function auto_shortlist(filter,mode) {
-  const url = 'http://127.0.0.1:8000/job/auto_shortlist/';
+function auto_filter(filter,mode) {
+  const url = 'http://127.0.0.1:8000/job/auto_filter/';
   
   const jsonData = {
     filter: filter,
@@ -1854,6 +1854,91 @@ function deleteCategory(catid) {
 
 
 
+function addQuiz(job_id) {
+  const url = 'http://127.0.0.1:8000/job/add_quiz/';
+  
+
+  const name = document.getElementById('quiz_title').value;
+ 
+  
+  const jsonData = {
+    quiz: name,
+    job_id:job_id
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function addQuestion(quiz_id) {
+  const url = 'http://127.0.0.1:8000/job/add_quesion/';
+  
+
+  const name = document.getElementById('question_title').value;
+ 
+  
+  const jsonData = {
+    question: name,
+    quiz_id:quiz_id
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 
 
 
