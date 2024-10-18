@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
@@ -5,28 +6,103 @@ import uuid
 # Create your models here.
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    idnumber = models.CharField(max_length=13, unique=True)
-    phone = models.CharField(max_length=10, null=True, default=" ")
-    dob = models.CharField(max_length=6,null=False )
-    gender = models.CharField(max_length=6, null=False)
-    age = models.CharField(max_length=6, null=False)
-    maritial_status = models.CharField(max_length=10, default=" ")
-    race = models.CharField(max_length=15, default=" ")
-    disability = models.CharField(max_length=30, default=" ")
-    is_verified = models.BooleanField(default=False, null=False)
-    linkedin_profile = models.CharField(max_length=225, default=" ")
-    personal_website = models.CharField(max_length=225, default=" ")
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    
+# class UsersProfile(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     idnumber = models.CharField(max_length=13, unique=True)
+#     phone = models.CharField(max_length=10, null=True, default=" ")
+#     dob = models.CharField(max_length=6,null=False )
+#     gender = models.CharField(max_length=6, null=False)
+#     age = models.CharField(max_length=6, null=False)
+#     maritial_status = models.CharField(max_length=10, default=" ")
+#     race = models.CharField(max_length=15, default=" ")
+#     disability = models.CharField(max_length=30, default=" ")
+#     is_verified = models.BooleanField(default=False, null=False)
+#     linkedin_profile = models.CharField(max_length=225, default=" ")
+#     personal_website = models.CharField(max_length=225, default=" ")
+#     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+#     def __str__(self):
+#         return f'{self.user.username} Profile'
+        
 
-    def __str__(self):
+# class Qualifications(models.Model):
+# 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='qualifications')
+# 	highest_qualification = models.CharField(max_length=225, null=True)
+# 	field_of_study = models.CharField(max_length=225, null=True)
+# 	institution = models.CharField(max_length=225,null=True) 
+# 	year_obtained =  models.CharField(max_length=225, null=True)
+# 	status =  models.CharField(max_length=225, null=True)
+# 	grade = models.CharField(max_length=100, null=True)
+# 	def __str__(self):
+# 		return f"{self.user.email} Qualification information"
 
-        return f'{self.user.email} Profile Information'
+# class LanguageSpoke(models.Model):
+# 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='languages')
+# 	language = models.CharField(max_length=225)
+# 	reading_proficiency = models.CharField(max_length=225)
+# 	writing_proficiency = models.CharField(max_length=225)
+# 	speaking_proficiency = models.CharField(max_length=225)
+	
+# 	def __str__(self):
+# 		return f"{self.user.email} Language and proficiency information"
+
+# class ComputerSkill(models.Model):
+# 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='skills')
+# 	skill = models.CharField(max_length=225)
+# 	level = models.CharField(max_length=225)
+# 	def __str__(self):
+# 		return f"{self.user.email} Computer Skills information"
+
+# class SoftSkill(models.Model):
+# 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+# 	skill = models.CharField(max_length=225)
+# 	level = models.CharField(max_length=225)
+# 	def __str__(self):
+# 		return f"{self.user.email} Soft Skills information"
+
+# class WorkExperience(models.Model):
+# 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+# 	job_title = models.CharField(max_length=225)
+# 	company = models.CharField(max_length=225)
+# 	location = models.CharField(max_length=225)
+# 	start_date = models.CharField(max_length=225)
+# 	end_date = models.CharField(max_length=225)
+# 	years_of_expreince = models.CharField(max_length=225)
+# 	def __str__(self):
+# 		return f"{self.user.email} Working Expereince information"
+
+# class AddressInformations(models.Model):
+# 	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+# 	street_address_line = models.CharField(max_length=225,null=True )
+# 	street_address_line1 = models.CharField(max_length=225,null=True )
+# 	city = models.CharField(max_length=225,null=True )
+# 	province = models.CharField(max_length=225,null=True)
+# 	postal_code = models.CharField(max_length=6,null=True )
+	
+# 	def __str__(self):
+# 		return f"{self.user.email} Address Information"
+
+
+# class ProfileSImage(models.Model):
+# 	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+# 	image = models.ImageField(upload_to='static/profiles/images/')
+# 	uploaded_at = models.DateTimeField(auto_now_add=True)
+# 	def __str__(self):
+# 		return f"{self.user.email} Profile Image"
+
+
+
+# class  SupportDocuments(models.Model):
+# 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+# 	document = models.ImageField(upload_to='static/supportindocuments/documents/')
+# 	uploaded_at = models.DateTimeField(auto_now_add=True)
+# 	document_type = models.CharField(max_length=225, null=False)
+# 	def __str__(self):
+# 		return f"{self.user.email} ID or Drivers Liscence or passport"
+
+#==========================Default Api Models===========================================
 
 class Qualification(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='qualifications')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='qualifications')
 	highest_qualification = models.CharField(max_length=225, null=True)
 	field_of_study = models.CharField(max_length=225, null=True)
 	institution = models.CharField(max_length=225,null=True) 
@@ -37,7 +113,7 @@ class Qualification(models.Model):
 		return f"{self.user.email} Qualification information"
 
 class Language(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='languages')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='languages')
 	language = models.CharField(max_length=225)
 	reading_proficiency = models.CharField(max_length=225)
 	writing_proficiency = models.CharField(max_length=225)
@@ -47,21 +123,21 @@ class Language(models.Model):
 		return f"{self.user.email} Language and proficiency information"
 
 class ComputerSkills(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skills')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='skills')
 	skill = models.CharField(max_length=225)
 	level = models.CharField(max_length=225)
 	def __str__(self):
 		return f"{self.user.email} Computer Skills information"
 
 class SoftSkills(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	skill = models.CharField(max_length=225)
 	level = models.CharField(max_length=225)
 	def __str__(self):
 		return f"{self.user.email} Soft Skills information"
 
 class WorkingExpereince(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	job_title = models.CharField(max_length=225)
 	company = models.CharField(max_length=225)
 	location = models.CharField(max_length=225)
@@ -69,10 +145,10 @@ class WorkingExpereince(models.Model):
 	end_date = models.CharField(max_length=225)
 	years_of_expreince = models.CharField(max_length=225)
 	def __str__(self):
-		return f"{self.user.email} Working Expereince information"
+		return f"{self.user.email} Working Experience information"
 
 class AddressInformation(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	street_address_line = models.CharField(max_length=225,null=True )
 	street_address_line1 = models.CharField(max_length=225,null=True )
 	city = models.CharField(max_length=225,null=True )
@@ -84,7 +160,7 @@ class AddressInformation(models.Model):
 
 
 class ProfileImage(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	image = models.ImageField(upload_to='static/profiles/images/')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
 	def __str__(self):
@@ -93,7 +169,7 @@ class ProfileImage(models.Model):
 
 
 class SupportingDocuments(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	document = models.ImageField(upload_to='static/supportindocuments/documents/')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
 	document_type = models.CharField(max_length=225, null=False)
@@ -101,6 +177,38 @@ class SupportingDocuments(models.Model):
 		return f"{self.user.email} ID or Drivers Liscence or passport"
 
 
+        
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    idnumber = models.CharField(max_length=13, unique=True)
+    phone = models.CharField(max_length=15, null=True )
+    dob = models.CharField(max_length=6,null=False )
+    gender = models.CharField(max_length=6, null=False)
+    age = models.CharField(max_length=6, null=False)
+    maritial_status = models.CharField(max_length=10,null=True,)
+    race = models.CharField(max_length=15,null=True,)
+    disability = models.CharField(max_length=30, null=True,)
+    is_verified = models.BooleanField(default=False, null=False)
+    linkedin_profile = models.CharField(max_length=225, null=True,)
+    personal_website = models.CharField(max_length=225,null=True, )
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    name = models.CharField(max_length=150,null=True,)
+    surname = models.CharField(max_length=150,null=True,)
+    
+    #=========================Creating Relaltionships============================================
+    qualifications = models.ManyToManyField(Qualification, related_name='profiles', blank=True)
+    languages = models.ManyToManyField(Language, related_name='profiles', blank=True)
+    computer_skills = models.ManyToManyField(ComputerSkills, related_name='profiles', blank=True)
+    soft_skills = models.ManyToManyField(SoftSkills, related_name='profiles', blank=True)
+    working_experience = models.ManyToManyField(WorkingExpereince, related_name='profiles', blank=True)
+    address_information = models.OneToOneField(AddressInformation, related_name='profile', on_delete=models.CASCADE, null=True, blank=True)
+    profile_image = models.OneToOneField(ProfileImage, related_name='profile', on_delete=models.CASCADE, null=True, blank=True)
+    supporting_documents = models.ManyToManyField(SupportingDocuments, related_name='profiles', blank=True)
+
+    def __str__(self):
+
+        return f'{self.user.email} Profile Information'
+ 	
 	
 # =======================================================================================
 

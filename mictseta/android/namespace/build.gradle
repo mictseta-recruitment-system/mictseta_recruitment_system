@@ -1,0 +1,4 @@
+android {
+    namespace 'com.example.phone_number'  // Replace with your actual package name
+    // other configurations
+}
