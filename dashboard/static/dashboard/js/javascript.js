@@ -1941,6 +1941,128 @@ function addQuestion(quiz_id) {
 }
 
 
+function addAnswer(question_id) {
+  const url = 'http://127.0.0.1:8000/job/add_answer/';
+  const answer = document.getElementById('answer'+question_id ).value;
+  const is_correct = document.getElementById('correct'+question_id ).value;
+  
+  const jsonData = {
+    answer : answer ,
+    question_id : question_id ,
+    is_correct : is_correct 
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function deleteAnswer(answer) {
+  const url = 'http://127.0.0.1:8000/job/delete_answer/';
+  
+  
+  const jsonData = {
+    answer_id : answer 
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function enableOrDisableQuiz(status, quiz_id) {
+  const url = 'http://127.0.0.1:8000/job/enable_or_disable_quiz/';
+  
+  
+  const jsonData = {
+    status : status,
+    quiz_id: quiz_id, 
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+
 
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {

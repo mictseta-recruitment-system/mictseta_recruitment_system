@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
@@ -1442,19 +1442,19 @@ def add_answer(request):
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 
     data = {
-    	'answer' : 'answer',
-    	'question' : 'question_id',
-    	'is_correct': 'is_correct'
+    	'answer' : json_data.get('answer'),
+    	'question' : json_data.get('question_id'),
+    	'is_correct': json_data.get('is_correct')
     }
 
-    if not data['answer'] or data['answer'] != "":
+    if not data['answer'] or data['answer'] == "":
     	return JsonResponse({'errors':'Answer name can not be empty', 'status':'error'})
-    if not data['question'] or data['question'] != "":
+    if not data['question'] or data['question'] == "":
     	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})
-    if not data['is_correct'] or data['is_correct'] != "":
+    if not data['is_correct'] or data['is_correct'] == "":
     	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})    	
     
-    question = question.objects.filter(id=int(data['question'])).first()
+    question = Question.objects.filter(id=int(data['question'])).first()
     if not question:
     	return JsonResponse({'errors':'Selected Question was not found', 'status':'error'})
 
@@ -1480,18 +1480,53 @@ def delete_answer(request):
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 
     data = {
-    	'answer' : 'answer_id'
+    	'answer' : json_data.get('answer_id')
     }
-
-    if not data['answer'] or data['answer'] != "":
+    print(data)
+    if not data['answer'] or data['answer'] == "":
     	return JsonResponse({'errors':'answer name can not be empty', 'status':'error'})
 
-    answer = answer.objects.filter(id=int(data['answer_id'])).first()
+    answer = Answer.objects.filter(id=int(data['answer'])).first()
     if not answer:
     	return JsonResponse({'errors':'Selected answer does not exist', 'status':'error'})
     answer.delete()
-    
     return JsonResponse({'message': 'answer added successfully', 'status': 'success'}, status=200)
+
+@check_leave
+@csrf_protect	
+def enable_or_disable_quiz(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'status' : json_data.get('status'),
+    	'quiz' : json_data.get('quiz_id')
+    }
+    print(data)
+    if not data['status'] or data['status'] == "":
+    	return JsonResponse({'errors':'status name can not be empty', 'status':'error'})
+    if not data['quiz'] or data['quiz'] == "":
+    	return JsonResponse({'errors':'quiz name can not be empty', 'status':'error'})
+
+    quiz = Quiz.objects.filter(id=int(data['quiz'])).first()
+    if not quiz:
+    	return JsonResponse({'errors':'Selected status does not exist', 'status':'error'})
+    if data['status'] == "enable":
+    	quiz.is_active = True
+    	quiz.save()
+    elif data['status'] == "disable":
+    	quiz.is_active = False
+    	quiz.save()
+    else:
+    	return JsonResponse({'errors': { "Quiz" : ['Error updating quiz ']}, 'status':'error'}, status=403)
+
+    return JsonResponse({'message': 'quiz status is updated Successfully', 'status': 'success'}, status=200)
 
 
 @csrf_protect
@@ -1505,39 +1540,37 @@ def take_quiz(request):
     except Exception :
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 
-    data ={
-		    'quiz_id':json_data.get('quiz_id'),
-		   	'quiz_data':{
-		   				'question_id':json_data.get('question_id'),
-					    'answer_id' : json_data.get("answer_id")
-		   			}
-		   }
+    # data ={
+	# 	    'quiz_id':json_data.get('quiz_id'),
+	# 	   	'quiz_data':{
+	# 	   				'question_id':json_data.get('question_id'),
+	# 				    'answer_id' : json_data.get("answer_id")
+	# 	   			}
+	# 	   }
+    
     score = 0
-    total = len(data)
-    quiz = Quiz.objects.filter(id=int(data['quiz_id'])).first()
-    for _, results in data.items():
-    	
-    	for key, value in results:
-    		if key == "answer_id":
-    			answer = Answer.objects.filter(id=int(value)).first()
+    total = len(json_data) - 2
+   
+    for key, value in json_data.items():
+    	if value != "" and key != "quiz":
+    		answer = Answer.objects.filter(id=int(value)).first()
+    		if answer:
     			if answer.is_correct:
-    				score += 1
-
+    				score +=1
     total_score = (score/total) * 100
 
-    if total_score >= 70.0 :
-    	quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="passed" )
-    else:
-    	quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="failed" )
-    	   
+    quiz = json_data.get('quiz')
+    quiz = Quiz.objects.filter(id=int(quiz)).first()
+    if quiz:
+    	if total_score >= 60.0 :
+    		quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="passed", total=total_score )
+    		return redirect('job_application', jobID=int(json_data.get('jobID')))
+    	else:
+    		quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="failed", total=total_score)
+      
     quiz_results.save()
 
-    # if not data['answer'] or data['answer'] != "":
-    # 	return JsonResponse({'errors':'Answer name can not be empty', 'status':'error'})
-    # if not data['question'] or data['question'] != "":
-    # 	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})
-    # if not data['is_correct'] or data['is_correct'] != "":
-    # 	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})    	
+    return JsonResponse({'message': 'quiz Submitedd Successfully', 'status': 'success'}, status=200)
+
     
     
-    return JsonResponse({'message': 'quiz submitted successfully', 'status': 'success'}, status=200)

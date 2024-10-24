@@ -43,6 +43,7 @@ urlpatterns = [
     path('add_answer/', views.add_answer, name='add_answer'),
     path('delete_answer/', views.delete_answer, name='delete_answer'),
     path('take_quiz/', views.take_quiz, name='take_quiz'),
+     path('enable_or_disable_quiz/', views.enable_or_disable_quiz, name='enable_or_disable_quiz'),
 
     
 

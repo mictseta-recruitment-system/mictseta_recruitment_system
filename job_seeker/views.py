@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from jobs.models import JobPost,FeedBack,Interview
+from django.shortcuts import render, redirect
+from jobs.models import JobPost,FeedBack,Interview, Quiz, QuizResults
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from profiles.models import SupportingDocuments, WorkingExpereince
 from django.db.models import Count
@@ -128,8 +128,20 @@ def job_information(request, jobID):
     jobs = JobPost.objects.filter(id=jobID).first()
     return render(request, 'job_information.html', {'jobs':jobs})
 
-def delete_feadback(request,feedbackID):
-    
+def quiz_test(request, jobID):
+    job = JobPost.objects.filter(id=int(jobID)).first()
+    if job:
+        quiz = Quiz.objects.get(job=job)
+        quiz_results = QuizResults.objects.filter(user=request.user, quiz=quiz).first()
+        if quiz_results:
+             return render(request, 'done_quiz.html')
+        if quiz :
+            return render(request, 'quiz_test.html', {'quiz':quiz,'jobID':jobID})
+        else:
+            return redirect('job_application', jobID=job.id)
+    return redirect('job_information', jobID=jobID)
+
+def delete_feadback(request,feedbackID):    
     feed_back = FeedBack.objects.filter(user=request.user)
     feed_back_delete = FeedBack.objects.filter(id=int(feedbackID)).first()
     feed_back_delete.delete()

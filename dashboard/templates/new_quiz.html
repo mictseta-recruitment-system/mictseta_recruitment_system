@@ -1,6 +1,6 @@
 {% extends 'dashboard_base.html' %}
 
-{% block title %}Add Staff{% endblock %}
+{% block title %}Add Quiz{% endblock %}
 
 {% block breadcrumbs %}
 <li class="breadcrumb-item"><a href="{% url 'dashboard.view_staff' %}">vacancy/Jobs</a></li>
@@ -8,6 +8,7 @@
 
 <li class="breadcrumb-item active" aria-current="page">Add Quiz</li>
 {% endblock %}
+
 
 {% block content %}
 
@@ -42,46 +43,56 @@
                                     </div>
                                 </div>
 
-                            <div class="">
+                            <div class="w-100">
                                 <h5>Questions </h5>
                                 
                                 <hr>
                                 {% for question in quiz.questions.all %}
                                 <h6>
                                     {{question.question_text}} ?  
-                                    <button type="button" onclick="toggleAnswer()" class="btn btn-outline-primary m-3 mt-0 mb-0 pt-0 pb-0">add answer</button> 
+                                    <button type="button" onclick="toggleAnswer({{question.id}})" class="btn btn-outline-primary m-3 mt-0 mb-0 pt-0 pb-0">add answer</button> 
                                 </h6>
 
-                                <div class="form-group w-100 bg-dark  p-2 mb-2" id="answers" style="display:none;">
+                                <div class="form-group w-100 bg-dark  p-2 mb-2" id="answers{{question.id}}" style="display:none;">
                                    
                                     <div class="d-flex justify-content-between">
                                         <div class="w-75">
                                             <label for="answer" class="text-white">Answer</label>
-                                            <input type="text" class="form-control " id="answer" name="answer" required>
+                                            <input type="text" class="form-control " id="answer{{question.id}}" name="answer" required>
                                         </div>
                                         <div cass=" w-100">
                                             <label for="correct" class="text-white">Correct</label>
-                                            <select  class="form-control " id="correct" >
+                                            <select  class="form-control " id="correct{{question.id}}" >
                                                  <option value="false" selected>No</option>       
                                                  <option value="true">Yes</option>       
                                             </select>
                                         </div>
-                                        <button type="button" onclick="addStaff()" class="btn btn-primary ">Add</button>
+                                        <button type="button" onclick="addAnswer('{{question.id}}')" class="btn btn-primary ">Add</button>
                                     </div>
                                 </div>
                                  
 
-                                <select  class="form-control" id = "answer_list">
-                                    <option value="" selected> </option>
-                                     <option value="2">2</option>       
-                                    
-                                     <option value="4">4</option>       
-                                </select>
+                               <ul class="list-group">
+                                {% for answer in  question.answers.all %}
+                                    {% if answer.is_correct %}
+                                   <li class="list-group-item text-success d-flex justify-content-between">
+                                       {{answer.answer_text}} 
+                                       <button class="btn btn-danger p-1" onclick="deleteAnswer({{answer.id}})">
+                                            <li class="fa fa-trash text-white" > </li>
+                                        </button>
+                                   </li>
+                                   {% else %}
+                                    <li class="list-group-item d-flex justify-content-between">
+                                       {{answer.answer_text}} <button class="btn btn-danger p-1 "onclick="deleteAnswer({{answer.id}})"><li class="fa fa-trash text-white" onclick="deleteAnswer({{answer.id}})"> </li></button>
+                                   </li>
+                                   {% endif %}
+                                {% endfor %}
+                               </ul>
                             </div>
                             <br>
                             {% endfor %}
                             {% endif %}
-                            <div class="col-md-6">
+                          <!--   <div class="col-md-6"> -->
                                <!--  <div class="form-group">
                                     <label for="username">title</label>
                                     <input type="text" class="form-control" id="username" name="username" required>
@@ -114,8 +125,8 @@
                                     <label for="password2">Confirm Password:</label>
                                     <input type="password" class="form-control" id="password2" name="password2" required>
                                 </div> -->
-                            </div>
-                            <div class="col-md-6">
+                         <!--    </div> -->
+                           <!--  <div class="col-md-6"> -->
                                <!--  <div class="form-group">
                                     <label for="job_title">Job Title:</label>
                                     <select class="form-control" id="job_title" name="job_title" required>
@@ -183,16 +194,28 @@
                                     </script>
                                 </div>
                             </div> -->
+                        </div> 
+                        {% if quiz %}
+                        <div class="row w-100 mt-2">
+                            {% if not quiz.is_active %}
+                            <div class="d-flex justify-content-center">    
+                                <button type="button" onclick="enableOrDisableQuiz('enable', {{quiz.id}})" class="btn btn-info w-75">Enable Quiz</button>
+                            </div>
+                            {% else %}
+                            <div class="d-flex justify-content-center">    
+                                <button type="button" onclick="enableOrDisableQuiz('disable',{{quiz.id}})" class="btn btn-warning w-75">Disable Quiz</button>
+                            </div>
+                            {% endif %}
                         </div>
-                        <button type="button" onclick="addStaff()" class="btn btn-success">Add User</button>
+                        {% endif%}
                     </form>
                 </div>
             </div>
         </div>
    
     <script>
-    function toggleAnswer() {
-      var element = document.getElementById("answers");
+    function toggleAnswer(answerID) {
+      var element = document.getElementById("answers"+answerID);
       if (element.style.display === "none") {
         element.style.display = "block"; // Show the element
       } else {

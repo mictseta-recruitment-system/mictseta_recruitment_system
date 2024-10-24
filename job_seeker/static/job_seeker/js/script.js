@@ -434,6 +434,53 @@ function uploadDocument(d_type, event) {
     });
 }
 
+function take_quiz() {
+  const url = 'http://127.0.0.1:8000/job/take_quiz/';
+  
+  const form = document.getElementById('myForm');
+ 
+  const formData = new FormData(form);
+
+  // Example: Convert formData to JSON object if needed
+  const formDataObject = {};
+  formData.forEach((value, key) => {
+    formDataObject[key] = value;
+  });
+
+  console.log(formData)
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(formDataObject),
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+      showFlashMessage(data.message, "success");
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
 
 
     // Setting the auto Progress
