@@ -127,7 +127,7 @@
                               <tr>
                           
                                   <th class="bg-dark text-white">Job Title</th>
-                                    <th class="bg-dark text-white">Candidate</th></tr></thead>
+                                    <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
@@ -470,7 +470,7 @@
                                 {% else %}
                                 <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
                                 {% endif %}
-                                
+
                               <td> 
                                 <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
                                 <a onclick="move_to_shortlist({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">short-list</a>
