@@ -106,7 +106,7 @@ class Interview(models.Model):
     start_time = models.CharField(max_length=225,null=False)
     end_time = models.CharField(max_length=225,null=False)
     def __str__(self):
-        return f'{self.user.application}'
+        return f'{self.application}'
 
 class FeedBack(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

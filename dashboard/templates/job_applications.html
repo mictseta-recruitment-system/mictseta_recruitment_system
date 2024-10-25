@@ -66,6 +66,7 @@
                           <thead>
                               <tr>
                                   <th class="bg-dark text-white">Job Title</th>
+                                  <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
@@ -78,20 +79,10 @@
                           {% if application.status == "pending" %}
                            <tr class="text-dark">
                               <td>{{application.job.title}}</td>
-                              {% if application.status == 'rejected' %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'approved' %}
-                              <td><button class="btn btn-success p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'interview' %}
-                              <td><button class="btn btn-info p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'short-list' %}
-                              <td><button class="btn btn-dark p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'pending' %}
-                              <td><button class="btn btn-warning p-0">{{application.job.status}}</button></td>
-                              {% else %}
-                              <td><button class="btn btn-outline-info p-0">{{application.job.status}}</button></td>
+                              <td><button class="btn btn-warning p-0"> {{application.user.first_name}} {{application.user.last_name}} </button></td>
+                              <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
                               
-                              {% endif %}
+                             
                               <td>{{application.date}}</td>
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
@@ -136,7 +127,8 @@
                               <tr>
                           
                                   <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">Job status</th>
+                                    <th class="bg-dark text-white">Candidate</th></tr></thead>
+                                  <th class="bg-dark text-white">status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
@@ -146,23 +138,17 @@
                                
                           {% for application in applications %}
               
-                          {% if application.filterd_out == True %}
+                          {% if application.filterd_out == True and application.status == 'pending' %}
                            <tr class="text-dark">
                               <td>{{application.job.title}}</td>
 
-                                {% if application.status == 'rejected' %}
-                                <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'approved' %}
-                                <td><button class="btn btn-success p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'interview' %}
-                                <td><button class="btn btn-info p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'short-list' %}
-                                <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'pending' %}
+                                 <td><button class="btn btn-warning p-0"> {{application.user.first_name}} {{application.user.last_name}} </button></td>
+                                
+                               
                                 <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
-                                {% else %}
-                                <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
-                                {% endif %}
+                               
+                               
+
                               <td>{{application.date}}</td>
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
@@ -201,9 +187,9 @@
                           <thead>
                               <tr>
                                  <th class="bg-dark text-white">Job Title</th>
+                                  <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">P. stage</th>
                                   <th class="bg-dark text-white">C. stage</th>
-                                  <th class="bg-dark text-white">Job status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
@@ -216,21 +202,11 @@
                            <tr class="text-dark">
                               
                               <td>{{application.job.title}}</td>
+                              <td>{{application.user.first_name}} {{application.user.last_name}}</td>
                               <td>{{application.previous_stage}}</td>
                               <td>{{application.current_stage}}</td>
-                                  {% if application.status == 'rejected' %}
-                                  <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'approved' %}
-                                  <td><button class="btn btn-success p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'interview' %}
-                                  <td><button class="btn btn-info p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'short-list' %}
-                                  <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'pending' %}
-                                  <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
-                                  {% else %}
-                                  <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
-                                  {% endif %}
+                                  
+                                  
                               <td>{{application.date}}</td>
                               <td> 
                                      <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
@@ -315,9 +291,9 @@
                           <thead>
                               <tr>
                                   <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">P. stage</th>
+                                  <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">C. stage</th>
-                                  <th class="bg-dark text-white">Interview Date</th>
+                                  <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">start time</th>
                                   <th class="bg-dark text-white">end time</th>
                                   <th class="bg-dark text-white">Action</th>
@@ -331,7 +307,7 @@
                            <tr class="text-dark">
                              
                               <td>{{interview.application.job.title}}</td>
-                              <td>{{interview.application.previous_stage}}</td>
+                              <td>{{interview.application.user.first_name}} {{interview.application.user.last_name}}</td>
                               <td>{{interview.application.current_stage}}</td>
                               <td>{{interview.date}}</td>
                               <td><b>{{interview.start_time}}</b></td>
@@ -480,7 +456,8 @@
                               <td>{{application.previous_stage}}</td>
                               <td>{{application.current_stage}}</td>
                               <td>{{application.date}}</td>
-                                  {% if application.status == 'rejected' %}
+
+                                {% if application.status == 'rejected' %}
                                 <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
                                 {% elif application.status == 'approved' %}
                                 <td><button class="btn btn-success p-0">{{application.status}}</button></td>
@@ -493,6 +470,7 @@
                                 {% else %}
                                 <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
                                 {% endif %}
+                                
                               <td> 
                                 <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
                                 <a onclick="move_to_shortlist({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">short-list</a>
