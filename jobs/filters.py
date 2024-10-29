@@ -42,7 +42,7 @@ class ApplicationFilter:
 					if not feed_back_exist:
 						application.is_rejected = True
 						feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{reason}",status="rejected")
-						feed_back.save()
+						feed_back.save() 
 
 	def standerd_filter(self):
 		print(self.applications)
@@ -66,10 +66,10 @@ class ApplicationFilter:
 		print(self.filterd_apllications)
 		self.rejection_reason("don't have qualifications required")
 
-		self.filter_by_language()
-		print("*********language filter ********")
-		print(self.filterd_apllications)
-		self.rejection_reason("Dont have language required")
+		#self.filter_by_language()
+		#print("*********language filter ********")
+		#print(self.filterd_apllications)
+		#self.rejection_reason("Dont have language required")
 
 		self.filter_by_experience()
 		print("********* experience filter ********")
@@ -193,11 +193,15 @@ class ApplicationFilter:
 		print("&%&%&%&%&%&%&%&%&%&%&")
 		if job_experience_list:
 			for application in self.filterd_apllications:
+				print("applications",application.user.email, application.user.qualifications.all())
 				for academic in application.job.educations.all():
 					academic_study_list.append(academic.field_of_study)
 					academic_level_list.append(academic.id)
 			valid_applications= self.filterd_apllications.filter(user__qualifications__field_of_study__in=academic_study_list).distinct()
 			self.filterd_apllications = valid_applications
+			print(valid_applications)
+			print(academic_study_list)
+			print(academic_level_list)
 
 	def filter_by_experience(self):
 		experience_list = []
