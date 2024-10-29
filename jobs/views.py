@@ -199,6 +199,7 @@ def add_job(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+
 @check_leave
 @csrf_protect
 def get_jobs(request):
