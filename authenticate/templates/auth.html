@@ -5,12 +5,19 @@
 {% block content %}
 {% load static %}
 <style>
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins" sans-serif;
+  }  
+    
+    
     body {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        background-color: #164b9a;
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
+        
+        background-color: #f9f9f9;
+
+        
     }
     .main {
         height: 100vh;
@@ -20,45 +27,28 @@
         align-items: center; /* Center content vertically */
     }
 
-    .oval-background {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 130%; /* Extend beyond the section */
-        height: 165%; /* Make it taller for a more oval shape */
-        background: linear-gradient(to right, #0693e3, #b0b0b0); /* Blue to Gray gradient */
-        border-radius: 50%; /* Makes the background oval */
-        transform: translate(50%, -15%); /* Adjust position to center */
-        z-index: -1; /* Send it behind other elements */
-    }
+    
 
-    @keyframes changeColorSignIn {
-        0% { background-color: rgba(255, 255, 255, 0.9); }
-        50% { background-color: rgba(240, 240, 240, 0.9); }
-        100% { background-color: rgba(255, 255, 255, 0.9); }
-    }
 
-    @keyframes changeColorSignUp {
-        0% { background-color: rgba(255, 255, 255, 0.9); }
-        50% { background-color: rgba(220, 240, 220, 0.9); }
-        100% { background-color: rgba(255, 255, 255, 0.9); }
-    }
+   
 
     .form-container {
-        width: 600px; /* Increased width */
-        height: 700px;
-        background-color: rgba(255, 255, 255, 0.9); /* Initial background */
-        border-radius: 10px; /* Rounded corners */
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-        padding: 20px; /* Padding inside the container */
+        width: 470px; /* Increased width */
+        height: 680px;
+        text-align:center ;  
+        background-color: hsla(213, 27%, 68%, 0.586); /* Initial background */
+        border-radius: 15px; /* Rounded corners */
+        box-shadow: 0 20px 25px rgba(1, 21, 171, 0.707); /* Subtle shadow for depth */
+        margin: 50px auto;
+        padding: 1px; /* Padding inside the container */
         position: relative; /* For positioning the oval background */
         animation: changeColorSignIn 0.5s forwards; /* Initial animation */
     }
 
     h1 {
-        font-size: 40px;
-        text-align: center;
-        margin-bottom: 25px;
+        font-size: 2rem; 
+        color: #000;
+        margin-bottom: 1.2rem;
     }
 
     h6 {
@@ -69,16 +59,19 @@
     }
 
     .input-group {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         position: relative;
     }
 
     .input-group input {
-        width: calc(100% - 40px); 
-        padding: 15px;
-        border: none; 
-        border-radius: 5px;
-        font-size: 16px;
+        width: 91%; 
+        outline: none;
+        padding: 12px 20px;
+        border: 1px solid #fff; 
+        color: #fff;
+        border-radius: 20px;
+        font-size: 1rem;
+        font-weight: normal;
         transition: all 0.3s ease; /* Transition for animation */
     }
 
@@ -113,6 +106,9 @@
         font-size: 18px;
         color: #333;
     }
+    input:hover{
+        border: 1px solid rgb(192, 192, 192);
+    }
 
     .remember-forgot {
         display: flex;
@@ -137,33 +133,47 @@
     }
 
     .btn {
-        width: 100%;
-        padding: 12px;
+        width: 90%;
+        padding: 10px 0;
+        margin-top: 1.8rem;
+        outline: none;
         border: none;  
-        border-radius: 5px;
-        font-size: 18px;
+        border-radius: 20px;
+        font-size: 1rem;
         cursor: pointer;
+        color: #fff;
+        background-color: rgb(17,107,143);
         transition: background-color 0.3s ease;
     }
-
-    .btn-primary {
-        background-color: #0693e3;
-    }
+button:hover{
+    background-color: rgb(17,107,143,104, .707);
+}
+   
+    
 
     .right-section h1 {
         color: black;
+    }
+    .flashmessage{
+        position: absolute;
+        margin-top: 100px;
+        margin-left: 30px;
+        z-index: 10000;
+
     }
 </style>
 
 <div class="main">
     <div class="filled-right-section">
         <div class="oval-background"></div> <!-- Oval Background with Gradient -->
-        <div id="flash-message-container"></div>
+        <div id="flash-message-container" class="flashmessage"></div>
         <div class="right-section">
             <div class="form-container" id="form-container">
                 <div class="wrapper" id="wrapper-sign-in">
                     <form action="" id="login-form" method="POST">
                         {% csrf_token %}
+                       <h3>Welcome back</h3>
+                       <p>Please log in using your personal information to stay connected with us.</p>
                         <h1>Login</h1>
                         <div class="spinner"></div>
                         <div class="input-group mb-3">
