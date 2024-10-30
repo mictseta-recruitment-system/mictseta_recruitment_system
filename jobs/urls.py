@@ -30,6 +30,8 @@ urlpatterns = [
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
     path('move_to_shortlist/', views.move_to_shortlist, name='move_to_shortlist'),
     path('auto_filter/', views.auto_filter, name='auto_filter'),
+    path('apply_filter/', views.apply_filter, name='apply_filter'),
+    
     path('approve_interview/', views.approve_interview, name='approve_interview'),
     path('reject_applicantion/', views.reject_applicantion, name='reject_applicantion'),
     path('purge/', views.purge, name='purge'),

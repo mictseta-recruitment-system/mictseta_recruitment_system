@@ -314,8 +314,41 @@ def auto_filter(request):
 		except Exception as e:
 			return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=500)
 
-		
+	job_post = JobPost.objects.get(id=filters)
+	job_post.is_filter = True
+	job_post.save()		
 	return JsonResponse({'message': f'{applications.get_total()} applications filtered', 'status': 'success'}, status=201)
+
+
+check_leave
+@csrf_protect
+def apply_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	filters = json_data.get('filter')	
+	
+
+	filter_id = int(filters)
+	applications = JobApplication.objects.filter(job__id=filter_id).all()
+	for application in applications:
+		application.is_filter_applied = True
+		application.save()
+
+		feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{application.reason}",status="rejected").first()
+		if not application.is_rejected:
+			if not feed_back_exist:
+				application.is_rejected = True
+				application.save()
+				feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{application.reason}",status="rejected")
+				feed_back.save() 
+		
+	return JsonResponse({'message': f'Filter applied  successfully', 'status': 'success'}, status=201)
 
 
 @check_leave
@@ -1082,6 +1115,8 @@ def delete_job_skill(request):
 				job_skill = ComputerSkill.objects.get(name=name)
 				job_skill.delete()
 			except Exception as e:
+				return JsonResponse({'errors': {'Skill':[f'{e} ']}, 'status': 'error'}, status=400)
+
 				name = SoftSkillsList.objects.get(skill=data['job_skill_id'])
 				exists = SoftSkill.objects.filter(job_post=job_post, name=name).exists()
 				if not exists:

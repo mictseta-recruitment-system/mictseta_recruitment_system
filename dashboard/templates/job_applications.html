@@ -32,6 +32,9 @@
                   <div>
                         <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button>
                         <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button>
+                        {% if applications.0.job.is_filter %}
+                        <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button>
+                        {% endif %}
                   </div>
                   {% else %}
                     <div> 
@@ -77,18 +80,51 @@
                                
                           {% for application in applications %}
                           {% if application.status == "pending" %}
-                           <tr class="text-dark">
-                              <td>{{application.job.title}}</td>
-                              <td> {{application.user.first_name}} {{application.user.last_name}}</td>
-                              <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
-                              
-                             
-                              <td>{{application.date}}</td>
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
-                                <i class="fa fa-eye"> </i></a>
-                             <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
-                           </td>
-                          </tr>
+                            {% if application.is_filter %}
+                              {% if application.filterd_out == True %}
+                               <tr class="text-sucess" >
+                                  <td class="text-success">{{application.job.title}}</td>
+                                  <td class="text-success"> {{application.user.first_name}} {{application.user.last_name}}</td>
+                                  <td class="text-success"><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                  
+                                 
+                                  <td class="text-success">{{application.date}}</td>
+                                  <td class="text-success"> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                    <i class="fa fa-eye"> </i></a>
+                                 <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                               </td>
+                              </tr>
+                              {% elif application.filterd_out == False %} 
+                               <tr class="text-danger text-danger"  >
+                                  <td class="text-danger">{{application.job.title}}</td>
+                                  <td class=" text-danger"> {{application.user.first_name}} {{application.user.last_name}}</td>
+                                  <td class=" text-danger"><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                  
+                                 
+                                  <td class=" text-danger">{{application.date}}</td>
+                                  <td class=" text-danger"> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                    <i class="fa fa-eye"> </i>
+                                </a>
+                                  <button class="btn btn-outline-danger p-0">{{application.reason}}</button>
+                                 <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                               </td>
+                              </tr>
+                              {%endif%}
+                            {% else %}
+                             <tr class="text-sucess" >
+                                  <td class="">{{application.job.title}}</td>
+                                  <td class=""> {{application.user.first_name}} {{application.user.last_name}}</td>
+                                  <td class=""><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                  
+                                 
+                                  <td class="">{{application.date}}</td>
+                                  <td class=""> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                    <i class="fa fa-eye"> </i></a>
+                                 <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                               </td>
+                              </tr>
+                            {% endif %}
+
                           {% endif%}
                               {% endfor %}                 
                           </tbody>
@@ -138,7 +174,7 @@
                                
                           {% for application in applications %}
               
-                          {% if application.filterd_out == True and application.status == 'pending' %}
+                          {% if application.filterd_out == True and application.is_filter_applied == True and application.status == 'pending' %}
                            <tr class="text-dark">
                               <td>{{application.job.title}}</td>
 
@@ -150,7 +186,7 @@
                                
 
                               <td>{{application.date}}</td>
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
                                <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td>
                           </tr>
@@ -317,7 +353,7 @@
                                <i class="fa fa-edit"> </i>
                                Reschedule
                               </button>
-                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
+                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid interview.application.job.id %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
 
                               <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-1" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
                               <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-1" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
@@ -472,7 +508,7 @@
                                 {% endif %}
 
                               <td> 
-                                <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
+                                <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
                                 <a onclick="move_to_shortlist({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">short-list</a>
                               </td>
                           </tr>
@@ -540,7 +576,7 @@
                                 {% else %}
                                 <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
                                 {% endif %}
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}"><i class="fa fa-eye"></i></a> </td>
+                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}"><i class="fa fa-eye"></i></a> </td>
                           
                           </tr>
                           {% endif %}

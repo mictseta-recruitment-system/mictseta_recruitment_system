@@ -18,6 +18,7 @@ class JobPost(models.Model):
     is_complete = models.BooleanField(null=False, default=False)
     is_approved = models.BooleanField(null=False, default=False)
     is_active = models.BooleanField(null=False, default=True)
+    is_filter= models.BooleanField(null=False, default=False)
     def __str__(self):
         return f'{self.title} '
 
@@ -94,8 +95,15 @@ class JobApplication(models.Model):
     previous_stage = models.CharField(max_length=100, null=True)
     current_stage = models.CharField(max_length=100, null=True)
     status = models.CharField(max_length=100, null=False)
+    
+
+    is_filter = models.BooleanField(null=False, default=False)
     filterd_out = models.BooleanField(null=False, default=False)
     is_rejected = models.BooleanField(null=False, default=False)
+    reason = models.CharField(null=True, max_length=100, default="")
+    is_filter_applied = models.BooleanField(null=False, default=False)
+
+
     def __str__(self):
         return f'{self.user.email} - {self.job.title}'
 

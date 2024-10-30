@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -337,7 +337,7 @@ def update_staff(request, staffID):
 	else:
 		return redirect('render_auth_page')
 
-def jobsekeer_details(request, seekerID):
+def jobsekeer_details(request, seekerID,jobID):
 	if request.user.is_authenticated:
 		
 		seeker = User.objects.get(profile__uuid=seekerID)
@@ -346,9 +346,9 @@ def jobsekeer_details(request, seekerID):
 				notify_len = len(Notification.objects.filter(is_seen=False))
 			else:
 				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
-			print(seeker.profile.age)
-			print(seeker.profile.gender)
-			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len})
+			application = JobApplication.objects.filter(job__id=int(jobID)).first()
+			feedback = FeedBack.objects.filter(user=seeker,job=application.job)
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:

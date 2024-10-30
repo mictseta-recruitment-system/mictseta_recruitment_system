@@ -21,14 +21,22 @@ class ApplicationFilter:
 
 	def apply_filter(self):
 		self.total = 0
+		for appli in self.applications :
+			appli.is_filter = True
+			appli.save()
+
 		for application in self.filterd_apllications:
 			application.filterd_out = True
+			application.is_filter = True
 			application.save()
+
 			self.total += 1
 
 	def reset_filter(self):
 		for application in self.applications:
 			application.filterd_out = False
+			application.is_filter = False
+			application.reason=""
 			application.save()
 
 	def get_total(self):
@@ -37,12 +45,15 @@ class ApplicationFilter:
 	def rejection_reason(self,reason):
 		for application in self.applications:
 			if application not in self.filterd_apllications:
-				feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{reason}",status="rejected").first()
-				if not application.is_rejected:
-					if not feed_back_exist:
-						application.is_rejected = True
-						feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{reason}",status="rejected")
-						feed_back.save() 
+				if application.is_filter_applied == False and application.reason =="":
+					application.reason = f'{reason}'
+					application.save()
+				#feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{reason}",status="rejected").first()
+				# if not application.is_rejected:
+				# 	if not feed_back_exist:
+				# 		application.is_rejected = True
+				# 		feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{reason}",status="rejected")
+				# 		feed_back.save() 
 
 	def standerd_filter(self):
 		print(self.applications)
@@ -158,8 +169,12 @@ class ApplicationFilter:
         	# Check if no documents are uploaded
 			Q(documents_count__lt=1)
 		).distinct()
+		print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+		print(incomplete_users)
+		print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+
     	# Exclude the incomplete users from the original Applications queryset
-		self.filterd_apllications = self.applications.exclude(id__in=incomplete_users)
+		self.filterd_apllications = incomplete_users
 
 	def filter_by_computer_skill(self):
 		job_skill_list = []
