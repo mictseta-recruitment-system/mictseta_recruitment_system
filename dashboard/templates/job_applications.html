@@ -15,6 +15,10 @@
 
       {% if applied_job.status == "closed" %}
         <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
+
+      {% elif applied_job.id == applications.0.job.id %}
+      <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-warning m-1">filter by : {{applied_job.title.title}}
+       </a>
       {% else %}
         <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
        </a>
@@ -34,10 +38,14 @@
                         <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button>
                         {% if applications.0.job.is_filter %}
                           <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button>
+                           
+                            <button class="btn btn-outline-info" onclick="reset_filter('{{applications.0.job.id}}')"> <i class="fa fa-cog"></i> Reset</button>
+                            
                             {% if applications.0.job.hide_application %}
                                <button class="btn btn-outline-success" onclick="show_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye"></i> Show</button>
                             {% elif not applications.0.job.hide_application %}
                              <button class="btn btn-outline-danger" onclick="hide_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye-slash"></i> Hide</button>
+                             
                             {% endif %}
                         {% endif %}
                   </div>

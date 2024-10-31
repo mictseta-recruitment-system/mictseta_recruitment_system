@@ -401,6 +401,29 @@ def show_filter(request):
 			application.save()
 	return JsonResponse({'message': f'show applications', 'status': 'success'}, status=201)
 
+@check_leave
+@csrf_protect
+def reset_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	jobID = json_data.get('jobID')	
+	
+	job_id = int(jobID)
+	applications = JobApplication.objects.filter(job__id=job_id).all()
+	for application in applications:
+		if not application.is_filter_applied:
+			application.hide = False
+			application.filterd_out = False
+			application.is_filter = False
+			application.reason=""
+			application.save()
+	return JsonResponse({'message': f'show applications', 'status': 'success'}, status=201)
 
 
 @check_leave

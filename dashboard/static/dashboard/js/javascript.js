@@ -1171,6 +1171,44 @@ function hide_filter(jobID) {
   });
 }
 
+function reset_filter(jobID) {
+  const url = 'http://127.0.0.1:8000/job/reset_filter/';
+  const jsonData = {
+    jobID: jobID,
+  };
+
+  fetch(url, { 
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+
 function approve_interview(appID) {
   const url = 'http://127.0.0.1:8000/job/approve_interview/';
   
