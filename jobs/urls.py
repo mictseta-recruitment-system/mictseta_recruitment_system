@@ -46,8 +46,10 @@ urlpatterns = [
     path('delete_answer/', views.delete_answer, name='delete_answer'),
     path('take_quiz/', views.take_quiz, name='take_quiz'),
      path('enable_or_disable_quiz/', views.enable_or_disable_quiz, name='enable_or_disable_quiz'),
+     path('hide_filter/', views.hide_filter, name='hide_filter'),
+     path('show_filter/', views.show_filter, name='show_filter'),
+ 
 
-    
 
 
     # path('delete_user/', views.delete_user, name='delete_user')

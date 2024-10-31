@@ -320,7 +320,7 @@ def auto_filter(request):
 	return JsonResponse({'message': f'{applications.get_total()} applications filtered', 'status': 'success'}, status=201)
 
 
-check_leave
+@check_leave
 @csrf_protect
 def apply_filter(request):
 	if not request.user.is_authenticated:
@@ -339,8 +339,6 @@ def apply_filter(request):
 	for application in applications:
 		application.is_filter_applied = True
 		application.save()
-		print("&&&&&&&&&&&&&&&&&&&&&TTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
-		print(application)
 
 		feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{application.reason}",status="rejected").first()
 		if not application.filterd_out:
@@ -351,6 +349,58 @@ def apply_filter(request):
 				feed_back.save() 
 		
 	return JsonResponse({'message': f'Filter applied  successfully', 'status': 'success'}, status=201)
+
+
+@check_leave
+@csrf_protect
+def hide_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	jobID = json_data.get('jobID')	
+	
+	job_id = int(jobID)
+	job = JobPost.objects.filter(id=job_id).first()
+	job.hide_application = True
+	job.save()
+	print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+	print(job)
+	applications = JobApplication.objects.filter(job__id=job_id).all()
+	for application in applications:
+		if application.is_filter_applied:
+			application.hide = True
+			application.save()
+	return JsonResponse({'message': f'hide applications', 'status': 'success'}, status=201)
+
+@check_leave
+@csrf_protect
+def show_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	jobID = json_data.get('jobID')	
+	
+	job_id = int(jobID)
+	job = JobPost.objects.filter(id=job_id).first()
+	job.hide_application = False
+	job.save()
+	applications = JobApplication.objects.filter(job__id=job_id).all()
+	for application in applications:
+		if application.is_filter_applied:
+			application.hide = False
+			application.save()
+	return JsonResponse({'message': f'show applications', 'status': 'success'}, status=201)
+
 
 
 @check_leave

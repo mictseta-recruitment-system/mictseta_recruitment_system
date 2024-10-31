@@ -19,6 +19,7 @@ class JobPost(models.Model):
     is_approved = models.BooleanField(null=False, default=False)
     is_active = models.BooleanField(null=False, default=True)
     is_filter= models.BooleanField(null=False, default=False)
+    hide_application = models.BooleanField(null=False,default=False)
     def __str__(self):
         return f'{self.title} '
 
@@ -96,7 +97,7 @@ class JobApplication(models.Model):
     current_stage = models.CharField(max_length=100, null=True)
     status = models.CharField(max_length=100, null=False)
     
-
+    hide = models.BooleanField(null=False, default=False)
     is_filter = models.BooleanField(null=False, default=False)
     filterd_out = models.BooleanField(null=False, default=False)
     is_rejected = models.BooleanField(null=False, default=False)

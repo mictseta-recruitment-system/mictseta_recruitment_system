@@ -30,18 +30,22 @@
                   <h6>ALL Application List</h6> 
                   {% if filtered %}
                   <div>
-                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button>
+                        <button class="btn btn-danger" onclick="auto_filter('{{applications.0.job.id}}','strict')">Strict filter</button>
                         <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button>
                         {% if applications.0.job.is_filter %}
-                        <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button>
+                          <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button>
+                            {% if applications.0.job.hide_application %}
+                               <button class="btn btn-outline-success" onclick="show_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye"></i> Show</button>
+                            {% elif not applications.0.job.hide_application %}
+                             <button class="btn btn-outline-danger" onclick="hide_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye-slash"></i> Hide</button>
+                            {% endif %}
                         {% endif %}
                   </div>
                   {% else %}
-                    <div> 
+                  <!--   <div> 
                         <button class="btn btn-dark-outline" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-cog"></i> </button>
-                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button>
-                        <button class="btn btn-info" onclick="auto_filter('all','standerd')">Standard filter</button>
-                    </div>
+                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button> -->
+                    
                   {% endif %}
                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog">
@@ -79,7 +83,7 @@
                           <tbody> 
                                
                           {% for application in applications %}
-                          {% if application.status == "pending" %}
+                          {% if application.status == "pending" and not application.hide %}
                             {% if application.is_filter %}
                               {% if application.filterd_out == True %}
                                <tr class="text-sucess" >
