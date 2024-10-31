@@ -130,7 +130,7 @@
                         <div class="row">
                             <div class="col-6 shadow-sm p-3 rounded">
                                 <h5>Application </h5>
-                                <p><b>Job Title:</b> {{application.job.title}}</p>
+                                <p><b>Job Title:</b> {{application.job.title}} </p>
                                 <p><b>Date:</b> {{application.date}}</p>
                                 <p><b>Status:</b> {{application.status}}</p>
                                 <p><b>Previous Stage: </b> {{application.previous_stage}} </p>
@@ -140,9 +140,9 @@
                                 <h5>Filter Information</h5>
                                 <p><b>is application filterd: </b> {% if application.is_filter %}YES{% else %}NO{% endif %}</p>
 
-                                <p><b>Is Selected:</b> {% if application.filterd_out %}YES{% else %}NO{% endif %}</p>
-                                <p><b>Is Rejected:</b> {% if application.is_rejected %}YES{% else %}NO{% endif %}</p>
+                                <p><b>Can Move to next Stage:</b> {{application.filterd_out}}</p>
                                 <p><b>Reason: </b> {{application.reason}} </p>
+                                <p><b>Is Rejected:</b> {% if application.is_rejected %}YES{% else %}NO{% endif %}</p>
 
                                 <p><b>Is filter applied:</b> {% if application.is_filter_applied %}YES{% else %}NO{% endif %}</p>
                                 <!-- Salary is not displayed -->

@@ -346,7 +346,7 @@ def jobsekeer_details(request, seekerID,jobID):
 				notify_len = len(Notification.objects.filter(is_seen=False))
 			else:
 				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
-			application = JobApplication.objects.filter(job__id=int(jobID)).first()
+			application = JobApplication.objects.filter(user=seeker,job__id=int(jobID)).first()
 			feedback = FeedBack.objects.filter(user=seeker,job=application.job)
 			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback})
 		else:

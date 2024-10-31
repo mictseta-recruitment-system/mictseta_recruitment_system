@@ -339,9 +339,11 @@ def apply_filter(request):
 	for application in applications:
 		application.is_filter_applied = True
 		application.save()
+		print("&&&&&&&&&&&&&&&&&&&&&TTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
+		print(application)
 
 		feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{application.reason}",status="rejected").first()
-		if not application.is_rejected:
+		if not application.filterd_out:
 			if not feed_back_exist:
 				application.is_rejected = True
 				application.save()

@@ -45,7 +45,7 @@ class ApplicationFilter:
 	def rejection_reason(self,reason):
 		for application in self.applications:
 			if application not in self.filterd_apllications:
-				if application.is_filter_applied == False and application.reason =="":
+				if application.is_filter_applied == False:
 					application.reason = f'{reason}'
 					application.save()
 				#feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{reason}",status="rejected").first()
