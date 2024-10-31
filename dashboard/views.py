@@ -348,7 +348,9 @@ def jobsekeer_details(request, seekerID,jobID):
 				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			application = JobApplication.objects.filter(user=seeker,job__id=int(jobID)).first()
 			feedback = FeedBack.objects.filter(user=seeker,job=application.job)
-			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback})
+			quiz_id = Quiz.objects.get(job=application.job)
+			quiz = QuizResults.objects.filter(user=seeker, quiz=quiz_id).first()
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:

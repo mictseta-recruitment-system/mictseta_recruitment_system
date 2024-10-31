@@ -147,6 +147,36 @@
                                 <p><b>Is filter applied:</b> {% if application.is_filter_applied %}YES{% else %}NO{% endif %}</p>
                                 <!-- Salary is not displayed -->
                             </div>
+                             <div class="col-12 shadow-lg p-3 rounded">
+                                <h5>Quiz Results</h5>
+                                <table class="table">
+                                    <thead class="bg-dark">
+                                        <tr class="text-white">
+                                            
+                                          <th style="padding: 10px; text-align: left; font-weight: bold;">Date </th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Quiz name</th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Results</th>
+                                       
+                                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-secondary">
+                                      <tr>
+                                      	<td>
+                                      		{{quiz.date}}
+                                      	</td>
+                                      	<td>
+                                      			{{quiz.quiz}}
+                                      	</td>
+                                      	<td>
+                                      			{{quiz.results}}
+                                      	</td>
+
+                                      </tr>
+                                     </tbody>
+                                </table>
+                                <!-- Salary is not displayed -->
+                            </div>
                             <div class="col-12 shadow-lg p-3 rounded">
                                 <h5>Application stages </h5>
                                 <table class="table table-bordered table-striped bg-dark">
