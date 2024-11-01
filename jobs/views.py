@@ -269,6 +269,7 @@ def move_to_shortlist(request):
 				applicant.current_stage = "short listing stage"
 				applicant.staff = request.user
 				applicant.is_rejected = False 
+				applicant.filterd_out = True 
 				applicant.reason = ""
 				applicant.save()
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to Short-List stage",status="Short-List")
@@ -530,6 +531,7 @@ def reject_applicantion(request):
 				applicant.current_stage = "rejected stage"
 				applicant.staff = request.user
 				applicant.is_rejected = True
+				applicant.filterd_out = False
 				applicant.reason = json_data.get('reason')
 				applicant.save()
 				interview = Interview.objects.filter(application=applicant).first()

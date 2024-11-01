@@ -364,7 +364,7 @@
                             </div>
                           
                             <div class="col-6  p-3 border-end border-dark">
-                                <h5>Work Experience
+                                <h5>Work Experience {% if 'experience' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}
 															</h5>
                                 <hr style="color: skyblue;">
                                 <div class="p-3 border border-dark-subtle rounded"style="max-height: 310px; overflow-y: scroll; overflow-x: auto;  background-color: rgb(238, 246, 255); ">
@@ -405,7 +405,7 @@
 
 
                             <div class="col-6  p-3 border-end border-dark">
-                                <h5>Academic Qualification</h5>
+                                <h5>Academic Qualification {% if 'academic' in application.reason or 'Academic' in application.reason or 'Qualification' in application.reason or 'qualification' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
                                 <hr style="color: skyblue;">
                                 <div class="p-3  border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
@@ -447,7 +447,7 @@
 
 
                              <div class="col-6  p-3  border-end border-dark">
-                                <h5>Soft Skills</h5>
+                                <h5>Soft Skills  {% if 'soft' in application.reason or 'Soft' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
                                 <hr style="color: skyblue;">
                                 <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
@@ -484,7 +484,7 @@
                                 
                             </div>
                              <div class="col-6  p-3 border-end border-dark">
-                                <h5>Computer Skills</h5>
+                                <h5>Computer Skills  {% if 'computer' in application.reason or 'Computer' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
                                 <hr style="color: skyblue;">
                                 <div class="p-3 border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
@@ -524,7 +524,7 @@
 
 
                         <div class="col-6  p-3  border-end border-dark">
-                                <h5>Lanuage </h5>
+                                <h5>Language {% if 'language' in application.reason or 'Language' in application.reason or 'Langauge' in application.reason  or 'langauge' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%} </h5>
                                 <hr style="color: skyblue;">
                                 <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
