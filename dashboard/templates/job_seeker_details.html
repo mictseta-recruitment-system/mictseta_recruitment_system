@@ -216,13 +216,21 @@
                                  		<p><b>Can Move to next Stage:</b> NO</p>
                                 {% endif %}
 
-                                {% if not application.filterd_out %}
-                                <p><b>Reason: </b> {{application.reason}} </p>
+                                {% if not application.filterd_out%}
+                                <ul>
+                               		<li> <p><b>Reason: </b> {{application.reason}} </p></li>
+                                	
+                                </ul>
                                 {% endif %}
 
                                 {% if application.is_rejected %}
                                 <p><b>Is Rejected:</b> YES</p>
+                                <ul>
+                                		<li> <p><b>Reason: </b> {{application.reason}} </p></li>
+                                	
+                                </ul>
                                 {% endif %}
+                               
 
                                 <p><b>Is filter applied:</b> {% if application.is_filter_applied %}YES{% else %}NO{% endif %}</p>
                                 <!-- Salary is not displayed -->
@@ -359,7 +367,7 @@
                                 <h5>Work Experience
 															</h5>
                                 <hr style="color: skyblue;">
-                                <div class="p-3 sroll-bar rounded"style="max-height: 310px; overflow-y: scroll; overflow-x: auto;  background-color: rgb(96, 119, 142); ">
+                                <div class="p-3 border border-dark-subtle rounded"style="max-height: 310px; overflow-y: scroll; overflow-x: auto;  background-color: rgb(238, 246, 255); ">
                                 {% for experience in seeker.working_expereince.all %}
 								                    <p><strong>Job Title:</strong> {{ experience.job_title.title }}</p>
 								                    <p><strong>Start Date:</strong> {{ experience.start_date }}</p>
@@ -374,7 +382,7 @@
                             <div class="col-6  p-3 rounded ">
                                 <h5>Required Work Experience</h5>
                                 <hr style="color: red;">
-                                <div class="p-3 rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3  border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
 	                              
 
@@ -399,7 +407,7 @@
                             <div class="col-6  p-3 border-end border-dark">
                                 <h5>Academic Qualification</h5>
                                 <hr style="color: skyblue;">
-                                <div class="p-3 rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3  border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
                                 {% for qualification in seeker.qualifications.all %}
                                     <p><strong>Field of study:</strong> {{ qualification.field_of_study }}</p>
@@ -418,7 +426,7 @@
                             <div class="col-6  p-3  ">
                                 <h5>Required Academic Qualification</h5>
                                 <hr style="color: red;">
-                                <div class="p-3 rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
                             
 										                {% for education in application.job.educations.all %}
@@ -441,7 +449,7 @@
                              <div class="col-6  p-3  border-end border-dark">
                                 <h5>Soft Skills</h5>
                                 <hr style="color: skyblue;">
-                                <div class="p-3 rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
                                 {% for skill in seeker.softskills_set.all %}
 								                    <p><strong>Soft Skill:</strong> {{ skill.skill }}</p>
@@ -457,7 +465,7 @@
                             <div class="col-6 p-3 ">
                                 <h5>Required Soft Skills</h5>
                                 <hr style="color: red;">
-                                <div class="p-3 rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
                                  
 																{% for skill in application.job.S_skills.all %}
 																  
@@ -478,7 +486,7 @@
                              <div class="col-6  p-3 border-end border-dark">
                                 <h5>Computer Skills</h5>
                                 <hr style="color: skyblue;">
-                                <div class="p-3 rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3 border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
                                  {% for skill in seeker.computerskills_set.all %}
 									                    <p><strong>Skill:</strong> {{ skill.skill }}</p>
@@ -494,7 +502,7 @@
                             <div class="col-6 p-3  ">
                                 <h5>Required Computer Skills</h5>
                                 <hr style="color: red;">
-                                <div class="p-3 rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
                                 
 									                {% for skill in application.job.C_skills.all %}
 									               
@@ -518,7 +526,7 @@
                         <div class="col-6  p-3  border-end border-dark">
                                 <h5>Lanuage </h5>
                                 <hr style="color: skyblue;">
-                                <div class="p-3 rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
 
                                   {% for language in seeker.language_set.all %}
                                     <p><strong>Language:</strong> {{ language.language }}</p>
@@ -535,7 +543,7 @@
                             <div class="col-6 p-3">
                                 <h5>Required Lanuage </h5>
                                  <hr style="color: red;">
-                                <div class="p-3 rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(96, 119, 142);">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
                                  {% for langauge in application.job.j_languages.all %}
 									            
 									                    <div class="ms-2 me-auto">
@@ -638,8 +646,8 @@
       </div>
       <div class="modal-body">
        <div class="form-group">
-       	<label for="message" class="form-label"><h6>Add Note or Message to outline Application Rejection</h6></label>
-       	<label for="message" class="form-label">requied field</label>
+       	<label for="message" class="form-label"><h6><i class="fa fa-circle-info text-info"> </i> Add Note or Message to outline Application Rejection</h6></label>
+       	<label for="message" class="form-label">message - requied field</label>
        		<input class="form-control" type="text" id="message{{application.id}}" required></input>
        </div>
       </div>

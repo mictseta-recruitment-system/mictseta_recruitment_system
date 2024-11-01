@@ -169,9 +169,6 @@ class ApplicationFilter:
         	# Check if no documents are uploaded
 			Q(documents_count__lt=1)
 		).distinct()
-		print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-		print(incomplete_users)
-		print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
 
     	# Exclude the incomplete users from the original Applications queryset
 		self.filterd_apllications = incomplete_users
@@ -203,20 +200,16 @@ class ApplicationFilter:
 		for application in self.filterd_apllications:
 			if application.job.educations.all():
 				job_experience_list.append(application)
-		print(job_experience_list)
+		
 
-		print("&%&%&%&%&%&%&%&%&%&%&")
 		if job_experience_list:
 			for application in self.filterd_apllications:
-				print("applications",application.user.email, application.user.qualifications.all())
 				for academic in application.job.educations.all():
 					academic_study_list.append(academic.field_of_study)
 					academic_level_list.append(academic.id)
 			valid_applications= self.filterd_apllications.filter(user__qualifications__field_of_study__in=academic_study_list).distinct()
 			self.filterd_apllications = valid_applications
-			print(valid_applications)
-			print(academic_study_list)
-			print(academic_level_list)
+
 
 	def filter_by_experience(self):
 		experience_list = []
@@ -224,8 +217,6 @@ class ApplicationFilter:
 		for application in self.filterd_apllications:
 			if application.job.experiences.all():
 				job_experience_list.append(application)
-		print(job_experience_list)
-		print("&%&%&%&%&%&%&%&%&%&%&")
 		if job_experience_list:
 			for application in self.filterd_apllications:
 				for experience in application.job.experiences.all():
@@ -239,8 +230,6 @@ class ApplicationFilter:
 		for application in self.filterd_apllications:
 			if application.job.j_languages.all():
 				job_experience_list.append(application)
-		print(job_experience_list)
-		print("&%&%&%&%&%&%&%&%&%&%&")
 		if job_experience_list:
 			for application in self.filterd_apllications:
 				for language in application.job.j_languages.all():

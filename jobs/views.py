@@ -14,6 +14,8 @@ from datetime import datetime
 from django.utils.timezone import now
 from django.utils import timezone
 from .custom_decorators import check_leave, change_application_status
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your views here.
@@ -235,6 +237,13 @@ def move_to_interview(request):
 				
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to interview stage",status="Processing")
 				feed_back.save()
+				send_mail(
+			        'Updated Application Status',
+			        'Dear Applicant. \n Your application was successfully moved to the <h1><b>Interview Stage </b></h1> \n kindly check your application tracking status to stay updated \n Best Regards \n MICT SETA',
+			        settings.DEFAULT_FROM_EMAIL,
+			        ['221649921@edu.vut.ac.za','sixskies25@gmail.com'],  
+			        fail_silently=False,
+			    )
 				return JsonResponse({'message': f'{applicant.user.email} moved to interview stage', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -256,9 +265,11 @@ def move_to_shortlist(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status = "short_list"
-				applicant.previous_stage = "auto filtering stage"
+				applicant.previous_stage = applicant.current_stage
 				applicant.current_stage = "short listing stage"
 				applicant.staff = request.user
+				applicant.is_rejected = False 
+				applicant.reason = ""
 				applicant.save()
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to Short-List stage",status="Short-List")
 				feed_back.save()
@@ -515,9 +526,10 @@ def reject_applicantion(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status ="rejected"
-				applicant.previous_stage = "short listing stage"
+				applicant.previous_stage = applicant.current_stage
 				applicant.current_stage = "rejected stage"
 				applicant.staff = request.user
+				applicant.is_rejected = True
 				applicant.reason = json_data.get('reason')
 				applicant.save()
 				interview = Interview.objects.filter(application=applicant).first()
@@ -582,7 +594,7 @@ def set_interview(request):
 				interview = Interview.objects.create(user=user,application=applicant,date=data['date'],start_time=data['start_time'],end_time=data['end_time'])
 				interview.save()
 				applicant.status = "interview"
-				applicant.previous_stage = "short listing stage"
+				applicant.previous_stage = applicant.current_stage
 				applicant.current_stage = "interview stage"
 				applicant.staff = request.user
 				applicant.save()

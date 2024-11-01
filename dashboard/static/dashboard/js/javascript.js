@@ -1288,16 +1288,16 @@ function approve_interview(appID) {
 function reject_applicantion(appID, intvw) {
   const url = 'http://127.0.0.1:8000/job/reject_applicantion/';
   try {
-  var reason = document.getElementById('message' + intvw).value;
+  var reason = document.getElementById('message' + appID).value;
   if (reason =="" || reason== null){
-    reason= document.getElementById('messages' + intvw).value;
+    reason= document.getElementById('messages' + appID).value;
   }
  
   
 } catch (error) {
   console.error("An error occurred:", error);
   // Optional: Set a default value if both elements are missing or inaccessible
-   var reason = document.getElementById('messages' + intvw).value;
+   var reason = document.getElementById('messages' + appID).value;
 }
   const jsonData = {
     appID: appID,

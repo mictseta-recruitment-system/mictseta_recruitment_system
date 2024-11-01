@@ -43,17 +43,187 @@
                   {% endif %}
                   {% if filtered %}
                   <div>
-                        <button class="btn btn-danger" onclick="auto_filter('{{applications.0.job.id}}','strict')">Strict filter</button>
-                        <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button>
+                       <!--  <button class="btn btn-danger" onclick="auto_filter('{{applications.0.job.id}}','strict')">Strict filter</button> -->
+                       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#strict"> strict filter
+                              </button>
+                              <div class="modal fade" id="strict" tabindex="-1" aria-labelledby="strict" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable  modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="strict">Warning - strict filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b class="text-info">filter applications</b> using the <b class="text-info" >strict</b> method on all applicattions for <b class="text-info"> {{applications.0.job.title}}.</b><br>
+                                    <hr>
+                                    <h4><b>The  <b class="text-danger"> Strict</b> Filter checks the follwiong:</b></h4>
+                                    <br>
+                                    <ol>
+                                      <li><b>Profile</b> - checks applications with complete profile information</li>
+                                      <li><b>Soft skill filter</b> -  checks applications with required soft skills and proficency level </li>
+                                      <li><b>Computer skill filter</b> - checks applications with required computer skills and proficency level</li>
+                                      <li><b>academics filter</b> -  checks applications with required academic qualifications and must be completed</li>
+                                      <li><b>experience filter</b> - checks applications with matching experience </li>
+                                      <li><b>years experience filter</b> - checks applications wif years of experince is relavent to that of the vacancy </li>
+
+                                      <li><b>description similarity filter</b> - looks for similarity between applicants cover letter and vacancy job description </li>
+
+                                        <li><b>Applicant must complete:</b></li>
+                                          <ul>
+                                            <li> 1 or more softskills</li>
+                                            <li> 1 or more computerskills</li>
+                                             <li> 1 or more working expereince</li>
+                                              <li> 1 or more qualifications</li>
+                                               <li>must have address</li>
+                                                <li>1 or more languages</li>
+                                                 
+                                          </ul>
+
+
+
+                                     
+                                    </ol>
+                                    <i class="fa fa-circle-info text-info"> </i> This changes can be undone by selecting the<b class="text-danger"> Reset</b> button.<br>
+                                    <i class="fa fa-circle-info text-info"> </i>  Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="auto_filter('{{applications.0.job.id}}','strict')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                       
+                        <!-- <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button> -->
+                         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#standard"> Standard filter
+                              </button>
+                              <div class="modal fade" id="standard" tabindex="-1" aria-labelledby="standard" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable  modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="standard">Warning - standard filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> this will <b class="text-primary">filter applications</b> using the <b class="text-primary">standard</b> method on all applicattions for <b class="text-primary"> {{applications.0.job.title}}.</b><br>
+                                    <hr>
+                                    <h4><b>The  <b class="text-primary"> Standard </b> Filter checks the follwiong:</b></h4>
+                                    <br>
+                                    <ul>
+                                      <li><b>Profile</b> - checks applications with complete profile information</li>
+                                      <li><b>Soft skill filter</b> -  checks applications with required soft skills </li>
+                                      <li><b>Computer skill filter</b> - checks applications with required computer skills </li>
+                                      <li><b>academics filter</b> -  checks applications with required academic qualifications</li>
+                                      <li><b>experience filter</b> - checks applications with complete experience </li>
+                                      <li><b>supporting documents filter</b> - checks applications with uploaded supporting documents </li>
+                                     
+                                    </ul>
+                                   <i class="fa fa-circle-info text-info"> </i> This changes can be undone by selecting the<b class="text-danger"> Reset</b> button.<br>
+                                  <i class="fa fa-circle-info text-info"> </i>   Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="auto_filter('{{applications.0.job.id}}','standerd')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                       
+
                         {% if applications.0.job.is_filter %}
-                          <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button>
+                        <!--   <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button> -->
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#apply"> <i class="fa fa-check"></i> Apply filter
+                              </button>
+                              <div class="modal fade" id="apply" tabindex="-1" aria-labelledby="apply" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="apply">Warning - apply filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>apply</b> all <b>filters</b> that have been added on selected applications <br>
+                                    <br>
+                                   <i class="fa fa-circle-info text-info"> </i> This change cannot be reversed, Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="apply_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                            
-                            <button class="btn btn-outline-info" onclick="reset_filter('{{applications.0.job.id}}')"> <i class="fa fa-cog"></i> Reset</button>
-                            
+                            <!-- <button class="btn btn-outline-info" onclick="reset_filter('{{applications.0.job.id}}')"> <i class="fa fa-cog"></i> Reset</button> -->
+                              <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#reset"> <i class="fa fa-cog"></i> Reset
+                              </button>
+                              <div class="modal fade" id="reset" tabindex="-1" aria-labelledby="reset" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="reset">Warning - Reset filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>reset</b> all <b>filters</b> that have been added on selected applications but not yet <b>Applied</b><br>
+                                    <br>
+                                    <i class="fa fa-circle-info text-info"> </i> This change cannot be reversed, Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success"onclick="reset_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             {% if applications.0.job.hide_application %}
-                               <button class="btn btn-outline-success" onclick="show_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye"></i> Show</button>
+                               <!-- <button class="btn btn-outline-success" onclick="show_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye"></i> Show</button> -->
+
+                                  <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#show"></i><i class="fa fa-eye"></i>  show
+                              </button>
+                              <div class="modal fade" id="show" tabindex="-1" aria-labelledby="show" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="show">Warning - Show filtered applications </h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>show</b> all applications that have <b>filters applied</b> (moved to filtered stage or rejected)<br>
+                                    <br>
+                                    <i class="fa fa-circle-info text-info"> </i> Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="show_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             {% elif not applications.0.job.hide_application %}
-                             <button class="btn btn-outline-danger" onclick="hide_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye-slash"></i> Hide</button>
+                            <!--  <button class="btn btn-outline-danger" onclick="hide_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye-slash"></i> Hide</button>
+ -->
+ <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#hide"> <i class="fa fa-cog"></i><i class="fa fa-eye-slash"></i>  hide
+                              </button>
+                              <div class="modal fade" id="hide" tabindex="-1" aria-labelledby="hide" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="hide">Warning - hide filtered applications </h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>hide</b> all applications that have <b>filters applied</b> (moved to filtered stage or rejected)<br> 
+                                    <br>
+                                    <i class="fa fa-circle-info text-info"> </i> Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="show_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                              
                             {% endif %}
                         {% endif %}
@@ -174,7 +344,35 @@
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   <h6>Filtered Application List</h6> 
                   {% if filtered %}
-                  <button class="btn btn-warning" onclick="auto_move_to_shortlist('{{applications.0.job.id}}')">Auto Short-list</button>
+                <!--   <button class="btn btn-warning" onclick="auto_move_to_shortlist('{{applications.0.job.id}}')">Auto Short-list</button> -->
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Auto Short-list
+                  </button>
+                  <div class="modal fade" id="auto-shortlist" tabindex="-1" aria-labelledby="auto-shortlist" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="auto-shortlist">Warning - Auto Shortlisting</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <i class="fa fa-circle-info text-info"> </i> This will move all applications on ther <b class="text-primary">filtered</b> applications stage to <b class="text-primary">shortlist</b> stage.
+
+                          <br>
+                          <br>
+                       <i class="fa fa-circle-info text-info"> </i> This changes cannot be <b class="text-danger">reversed.</b>  
+                       <br>
+
+                       <i class="fa fa-circle-info text-info"> </i>Are you sure you want to continue ?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                          <button type="button" class="btn btn-success"  onclick="auto_move_to_shortlist('{{applications.0.job.id}}')" >YES</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
                   {% endif %}
                 </div>
 
@@ -344,8 +542,8 @@
       </div>
       <div class="modal-body">
        <div class="form-group">
-        <label for="message" class="form-label"><h6>Add Note or Message to outline Application Rejection</h6></label>
-        <label for="message" class="form-label">requied field</label>
+        <label for="message" class="form-label"><h6><i class="fa fa-circle-info text-info"> </i> Add Note or Message to outline Application Rejection</h6></label>
+        <label for="message" class="form-label">message/note</label>
           <input class="form-control" type="text" id="message{{application.id}}" required></input>
        </div>
       </div>
@@ -453,8 +651,8 @@
       </div>
       <div class="modal-body">
        <div class="form-group">
-        <label for="message" class="form-label"><h6>Add Note or Message to outline Application Rejection</h6></label>
-        <label for="message" class="form-label">requied field</label>
+        <label for="message" class="form-label"><h6><i class="fa fa-circle-info text-info"></i>  Add Note or Message to outline Application Rejection</h6></label>
+        <label for="message" class="form-label">message - requied field</label>
           <input class="form-control" type="text" id="messages{{interview.id}}" required></input>
        </div>
       </div>
