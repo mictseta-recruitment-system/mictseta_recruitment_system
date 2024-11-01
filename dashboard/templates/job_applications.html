@@ -14,14 +14,19 @@
     {% for applied_job in applied_jobs %}
 
       {% if applied_job.status == "closed" %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
+          <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
 
       {% elif applied_job.id == applications.0.job.id %}
-      <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-warning m-1">filter by : {{applied_job.title.title}}
-       </a>
+          {% if filtered %}
+            <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-warning m-1">filter by : {{applied_job.title.title}}
+             </a>
+          {% else %}
+             <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
+             </a>
+           {% endif %}
       {% else %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
-       </a>
+            <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
+           </a>
       {% endif %}
     {% endfor %}
  
@@ -31,7 +36,11 @@
           <div id="applications" style="display:block;">
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
-                  <h6>ALL Application List</h6> 
+                  {% if filtered %}
+                    <h6><b>{{applications.0.job.title}} List</b></h6>
+                  {% else %}
+                  <h6><b>ALL Application List</b></h6>
+                  {% endif %}
                   {% if filtered %}
                   <div>
                         <button class="btn btn-danger" onclick="auto_filter('{{applications.0.job.id}}','strict')">Strict filter</button>
@@ -164,8 +173,9 @@
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   <h6>Filtered Application List</h6> 
-                  
-                  <button class="btn btn-warning">Auto Short-list</button>
+                  {% if filtered %}
+                  <button class="btn btn-warning" onclick="auto_move_to_shortlist('{{applications.0.job.id}}')">Auto Short-list</button>
+                  {% endif %}
                 </div>
 
                 <div class="card-body" style="overflow-x: scroll;"> 
@@ -185,7 +195,7 @@
                           <tbody> 
                                
                           {% for application in applications %}
-              
+               
                           {% if application.filterd_out == True and application.is_filter_applied == True and application.status == 'pending' %}
                            <tr class="text-dark">
                               <td>{{application.job.title}}</td>
@@ -257,13 +267,16 @@
                                   
                               <td>{{application.date}}</td>
                               <td> 
-                                     <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
+                                <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-plus"></i> interview
                               </button>
 
-                                <a class="btn btn-danger p-1" onclick="reject_applicantion({{application.id}})" data-bs-placement="top" title="Reject application">
+                                <a class="btn btn-danger p-1"data-bs-toggle="modal" data-bs-target="#exampleModal{{application.id}}">
                                   <i class="fa fa-trash"></i> 
+                                  Reject
                                 </a>
+                                 <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                <i class="fa fa-eye"> </i></a>
                               </td>
                           </tr>
                           {% endif %}
@@ -322,7 +335,27 @@
       </div>
     </div>
 
-
+<div class="modal fade" id="exampleModal{{application.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Rejection Note</b></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+        <label for="message" class="form-label"><h6>Add Note or Message to outline Application Rejection</h6></label>
+        <label for="message" class="form-label">requied field</label>
+          <input class="form-control" type="text" id="message{{application.id}}" required></input>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="reject_applicantion({{application.id}})">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
 
                         {% endfor %}
            </div>   
@@ -368,8 +401,10 @@
                                 <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid interview.application.job.id %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
 
                               <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-1" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
-                              <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-1" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
-                            
+                              <a class="btn btn-danger p-1"data-bs-toggle="modal" data-bs-target="#exampleModals{{application.id}}">
+                                  <i class="fa fa-trash"></i> 
+                                  Reject
+                                </a>
                               </td>
                           </tr>
                           {% endif %}
@@ -406,7 +441,30 @@
           </div>
         </div>
       </div>
+
     </div>
+
+    <div class="modal fade" id="exampleModals{{application.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Rejection Note</b></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+        <label for="message" class="form-label"><h6>Add Note or Message to outline Application Rejection</h6></label>
+        <label for="message" class="form-label">requied field</label>
+          <input class="form-control" type="text" id="messages{{interview.id}}" required></input>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="reject_applicantion('{{interview.application.id}}', '{{interview.id}}')">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
                               {% endfor %}                 
                           </tbody>
                           <tfoot>

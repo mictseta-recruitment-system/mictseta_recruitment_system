@@ -271,6 +271,37 @@ def move_to_shortlist(request):
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+@check_leave
+@csrf_protect
+def auto_move_to_shortlist(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			try:
+				jobID = json_data.get('jobID')
+				job = JobPost.objects.filter(id=int(jobID)).first()
+				if job :
+					for applicant in job.jobapplication_set.all():
+						if applicant.status == "pending":
+							applicant.status = "short_list"
+							applicant.previous_stage = "auto filtering stage"
+							applicant.current_stage = "short listing stage"
+							applicant.staff = request.user
+							applicant.save()
+							feed_back = FeedBack.objects.create(user=applicant.user,job=job,message="moved to Short-List stage",status="Short-List")
+							feed_back.save()
+							print(feed_back)
+				return JsonResponse({'message': f'all moved to short-list stage', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
 
 @check_leave
 @csrf_protect
@@ -339,12 +370,12 @@ def apply_filter(request):
 	for application in applications:
 		application.is_filter_applied = True
 		application.save()
-
 		feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{application.reason}",status="rejected").first()
 		if not application.filterd_out:
+			application.is_rejected = True
+			application.save()
+
 			if not feed_back_exist:
-				application.is_rejected = True
-				application.save()
 				feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{application.reason}",status="rejected")
 				feed_back.save() 
 		
@@ -487,11 +518,12 @@ def reject_applicantion(request):
 				applicant.previous_stage = "short listing stage"
 				applicant.current_stage = "rejected stage"
 				applicant.staff = request.user
+				applicant.reason = json_data.get('reason')
 				applicant.save()
-				interview = Interview.objects.get(application=applicant)
+				interview = Interview.objects.filter(application=applicant).first()
 				if interview:
 					interview.delete()
-				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application Rejected",status="rejected")
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message=f"Application Rejected due to {json_data.get('reason')}",status="rejected")
 				feed_back.save()
 				return JsonResponse({'message': f'{applicant.user.email} Application is rejected', 'status': 'success'}, status=201)
 			except Exception as e:

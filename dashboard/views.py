@@ -134,7 +134,8 @@ def filter_job_application(request,jobID):
 		job_applications = JobApplication.objects.filter(job__id=jobID)
 		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		cnt=0
-		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt,'filtered':True})
+		interview = Interview.objects.filter(application__job__id=jobID)
+		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs,'interviews':interview, 'cnt':cnt,'filtered':True})
 	else:
 		return redirect('render_auth_page')
 
@@ -348,8 +349,11 @@ def jobsekeer_details(request, seekerID,jobID):
 				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
 			application = JobApplication.objects.filter(user=seeker,job__id=int(jobID)).first()
 			feedback = FeedBack.objects.filter(user=seeker,job=application.job)
-			quiz_id = Quiz.objects.get(job=application.job)
-			quiz = QuizResults.objects.filter(user=seeker, quiz=quiz_id).first()
+			quiz_id = Quiz.objects.filter(job=application.job).first()
+			if quiz_id:
+				quiz = QuizResults.objects.filter(user=seeker, quiz=quiz_id).first()
+			else:
+				quiz = {}
 			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")

@@ -1017,6 +1017,44 @@ function move_to_shortlist(appID) {
   });
 }
 
+function auto_move_to_shortlist(appID) {
+  const url = 'http://127.0.0.1:8000/job/auto_move_to_shortlist/';
+  
+  const jsonData = {
+    jobID: appID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
 function auto_filter(filter,mode) {
   const url = 'http://127.0.0.1:8000/job/auto_filter/';
   
@@ -1247,11 +1285,23 @@ function approve_interview(appID) {
   });
 }
 
-function reject_applicantion(appID) {
+function reject_applicantion(appID, intvw) {
   const url = 'http://127.0.0.1:8000/job/reject_applicantion/';
+  try {
+  var reason = document.getElementById('message' + intvw).value;
+  if (reason =="" || reason== null){
+    reason= document.getElementById('messages' + intvw).value;
+  }
+ 
   
+} catch (error) {
+  console.error("An error occurred:", error);
+  // Optional: Set a default value if both elements are missing or inaccessible
+   var reason = document.getElementById('messages' + intvw).value;
+}
   const jsonData = {
     appID: appID,
+    reason:reason,
   };
 
   fetch(url, {
@@ -2305,3 +2355,4 @@ function handleItemClick(event) {
 document.querySelectorAll('#applicants li').forEach(item => {
   item.addEventListener('click', handleItemClick);
 });
+
