@@ -1,11 +1,13 @@
 {% extends 'dashboard_base.html' %}
 
- {% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Recruitment</li>
-      <li class="breadcrumb-item active" aria-current="page">Manage</li>
-      <li class="breadcrumb-item active" aria-current="page">Job Details</li>
+
+     {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      <li class="breadcrumb-item active" aria-current="page"> {{job.title}} </li>
+
       
-     {% endblock %}
+ {% endblock %}
 
 {% block head %} Job Details {% endblock %}
  

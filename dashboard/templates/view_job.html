@@ -5,11 +5,13 @@ View jobs
 {% endblock %}
 {% load static %}
 
-{% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Recruitment</li>
-      <li class="breadcrumb-item active" aria-current="page">Jobs</li>
+  {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      <li class="breadcrumb-item active" aria-current="page"> all </li>
+
       
-{% endblock %}
+ {% endblock %}
 
 
 {% block description %}

@@ -2,10 +2,13 @@
 
 {% block title %}Job Details{% endblock %}
 
-{% block breadcrumbs %}
-    <li class="breadcrumb-item active" aria-current="page"> Jobs/Vacancy </li>
-    <li class="breadcrumb-item active" aria-current="page"> Calendar </li>
-{% endblock %}
+ {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      <li class="breadcrumb-item active" aria-current="page">Calender </li>
+
+      
+ {% endblock %}
 
 {% block content %}
 <style>

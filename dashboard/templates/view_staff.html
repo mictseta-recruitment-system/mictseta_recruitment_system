@@ -5,11 +5,13 @@ Manage Users
 {% endblock %}
 
 {% load static %}
-{% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Employee</li>
-      <li class="breadcrumb-item active" aria-current="page">View All</li>
+ {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_staff/"  class="btn btn-outline p-0"> Staff </a></li>
+      <li class="breadcrumb-item active" aria-current="page"> all </li>
+
       
-{% endblock %}
+ {% endblock %}
 
 {% block description %} here you can manage all users {% endblock %}
 

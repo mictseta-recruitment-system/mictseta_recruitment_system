@@ -339,7 +339,14 @@
     <div class="content">
         <div id="defaultPage" style="margin-top: 40px;">
             <div id="flash-message-container"></div>
-
+            <nav style="--bs-breadcrumb-divider: '>'; color:white;" aria-label="breadcrumb" class="p-3 pb-1 bg-info rounded-2 shadow shadow-sm">
+              <ol class="breadcrumb">
+                {% block breadcrumbs %}
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Library</li>
+                {% endblock %}
+              </ol>
+            </nav>
             <div class="container">
                 {% block description %} {% endblock %}
             </div>

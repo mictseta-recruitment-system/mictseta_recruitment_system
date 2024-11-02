@@ -3,8 +3,15 @@
 {% block title %}Job Applications {% endblock %}
 
 {% block breadcrumbs %}
-    <li class="breadcrumb-item active" aria-current="page"> Jobs/Vacancy </li>
-      <li class="breadcrumb-item active" aria-current="page"> Applications </li>
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      <li class="breadcrumb-item " ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Applications </a></li>
+      {% if filtered %}
+      <li class="breadcrumb-item active" aria-current="page"> {{applications.0.job.title}} </li>
+
+      {% else %}
+      <li class="breadcrumb-item active" aria-current="page"> all </li>
+      {% endif %}
  {% endblock %}
 
 {% block content %}
