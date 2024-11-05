@@ -165,7 +165,11 @@ View jobs
                   <td>{{ job.id }}</td>
                   <td>
                       <b>
-                          <a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{ job.title }}</a>
+                         {% if not job.is_active %}
+                          <a href="{% url 'dashboard.job_details' job.id %}" class="text-danger">{{ job.title }}</a>
+                         {% else %}
+                            <a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{ job.title }}</a>
+                         {% endif %}
                       </b>
                   </td>
                   <td>
@@ -224,13 +228,21 @@ View jobs
                                 <i class="fa fa-edit"></i>
                             </a>
                         {% endif %}
-                        <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})">
-                            <i class="fa fa-trash"></i>
+                        {% if job.is_active %}
+                        <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="Disable">
+                            <i class="fa fa-circle-minus fa-1x"></i>
                         </a>
+                        {% else %}
+                         <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
+                            <i class="fa fa-circle-minus fa-1x"></i>
+                        </a>
+                        {% endif %}
                          <a class="btn btn-outline-info btn-sm" type="button" href="{% url 'dashboard.new_quiz' job.id %}">
                             <i class="fa fa-plus"></i>
-                            add Quiz
+                            Quiz
                         </a>
+
+
                     </div>
                 {% else %}
                     {% if not job.is_approved %}

@@ -7,20 +7,19 @@ Manage Users
 {% load static %}
  {% block breadcrumbs %}
     <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
-    <li class="breadcrumb-item " ><a href="/dashboard/view_staff/"  class="btn btn-outline p-0"> Staff </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_staff/"  class="btn btn-outline p-0"> Staff/Employee </a></li>
       <li class="breadcrumb-item active" aria-current="page"> all </li>
 
       
  {% endblock %}
 
-{% block description %} here you can manage all users {% endblock %}
 
 
 {% block content %}
 
 
 <!-- User Table Section -->
-        <div class="table-container">
+        <div class="table-container mt-5">
           <div class="card shadow-lg rounded">
               <div class="card-header d-flex justify-content-between " style="height:50px;">
 
@@ -65,14 +64,28 @@ Manage Users
                                 {% if staff.is_active %}
                                 <td>Yes</td>
                                 {% else %}
-                                <td>Yes</td>
+                                <td>NO</td>
                                 {% endif %}
                                   {% if staff.staffprofile.department == "ADMINISTRATOR" %}
                                   <td><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a></td>
                                   {% else %}
                                   {% if user.is_superuser %}
                                   <td ><a href="{% url 'dashboard.update_staff' staff.id %}" class="btn btn-warning" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i></a> 
-                                  <button class="btn btn-danger" type="button" role="button" onclick="deleteUser('{{staff.username}}')" style="font-size: 12px;" > <i class="fa fa-trash" aria-hidden="true"></i></button><a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a> </td>
+
+                                  {% if staff.is_active %}
+                                  <button class="btn btn-danger" type="button" role="button" onclick="disableUser('{{staff.username}}')" style="font-size: 12px;" > 
+                                    <i class="fa fa-circle-minus" aria-hidden="true"></i>
+
+                                  </button>
+                                  {% else %}
+                                   <button class="btn btn-success" type="button" role="button" onclick="disableUser('{{staff.username}}')" style="font-size: 12px;" > 
+                                    <i class="fa fa-circle-plus" aria-hidden="true"></i>
+
+                                  </button>
+
+                                  {% endif %}
+
+                                  <a href="{% url 'dashboard.employee_details' staff.id %}" class="btn btn-info" style="font-size: 12px;"> <i class="fa fa-eye" aria-hidden="true"></i></a> </td>
                                   
                                   {% else %}
                                     <td > 

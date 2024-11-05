@@ -842,6 +842,7 @@ function completeJob(jobID, spinner, content, modal) {
       document.getElementById('modal-b' + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
       showFlashMessage(data.message, "success");
       location.reload();
+      showFlashMessage(data.message, "success");
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
       
     } else if (data.status === "warning") {
@@ -880,8 +881,9 @@ function ApproveJob(jobID) {
   })
   .then(data => {
     if (data.status === "error") {
-      handleErrors(data.errors, jobID);
+      handleErrors(data.errors);
     } else if (data.status === "success") {
+      showFlashMessage(data.message, "success");
       location.reload();
       showFlashMessage(data.message, "success");
     
@@ -907,7 +909,7 @@ function deleteJob(jobID) {
   const jsonData = {
     job_id: jobID 
   };
-  console.log(getCookie('csrftoken'))
+ 
   fetch(url, {
     method: 'POST',
     headers: {
@@ -921,8 +923,9 @@ function deleteJob(jobID) {
   })
   .then(data => {
     if (data.status === "error") {
-      handleErrors(data.errors, jobID, spinner);
+      handleErrors(data.errors, jobID);
     } else if (data.status === "success") {
+      showFlashMessage(data.message, "success");
       location.reload()
       showFlashMessage(data.message, "success");
     
@@ -966,6 +969,7 @@ function move_to_interview(appID) {
    
       showFlashMessage(data.message, "success");
       location.reload();
+      showFlashMessage(data.message, "success");
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1607,6 +1611,40 @@ function UpdateStaff(){
               });
         }
 
+
+function disableUser(username) {
+    
+    const url = 'http://127.0.0.1:8000/profile/update/enable_disable_staff/';  // Replace with your actual endpoint URL
+    const data = {
+        username: username,
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')  // Function to get CSRF token
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status === 'success') {
+            location.reload();
+            showFlashMessage(result.message, "success");
+           
+        } else {
+            
+            showFlashMessage(result.errors, "danger");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showFlashMessage(error, "danger");
+        showFlashMessage('An error occurred. Check the console for details.', "danger");
+       
+    });
+}
 
 /*==================================================================================*/
 function sendLeave(){

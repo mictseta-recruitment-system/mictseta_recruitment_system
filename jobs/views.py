@@ -1261,8 +1261,12 @@ def delete_job(request):
 				return JsonResponse({'errors': {'job post':['Job does not exists']}, 'status': 'error'}, status=400)
 			try:
 				update_job_post = JobPost.objects.get(id=int(data['job_id']))
-				update_job_post.delete()
-				noty = Notification.objects.create(user=request.user, action="Delete Job Post", job_title=update_job_post.title, status="Deleted")
+				if update_job_post.is_active:
+					update_job_post.is_active = False
+				else:
+					update_job_post.is_active = True
+				update_job_post.save()
+				noty = Notification.objects.create(user=request.user, action="Delete Job Post", job_title=update_job_post.title.title, status="Deleted")
 				noty.save()
 				return JsonResponse({'message': 'Job Post removed Successfully', 'status': 'success'}, status=201)
 			except Exception as e:

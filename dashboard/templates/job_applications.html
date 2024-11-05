@@ -5,13 +5,13 @@
 {% block breadcrumbs %}
     <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
     <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
-      <li class="breadcrumb-item " ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Applications </a></li>
       {% if filtered %}
-      <li class="breadcrumb-item active" aria-current="page"> {{applications.0.job.title}} </li>
+      <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{applications.0.job.id}}/"  class="btn btn-outline p-0"> {{applications.0.job.title}}</a> </li>
 
       {% else %}
-      <li class="breadcrumb-item active" aria-current="page"> all </li>
+      <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> all </a> </li>
       {% endif %}
+      <li class="breadcrumb-item active" aria-current="page" ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Applications </a></li>
  {% endblock %}
 
 {% block content %}

@@ -7,8 +7,11 @@
      {% block breadcrumbs %}
     <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
     <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
-      <li class="breadcrumb-item " ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Application </a></li>
+      
       <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{application.job.id}}/"  class="btn btn-outline p-0"> {{application.job.title}} </a></li>
+      
+      <li class="breadcrumb-item " ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Application </a></li>
+      
      
       <li class="breadcrumb-item active" aria-current="page"> {{application.user.first_name}} {{application.user.last_name}} </li>
 
