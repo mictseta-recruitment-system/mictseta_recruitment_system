@@ -243,6 +243,57 @@ def view_jobs(request):
 	else:
 		return redirect('render_auth_page')
 
+
+@csrf_protect
+def edit_job(request, jobID):
+	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
+		try:
+			job = JobPost.objects.get(id=int(jobID))
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+
+			job_title = JobTitle.objects.all()
+			industry = Industry.objects.all()
+
+			languages = LanguageList.objects.all()
+			readings = ReadingProficiencyList.objects.all()
+			speakings = SpeakingProficiencyList.objects.all()
+			writings = WritingProficiencyList.objects.all()
+			computer_skills = ComputerSkillsList.objects.all()
+			computer_prof = ComputerProficiency.objects.all()
+			soft_skill = SoftSkillsList.objects.all()
+			soft_prof = SoftProficiency.objects.all()
+			qualification = Qualification.objects.all()
+			nqf_level = NQF.objects.all()
+			
+			return render(request,'edit_job.html',
+				{
+				'job':job, 
+				'notify_len':notify_len,
+				'job_titles':job_title, 
+				'industries':industry,
+				'computer_skills':computer_skills,
+				'computer_profs':computer_prof,
+				'soft_skills':soft_skill,
+				'soft_profs':soft_prof,
+				'nqf_levels' : nqf_level,
+				'qualifications':qualification,
+				'languages' : languages,
+				'readings' : readings,
+				'writings' : writings,
+				'speakings':speakings
+			})
+		except Exception as e:
+			return HttpResponse(f"<h1> Sever Error : Job not Found : {e}</h1>")
+	else:
+		return redirect('render_auth_page')
+
 @csrf_protect
 def job_details(request, jobID):
 	if request.user.is_authenticated:

@@ -28,6 +28,8 @@ urlpatterns = [
     path('login_events/', views.login_events, name="dashboard.login_events"),
     path('job_applications/', views.job_applications, name="dashboard.job_applications"),
     path('calender/', views.calender, name="dashboard.calender"),
+    path('edit_job/<jobID>', views.edit_job, name="dashboard.edit_job"),
+    
     
     path('jobsekeer_details/<seekerID>/<jobID>', views.jobsekeer_details, name="dashboard.jobsekeer_details"),
     path('filter_job_application/<int:jobID>', views.filter_job_application, name='filter_job_application'),

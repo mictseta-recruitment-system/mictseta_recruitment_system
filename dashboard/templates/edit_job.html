@@ -1,0 +1,981 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+
+
+     {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      
+      <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{job.id}}/"  class="btn btn-outline p-0"> {{job.title}} </a></li>
+     
+      <li class="breadcrumb-item active" aria-current="page"> Edit </li>
+
+   
+ {% endblock %}
+
+
+{% load static %}
+
+{% block content %}
+
+
+<div class="row p-2 ">
+
+<!-- Combined Profile Sidebar and Details -->
+<div class="col-sm-12 col-md-12 d-flex justify-content-center p-3">
+    <div class="card shadow p-4 mb-5 bg-body rounded" style="width: 100%;">
+        <div class="row">
+    <!-- Profile Sidebar -->
+<!-- <div class="col-sm-12 col-md-4 d-flex justify-content-center p-3">
+    <div class="text-center shadow-sm p-4 rounded border bg-light d-flex flex-column align-items-center">
+        <div class="rounded-circle border d-flex align-items-center justify-content-center position-relative mb-3" style="height: 150px; width: 150px; cursor: pointer;" onclick="removeImage('{{ emp.id }}')">
+            {% if emp.profileimage.image.url %}
+                <img src="{{ emp.profileimage.image.url }}" class="rounded-circle" style="height: 150px; width: 150px; object-fit: cover;">
+            {% else %}
+                <i class="fas fa-user position-absolute" style="font-size: 50px; color: black;"></i>
+            {% endif %}
+          
+            <i class="fas fa-user position-absolute" style="font-size: 50px; color: black;"></i>
+        </div>
+
+        <h5 class="font-weight-bold">{{ emp.first_name }} {{ emp.last_name }}</h5>
+        <p class="text-muted mb-2 text-center">
+            <strong>Gender:</strong> {{ emp.staffprofile.gender }} <br>
+            <strong>Age:</strong> {{ emp.staffprofile.age }}
+        </p>
+
+        {% if emp.id == user.id or user.is_superuser %}
+        <form id="image-upload-form" method="post" enctype="multipart/form-data" class="mt-3">
+            <div class="mb-3">
+                <input class="form-control form-control-sm" name="image" id="image" type="file" accept="image/*">
+                <input type="hidden" name="empID" id="empID" value="{{ emp.id }}">
+                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="uploadImage()">Upload Image</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div> -->
+
+
+            <!-- Profile Details -->
+            <div class="col-12">
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                		
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#profileinformation" type="button" role="tab" aria-controls="profileinformation" aria-selected="true">
+                            <i class="fa fa-user"></i> Vacancy/job Information
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-company-tab" data-bs-toggle="pill" data-bs-target="#companyinformation" type="button" role="tab" aria-controls="companyinformation" aria-selected="false">
+                            <i class="fa fa-building"></i> Vacancy/job Requirements
+                        </button>
+                    </li>
+                    <!-- <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-vacancies-tab" data-bs-toggle="pill" data-bs-target="#vacanciesc" type="button" role="tab" aria-controls="vacanciesc" aria-selected="false">
+                            <i class="fa fa-briefcase"></i>Experiences & Skills
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-supporting_documents-tab" data-bs-toggle="pill" data-bs-target="#supporting_documents" type="button" role="tab" aria-controls="supporting_documents" aria-selected="false">
+                            <i class="fa fa-calendar-check"></i> supporting documents
+                        </button>
+                    </li> -->
+                </ul>
+
+
+
+
+             
+                <!-- Tab Content -->
+                <div class="tab-content" id="pills-tabContent">
+                    <!-- Profile Information -->
+                    <div class="tab-pane fade show active" id="profileinformation" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <h4 class="d-flex justify-content-between">
+                            <span>Job/Vacancy Information</span>
+                            {% if job.is_active %}
+                            <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="Disable">
+                                <i class="fa fa-circle-minus fa-1x"></i> Disable
+                            </a>
+                            {% else %}
+                             <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
+                                <i class="fa fa-circle-minus fa-1x"></i>Enable
+                            </a>
+                            {% endif %}
+                        </h4>
+                        <hr style="color: blue;">
+                        <div class="row">
+                            <form>
+                                <div class="form-group mb-3">
+                                    <label for="jobTitle">Title</label>
+                                    <select class="form-control" id="title">
+                                        <option value="{{ job.title.id }}" selected>{{ job.title }}</option>
+                                        {% for jobv in job_titles %}
+                                            <option value="{{ jobv.id }}">{{ jobv.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+        
+                                <!-- Job Description Field -->
+                                <div class="form-group mb-3">
+                                    <label for="jobDescription">Description</label>
+                                    <textarea class="form-control" id="description" rows="4" placeholder="Job Description">{{ job.description }}</textarea>
+                                </div>
+        
+                                <div class="form-row mb-3">
+                                    <div class="form-group col-md-6">
+                                        <label for="endDate">End Date</label>
+                                        <input type="date" class="form-control" id="end_date" value="{{ job.end_date|date:'Y-m-d' }}">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="location">Location</label>
+                                        <select class="form-control" id="location">
+                                            <option>{{ job.location }}</option>
+                                            <option>Johannesburg</option>
+                                            <option>Cape Town</option>
+                                            <option>Durban</option>
+                                            <option>Pretoria</option>
+                                            <option>Port Elizabeth</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                                <div class="form-row mb-3">
+                                    <div class="form-group col-md-6">
+                                        <label for="salaryRange">Salary Range</label>
+                                        <select class="form-control" id="salary_range">
+                                            <option>{{ job.salary_range }}</option>
+                                            <option>R20,000 - R30,000</option>
+                                            <option>R30,000 - R40,000</option>
+                                            <option>R40,000 - R50,000</option>
+                                            <option>R50,000 - R60,000</option>
+                                            <option>R60,000+</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="jobType">Job Type</label>
+                                        <select class="form-control" id="job_type">
+                                            <option>{{ job.job_type }}</option>
+                                            <option>Remote</option>
+                                            <option>Permanent</option>
+                                            <option>Contract</option>
+                                            <option>Internship</option>
+                                            <option>Temporary</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                                <div class="form-row mb-3">
+                                    <div class="form-group col-md-6">
+                                        <label for="industry">Industry</label>
+                                        <select class="form-control" id="industry">
+                                            <option value="{{ job.industry.id }}" selected>{{ job.industry }}</option>
+                                            {% for industry in industries %}
+                                                <option value="{{ industry.id }}">{{ industry.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="assigned_to" class="form-label">Choose responsible HOD:</label>
+                                        <input list="assigned_tos" class="form-control" name="assigned_to" id="assigned_to" placeholder="Select user here" value="{{ job.assigned_to.email }}">
+                                        <datalist id="assigned_tos">
+                                            {% for emp in employees %}
+                                                <option value="{{ emp.email }}">{{ emp.first_name }} {{ emp.last_name }} - {{ emp.staffprofile.department }}</option>
+                                            {% endfor %}
+                                        </datalist>
+                                    </div>
+                                </div>
+                            </form>
+                            <button class="btn btn-primary" onclick="updateJob({{ job.id }}, 'spinner', 'editJob')">Save & Continue</button>
+                           
+                        </div>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="tab-pane fade" id="companyinformation" role="tabpanel" aria-labelledby="pills-company-tab">
+                    	<div class="d-flex justify-content-between">
+                    		
+                        <h4 class="d-flex justify-content-between"> 
+                            <span>Vacancy/Job Requirements </span>
+                        </h4>
+                            {% if job.is_active %}
+                            <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="Disable">
+                                <i class="fa fa-circle-minus fa-1x"></i> Disable
+                            </a>
+                            {% else %}
+                             <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
+                                <i class="fa fa-circle-minus fa-1x"></i>Enable
+                            </a>
+                            {% endif %}
+                        
+                    	</div>
+                        <hr style="color: blue;">
+                        <div class="row">
+                         <div class="col-6 shadow-lg p-3 rounded mb-5 d-flex justify-content-between w-100">
+                            <div class="col-6">
+                                <h5 class="d-flex justify-content-between">
+                                    <span>Computer Skills</span>  
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#computer_skill">
+                                      <i class="fa fa-plus"> </i> add
+                                    </button>
+
+                                </h5>
+                                <hr style="color: red;">
+                                {% for skill in job.C_skills.all %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-start">
+                                      <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{skill.name}} {% if skill.is_required %}<span class="text-danger"> required </span>{% endif %}</div>
+                                        {{skill.level}}
+                                      </div>
+                                      
+                                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill({{job.id}},'spinnerSkill','editSkill','skillToggle','{{skill.name}}')"></i>
+                                  </li>
+                                  
+                                  {% endfor %}
+                            </div>
+                            <div class="col-6">
+                                <h5 class="d-flex justify-content-between">
+                                    <span>Soft Skills</span>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#soft_skill">
+                                      <i class="fa fa-plus"> </i> add
+                                    </button>
+                                </h5>
+                                <hr style="color: red;">
+                                {% for skill in job.S_skills.all %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-start">
+                                      <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{skill.name}} {% if skill.is_required %}<span class="text-danger"> required </span>{% endif %}</div>
+                                        {{skill.level}}
+                                      </div>
+                                      
+                                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill({{job.id}},'spinnerSkill','editSkill','skillToggle','{{skill.name}}')"></i>
+                                  </li>
+                                  
+                                  {% endfor %}
+                                <!-- Salary is not displayed -->
+                            </div>
+                          </div>
+                             
+                            
+                        </div>
+
+
+                        <div class="row">
+                         <div class="col-6 shadow-lg p-3 rounded mb-5 d-flex justify-content-between w-100">
+                            <div class="col-6">
+                                <h5 class="d-flex justify-content-between">
+                                    <span>Qualification</span>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#qualification_d">
+                                         <i class="fa fa-plus"></i> add
+                                    </button>
+                                </h5>
+                                <hr style="color: red;">
+                                 <ul class="list-group list-group-flush">
+                                    {% for education in job.educations.all %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <div class="ms-2 me-auto">
+                                          <div class="fw-bold">{{education.field_of_study}}</div>
+                                           {{education.nqf_level}}
+                                        </div>
+                                        
+                                        <i class="fa-solid fa-square-minus min-icon" onclick="deleteEducation({{job.id}},'spinnerEducation','editEducation','EducationToggle',{{education.id}})"></i>
+                                    </li>
+                                    
+                                    {% endfor %}
+                                  </ul>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="d-flex justify-content-between"> 
+                                    <span>Experience</span>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#experience_d">
+                                      <i class="fa fa-plus"></i> add
+                                    </button>
+                                </h5>
+                                <hr style="color: red;">
+                                
+                                <ul class="list-group list-group-flush">
+                                  {% for experience in job.experiences.all %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-start">
+                                      <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{experience.name}}</div>
+                                         {{experience.duration}} years
+                                      </div>
+                                      
+                                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteExperience({{job.id}},'spinnerExperience','editExperience','experienceToggle',{{experience.id}})"></i>
+                                  </li>
+                                  
+                                  {% endfor %}
+                                </ul>
+                                <!-- Salary is not displayed -->
+                            </div>
+                          </div>
+                             
+                            
+                        </div>
+
+
+                        <div class="row">
+                         <div class="col-6 shadow-lg p-3 rounded mb-5 d-flex justify-content-between w-100">
+                            <div class="col-6">
+                                <h5 class="d-flex justify-content-between">
+                                    <span>Duties & Responsibilities</span>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#requirements_d">
+                                     <i class="fa fa-plus"></i> add
+                                    </button>
+                                </h5>
+                                <hr style="color: red;">
+                                 <ul class="list-group list-group-flush">
+                                      {% for requirement in job.requirements.all %}
+                                      <li class="list-group-item d-flex justify-content-between align-items-start">
+                                          <div class="ms-2 me-auto">
+                                            <div class="fw-bold">{{requirement.description}}</div>
+                                             {{requirement.duration}}
+                                          </div>
+                                          
+                                          <i class="fa-solid fa-square-minus min-icon" onclick="deleteRequirements({{job.id}},'spinnerRequirements','editRequirements','requirementsToggle',{{requirement.id}})"></i>
+                                      </li>
+                                      
+                                      {% endfor %}
+                                  </ul>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="d-flex justify-content-between" > 
+                                    <span>Languages</span>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#language_d">
+                                      <i class="fa fa-plus"></i> add
+                                    </button>
+
+                                </h5>
+                                <hr style="color: red;">
+                                
+                                <ul class="list-group list-group-flush">
+                                  {% for langauge in job.j_languages.all %}
+                                  <li class="list-group-item d-flex justify-content-between align-items-start">
+                                      
+                                        <div class="fw-bold">
+                                          {{langauge}}
+                                         
+                                        </div>
+
+                                         <div>
+                                           {{langauge.speaking_proficiency.proficiency}}
+                                            
+                                         </div>
+                                         <div>
+                                           
+                                            {{langauge.reading_proficiency.proficiency}}  
+                                         </div>
+                                         <div>
+                                           {{langauge.writing_proficiency.proficiency}}
+                                         </div>
+                                          
+                                      <i class="fa-solid fa-square-minus min-icon" onclick="deleteLanguage({{job.id}},'spinnerRequirements','editRequirements','requirementsToggle',{{langauge.id}})"></i>
+                                  </li>
+                                  
+                                  {% endfor %}
+                                </ul><!-- Salary is not displayed -->
+                            </div>
+                          </div>
+                             
+                            
+                        </div>
+                    </div>
+
+                    <!-- Vacancies Created -->
+                    <!-- <div class="tab-pane fade" id="vacanciesc" role="tabpanel" aria-labelledby="pills-vacancies-tab">
+                        <h4>Experiences & Skills & Qualifications</h4>
+                        <hr style="color: blue;">
+                        <div class="row">
+                        	<div class="col-6  p-0   border-end border-dark">
+                                <h5 class="p-2"><b> {{seeker.first_name }} {{ seeker.last_name}} Application Details</b></h5>
+                                <hr style="color: black;">
+                               
+								              
+                            </div>
+                            <div class="col-6  p-0 rounded ">
+                                <h5 class="p-2"> <b>Job Requried details</b></h5>
+                                <hr style="color: black;">
+                               
+                            </div>
+                          
+                            <div class="col-6  p-3 border-end border-dark">
+                                <h5>Work Experience {% if 'experience' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}
+															</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded"style="max-height: 310px; overflow-y: scroll; overflow-x: auto;  background-color: rgb(238, 246, 255); ">
+                                {% for experience in seeker.working_expereince.all %}
+								                    <p><strong>Job Title:</strong> {{ experience.job_title.title }}</p>
+								                    <p><strong>Start Date:</strong> {{ experience.start_date }}</p>
+								                    <p><strong>End Date:</strong> {{ experience.end_date }}</p>
+
+								                    <hr>
+								                {% empty %}
+								                    <p>No working experience available.</p>
+								                {% endfor %}
+								              </div>
+                            </div>
+                            <div class="col-6  p-3 rounded ">
+                                <h5>Required Work Experience</h5>
+                                <hr style="color: red;">
+                                <div class="p-3  border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+	                              
+
+											                {% for experience in application.job.experiences.all %}
+											               
+											                    <div class="ms-2 me-auto">
+											                      <div class="fw-bold">{{experience.name}}</div>
+											                       {{experience.duration}} years
+											                       {{application.job.title}}
+											                       
+											                    </div>
+											                    
+											             	<hr style="color: black;">
+											                 {% empty %}
+									                    <p>No Experience available.</p>
+											                {% endfor %}
+											              
+                                </div>
+                            </div>
+
+
+                            <div class="col-6  p-3 border-end border-dark">
+                                <h5>Academic Qualification {% if 'academic' in application.reason or 'Academic' in application.reason or 'Qualification' in application.reason or 'qualification' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3  border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                {% for qualification in seeker.qualifications.all %}
+                                    <p><strong>Field of study:</strong> {{ qualification.field_of_study }}</p>
+                                    <p><strong>NQF Level:</strong> {{ qualification.nqf_level }}</p>
+                                   
+                                    <p><strong>Institution:</strong> {{ qualification.institution }}</p>
+                                    <p><strong>Start date:</strong> {{ qualification.start_date }}</p>
+                                    <p><strong>End date:</strong> {{ qualification.end_date }}</p>
+                                    <p><strong>Status:</strong> {{ qualification.status }}</p>
+                                    <hr>
+                                {% empty %}
+                                    <p>No academic qualifications available.</p>
+                                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6  p-3  ">
+                                <h5>Required Academic Qualification</h5>
+                                <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                            
+										                {% for education in application.job.educations.all %}
+										             
+										                    <div class="ms-2 me-auto">
+										                      <div class="fw-bold">{{education.field_of_study}}</div>
+										                       {{education.nqf_level}}
+										                    </div>    
+										              
+										                <hr style="color: black;">
+										                 {% empty %}
+									                    <p>No Qualification  available.</p>
+										                {% endfor %}
+										            
+										            </div>
+                               
+                            </div>
+
+
+                             <div class="col-6  p-3  border-end border-dark">
+                                <h5>Soft Skills  {% if 'soft' in application.reason or 'Soft' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                {% for skill in seeker.softskills_set.all %}
+								                    <p><strong>Soft Skill:</strong> {{ skill.skill }}</p>
+								                    <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
+								                
+
+								                    <hr>
+								                {% empty %}
+								                    <p>No soft skills available.</p>
+								                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6 p-3 ">
+                                <h5>Required Soft Skills</h5>
+                                <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+                                 
+																{% for skill in application.job.S_skills.all %}
+																  
+																       <div class="ms-2 me-auto">
+																         <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+																                      {{skill.level}} 
+																       </div>
+																                    
+																   <hr style="color: black;">
+																     {% empty %}
+									                    <p>No Soft skills available.</p>
+																                
+																 {% endfor %}
+																 
+																</div>
+                                
+                            </div>
+                             <div class="col-6  p-3 border-end border-dark">
+                                <h5>Computer Skills  {% if 'computer' in application.reason or 'Computer' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                 {% for skill in seeker.computerskills_set.all %}
+									                    <p><strong>Skill:</strong> {{ skill.skill }}</p>
+									                    <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
+									                  
+
+									                    <hr>
+									                {% empty %}
+									                    <p>No computer skills available.</p>
+									                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6 p-3  ">
+                                <h5>Required Computer Skills</h5>
+                                <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+                                
+									                {% for skill in application.job.C_skills.all %}
+									               
+									                    <div class="ms-2 me-auto">
+									                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+									                      {{skill.level}} 
+									                    </div>
+
+									                    <hr>
+									                    {% empty %}
+									                    <p>No computer skills available.</p>
+									              
+									                {% endfor %}
+									              
+									             </div>
+                               
+                            </div>
+                      
+
+
+                        <div class="col-6  p-3  border-end border-dark">
+                                <h5>Language {% if 'language' in application.reason or 'Language' in application.reason or 'Langauge' in application.reason  or 'langauge' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%} </h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                  {% for language in seeker.language_set.all %}
+                                    <p><strong>Language:</strong> {{ language.language }}</p>
+                                    <p><strong>Reading Level:</strong> {{ language.reading_proficiency }}</p>
+                                    <p><strong>Writing Level:</strong> {{ language.writing_proficiency }}</p>
+                                    <p><strong>Speaking Level:</strong> {{ language.speaking_proficiency }}</p>
+                   
+                                    <hr>
+                                    {% empty%}
+                               			<p>No Languages available.</p>
+                                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6 p-3">
+                                <h5>Required Lanuage </h5>
+                                 <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+                                 {% for langauge in application.job.j_languages.all %}
+									            
+									                    <div class="ms-2 me-auto">
+									                      <div class="fw-bold"> Language : {{langauge}} </div>
+									                      <span> Speaking : {{langauge.speaking_proficiency.proficiency}} </span> <br>
+									                       <span> Reading :{{langauge.reading_proficiency.proficiency}}  </span> <br>
+									                        <span> Writing : {{langauge.writing_proficiency.proficiency}}</span> 
+									                    </div>
+									                    <hr>
+									             		  {% empty %}
+									                    <p>No Languages skills available.</p>
+									                
+									                {% endfor %}
+									                
+									            
+                               
+                            </div>
+                          </div>
+                        </div>
+                    </div> -->
+
+                    <!-- supporting_documents -->
+                    <!-- <div class="tab-pane fade" id="supporting_documents" role="tabpanel" aria-labelledby="pills-supporting_documents-tab">
+                        <h4 class="">Supporting Documents</h4>
+												<hr>
+												<div class="row d-flex justify-content-center ">
+														<table class="table table-bordered table-striped">
+									            <thead>
+									              <tr>
+									               
+									                
+									                <th>Document Type</th>
+									                <th>Date Uploaded</th>
+									                <th>Action</th>
+									              </tr>
+									            </thead>
+									            <tbody>
+													
+														{% for document in seeker.documents.all %} 
+									                    <tr>
+									                        <td>{{ document.document_type }}</td>
+									                        <td>{{ document.uploaded_at }}</td>
+									                       
+									                        <td><a href="{{document.document.url}}" class="btn btn-primary my-1"> View </a>  <a href="{{document.document.url}}" class="btn btn-dark my-1" download> Download </a> 
+									                       
+									                    </tr>
+									                    {% endfor %}
+									              
+									          </tbody>
+									        </table>
+											</div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="computer_skill" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Computer Skill</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="">
+                      <div class="form-group w-100">
+                        <label for="Skillname">Skill name</label>
+                        <select type="text" class="form-control" id="cname" placeholder="Skill ">
+                    
+                        {% for c_skill in computer_skills %}
+                          <option value="{{c_skill.skill}}">{{c_skill.skill}}</option>
+                        {% endfor %}
+                        </select>
+                      </div>
+                      
+                      <div class="form-group w-100">
+                        <label for="location">Level</label>
+                        <select class="form-control" id="clevel">
+                         {% for soft in soft_profs %}
+                          <option value="{{soft.level}}">{{soft.level}}</option>
+                         {% endfor %}
+                          
+                      </div>
+                      <div class="form-group mt-3">
+
+                        <input type="checkbox"  id="cmyCheckbox">is Required
+                      </div>
+                    
+                        
+                    </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-info" type="button" role="button" onclick="addJobSkill({{job.id}},'spinnerSkill','editSkill','skillToggle')" id="" >Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="soft_skill" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add soft Skill</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="">
+                      <div class="form-group w-100">
+                        <label for="Skillname">Skill name</label>
+                        <select type="text" class="form-control" id="sname" placeholder="Skill ">
+                        {% for soft_skill in soft_skills %}
+                          <option value="{{soft_skill.skill}}">{{soft_skill.skill}}</option>
+                        {% endfor %}
+                        </select>
+                      </div>
+                      
+                      <div class="form-group w-100">
+                        <label for="location">Level</label>
+                        <select class="form-control" id="slevel">
+                         {% for soft in soft_profs %}
+                          <option value="{{soft.level}}">{{soft.level}}</option>
+                         {% endfor %}
+                          
+                      </div>
+                      <div class="form-group mt-3">
+
+                        <input type="checkbox"  id="smyCheckbox">is Required
+                      </div>
+                    
+                        
+                    </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-info" type="button" role="button" onclick="addJobSkills({{job.id}},'spinnerSkill','editSkill','skillToggle')" id="" >Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="experience_d" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Experience</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form >
+                        <div class="form-group ">
+                          <label for="name">Experience</label>
+                          <select type="text" class="form-control" id="Ename" placeholder="Expereince in what?">
+                             {% for c_skill in computer_skills %}
+                              <option value="{{c_skill.skill}}">{{c_skill.skill}}</option>
+                             {% endfor %}
+                            {% for jobv in job_titles %}
+                                <option value="{{jobv.title}}">{{jobv.title}}</option>
+                            {% endfor %}
+                         </select>
+                        </div>
+                         <div class="form-group mx-2">
+                          <label for="duration">duration</label>
+                          <div class="d-flex justify-content-start">
+                            
+                              <input type="number" class="form-control w-25" id="Eduration" placeholder="for how long" >
+                              <span class="mx-2"> years</span> 
+                          </div>
+                        </div> 
+                       
+                      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-info "  type="button" role="button" onclick="addExperience({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="qualification_d" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">add Qualifications</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <form >
+                      <div class="form-group ">
+                        <label for="level">NQF Level</label>
+                        <select type="text" class="form-control" id="Elevel" placeholder="eg. grade 12 or Information Technology">
+                          {% for nqf in nqf_levels %}
+                              <option value="{{nqf.id}}">{{nqf.level}} </option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                      <div class="form-group mx-2">
+                        <label for="qualification">qualification</label>
+                        <select type="text" class="form-control" id="qualification" placeholder="eg. Matric or Diploma">
+                         {% for qualification in qualifications %}
+                              <option value="{{qualification.id}}">{{qualification.name}} </option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-info" type="button" role="button" onclick="addEducation({{job.id}},'spinnerEducation','editEducation','EducationToggle')" id="add_btn" >Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="requirements_d" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">add Duties and Responsibilities</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form>
+                    <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Requirements</label>
+                      <!-- <input type="text" class="form-control"  placeholder="description"> -->
+                      <textarea class="form-control" id="Rdescription" rows="2" placeholder="job requirements and responsibilties "></textarea>
+                    </div>
+                  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-info "  type="button" role="button" onclick="addRequirements({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="language_d" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <form >
+                    <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Language</label>
+                      <select class="form-control" id="language">
+                      {% for language in languages %}
+                        <option value="{{language.id}}">{{language.name}} </option>
+                      {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Speaking</label>
+                      <select class="form-control" id="speaking">
+                      {% for speaking in speakings %}
+                        <option value="{{speaking.id}}">{{speaking.proficiency}} </option>
+                      {% endfor %}
+                      </select>
+                    </div>
+                   <div class="form-group m-1" style="width: 90%;">
+                      <label for="description">Reading</label>
+                      <select class="form-control" id="reading">
+                      {% for reading in readings %}
+                        <option value="{{reading.id}}">{{reading.proficiency}} </option>
+                      {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group m-1" style="width: 90%;">
+
+                      <label for="description">Writing</label>
+                      <select class="form-control" id="writing">
+                      {% for writing in writings %}
+                        <option value="{{writing.id}}">{{writing.proficiency}} </option>
+                      {% endfor %}
+                      </select>
+
+                     
+                    </div>
+                   
+                  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-info "  type="button" role="button" onclick="addLanguage({{job.id}},'spinnerExperience','editExperience','experienceToggle')" id="add_btn" >Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+ <div class="modal fade"id="interview{{application.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog ">
+        <div class="modal-content ">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Set Interview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Title</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" value="{{seeker.first_name}} {{seeker.last_name}} - {{seeker.email}}" disabled>
+            </div>
+            <div class="form-group w-100">
+              <label for="endDate">Select Date</label>
+              <input type="date" value="" class="form-control" id="date_time{{application.id}}">
+            </div>
+            <div class="d-flex justify-content-between">
+              <div class="form-group w-100 m-1" style="position:relative;">
+                <label for="start_time">Start Time:</label>
+                <input class="form-control" value="" type="time" id="date_start_time{{application.id}}" value="" />
+              </div>
+              <div class="form-group w-100 m-1 " style="position:relative;" value="">
+                <label for="end_time">End Time:</label>
+                <input class="form-control" type="time" value="" id="date_end_time{{application.id}}" value="" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="set_interview({{application.id}})">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Rejection Note</b></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+       	<label for="message" class="form-label"><h6><i class="fa fa-circle-info text-info"> </i> Add Note or Message to outline Application Rejection</h6></label>
+       	<label for="message" class="form-label">message - requied field</label>
+       		<input class="form-control" type="text" id="message{{application.id}}" required></input>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="reject_applicantion({{application.id}})">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	
+	  function openModal(modalId,appId) {
+      var modalElement = document.getElementById(modalId);
+      var modal = new bootstrap.Modal(modalElement);
+       flatpickr("#date_end_time"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+                  flatpickr("#date_start_time"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+      // Show the modal
+      modal.show();
+
+      // Initialize datetimepicker once the modal is fully shown
+     
+    }
+</script>
+{% endblock %}

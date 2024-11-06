@@ -113,22 +113,22 @@ function addJob() {
 function updateJob(jobID,spinner,content) {
   // Replace with your actual endpoint URL
   const url = 'http://127.0.0.1:8000/job/update_job/';
-  document.getElementById('spinner' + jobID).style.display = 'block';
-  document.getElementById('editJob' + jobID).style.display = 'none';
+  document.getElementById('spinner' ).style.display = 'block';
+  document.getElementById('editJob' ).style.display = 'none';
 
   // Extract values from input fields
-  const title = document.getElementById('title'+ jobID).value;
-  const description = document.getElementById('description'+ jobID).value;
-  const end_date = document.getElementById('end_date'+ jobID).value;
+  const title = document.getElementById('title').value;
+  const description = document.getElementById('description').value;
+  const end_date = document.getElementById('end_date').value;
 
   // Extract values from select fields
-  const location = document.getElementById('location'+ jobID).value;
-  const salary_range = document.getElementById('salary_range'+ jobID).value;
-  const job_type = document.getElementById('job_type'+ jobID).value;
-  const assigned_to = document.getElementById('assigned_to'+ jobID).value;
+  const location = document.getElementById('location').value;
+  const salary_range = document.getElementById('salary_range').value;
+  const job_type = document.getElementById('job_type').value;
+  const assigned_to = document.getElementById('assigned_to').value;
 
   // Extract value from company_name input field
-  const industry = document.getElementById('industry'+ jobID).value;
+  const industry = document.getElementById('industry').value;
 
   // Form JSON data object
   const jsonData = {
@@ -197,11 +197,11 @@ function updateJob(jobID,spinner,content) {
 function addJobSkill(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_skill/';
  
-  const skillListElement = document.getElementById('skillList' + jobID);
+ // const skillListElement = document.getElementById('skillList' + jobID);
 
-  const name = document.getElementById('name'+ jobID).value;
-  const level = document.getElementById('level'+ jobID).value;
-  var checkbox = document.getElementById('myCheckbox'+ jobID);
+  const name = document.getElementById('cname').value;
+  const level = document.getElementById('clevel').value;
+  var checkbox = document.getElementById('cmyCheckbox');
 
   // Check if the checkbox is checked
   if (checkbox.checked) {
@@ -234,25 +234,25 @@ function addJobSkill(jobID, spinner, content, modal) {
     } else if (data.status === "success") {
      
       showFlashMessage(data.message, "success");
-      skillListElement.innerHTML = '';
+      //skillListElement.innerHTML = '';
 
             // Re-render list items based on updated data
-            data.skills.forEach(skill => {
-                const listItem = document.createElement('li');
-                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
-                listItem.innerHTML = `
-                     <div class="ms-2 me-auto">
-                        <div class="fw-bold">${skill.name}</div>
-                        ${skill.level} 
-                    </div>
-                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.name})"></i>
-                `;
-                skillListElement.appendChild(listItem);
-            });
+            //data.skills.forEach(skill => {
+               // const listItem = document.createElement('li');
+              //  listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+              //  listItem.innerHTML = `
+              //       <div class="ms-2 me-auto">
+               //         <div class="fw-bold">${skill.name}</div>
+               //         ${skill.level} 
+               //     </div>
+                //    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.name})"></i>
+                //`;
+               // skillListElement.appendChild(listItem);
+            //});
       
       
     } else if (data.status === "warning") {
-      d
+      
       showFlashMessage(data.message, "warning");
       
     }
@@ -262,6 +262,76 @@ function addJobSkill(jobID, spinner, content, modal) {
     showFlashMessage(error.message, "danger");
   });
 }
+
+function addJobSkills(jobID, spinner, content, modal) {
+  const url = 'http://127.0.0.1:8000/job/add_job_skill/';
+ 
+  //const skillListElement = document.getElementById('skillList' + jobID);
+
+  const name = document.getElementById('sname').value;
+  const level = document.getElementById('slevel').value;
+  var checkbox = document.getElementById('smyCheckbox');
+
+  // Check if the checkbox is checked
+  if (checkbox.checked) {
+    checkbox='true';
+  } else {
+    checkbox='false';
+  }
+  const jsonData = {
+    name: name,
+    level: level,
+    job_post_id: jobID,
+    is_required:checkbox
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors, jobID, spinner);
+      
+    } else if (data.status === "success") {
+     
+      showFlashMessage(data.message, "success");
+      //skillListElement.innerHTML = '';
+
+            // Re-render list items based on updated data
+            //data.skills.forEach(skill => {
+               // const listItem = document.createElement('li');
+              //  listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+              //  listItem.innerHTML = `
+              //       <div class="ms-2 me-auto">
+               //         <div class="fw-bold">${skill.name}</div>
+               //         ${skill.level} 
+               //     </div>
+                //    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.name})"></i>
+                //`;
+               // skillListElement.appendChild(listItem);
+            //});
+      
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+      
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
 
 function deleteSkill(jobID, spinner, content, modal, skillID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_skill/';
@@ -323,10 +393,10 @@ function deleteSkill(jobID, spinner, content, modal, skillID) {
 function addEducation(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_acedemic/';
   
-  const skillListElement = document.getElementById('educationList' + jobID);
+  //const skillListElement = document.getElementById('educationList' + jobID);
 
-  const level = document.getElementById('Elevel'+ jobID).value;
-  const qualification = document.getElementById('qualification'+ jobID).value;
+  const level = document.getElementById('Elevel').value;
+  const qualification = document.getElementById('qualification').value;
   
   const jsonData = {
     level: level,
@@ -353,7 +423,7 @@ function addEducation(jobID, spinner, content, modal) {
     } else if (data.status === "success") {
     
       showFlashMessage(data.message, "success");
-      skillListElement.innerHTML = '';
+      /*skillListElement.innerHTML = '';
 
             // Re-render list items based on updated data
             data.educations.forEach(education => {
@@ -368,7 +438,7 @@ function addEducation(jobID, spinner, content, modal) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      
+      */
       
     } else if (data.status === "warning") {
       document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
@@ -385,7 +455,7 @@ function addEducation(jobID, spinner, content, modal) {
 function deleteEducation(jobID, spinner, content, modal, educationID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_acedemic/';
   
-  const skillListElement = document.getElementById('educationList' + jobID);
+  //const skillListElement = document.getElementById('educationList' + jobID);
 
   const jsonData = {
     job_academic_id: educationID,
@@ -410,7 +480,7 @@ function deleteEducation(jobID, spinner, content, modal, educationID) {
     } else if (data.status === "success") {
       
       showFlashMessage(data.message, "success");
-      skillListElement.innerHTML = '';
+      /*skillListElement.innerHTML = '';
 
             // Re-render list items based on updated data
             data.educations.forEach(education => {
@@ -424,7 +494,7 @@ function deleteEducation(jobID, spinner, content, modal, educationID) {
                     <i class="fa-solid fa-square-minus min-icon" onclick="deleteEducation(${jobID},'spinnerEducation','editEducation','EducationToggle',${education.id})"></i>
                 `;
                 skillListElement.appendChild(listItem);
-            });
+            });*/
 
       
     } else if (data.status === "warning") {
@@ -444,10 +514,10 @@ function deleteEducation(jobID, spinner, content, modal, educationID) {
 function addExperience(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_expereince/';
   
-  const skillListElement = document.getElementById('experienceList' + jobID);
+  //const skillListElement = document.getElementById('experienceList' + jobID);
 
-  const name = document.getElementById('Ename'+ jobID).value;
-  const duration = document.getElementById('Eduration'+ jobID).value;
+  const name = document.getElementById('Ename').value;
+  const duration = document.getElementById('Eduration').value;
   
   const jsonData = {
     duration: duration,
@@ -472,9 +542,9 @@ function addExperience(jobID, spinner, content, modal) {
       
     } else if (data.status === "success") {
      
-      skillListElement.innerHTML = '';
+     /* skillListElement.innerHTML = '';
 
-            // Re-render list items based on updated data
+        
             data.experiences.forEach(experience => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
@@ -487,7 +557,7 @@ function addExperience(jobID, spinner, content, modal) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      
+      */
       
     } else if (data.status === "warning") {
       
@@ -504,7 +574,7 @@ function addExperience(jobID, spinner, content, modal) {
 function deleteExperience(jobID, spinner, content, modal, experienceID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_expereince/';
   
-  const experinceElement = document.getElementById('experienceList' + jobID);
+  //const experinceElement = document.getElementById('experienceList' + jobID);
 
   const jsonData = {
     job_experience_id: experienceID,
@@ -529,9 +599,9 @@ function deleteExperience(jobID, spinner, content, modal, experienceID) {
     } else if (data.status === "success") {
      
       showFlashMessage(data.message, "success");
-      experinceElement.innerHTML = '';
+     /* experinceElement.innerHTML = '';
 
-            // Re-render list items based on updated data
+          
             data.experiences.forEach(experience => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
@@ -543,7 +613,7 @@ function deleteExperience(jobID, spinner, content, modal, experienceID) {
                     <i class="fa-solid fa-square-minus min-icon" onclick="deleteExperience(${jobID},'spinnerExperience','editExperience','experienceToggle',${experience.id})"></i>
                 `;
                 experinceElement.appendChild(listItem);
-            });
+            });*/
   
       
     } else if (data.status === "warning") {
@@ -562,9 +632,9 @@ function deleteExperience(jobID, spinner, content, modal, experienceID) {
 function addRequirements(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_requirements/';
  
-  const skillListElement = document.getElementById('requirementsList' + jobID);
+  //const skillListElement = document.getElementById('requirementsList' + jobID);
 
-  const description = document.getElementById('Rdescription'+ jobID).value;
+  const description = document.getElementById('Rdescription').value;
   
   const jsonData = {
     description: description,
@@ -589,9 +659,9 @@ function addRequirements(jobID, spinner, content, modal) {
     } else if (data.status === "success") {
       
       showFlashMessage(data.message, "success");
-      skillListElement.innerHTML = '';
+     /* skillListElement.innerHTML = '';
 
-            // Re-render list items based on updated data
+        
             data.requirements.forEach(requirement => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
@@ -604,7 +674,7 @@ function addRequirements(jobID, spinner, content, modal) {
                 `;
                 skillListElement.appendChild(listItem);
             });
-      
+      */
       
     } else if (data.status === "warning") {
       
@@ -620,7 +690,7 @@ function addRequirements(jobID, spinner, content, modal) {
 
 function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
   const url = 'http://127.0.0.1:8000/job/delete_job_requirements/';
-  const experinceElement = document.getElementById('requirementsList' + jobID);
+ // const experinceElement = document.getElementById('requirementsList' + jobID);
 
   const jsonData = {
     job_requirement_id: requirementsID,
@@ -645,9 +715,9 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
     } else if (data.status === "success") {
      
       showFlashMessage(data.message, "success");
-      experinceElement.innerHTML = '';
+     /* experinceElement.innerHTML = '';
 
-            // Re-render list items based on updated data
+           
             data.requirements.forEach(requirement => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
@@ -660,7 +730,7 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
                 `;
                 experinceElement.appendChild(listItem);
             });
-      
+      */
       
     } else if (data.status === "warning") {
       
@@ -677,12 +747,12 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
 function addLanguage(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/add_job_language/';
   
-  const skillListElement = document.getElementById('LanguageList' + jobID);
+  //const skillListElement = document.getElementById('LanguageList' + jobID);
 
-  const language = document.getElementById('language'+ jobID).value;
-  const speaking = document.getElementById('speaking'+ jobID).value;
-  const reading = document.getElementById('reading'+ jobID).value;
-  const writing = document.getElementById('writing'+ jobID).value;
+  const language = document.getElementById('language').value;
+  const speaking = document.getElementById('speaking').value;
+  const reading = document.getElementById('reading').value;
+  const writing = document.getElementById('writing').value;
   
   const jsonData = {
     job_post_id: jobID,
@@ -711,9 +781,8 @@ function addLanguage(jobID, spinner, content, modal) {
     } else if (data.status === "success") {
     
       showFlashMessage(data.message, "success");
-      skillListElement.innerHTML = '';
+      /*skillListElement.innerHTML = '';
 
-            // Re-render list items based on updated data
             data.languages.forEach(language => {
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
@@ -735,7 +804,7 @@ function addLanguage(jobID, spinner, content, modal) {
                 skillListElement.appendChild(listItem);
             });
       
-      
+      */
     } else if (data.status === "warning") {
       document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
       showFlashMessage(data.message, "warning");
@@ -750,7 +819,7 @@ function addLanguage(jobID, spinner, content, modal) {
 
 function deleteLanguage(jobID, spinner, content, modal, languageID) {
   const url = 'http://127.0.0.1:8000/job/delete_language/';
-  const skillListElement = document.getElementById('LanguageList' + jobID);
+  //const skillListElement = document.getElementById('LanguageList' + jobID);
 
   const jsonData = {
     job_language_id: languageID,
@@ -775,7 +844,7 @@ function deleteLanguage(jobID, spinner, content, modal, languageID) {
     } else if (data.status === "success") {
      
       showFlashMessage(data.message, "success");
-      skillListElement.innerHTML = '';
+      /*skillListElement.innerHTML = '';
 
             // Re-render list items based on updated data
            data.languages.forEach(language => {
@@ -799,7 +868,7 @@ function deleteLanguage(jobID, spinner, content, modal, languageID) {
                 skillListElement.appendChild(listItem);
             });
       
-      
+      */
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
