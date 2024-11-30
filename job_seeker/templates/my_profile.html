@@ -466,7 +466,7 @@
                 </button>
             </div>
             
-            <div class="modal-body">
+            <div class="modal-body" id="personalDetailsModals">
                 <form>
                     <div class="row">
                         <div class="col-md-6 col-12"> <!-- col-12 ensures full width on mobile -->
@@ -575,7 +575,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="addressDetailsModals">
                 <form method="post">
                     {% csrf_token %}
                     <div class="row">
@@ -637,7 +637,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="academicQualificationsModals">
                 <form id="academicQualificationForm">
                     <div class="form-group">
                         <label for="institution" class="form-label">Institution</label>
@@ -709,7 +709,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="languageProficiencyModals">
                     <form>
                         <div class="form-group">
                             <label for="language">Language:</label>
@@ -772,7 +772,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="computerSkillsModals">
                 <form id="computerSkillsForm">
                     <div class="form-group">
                         <label for="skill1">Computer Skill</label>
@@ -815,7 +815,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="softSkillsModals">
                     <form id="softSkillsForm">
                         <div class="form-group">
                             <label for="softskill1">Soft Skill</label>
@@ -826,10 +826,6 @@
                                 {% endfor %}
                             </select>
                         </div>
-                       <!--  <div class="form-group" id="other-soft-skill-group" style="display: none;">
-                            <label for="otherSoftSkill">Specify Skill</label>
-                            <input type="text" class="form-control" id="otherSoftSkill" name="otherSoftSkill">
-                        </div> -->
                         <div class="form-group">
                             <label for="proficiency1">Proficiency Level</label>
                             <select id="proficiency1" class="form-control" name="proficiency1">
@@ -859,7 +855,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="addExperienceModals">
                 <form>
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -934,7 +930,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="referencesModals">
                 <form id="referenceForm">
                    
                         
@@ -982,7 +978,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="supportingDocumentsModals">
                 Upload your supporting documents here.
                 <!-- Add document upload forms -->
                 <form id="license-upload-form" method="POST" enctype="multipart/form-data">

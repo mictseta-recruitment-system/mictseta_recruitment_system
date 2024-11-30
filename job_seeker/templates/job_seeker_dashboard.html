@@ -41,6 +41,10 @@
         .navbar-custom .nav-link:hover {
             color: #d5d5d5; 
         }
+        .flash1{
+            display: fixed;
+            z-index: 1000;
+        }
 
         .sidebar {
             background-color: #ffffff;
@@ -215,7 +219,7 @@
 
         <div class="content">
             <div class="inner-content-box">
-                <div id="flash-message-container"></div>
+                <div id="flash-message-container" class="flash1"></div>
                 {% block content %}
                 {% endblock %}
             </div>
