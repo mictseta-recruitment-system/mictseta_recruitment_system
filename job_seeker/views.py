@@ -5,6 +5,126 @@ from profiles.models import SupportingDocuments, WorkingExpereince
 from django.db.models import Count
 # Create your views here.
 
+
+def count_profile(req):
+
+    score = 0
+
+    if req.user.first_name and req.user.first_name != " " and req.user.first_name != "" :
+        score += 1
+    if req.user.last_name and req.user.last_name != " "  and req.user.last_name != "":
+        score += 1
+    if req.user.profile.cover_letter and req.user.profile.cover_letter != " " and req.user.profile.cover_letter != "":
+        score += 1
+    if req.user.profile.phone and req.user.profile.phone != " " and req.user.profile.phone != "":
+        score += 1
+    if req.user.profile.race and req.user.profile.race != " " and req.user.profile.race != "":
+        score += 1
+    if req.user.profile.maritial_status and req.user.profile.maritial_status != " " and req.user.profile.maritial_status != "" :
+        score += 1
+    if req.user.profile.disability and req.user.profile.disability != " " and req.user.profile.disability != "" :
+        score += 1
+    if req.user.profile.linkedin_profile and req.user.profile.linkedin_profile != " " and req.user.profile.linkedin_profile != "" :
+        score += 1
+    if req.user.profile.personal_website and req.user.profile.personal_website != " " and req.user.profile.personal_website != "" :
+        score += 1
+
+    total = (score/9) * 100
+    return round(total) 
+
+def count_language(req):
+
+    score = 0
+    lang = req.user.language_set.all()
+    if len(lang) > 0 :
+        score += 1
+    if len(lang) > 1 :
+        score += 1
+    total = (score/2) * 100
+    return round(total) 
+
+def count_address(req):
+
+    score = 0
+
+    if req.user.address.street_address_line and req.user.address.street_address_line != " " and req.user.address.street_address_line != "" :
+        score += 1
+    if req.user.address.city and req.user.address.city != " "  and req.user.address.city != "":
+        score += 1
+    if req.user.address.province and req.user.address.province != " " and req.user.address.province != "":
+        score += 1
+    if req.user.address.postal_code and req.user.address.postal_code != " " and req.user.address.postal_code != "":
+        score += 1
+    
+    total = (score/4) * 100
+    return round(total) 
+
+def count_academic(req):
+
+    score = 0
+    academics = req.user.qualifications.all()
+
+    for academic in academics:
+        if academic.institution and academic.institution != " " and academic.institution != "" :
+            score += 1
+        if academic.field_of_study and academic.field_of_study != " "  and academic.field_of_study != "":
+            score += 1
+        if academic.nqf_level and academic.nqf_level != " " and academic.nqf_level != "":
+            score += 1
+        if academic.start_date and academic.start_date != " " and academic.start_date != "":
+            score += 1
+        if academic.end_date and academic.end_date != " " and academic.end_date != "":
+            score += 1
+        if academic.status and academic.status != " " and academic.status != "":
+            score += 1
+    
+    total = (score/(6*len(academics))) * 100
+    return round(total) 
+
+def count_cs(req):
+
+    score = 0
+    cs = req.user.computerskills_set.all()
+    if len(cs) > 0 :
+        score += 1
+    if len(cs) > 1 :
+        score += 1
+    if len(cs) > 2 :
+        score += 1
+    if len(cs) > 3 :
+        score += 1
+    if len(cs) > 4 :
+        score += 1
+   
+    total = (score/5) * 100
+    return round(total) 
+
+def count_ss(req):
+
+    score = 0
+    cs = req.user.softskills_set.all()
+    if len(cs) > 0 :
+        score += 1
+    if len(cs) > 1 :
+        score += 1
+    if len(cs) > 2 :
+        score += 1
+    if len(cs) > 3 :
+        score += 1
+    if len(cs) > 4 :
+        score += 1
+
+    total = (score/5) * 100
+    return round(total) 
+
+def count_doc(req):
+    score = 0
+    cs = req.user.documents.all()
+    if len(cs) > 0 :
+        score += 1
+    total = (score/1.1) * 100
+    return round(total) 
+
 def job_seeker_dashboard(request):
     institution = Institution.objects.all()
     qualification = Qualification.objects.all()
@@ -41,7 +161,14 @@ def job_seeker_dashboard(request):
         'selected_proficiency': selected_proficiency,
         'softs':soft, 
         'proficiencys':proficiency,
-        'working_experiences':working_experience
+        'working_experiences':working_experience,
+        'stat_profile': count_profile(request),
+        'stat_lang': count_language(request),
+        'stat_address':count_address(request),
+        'stat_academic':count_academic(request),
+        'stat_soft':count_ss(request),
+        'stat_comp':count_cs(request),
+        'stat_doc':count_doc(request)
         })
 
 def my_profile(request):
