@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - {{user.first_name}} {{user.last_name}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: #007bff;
+        }
+        header p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        section {
+            margin-bottom: 20px;
+        }
+        section h2 {
+            font-size: 1.8rem;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .info-grid div {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .skills-gri {
+            display: flex;
+           justify-content: space-between;
+        
+        }
+        .skills-grid div {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #e9f5ff;
+            border: 1px solid #007bff;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        ul li strong {
+            font-weight: bold;
+        }
+        .address ul, .references ul {
+            margin-top: 10px;
+        }
+        .references li {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>{{user.first_name}} {{user.last_name}}</h1>
+
+            <p>{{user.profile.cover_letter}}/p>
+        </header>
+
+        <!-- Personal Information Section -->
+        <section>
+            <h2>Personal Information</h2>
+            <div class="info-grid">
+                <div><strong>ID Number:</strong> {{user.profile.idnumber}}</div>
+                <div><strong>Date of Birth:</strong> {{user.profile.dob}}</div>
+                <div><strong>Gender:</strong> {{user.profile.gender}}</div>
+                <div><strong>Age:</strong> {{user.profile.age}}</div>
+                <div><strong>Marital Status:</strong> {{user.profile.maritial_status}}</div>
+                <div><strong>Race:</strong> {{user.profile.race}}</div>
+                <div><strong>Disability:</strong> {{user.profile.disability}}</div>
+                <div><strong>Languages:</strong> {% for language in user.language_set.all %} {{language.language}},  {% endfor %}</div>
+            </div>
+        </section>
+
+        <!-- Address Information Section -->
+        <section>
+            <h2>Address Information</h2>
+            <div class="info-grid">
+                <div><strong>Street Address:</strong> {{user.address.street_address_line}}</div>
+                <div><strong>City:</strong> {{user.address.city}}</div>
+                <div><strong>Province:</strong> {{user.address.province}}</div>
+                <div><strong>Postal Code:</strong> {{user.address.postal_code}}</div>
+            </div>
+        </section>
+
+        <!-- Soft Skills Section -->
+        <section>
+            <h2>Soft Skills</h2>
+            <div class="info-grids">
+                {% for soft in user.softskills_set.all %}
+                <div class=" ">{{soft.skill}} - {{soft.proficiency}}</div>
+                {% endfor %}
+                
+            </div>
+        </section>
+
+        <!-- Computer Skills Section -->
+        <section>
+            <h2>Computer Skills</h2>
+            <div class="info-grid">
+                  {% for computer in user.computerskills_set.all %}
+                <div>{{computer.skill}} - {{computer.proficiency}}</div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Work Experience Section -->
+        <section>
+            <h2>Work Experience</h2>
+            <ul>
+                {% for exp in user.working_expereince.all %}
+                <li>
+                    <strong>{{exp.job_title}}</strong> at {{exp.company}} ({{exp.start_date}} - {{exp.end_date}})
+                    <p>{{exp.description}}</p>
+                </li>
+              {% endfor %}
+            </ul>
+        </section>
+
+        <!-- References Section -->
+        <section class="references">
+            <h2>References</h2>
+            <ul>
+                {% for ref in user.reference.all %}
+                <li>
+                    <strong>{{ref.full_name}}</strong><br>
+                    {{ref.position}}, {{ref.working_experince}}<br>
+                    Phone: {{ref.phone}}
+                </li>
+              {% endfor %}
+            </ul>
+        </section>
+
+        <footer>
+            <p>© 2024 {{user.first_name}} {{user.last_name}}. All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

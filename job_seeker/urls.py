@@ -16,6 +16,8 @@ urlpatterns = [
     path('application_tracking/', views.application_tracking, name='application_tracking'),
     path('interviews/', views.interviews, name='interviews'),
     path('feedback/', views.feedback, name='feedback'),
+     path('cv/', views.cv, name='cv'),
+     path('generate_cv/', views.generate_cv, name='generate_cv'),
     path('delete_feadback/<int:feedbackID>', views.delete_feadback, name='delete_feadback'),
 
 

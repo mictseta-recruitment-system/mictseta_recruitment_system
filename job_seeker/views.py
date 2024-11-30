@@ -209,6 +209,33 @@ def my_profile(request):
         })
 
 
+
+def cv(request):
+    return render(request, 'cv.html')
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+
+def generate_cv(request):
+    # Define the context for the template
+    context = {
+        'user': request.user,
+        # Add any additional data you need in the template
+    }
+
+    # Render the template to an HTML string
+    html_string = render_to_string('cv.html', context)
+
+    # Generate the PDF
+    pdf = HTML(string=html_string).write_pdf()
+
+    # Return the PDF as a response
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="cv.pdf"'
+    return response
+
+
+
 def address_details(request):
     return render(request, 'address_details.html')
 
