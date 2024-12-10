@@ -44,42 +44,48 @@ def count_language(req):
     return round(total) 
 
 def count_address(req):
-
     score = 0
 
-    if req.user.address.street_address_line and req.user.address.street_address_line != " " and req.user.address.street_address_line != "" :
-        score += 1
-    if req.user.address.city and req.user.address.city != " "  and req.user.address.city != "":
-        score += 1
-    if req.user.address.province and req.user.address.province != " " and req.user.address.province != "":
-        score += 1
-    if req.user.address.postal_code and req.user.address.postal_code != " " and req.user.address.postal_code != "":
-        score += 1
+    # Check if the user has an associated address and it's not None
+    if hasattr(req.user, 'address') and req.user.address:
+        # Check each field of the address and ensure it's not empty or just whitespace
+        if req.user.address.street_address_line and req.user.address.street_address_line.strip():
+            score += 1
+        if req.user.address.city and req.user.address.city.strip():
+            score += 1
+        if req.user.address.province and req.user.address.province.strip():
+            score += 1
+        if req.user.address.postal_code and req.user.address.postal_code.strip():
+            score += 1
     
-    total = (score/4) * 100
-    return round(total) 
+    # Calculate the percentage score and return it rounded
+    total = (score / 4) * 100
+    return round(total)
 
 def count_academic(req):
-
     score = 0
     academics = req.user.qualifications.all()
 
-    for academic in academics:
-        if academic.institution and academic.institution != " " and academic.institution != "" :
-            score += 1
-        if academic.field_of_study and academic.field_of_study != " "  and academic.field_of_study != "":
-            score += 1
-        if academic.nqf_level and academic.nqf_level != " " and academic.nqf_level != "":
-            score += 1
-        if academic.start_date and academic.start_date != " " and academic.start_date != "":
-            score += 1
-        if academic.end_date and academic.end_date != " " and academic.end_date != "":
-            score += 1
-        if academic.status and academic.status != " " and academic.status != "":
-            score += 1
-    
-    total = (score/(6*len(academics))) * 100
-    return round(total) 
+    if academics:  # Ensure there is at least one academic record
+        for academic in academics:
+            if academic.institution and academic.institution != " " and academic.institution != "":
+                score += 1
+            if academic.field_of_study and academic.field_of_study != " " and academic.field_of_study != "":
+                score += 1
+            if academic.nqf_level and academic.nqf_level != " " and academic.nqf_level != "":
+                score += 1
+            if academic.start_date and academic.start_date != " " and academic.start_date != "":
+                score += 1
+            if academic.end_date and academic.end_date != " " and academic.end_date != "":
+                score += 1
+            if academic.status and academic.status != " " and academic.status != "":
+                score += 1
+        
+        total = (score / (6 * len(academics))) * 100
+        return round(total)
+    else:
+        return 0  # Return 0 if no academic records exist
+
 
 def count_cs(req):
 
