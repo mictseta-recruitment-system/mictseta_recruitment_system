@@ -10,38 +10,129 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="shortcut icon" href="{% static 'home/images/webicon.png' %}" type="image/x-icon">  
-</head>
+    <style>
+      /* Custom styles */
+      body {
+          margin: 0;
+          padding: 0;
+      }
+    
+      #navbar {
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+    
+      .filterbar {
+          margin-top: 20px;
+      }
+    
+      .social-media-icons ul {
+          list-style-type: none;
+          padding: 0;
+      }
+    
+      .social-media-icons li {
+          display: inline;
+          margin-right: 10px;
+      }
+    
+      footer {
+          text-align: center;
+          padding: 20px 0;
+          background-color: #f8f9fa;
+      }
+    
+      @media (max-width: 576px) {
+          .filterbar {
+              display: flex;
+              flex-direction: column;
+              align-items: stretch;
+          }
+      }
+    </style>
+    </head>
     <body>
+    
          
-      <nav id="navbar" class="navbar navbar-expand-lg bg-body-primary">
-        <div class="container-fluid">
-    <div class="logo" id="logo">
-        <img class="nav-logo" src="{% static 'authenticate/images/mict_logo.png' %}" alt="Logo">
-    </div>
-          
-         <div class="nav-items">
-            <button id="navbar-toggler" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarText">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-                 
-                  </li>
-                 
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'about_us' %}">About</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
-                  </li>
-                 
-                </ul>
+            <nav id="navbar" class="navbar navbar-expand-lg bg-body-primary">
+                <div class="container-fluid">
+        <div class="logo" id="logo">
+          <img class="nav-logo" src="{% static 'authenticate/images/mict_logo.png' %}" alt="Logo">
+            </div>
+                  
+                 <div class="nav-items">
+                  <button id="navbar-toggler" class="navbar-toggler" type="button" 
+                  data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" 
+                  aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about_us' %}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
+                        </li>
+                        {% if user.is_authenticated and not user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'job_seeker_dashboard' %}">Job Seeker</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">LogOut</a>
+                            </li>
+                        {% elif not user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'render_auth_page' %}">Job Seeker</a>
+                            </li>
+                        {% endif %}
+                        {% if user.is_authenticated and user.is_superuser %}
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dashboard
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton">
+                                {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
+                                    <li><a class="dropdown-item" href="{% url 'dashboard.panel' %}" style="color: white;">Dashboard</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{% url 'dashboard.emp_panel' %}" style="color: white;">Dashboard</a></li>
+                                {% endif %}
+                                <li><a class="dropdown-item" href="{% url 'log_out' %}" style="color: white;">Log Out</a></li>
+                            </ul>
+                        </div>
+                        {% elif not user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'render_auth_page' %}">Login</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+            
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Logout</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to logout?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><a class="dropdown-item" href="{% url 'log_out' %}">Yes Logout</a></button>
+                      
+                    </div>
+                  </div>
+                </div>
               </div>
-         </div>
-        </div>
-      </nav>
   
     <header class="bg-dark text-white text-center py-3">
       <h1>Contact Us</h1>
@@ -200,6 +291,12 @@
 <footer class="footer">
               <p>© 2024 All rights reserved | The Media, Information and Communication Technologies Sector Education and Training Authority</p>
           </footer>
+          <script src="{% static 'authenticate/javascripts/index.js'%}"></script>
+
+	<script src="{% static 'authenticate/javascripts/login.js'%}"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   
 </body>
 </html>

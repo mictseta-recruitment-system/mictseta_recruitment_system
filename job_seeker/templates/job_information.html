@@ -7,31 +7,140 @@
 <!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-<h2>Job Information</h2>
-<p>
-    Position: Software Engineer<br>
-    Location: Gauteng<br>
-    Type: Full-time<br>
-    Application Deadline: 30 August 2024<br>
-</p>
+<div class="job-details-container">
+  <div class="card shadow  mb-5 bg-body rounded">
+    <div class="card-header">
+      Job Title: <span id="jobTitle">{{jobs.title}}</span>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        <strong>Description:</strong> <span id="jobDescription">{{jobs.description}}</span>
+      </p>
+      <p class="card-text">
+        <strong>End Date:</strong> <span id="endDate">{{jobs.end_date}}</span>
+      </p>
+      <p class="card-text">
+        <strong>Location:</strong> <span id="location">{{jobs.location}}</span>
+      </p>
+      <p class="card-text">
+        <strong>Salary Range:</strong> <span id="salaryRange">{{jobs.salary_range}}</span>
+      </p>
+      <p class="card-text">
+        <strong>Job Type:</strong> <span id="jobType">{{jobs.job_type}}</span>
+      </p>
+      <p class="card-text">
+        <strong>Industry:</strong> <span id="industry">{{jobs.industry}}</span>
+      </p>
+      <p class="card-text">
+        <strong>Status:</strong> <span id="status">{{jobs.status}}</span>
 
-<h2>Requirements</h2>
-<ul>
-    <li>Bachelor's degree in Computer Science, Software Engineering, or a related field.</li>
-    <li>Proficiency in programming languages such as Python, Java, or C++.</li>
-    <li>Strong analytical and problem-solving skills.</li>
-    <li>Experience with data structures, algorithms, and software design patterns.</li>
-    <li>Excellent communication and organizational skills.</li>
-    <li>Experience with version control systems like Git.</li>
-</ul>
+      </p>
+    </div>
+    <div class="card-footer">
+      <a href="{% url 'dashboard.view_jobs' %}" class="btn btn-secondary">Back to Job List</a>
+    </div>
+  </div>
 
-<h2>Experience</h2>
-<ul>
-    <li>Minimum of 2 years of experience in software development or a related field.</li>
-    <li>Experience with software testing and debugging.</li>
-    <li>Experience in building and maintaining software systems.</li>
-    <li>Knowledge of software development life cycle (SDLC) and agile methodologies is preferred.</li>
-</ul>
+  <div class="card m-2 shadow mb-5 bg-body rounded">
+    <div class="card-header bg-secondary">
+      Academic Requirements
+    </div>
+    <div class="card-body">
+     <ul class="list-group list-group-flush">
+                {% for education in jobs.educations.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{education.field_of_study}}</div>
+                       {{education.nqf_level}}
+                    </div>    
+                </li>
+                
+                {% endfor %}
+              </ul>
+    </div>
+
+  </div>
+
+
+  <div class="card m-2 shadow mb-5 bg-body rounded">
+    <div class="card-header bg-secondary">
+      Skills & Knowledge Requirements
+    </div>
+    <div class="card-body">
+      <ul class="list-group list-group-flush">
+                {% for skill in jobs.C_skills.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+                      {{skill.level}} 
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+                {% for skill in jobs.S_skills.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+                      {{skill.level}} 
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+              </ul>
+    </div>
+
+  </div>
+
+
+
+   <div class="card m-2 shadow mb-5 bg-body rounded">
+    <div class="card-header bg-secondary">
+      Experience Requirements
+    </div>
+    <div class="card-body">
+    <ul class="list-group list-group-flush">
+                {% for experience in jobs.experiences.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{experience.name}}</div>
+                       {{experience.duration}} years
+                       
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+              </ul>
+    </div>
+    
+  </div>
+
+  <div class="card m-2 shadow mb-5 bg-body rounded">
+    <div class="card-header bg-secondary">
+      Job Requirements & Responsibilities 
+    </div>
+    <div class="card-body">
+    <ul class="list-group list-group-flush">
+              {% for requirement in jobs.requirements.all %}
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold"></div>
+                    {{requirement.description}}
+                  </div>
+                  
+                  
+              </li>
+              
+              {% endfor %}
+            </ul>
+    </div>
+  </div>
+
+
+
+</div>
 
      <a href="{% url 'job_application' jobs.id %}" class="btn btn-primary">Apply</a>
 

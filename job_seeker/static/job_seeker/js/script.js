@@ -12,7 +12,7 @@
         const disability = document.getElementById("disability").value;
         const linkedin_profile = document.getElementById("linkedin_profile").value;
         const personal_website = document.getElementById("personal_website").value;
-        
+        const cover_letter = document.getElementById("cover_letter").value;
 
 
         const data2 = {
@@ -27,6 +27,7 @@
             maritial_status : maritial_status,
             race : race,
             disability : disability,
+            cover_letter:cover_letter
            
         };
        
@@ -63,20 +64,20 @@
     }
   function handle_update_qualification_button_click() {
        
-        const highest_qualification = document.getElementById("highest_qualification").value;
-        const field_of_study = document.getElementById("field_of_study").value;
         const institution = document.getElementById("institution").value;
-        const year_obtained = document.getElementById("year_obtained").value;
+        const field_of_study = document.getElementById("field").value;
+        const nqf_level = document.getElementById("nqf").value;
+        const start_date = document.getElementById("start_date").value;
+        const end_date = document.getElementById("end_date").value;
          const status = document.getElementById("status").value;
-        const grade = document.getElementById("grade").value;
        
         const personal_information = {
 
-            highest_qualification : highest_qualification,
-            field_of_study : field_of_study,
             institution : institution, 
-            year_obtained : year_obtained, 
-            grade : grade,
+            field_of_study : field_of_study,
+            nqf_level : nqf_level,
+            start_date : start_date, 
+            end_date : end_date,
              status : status
         };
         
@@ -159,17 +160,17 @@
           });
     }
 
-  function handle_update_skill_button_click() {
+  function handle_update_computer_skill_button_click() {
        
-        const skill = document.getElementById("skill1").value;
-        const level = document.getElementById("level").value;
+        const skill = document.getElementById("skill3").value;
+        const level = document.getElementById("level3").value;
         
         const skill_information = {
             skill : skill,
             level : level,
         };
         
-        fetch("http://127.0.0.1:8000/profile/update/skill_information/", {
+        fetch("http://127.0.0.1:8000/profile/update/computer_skill_information/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -201,6 +202,196 @@
           });
     }
 
+  function handle_update_soft_skill_button_click() {
+       
+        const skill = document.getElementById("softskill1").value;
+        const level = document.getElementById("proficiency1").value;
+        
+        const skill_information = {
+            skill : skill,
+            level : level,
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/soft_skill_information/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(skill_information),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
+
+function handle_update_address_button_click() {
+       
+        const street = document.getElementById("residential_street_address").value;
+        const city = document.getElementById("residential_city").value; 
+        const province = document.getElementById("residential_province").value;
+        const postal_code = document.getElementById("residential_postal_code").value;
+        const address = {
+            street : street,
+            city : city,
+            province : province,
+            postal_code : postal_code
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/address_information/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(address),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
+
+
+
+function handle_update_working_experince_button_click() {
+       
+        const job_title = document.getElementById("wjob_title").value;
+        const company = document.getElementById("wcompany").value; 
+        const location = document.getElementById("wlocation").value;
+        const start_date = document.getElementById("wstart_date").value;
+       var end_date =  document.getElementById("wend_date").value;
+        const description = document.getElementById("wdescription").value;
+        const checkbox = document.getElementById("myCheckbox");
+
+        if (checkbox.checked) {
+            end_date = 'currentley working there ';
+        } else {
+            end_date = document.getElementById("wend_date").value;
+        }
+        const working_experince = {
+            job_title : job_title,
+            company : company,
+            location : location,
+            start_date : start_date,
+            end_date : end_date,
+            description : description
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/update_working_experince/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(working_experince),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
+
+function handle_update_reference_button_click() {
+       
+        const working_expereince = document.getElementById("working_expereince").value;
+        const full_name = document.getElementById("full_name").value; 
+        const phone = document.getElementById("rphone").value;
+        const position = document.getElementById("rposition").value;
+        const working_experince = {
+            working_expereince : working_expereince,
+            full_name : full_name,
+            phone : phone,
+            position : position,
+            
+        };
+        
+        fetch("http://127.0.0.1:8000/profile/update/update_reference/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify(working_experince),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "error") {
+             console.log(data.errors)
+              if (data.errors) {
+                handleErrors(data.errors);
+              } else {
+                showFlashMessage("An unknown error occurred", "danger");
+              }
+            } else if (data.status === "success") {
+               
+                showFlashMessage(data.message, "success");
+                 location.reload();
+            } else if (data.status === "warning") {
+      
+                showFlashMessage(data.message, "warning");
+            }
+          })
+          .catch((error) => {
+            showFlashMessage("An unexpected error occurred", "danger");
+            console.error("Error:", error);
+          });
+    }
 
 function uploadDocument(d_type, event) {
    event.preventDefault(); 
@@ -219,7 +410,7 @@ function uploadDocument(d_type, event) {
     
     console.log(formData);
 
-    fetch('http://127.0.0.1:8000/profile/update/upload_supporting_document/', {
+      fetch('http://127.0.0.1:8000/profile/update/upload_supporting_document/', {
         method: 'POST',
         body: formData,
         headers: {

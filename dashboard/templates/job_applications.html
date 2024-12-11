@@ -14,9 +14,9 @@
     {% for applied_job in applied_jobs %}
 
       {% if applied_job.status == "closed" %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title}}</a>
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
       {% else %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title}}
+        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
        </a>
       {% endif %}
     {% endfor %}
@@ -28,8 +28,36 @@
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   <h6>ALL Application List</h6> 
-                  
-                  <button class="btn btn-warning">Auto Short-list</button>
+                  {% if filtered %}
+                  <div>
+                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button>
+                        <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button>
+                  </div>
+                  {% else %}
+                    <div> 
+                        <button class="btn btn-dark-outline" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-cog"></i> </button>
+                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button>
+                        <button class="btn btn-info" onclick="auto_filter('all','standerd')">Standard filter</button>
+                    </div>
+                  {% endif %}
+                       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            ...
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                 </div>
 
                 <div class="card-body" style="overflow-x: scroll;"> 
@@ -37,10 +65,8 @@
                     <table id="application" class="table table-striped table-hover" style="width:100%">
                           <thead>
                               <tr>
-                                  <th class="bg-dark text-white">Email </th>
                                   <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">Job type</th>
-                                  <th class="bg-dark text-white">Job status</th>
+                                  <th class="bg-dark text-white">status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
@@ -51,18 +77,26 @@
                           {% for application in applications %}
                           {% if application.status == "pending" %}
                            <tr class="text-dark">
-                              <td>{{application.user.email}}</td>
                               <td>{{application.job.title}}</td>
-                              <td>{{application.job.job_type}}</td>
-                              {% if application.job.status == 'closed' %}
+                              {% if application.status == 'rejected' %}
                               <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% else %}
+                              {% elif application.status == 'approved' %}
                               <td><button class="btn btn-success p-0">{{application.job.status}}</button></td>
+                              {% elif application.status == 'interview' %}
+                              <td><button class="btn btn-info p-0">{{application.job.status}}</button></td>
+                              {% elif application.status == 'short-list' %}
+                              <td><button class="btn btn-dark p-0">{{application.job.status}}</button></td>
+                              {% elif application.status == 'pending' %}
+                              <td><button class="btn btn-warning p-0">{{application.job.status}}</button></td>
+                              {% else %}
+                              <td><button class="btn btn-outline-info p-0">{{application.job.status}}</button></td>
+                              
                               {% endif %}
                               <td>{{application.date}}</td>
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
-                               <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td>
+                             <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                           </td>
                           </tr>
                           {% endif%}
                               {% endfor %}                 
@@ -82,9 +116,80 @@
                 });
 
               </script>
-            </div>
+             </div>
            </div> 
+------------
 
+
+          <div id="filterd" style="display:none;">
+            <div class="card shadow-lg mt-3 rounded">
+                <div class="card-header d-flex justify-content-between " style="height:50px;">
+                  <h6>Filtered Application List</h6> 
+                  
+                  <button class="btn btn-warning">Auto Short-list</button>
+                </div>
+
+                <div class="card-body" style="overflow-x: scroll;"> 
+
+                    <table id="filterd-table" class="table table-striped table-hover" style="width:100%">
+                          <thead>
+                              <tr>
+                          
+                                  <th class="bg-dark text-white">Job Title</th>
+                                  <th class="bg-dark text-white">Job status</th>
+                                  <th class="bg-dark text-white">Date</th>
+                                  <th class="bg-dark text-white">Action</th>
+                                  
+                              </tr>
+                          </thead>
+                          <tbody> 
+                               
+                          {% for application in applications %}
+              
+                          {% if application.filterd_out == True %}
+                           <tr class="text-dark">
+                              <td>{{application.job.title}}</td>
+
+                                {% if application.status == 'rejected' %}
+                                <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'approved' %}
+                                <td><button class="btn btn-success p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'interview' %}
+                                <td><button class="btn btn-info p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'short-list' %}
+                                <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'pending' %}
+                                <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                {% else %}
+                                <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
+                                {% endif %}
+                              <td>{{application.date}}</td>
+                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                <i class="fa fa-eye"> </i></a>
+                               <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td>
+                          </tr>
+                          {% endif%}
+
+                              {% endfor %}                 
+                          </tbody>
+                          <tfoot>
+                            <tr>      
+                            </tr>
+                          </tfoot>
+                        </table>
+                </div>
+                <script >
+                
+                $(document).ready(function (){
+
+                  new DataTable('#filterd-table');
+
+                });
+
+              </script>
+             </div>
+           </div> 
+----------------
            <div id="shortlistss" style="display:none;">
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
@@ -95,10 +200,10 @@
                     <table id="shortlist-table" class="table table-striped table-hover" style="width:100%">
                           <thead>
                               <tr>
-                                  <th class="bg-dark text-white">Email</th>
-                                  <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">Job type</th>
-                                  <th class="bg-dark text-white">Job Status</th>
+                                 <th class="bg-dark text-white">Job Title</th>
+                                  <th class="bg-dark text-white">P. stage</th>
+                                  <th class="bg-dark text-white">C. stage</th>
+                                  <th class="bg-dark text-white">Job status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
@@ -109,14 +214,23 @@
                           {% for application in applications %}
                           {% if application.status == "short_list" %}
                            <tr class="text-dark">
-                              <td>{{application.user.email}}</td>
+                              
                               <td>{{application.job.title}}</td>
-                              <td>{{application.job.job_type}}</td>
-                              {% if application.job.status == 'closed' %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% else %}
-                              <td><button class="btn btn-success p-0">{{application.job.status}}</button></td>
-                              {% endif %}
+                              <td>{{application.previous_stage}}</td>
+                              <td>{{application.current_stage}}</td>
+                                  {% if application.status == 'rejected' %}
+                                  <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
+                                  {% elif application.status == 'approved' %}
+                                  <td><button class="btn btn-success p-0">{{application.status}}</button></td>
+                                  {% elif application.status == 'interview' %}
+                                  <td><button class="btn btn-info p-0">{{application.status}}</button></td>
+                                  {% elif application.status == 'short-list' %}
+                                  <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
+                                  {% elif application.status == 'pending' %}
+                                  <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                  {% else %}
+                                  <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
+                                  {% endif %}
                               <td>{{application.date}}</td>
                               <td> 
                                      <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
@@ -200,9 +314,9 @@
                     <table id="interview-table" class="table table-striped table-hover" style="width:100%">
                           <thead>
                               <tr>
-                                  <th class="bg-dark text-white">Email</th>
                                   <th class="bg-dark text-white">Job Title</th>
-                        
+                                  <th class="bg-dark text-white">P. stage</th>
+                                  <th class="bg-dark text-white">C. stage</th>
                                   <th class="bg-dark text-white">Interview Date</th>
                                   <th class="bg-dark text-white">start time</th>
                                   <th class="bg-dark text-white">end time</th>
@@ -215,20 +329,22 @@
                           {% for interview in interviews %}
                           {% if interview.application.status == "interview" %}
                            <tr class="text-dark">
-                              <td>{{interview.user.email}}</td>
+                             
                               <td>{{interview.application.job.title}}</td>
+                              <td>{{interview.application.previous_stage}}</td>
+                              <td>{{interview.application.current_stage}}</td>
                               <td>{{interview.date}}</td>
                               <td><b>{{interview.start_time}}</b></td>
                               <td><b>{{interview.end_time}}</b></td>
                               <td> 
-                              <button type="button" class="btn btn-warning p-1 mb-1 mx-2" onclick="openModal1('interviews{{interview.id}}','{{interview.id}}')" data-bs-placement="top" title="Schedule interview">
+                              <button type="button" class="btn btn-warning p-1 mb-1 mx-1" onclick="openModal1('interviews{{interview.id}}','{{interview.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-edit"> </i>
                                Reschedule
                               </button>
-                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid %}" class="btn btn-primary p-1 mx-2" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
+                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
 
-                              <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-2" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
-                              <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-2" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
+                              <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-1" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
+                              <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-1" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
                             
                               </td>
                           </tr>
@@ -346,12 +462,12 @@
                     <table id="on_hold-table" class="table table-striped table-hover" style="width:100%">
                           <thead>
                               <tr>
-                                  <th class="bg-dark text-white">Email</th>
-                                  <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">Job type</th>
+                                    <th class="bg-dark text-white">Job Title</th>
+                                     <th class="bg-dark text-white">P. stage</th>
+                                    <th class="bg-dark text-white">C. stage</th>
                                   <th class="bg-dark text-white">Date</th>
-                                  <th class="bg-dark text-white">Status</th>
-                                  <th class="bg-dark text-white">Action</th>
+                                  <th class="bg-dark text-white">App. status</th>
+                               <th class="bg-dark text-white">Action</th>
                                   
                               </tr>
                           </thead>
@@ -360,16 +476,23 @@
                           {% for application in applications %}
                           {% if application.status == "rejected" %}
                            <tr class="text-dark">
-                              <td>{{application.user.email}} </td>
                               <td>{{application.job.title}}</td>
-                              <td>{{application.job.job_type}}</td>
+                              <td>{{application.previous_stage}}</td>
+                              <td>{{application.current_stage}}</td>
                               <td>{{application.date}}</td>
-                              {% if application.job.status == 'closed' %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% else %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% endif %}
-                              move_to_shortlist
+                                  {% if application.status == 'rejected' %}
+                                <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'approved' %}
+                                <td><button class="btn btn-success p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'interview' %}
+                                <td><button class="btn btn-info p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'short-list' %}
+                                <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'pending' %}
+                                <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                {% else %}
+                                <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
+                                {% endif %}
                               <td> 
                                 <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
                                 <a onclick="move_to_shortlist({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">short-list</a>
@@ -407,13 +530,13 @@
                     <table id="approved-table" class="table table-striped table-hover" style="width:100%">
                           <thead>
                               <tr>
-                                  <th class="bg-dark text-white">Email </th>
-                                  <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">Job type</th>
-                                  <th class="bg-dark text-white">Date</th>
-                                  <th class="bg-dark text-white">Status</th>
-                                  <th class="bg-dark text-white">Action</th>
-                                  
+
+                                    <th class="bg-dark text-white">Job Title</th>
+                                                                    <th class="bg-dark text-white">P. stage</th>
+                                                                   <th class="bg-dark text-white">C. stage</th>
+                                                                    <th class="bg-dark text-white">Date</th>
+                                                                   <th class="bg-dark text-white">App. status</th>
+                                                                    <th class="bg-dark text-white">Action</th>
                               </tr>
                           </thead>
                           <tbody> 
@@ -421,15 +544,24 @@
                           {% for application in applications %}
                           {% if application.status == "approved" %}
                            <tr class="text-dark">
-                              <td>{{application.user.email}} </td>
+
                               <td>{{application.job.title}}</td>
-                              <td>{{application.job.job_type}}</td>
+                              <td>{{application.previous_stage}}</td>
+                                                            <td>{{application.current_stage}}</td>
                               <td>{{application.date}}</td>
-                              {% if application.job.status == 'closed' %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% else %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% endif %}
+                              {% if application.status == 'rejected' %}
+                                <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'approved' %}
+                                <td><button class="btn btn-success p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'interview' %}
+                                <td><button class="btn btn-info p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'short-list' %}
+                                <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
+                                {% elif application.status == 'pending' %}
+                                <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                {% else %}
+                                <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
+                                {% endif %}
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}"><i class="fa fa-eye"></i></a> </td>
                           
                           </tr>
@@ -465,6 +597,7 @@
         
       <ul id="applicants" class="list-group list-group-flush " style="cursor: pointer;">
         <li class="list-group-item emp-profile active" onclick="toggleV('applications')">All Applications</li>
+        <li class="list-group-item emp-profile " onclick="toggleV('filterd')">Filterd Applications</li>
         <li class="list-group-item emp-profile" onclick="toggleV('shortlistss')">Short-listed</li>
         <li class="list-group-item emp-profile" onclick="toggleV('interview')">Interview</li>
         <li class="list-group-item emp-profile" onclick="toggleV('on_hold')">Rejected</li>
@@ -482,6 +615,45 @@
          </div>
        </div>
         
+       <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to set the minimum date and time
+            function setMinDateTime() {
+                // Get the current date and time
+                var now = new Date();
+    
+                // Format the date in YYYY-MM-DD format
+                var today = now.toISOString().split('T')[0];
+    
+                // Get the current time in HH:MM format
+                var time = now.toTimeString().split(' ')[0].slice(0, 5);
+    
+                // Set the min attribute for the date input
+                var dateInput = document.querySelector('input[type="date"]');
+                if (dateInput) {
+                    dateInput.setAttribute('min', today);
+                }
+    
+                // Set the min attribute for the start time input
+                var startTimeInput = document.querySelector('input[type="time"]#date_start_times{{interview.id}}');
+                if (startTimeInput) {
+                    startTimeInput.setAttribute('min', time);
+                }
+    
+                // Set the min attribute for the end time input
+                var endTimeInput = document.querySelector('input[type="time"]#date_end_times{{interview.id}}');
+                if (endTimeInput) {
+                    // If end time should be after the start time, set it accordingly
+                    // This example assumes the end time should be after the start time
+                    endTimeInput.setAttribute('min', time);
+                }
+            }
+    
+            // Call the function to set the minimum date and time
+            setMinDateTime();
+        });
+    </script>
+    
 {% endblock %}
 
 

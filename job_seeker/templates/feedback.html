@@ -3,34 +3,74 @@
 {% block title %}Feedback{% endblock %}
 
 {% block content %}
-<div class="feedback" style="padding: 20px; font-family: Arial, sans-serif;">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Feedback</li>
-        </ol>
-      </nav>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr style="background-color: #f8f8f8; border-bottom: 2px solid #ddd;">
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Feedback</th>
-                <th style="padding: 10px; text-align: left; font-weight: bold;">Date Received</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if feedback_list %}
-                {% for feedback in feedback_list %}
-                <tr style="border-bottom: 1px solid #eee;">
-                    <td style="padding: 10px;">{{ feedback.text }}</td>
-                    <td style="padding: 10px;">{{ feedback.date_received|date:"Y-m-d" }}</td>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my_profile' %}">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'jobseeker.job_details' %}">Job Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'application_tracking' %}">Application Tracking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'interviews' %}">Interviews</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'log_out' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="feedback" style="padding: 20px; font-family: Arial, sans-serif;">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Feedback</li>
+            </ol>
+        </nav>
+        
+        <h2>Interview Dates</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background-color: #f8f8f8; border-bottom: 2px solid #ddd;">
+                    <th style="padding: 10px; text-align: left; font-weight: bold;">Job Title</th>
+                    <th style="padding: 10px; text-align: left; font-weight: bold;">Date</th>
+                    <th style="padding: 10px; text-align: left; font-weight: bold;">Start Time</th>
+                    <th style="padding: 10px; text-align: left; font-weight: bold;">End Time</th>
                 </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="2" style="padding: 20px; text-align: center; color: #999;">No feedback available.</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {% if interviews %}
+                    {% for interview in interviews %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px;">{{ interview.application.job.title }}</td>
+                        <td style="padding: 10px;">{{ interview.date }}</td>
+                        <td style="padding: 10px;">{{ interview.start_time }}</td>
+                        <td style="padding: 10px;">{{ interview.end_time }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="padding: 20px; text-align: center; color: #999;">No feedback available.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <h2>Feedback</h2>
+        <!-- Add any additional feedback-related content here -->
+    </div>
+</body>
 {% endblock %}

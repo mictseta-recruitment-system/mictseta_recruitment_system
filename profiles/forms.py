@@ -11,7 +11,6 @@ class UpdateProfileInformationForm(forms.Form):
 	phone = forms.CharField(max_length=10)
 	maritial_status = forms.CharField(max_length=10)
 	race = forms.CharField(max_length=15)
-	disability = forms.CharField(max_length=30)
 	r_phone = forms.CharField(max_length=10)
 	
 	def validate_names(self,name):
@@ -66,10 +65,6 @@ class UpdateProfileInformationForm(forms.Form):
 		return self.validate_names(race)
 
 	def clean_disability(self):
-		disability = self.cleaned_data.get('disability')
-		if ' ' in disability :
-			raise forms.ValidationError("Spaces not allowed in disability")
-		
 		linkedin_profile = self.cleaned_data.get('linkedin_profile')
 		
 		if linkedin_profile == "none" or linkedin_profile =="" or linkedin_profile == None or linkedin_profile ==" ":
@@ -210,68 +205,67 @@ class UpdateQualificationForm(forms.Form):
 			raise forms.ValidationError("academic status cannot be empty")
 		return self.validate_names(status)
 	
-class UpdateLanguageForm(forms.Form):
-	language = forms.CharField(max_length=225)
-	reading_proficiency = forms.CharField(max_length=225)
-	writing_proficiency = forms.CharField(max_length=225)
-	speaking_proficiency = forms.CharField(max_length=225)
+# class UpdateLanguageForm(forms.Form):
+# 	language = forms.CharField(max_length=225)
+# 	reading_proficiency = forms.CharField(max_length=225)
+# 	writing_proficiency = forms.CharField(max_length=225)
+# 	speaking_proficiency = forms.CharField(max_length=225)
 
-	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
-		matches = re.findall(pattern, name)
-		if matches:
-			raise forms.ValidationError("No special characters allowed")
-		if len(name) < 2:
-			raise forms.ValidationError(f"Name:{name} is too short")
-		try:
-			str(name)
-		except Exception as e:
-			raise forms.ValidationError(e)
-		return name
+# 	def validate_names(self,name):
+# 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+# 		matches = re.findall(pattern, name)
+# 		if matches:
+# 			raise forms.ValidationError("No special characters allowed")
+# 		if len(name) < 2:
+# 			raise forms.ValidationError(f"Name:{name} is too short")
+# 		try:
+# 			str(name)
+# 		except Exception as e:
+# 			raise forms.ValidationError(e)
+# 		return name
 
-	def clean_language(self):
-		language = self.cleaned_data.get('language')
-		return self.validate_names(language)
+# 	def clean_language(self):
+# 		language = self.cleaned_data.get('language')
+# 		return self.validate_names(language)
 
-	def clean_writing_proficiency(self):
-		writing_proficiency = self.cleaned_data.get('writing_proficiency')
-		return self.validate_names(writing_proficiency)
-	def clean_reading_proficiency(self):
-		reading_proficiency = self.cleaned_data.get('reading_proficiency')
-		return self.validate_names(reading_proficiency)
-	def clean_speaking_proficiency(self):
-		speaking_proficiency = self.cleaned_data.get('speaking_proficiency')
-		return self.validate_names(speaking_proficiency)
+# 	def clean_writing_proficiency(self):
+# 		writing_proficiency = self.cleaned_data.get('writing_proficiency')
+# 		return self.validate_names(writing_proficiency)
+# 	def clean_reading_proficiency(self):
+# 		reading_proficiency = self.cleaned_data.get('reading_proficiency')
+# 		return self.validate_names(reading_proficiency)
+# 	def clean_speaking_proficiency(self):
+# 		speaking_proficiency = self.cleaned_data.get('speaking_proficiency')
+# 		return self.validate_names(speaking_proficiency)
 
 
-class UpdateSkillsForm(forms.Form):
-	skill = forms.CharField(max_length=225)
-	level = forms.CharField(max_length=225)
+# class UpdateSkillsForm(forms.Form):
+# 	skill = forms.CharField(max_length=225)
+# 	level = forms.CharField(max_length=225)
 	
-	def validate_names(self,name):
-		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
-		matches = re.findall(pattern, name)
-		if matches:
-			raise forms.ValidationError("No special characters allowed")
-		if len(name) < 2:
-			raise forms.ValidationError(f"Name:{name} is too short")
-		try:
-			str(name)
-		except Exception as e:
-			raise forms.ValidationError(e)
-		return name
+# 	def validate_names(self,name):
+# 		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+# 		matches = re.findall(pattern, name)
+# 		if matches:
+# 			raise forms.ValidationError("No special characters allowed")
+# 		if len(name) < 2:
+# 			raise forms.ValidationError(f"Name:{name} is too short")
+# 		try:
+# 			str(name)
+# 		except Exception as e:
+# 			raise forms.ValidationError(e)
+# 		return name
 
-	def clean_skill(self):
-		skill = self.cleaned_data.get('skill')
-		return self.validate_names(skill)
+# 	def clean_skill(self):
+# 		skill = self.cleaned_data.get('skill')
+# 		return self.validate_names(skill)
 		
-	def clean_level(self):
-		level = self.cleaned_data.get('level')
-		return self.validate_names(level)
+# 	def clean_level(self):
+# 		level = self.cleaned_data.get('level')
+# 		return self.validate_names(level)
 
 class UpdateAddressInformationForm(forms.Form):
 	street_address_line = forms.CharField(max_length=225)
-	street_address_line1 = forms.CharField(max_length=225)
 	city = forms.CharField(max_length=225)
 	province = forms.CharField(max_length=225)
 	postal_code = forms.CharField(max_length=6)
@@ -309,6 +303,43 @@ class UpdateAddressInformationForm(forms.Form):
 			int(postal_code)
 		except:
 			raise forms.ValidationError("Postal code must integers")
+
+class UpdateWorkingExpereinceForm(forms.Form):
+	job_title = forms.CharField(max_length=225)
+	company = forms.CharField(max_length=225)
+	location = forms.CharField(max_length=225)
+	description = forms.CharField(max_length=6)
+
+	def validate_names(self,name):
+		pattern = r"[~`+!@#$%^&*()=\-/\*\\|}{\[\];'\?.,]"
+		matches = re.findall(pattern, name)
+		if matches:
+			raise forms.ValidationError("No special characters allowed")
+		if len(name) < 3:
+			raise forms.ValidationError(f" Address :{name} is too short")
+		return name
+
+	def clean_job_title(self):
+		job_title = self.cleaned_data.get('job_title')
+		return self.validate_names(job_title)
+
+	def clean_street_address_line1(self):
+		street_address_line = self.cleaned_data.get('street_address_line')
+		return self.validate_names(street_address_line)
+
+	def clean_company(self):
+		company = self.cleaned_data.get('company')
+		return self.validate_names(company)
+
+	def clean_location(self):
+		location = self.cleaned_data.get('location')
+		return self.validate_names(location)
+
+	def clean_description(self):
+		description = self.cleaned_data.get('description')
+		if len(description) < 3 :
+			raise forms.ValidationError(" job description too short")
+		return self.validate_names(clean_description)
 
 class ImageUploadForm(forms.ModelForm):
 	class Meta:

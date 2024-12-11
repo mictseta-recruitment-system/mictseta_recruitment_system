@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -14,6 +14,8 @@ import json
 from django.db.models import Q
 from easyaudit.models import CRUDEvent, LoginEvent
 from jobs.custom_decorators import check_leave, change_application_status
+from config.models import JobTitle, Industry
+from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 
 @ensure_csrf_cookie
 def panel(request):
@@ -36,27 +38,28 @@ def panel(request):
 @ensure_csrf_cookie
 def emp_panel(request):
 	if request.user.is_authenticated:
-		shift_start_time = request.user.shift.start_time
-		shift_end_time = request.user.shift.end_time
-		current_time =  datetime.now()
+		#### Shift Code #####
+		# shift_start_time = request.user.shift.start_time
+		# shift_end_time = request.user.shift.end_time
+		# current_time =  datetime.now()
 		
-		att = Attendance.objects.filter(employee=request.user, date=dates.date.today()).exists()
-		if att :
-			att = Attendance.objects.get(employee=request.user, date=dates.date.today())
-			status = att.active
-		else:
-			status = "Inactive"
+		# att = Attendance.objects.filter(employee=request.user, date=dates.date.today()).exists()
+		# if att :
+		# 	att = Attendance.objects.get(employee=request.user, date=dates.date.today())
+		# 	status = att.active
+		# else:
+		# 	status = "Inactive"
 
-		if current_time.month  < 10 :
+		# if current_time.month  < 10 :
 
-			start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
-			end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
-		elif current_time.day < 10 :
-			start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
-			end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
-		else:
-			start_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_start_time}" 
-			end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
+		# 	start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
+		# 	end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
+		# elif current_time.day < 10 :
+		# 	start_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_start_time}" 
+		# 	end_time = f"{current_time.year}-0{current_time.month}-{current_time.day}T{shift_end_time}"
+		# else:
+		# 	start_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_start_time}" 
+		# 	end_time = f"{current_time.year}-{current_time.month}-{current_time.day}T{shift_end_time}"
 		
 		if request.user.is_superuser:
 			notification = Notification.objects.all()
@@ -76,7 +79,7 @@ def emp_panel(request):
 			cats.append(cat.name)
 			data.append(len(Task.objects.filter(category=cat, is_complete=False, assigned_to=request.user)))
 		
-		return render(request,'emp_panel.html', {'start_time':start_time,'end_time':end_time,'status':status, 'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data)})
+		return render(request,'emp_panel.html', {'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data)})
 	else:
 		return redirect('render_auth_page')
 
@@ -97,9 +100,31 @@ def view_staff(request):
 def job_applications(request):
 	if request.user.is_authenticated:
 		applications = JobApplication.objects.all()
-		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		interview = Interview.objects.all()
 		return render(request, 'job_applications.html', {'applications':applications,'interviews':interview, 'applied_jobs':applied_jobs})
+	else:
+		return redirect('render_auth_page')
+
+@change_application_status
+@csrf_protect
+def calender(request):
+	if request.user.is_authenticated:
+		interviews = Interview.objects.all()
+		interview_list = []
+		for interview in interviews:
+			add_to_list = {
+
+						'groupID':'999',
+						'id':f'{interview.id}',
+        				'title': f'{interview.user.email}',
+        				'start': f'{interview.date}T{interview.start_time}',
+        				'end': f'{interview.date}T{interview.end_time}'
+     		}
+			interview_list.append(add_to_list)
+
+		interview_list_json = json.dumps(interview_list)
+		return render(request, 'calender.html',{'interviews':interview_list_json})
 	else:
 		return redirect('render_auth_page')
 
@@ -107,9 +132,9 @@ def job_applications(request):
 def filter_job_application(request,jobID):
 	if request.user.is_authenticated:
 		job_applications = JobApplication.objects.filter(job__id=jobID)
-		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).values('title','status','id').distinct()
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		cnt=0
-		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt})
+		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt,'filtered':True})
 	else:
 		return redirect('render_auth_page')
 
@@ -130,7 +155,9 @@ def add_job(request):
 			employees = User.objects.filter(is_staff=True)
 		else:
 			employees = User.objects.filter(id=request.user.id)
-		return render(request,'add_job.html',{'notify_len':notify_len,'employees':employees})
+		job_title = JobTitle.objects.all()
+		industry = Industry.objects.all()
+		return render(request,'add_job.html',{'notify_len':notify_len,'employees':employees, 'job_titles':job_title, 'industries':industry})
 	else:
 		return redirect('render_auth_page')
 
@@ -176,7 +203,42 @@ def view_jobs(request):
 			employees = User.objects.filter(is_staff=True)
 		else:
 			employees = User.objects.filter(id=request.user.id)
-		return render(request,'view_job.html',{'employees':employees,'notify_len':notify_len,'jobs':jobs, 'all_jobs':all_jobs,'open_jobs':open_jobs, 'pending_jobs':pending_jobs,'closed_jobs':closed_jobs})
+		job_title = JobTitle.objects.all()
+		industry = Industry.objects.all()
+
+		languages = LanguageList.objects.all()
+		readings = ReadingProficiencyList.objects.all()
+		speakings = SpeakingProficiencyList.objects.all()
+		writings = WritingProficiencyList.objects.all()
+		computer_skills = ComputerSkillsList.objects.all()
+		computer_prof = ComputerProficiency.objects.all()
+		soft_skill = SoftSkillsList.objects.all()
+		soft_prof = SoftProficiency.objects.all()
+		qualification = Qualification.objects.all()
+		nqf_level = NQF.objects.all()
+		return render(request,'view_job.html',
+			{
+			'employees':employees,
+			'notify_len':notify_len,
+			'jobs':jobs, 
+			'all_jobs':all_jobs,
+			'open_jobs':open_jobs, 
+			'pending_jobs':pending_jobs,
+			'closed_jobs':closed_jobs, 
+			'job_titles':job_title, 
+			'industries':industry,
+			'computer_skills':computer_skills,
+			'computer_profs':computer_prof,
+			'soft_skills':soft_skill,
+			'soft_profs':soft_prof,
+			'nqf_levels' : nqf_level,
+			'qualifications':qualification,
+			'languages' : languages,
+			'readings' : readings,
+			'writings' : writings,
+			'speakings':speakings
+			},
+			status=200)
 	else:
 		return redirect('render_auth_page')
 
@@ -343,23 +405,24 @@ def view_leave(request):
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
 		return redirect('render_auth_page')
-
-def manage_attendance(request):
-	if request.user.is_authenticated:
-		if request.user.is_staff:
-			try:
-				attendances = Attendance.objects.all()
-				if request.user.is_superuser:
-					notify_len = len(Notification.objects.filter(is_seen=False))
-				else:
-					notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
-				return render(request,'attendance.html',{'attendances':attendances,'notify_len':notify_len})
-			except Exception as e:
-				return HttpResponse(f'view Attendance: {e}')
-		else:       
-			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
-	else:
-		return redirect('render_auth_page')
+		
+#### Shift Code #####
+# def manage_attendance(request):
+# 	if request.user.is_authenticated:
+# 		if request.user.is_staff:
+# 			try:
+# 				attendances = Attendance.objects.all()
+# 				if request.user.is_superuser:
+# 					notify_len = len(Notification.objects.filter(is_seen=False))
+# 				else:
+# 					notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+# 				return render(request,'attendance.html',{'attendances':attendances,'notify_len':notify_len})
+# 			except Exception as e:
+# 				return HttpResponse(f'view Attendance: {e}')
+# 		else:       
+# 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+# 	else:
+# 		return redirect('render_auth_page')
 
 
 
@@ -620,3 +683,18 @@ def crud_events_generate_pdf_report(request):
 
 	pdf = render_to_pdf('pdf_crud_events.html', context)
 	return HttpResponse(pdf, content_type='application/pdf')
+
+
+def new_quiz(request, job_id):
+	if request.user.is_authenticated:
+		if request.user.is_staff:
+			job = JobPost.objects.filter(id=int(job_id)).first()
+			quiz = Quiz.objects.filter(job__id=int(job_id)).first()
+			if not job:
+				return render(request, 'new_quiz.html',{})
+
+			return render(request, 'new_quiz.html',{'job':job, 'quiz':quiz})
+		else:       
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')

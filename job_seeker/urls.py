@@ -2,8 +2,8 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path('job_seeker_dashboard', views.job_seeker_dashboard, name='job_seeker_dashboard'), 
-    path('personal_details/', views.personal_details, name='personal_details'),
+    path('job_seeker_dashboard/', views.job_seeker_dashboard, name='job_seeker_dashboard'), 
+    path('personal_details/', views.my_profile, name='my_profile'),
      path('address_details/', views.address_details, name='address_details'),
     path('academic_qualifications/', views.academic_qualifications, name='academic_qualifications'),
     path('language_proficiency/', views.language_proficiency, name='language_proficiency'),
@@ -16,6 +16,11 @@ urlpatterns = [
     path('application_tracking/', views.application_tracking, name='application_tracking'),
     path('interviews/', views.interviews, name='interviews'),
     path('feedback/', views.feedback, name='feedback'),
+    path('delete_feadback/<int:feedbackID>', views.delete_feadback, name='delete_feadback'),
+
+
     path('logout/', views.logout, name='logout'),
     path('job_information/<int:jobID>', views.job_information, name='job_information'),
 ]
+
+

@@ -5,11 +5,8 @@ import re
 # from authenticate.data_validator import *
 
 class AddJobForm(forms.Form):
-	title = forms.CharField(max_length=150)
 	description = forms.CharField()
 	job_type = forms.CharField()
-	industry = forms.CharField()
-	company_name = forms.CharField()
 	location = forms.CharField(max_length=150)
 	salary_range = forms.CharField(max_length=100)
 	
@@ -26,27 +23,13 @@ class AddJobForm(forms.Form):
 			raise forms.ValidationError(e)
 		return name
 
-	def clean_title(self):
-		title = self.cleaned_data.get('title')
-		if len(title) > 149 :
-			raise forms.ValidationError(f"Title is too long")
-		return self.validate_names(title)
-	
 	def clean_description(self):
 		description = self.cleaned_data.get('description')
 		return self.validate_names(description)
-	
-	def clean_industry(self):
-		industry = self.cleaned_data.get('industry')
-		return self.validate_names(industry)
-	
+		
 	def clean_job_type(self):
 		job_type = self.cleaned_data.get('job_type')
 		return self.validate_names(job_type)
-	
-	def clean_company_name(self):
-		company_name = self.cleaned_data.get('company_name')
-		return self.validate_names(company_name)
 	
 	def clean_location(self):
 		location = self.cleaned_data.get('location')

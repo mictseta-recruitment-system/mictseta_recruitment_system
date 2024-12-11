@@ -10,11 +10,14 @@ urlpatterns = [
     path('add_job_acedemic/', views.add_job_acedemic, name='add_job_acedemic'),
     path('add_job_expereince/', views.add_job_expereince, name='add_job_expereince'),
     path('add_job_requirements/', views.add_job_requirements, name='add_job_requirements'),
+    path('add_job_language/', views.add_job_language, name='add_job_language'),
     path('update_job/', views.update_job, name='update_job'),
     path('update_job_skill/', views.update_job_skill, name='update_job_skill'),
     path('update_job_acedemic/', views.update_job_acedemic, name='update_job_acedemic'),
     path('update_job_expereince/', views.update_job_expereince, name='update_job_expereince'),
     path('update_job_requirements/', views.update_job_requirements, name='update_job_requirements'),
+    path('delete_language/', views.delete_language, name='delete_language'),
+   
     path('delete_job/', views.delete_job, name='delete_job'),
     path('delete_job_skill/', views.delete_job_skill, name='delete_job_skill'),
     path('delete_job_acedemic/', views.delete_job_acedemic, name='delete_job_acedemic'),
@@ -26,12 +29,22 @@ urlpatterns = [
     path('job_application/<int:jobID>', views.job_application, name='job_application'),
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
     path('move_to_shortlist/', views.move_to_shortlist, name='move_to_shortlist'),
+    path('auto_filter/', views.auto_filter, name='auto_filter'),
     path('approve_interview/', views.approve_interview, name='approve_interview'),
     path('reject_applicantion/', views.reject_applicantion, name='reject_applicantion'),
     path('purge/', views.purge, name='purge'),
     path('set_interview/', views.set_interview, name='set_interview'),
     path('reschedule_interview/', views.reschedule_interview, name='reschedule_interview'),
+   
+    path('add_quiz/', views.add_quiz, name='add_quiz'),
+    path('delete_quiz/', views.delete_quiz, name='delete_quiz'),
+    path('add_quesion/', views.add_quesion, name='add_quesion'),
+    path('delete_question/', views.delete_question, name='delete_question'),
+    path('add_answer/', views.add_answer, name='add_answer'),
+    path('delete_answer/', views.delete_answer, name='delete_answer'),
+    path('take_quiz/', views.take_quiz, name='take_quiz'),
 
+    
 
 
     # path('delete_user/', views.delete_user, name='delete_user')

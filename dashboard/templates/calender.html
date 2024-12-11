@@ -1,0 +1,302 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active" aria-current="page"> Jobs/Vacancy </li>
+    <li class="breadcrumb-item active" aria-current="page"> Calendar </li>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Custom styles for the calendar */
+    #calendar {
+        color: black; /* Set text color to black */
+        position: relative; /* Allow absolute positioning for no events message */
+        background-color: white; /* Calendar background */
+    }
+
+    .fc-daygrid-event {
+        background-color: #007bff; /* Customize event background */
+        border: none; /* Remove border */
+        color: white; /* Event text color */
+        border-radius: 5px; /* Rounded corners for events */
+    }
+
+    .fc-daygrid-event:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+    }
+
+    /* Additional styles to improve appearance */
+    .fc-toolbar {
+        background-color: #f8f9fa; /* Light background for the toolbar */
+        border-bottom: 1px solid #dee2e6; /* Subtle border */
+    }
+
+    .fc-toolbar h2 {
+        color: black; /* Toolbar title color */
+        font-weight: bold; /* Make title bold */
+    }
+
+    /* No events message style */
+    .no-events {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        display: none; /* Hidden by default */
+    }
+
+    .no-events i {
+        font-size: 50px; /* Icon size */
+        color: #6c757d; /* Gray color for icon */
+    }
+
+    .no-events p {
+        color: #6c757d; /* Gray color for text */
+        margin-top: 10px;
+    }
+
+    /* Modal header styles */
+    .modal-header {
+        background-color: #f0f0f0; /* Light grey background */
+        color: black; /* Black text color */
+    }
+
+    .modal-title {
+        font-weight: bold; /* Bold title */
+    }
+
+    /* Modal button styles */
+    .modal-footer .btn-primary {
+        background-color: #007bff; /* Primary button color */
+        border: none; /* Remove border */
+    }
+
+    .modal-footer .btn-danger {
+        background-color: #dc3545; /* Danger button color */
+        border: none; /* Remove border */
+    }
+
+    .modal-footer .btn-primary:hover, 
+    .modal-footer .btn-danger:hover {
+        opacity: 0.9; /* Slightly darken on hover */
+    }
+
+    /* Event List Styles */
+    .event-list {
+        background-color: #f8f9fa; /* Light background */
+        padding: 10px;
+        border-radius: 5px; /* Rounded corners */
+        max-height: 300px; /* Set a max height */
+        overflow-y: auto; /* Enable scrolling */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .event-item {
+        padding: 5px;
+        margin-bottom: 5px;
+        border-radius: 3px;
+        color: white; /* White text for event items */
+    }
+
+</style>
+
+<div class="container shadow p-5 mt-3" style="background-color:whitesmoke;">
+    <div class="row">
+        <div class="col-md-3">
+            <h5>Event Actions</h5>
+            <button class="btn btn-primary mb-2" id="createEventButton">Create New Event</button>
+            <div class="event-list" id="eventList">
+                <h6>Upcoming Events</h6>
+                <div id="eventItems"></div> <!-- Placeholder for event items -->
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="p-4 shadow" id="calendar">
+                <!-- No events message -->
+                <div class="no-events" id="noEventsMessage">
+                    <i class="fas fa-calendar-alt"></i>
+                    <p>No events have been added yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: Modal for creating/editing events -->
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeModalButton">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Title</label>
+                        <input type="text" class="form-control" id="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventCategory">Category</label>
+                        <select class="form-control" id="eventCategory" required>
+                            <option value="" disabled selected>Select category</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="interview">Interview</option>
+                            <option value="deadline">Deadline</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventStart">Start Time</label>
+                        <input type="datetime-local" class="form-control" id="eventStart" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventEnd">End Time</label>
+                        <input type="datetime-local" class="form-control" id="eventEnd" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="saveEvent">Save Event</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let interviewList = JSON.parse('{{ interviews|escapejs }}');
+        var calendarEl = document.getElementById('calendar');
+        var noEventsMessage = document.getElementById('noEventsMessage'); // No events message element
+        var eventItemsContainer = document.getElementById('eventItems'); // Container for event items
+
+        // Color mapping for event categories
+        const categoryColors = {
+            meeting: '#28a745', // Green
+            interview: '#007bff', // Blue
+            deadline: '#dc3545' // Red
+        };
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth', // Start with month view
+            headerToolbar: {
+                left: 'prev today next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay' // Include day, week, month buttons
+            },
+            views: {
+                timeGridWeek: { // Define week view
+                    columnFormat: 'dddd' // Use full day names
+                },
+                timeGridDay: { // Define day view
+                    columnFormat: 'dddd' // Use full day names
+                }
+            },
+            events: interviewList,
+            selectable: true,
+            editable: true,
+            eventClick: function(info) {
+                // Show modal with event details
+                $('#eventModal').modal('show');
+                $('#eventTitle').val(info.event.title);
+                $('#eventCategory').val(info.event.extendedProps.category); // Load category
+                $('#eventStart').val(info.event.start.toISOString().slice(0, 16));
+                $('#eventEnd').val(info.event.end ? info.event.end.toISOString().slice(0, 16) : '');
+            },
+            select: function(info) {
+                // Show modal to create a new event
+                $('#eventModal').modal('show');
+                $('#eventTitle').val('');  // Clear title
+                $('#eventCategory').val(''); // Clear category
+                $('#eventStart').val(info.start.toISOString().slice(0, 16));
+                $('#eventEnd').val(info.end ? info.end.toISOString().slice(0, 16) : '');
+            },
+            eventDrop: function(event) {
+                var start_time = event.event.start;
+                var end_time = event.event.end;
+                var id = event.event.id;
+                calender_reschedule_interview(id, start_time, end_time);
+            }
+        });
+
+        calendar.render();
+
+        // Check if there are no events and show the no events message
+        if (interviewList.length === 0) {
+            noEventsMessage.style.display = 'block'; // Show message if no events
+        } else {
+            noEventsMessage.style.display = 'none'; // Hide message if events exist
+            updateEventList(interviewList); // Update event list
+        }
+
+        // Save event on form submission
+        document.getElementById('saveEvent').addEventListener('click', function() {
+            let title = document.getElementById('eventTitle').value;
+            let category = document.getElementById('eventCategory').value;
+            let start = document.getElementById('eventStart').value;
+            let end = document.getElementById('eventEnd').value;
+
+            // Add event to calendar
+            calendar.addEvent({
+                title: title,
+                start: start,
+                end: end,
+                allDay: false,
+                extendedProps: { category: category } // Store category
+            });
+
+            // Update event list
+            updateEventList(calendar.getEvents());
+
+            $('#eventModal').modal('hide');
+            noEventsMessage.style.display = 'none'; // Hide no events message after adding an event
+        });
+
+        // Button to create new event
+        document.getElementById('createEventButton').addEventListener('click', function() {
+            $('#eventModal').modal('show');
+            $('#eventTitle').val('');  // Clear title
+            $('#eventCategory').val(''); // Clear category
+            $('#eventStart').val('');  // Clear start time
+            $('#eventEnd').val('');    // Clear end time
+        });
+
+        // Function to update the event list
+        function updateEventList(events) {
+            eventItemsContainer.innerHTML = ''; // Clear existing items
+
+            // Group events by date
+            const groupedEvents = {};
+            events.forEach(event => {
+                const eventDate = event.start.toISOString().split('T')[0]; // Get the date part
+                if (!groupedEvents[eventDate]) {
+                    groupedEvents[eventDate] = [];
+                }
+                groupedEvents[eventDate].push(event);
+            });
+
+            // Create event items
+            for (const date in groupedEvents) {
+                const dateDiv = document.createElement('div');
+                dateDiv.classList.add('event-date');
+                dateDiv.innerHTML = `<strong>${date}</strong>`; // Display the date
+                eventItemsContainer.appendChild(dateDiv);
+
+                groupedEvents[date].forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.classList.add('event-item');
+                    eventDiv.style.backgroundColor = categoryColors[event.extendedProps.category]; // Set background color
+                    eventDiv.textContent = `${event.title} (${event.start.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})} - ${event.end ? event.end.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) : 'N/A'})`;
+                    eventItemsContainer.appendChild(eventDiv);
+                });
+            }
+        }
+    });
+</script>
+
+{% endblock %}

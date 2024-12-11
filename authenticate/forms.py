@@ -103,7 +103,7 @@ class UserSignUpForm(forms.Form):
 		if ' ' in idnumber :
 			raise forms.ValidationError("Spaces not allowed ")
 
-		# if not is_valid:
-		# 	raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
+		if not is_valid:
+		 	raise forms.ValidationError("Provide ID Number is not a valid South African ID Number")
 		return idnumber
 

@@ -18,7 +18,7 @@ urlpatterns = [
     path('manage_leave/', views.manage_leave, name="dashboard.manage_leave"),
     path('view_leave/', views.view_leave, name="dashboard.view_leave"),
     path('emp_panel/', views.emp_panel, name="dashboard.emp_panel"),
-    path('manage_attendance/', views.manage_attendance, name="dashboard.manage_attendance"),
+   # path('manage_attendance/', views.manage_attendance, name="dashboard.manage_attendance"),
     path('backup_database/', views.backup_database, name="dashboard.backup_database"),
     path('backup_db/', views.backup_db, name="dashboard.backup_db"),
     path('delete_db/<int:dbID>/', views.delete_db, name="dashboard.delete_db"),
@@ -27,6 +27,8 @@ urlpatterns = [
     path('crud_events/', views.crud_events, name="dashboard.crud_events"),
     path('login_events/', views.login_events, name="dashboard.login_events"),
     path('job_applications/', views.job_applications, name="dashboard.job_applications"),
+    path('calender/', views.calender, name="dashboard.calender"),
+    
     path('jobsekeer_details/<seekerID>', views.jobsekeer_details, name="dashboard.jobsekeer_details"),
      path('filter_job_application/<int:jobID>', views.filter_job_application, name='filter_job_application'),
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),
@@ -34,6 +36,8 @@ urlpatterns = [
     path('login_events/report/pdf/', views.login_events_generate_pdf_report, name='dashboard.login_events_generate_pdf_report'),
     path('crud_events/report/pdf/', views.crud_events_generate_pdf_report, name='dashboard.crud_events_generate_pdf_report'),
 
+    path('new_quiz/<job_id>', views.new_quiz, name="dashboard.new_quiz"),
+    
 
 
     

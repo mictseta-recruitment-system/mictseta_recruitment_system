@@ -48,9 +48,7 @@ function addJob() {
   const job_type = document.getElementById('job_type').value;
   const assigned_to = document.getElementById('assigned_to').value;
 
-
   // Extract value from company_name input field
-  company_name = document.getElementById('company_name').value;
   industry = document.getElementById('industry').value;
 
   // Form JSON data object
@@ -62,7 +60,6 @@ function addJob() {
     salary_range: salary_range,
     job_type: job_type,
     industry: industry,
-    company_name: company_name,
     job_assigned_to: assigned_to,
   };
 
@@ -94,8 +91,7 @@ function addJob() {
       end_date = ""
       company_name = ""
       industry = ""
-    document.getElementById('addJobPage').style.display = 'none';
-    document.getElementById('addJobPageComplete').style.display = 'block';
+   
     showFlashMessage(data.message, "success");
 
   } else if (data.status === "warning") {
@@ -132,7 +128,6 @@ function updateJob(jobID,spinner,content) {
   const assigned_to = document.getElementById('assigned_to'+ jobID).value;
 
   // Extract value from company_name input field
-  const company_name = document.getElementById('company_name'+ jobID).value;
   const industry = document.getElementById('industry'+ jobID).value;
 
   // Form JSON data object
@@ -144,7 +139,6 @@ function updateJob(jobID,spinner,content) {
     salary_range: salary_range,
     job_type: job_type,
     industry: industry,
-    company_name: company_name,
     job_id: jobID,
     assigned_to: assigned_to,
   };
@@ -207,11 +201,19 @@ function addJobSkill(jobID, spinner, content, modal) {
 
   const name = document.getElementById('name'+ jobID).value;
   const level = document.getElementById('level'+ jobID).value;
-  
+  var checkbox = document.getElementById('myCheckbox'+ jobID);
+
+  // Check if the checkbox is checked
+  if (checkbox.checked) {
+    checkbox='true';
+  } else {
+    checkbox='false';
+  }
   const jsonData = {
     name: name,
     level: level,
-    job_post_id: jobID 
+    job_post_id: jobID,
+    is_required:checkbox
   };
 
   fetch(url, {
@@ -239,11 +241,11 @@ function addJobSkill(jobID, spinner, content, modal) {
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
                 listItem.innerHTML = `
-                    <div class="ms-2 me-auto">
+                     <div class="ms-2 me-auto">
                         <div class="fw-bold">${skill.name}</div>
-                        ${skill.level}
+                        ${skill.level} 
                     </div>
-                    <i class="fa-solid fa-square-minus min-icon"></i>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.name})"></i>
                 `;
                 skillListElement.appendChild(listItem);
             });
@@ -299,7 +301,7 @@ function deleteSkill(jobID, spinner, content, modal, skillID) {
                         <div class="fw-bold">${skill.name}</div>
                         ${skill.level}
                     </div>
-                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.id})"></i>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteSkill(${jobID},'spinnerSkill','editSkill','skillToggle',${skill.name})"></i>
                 `;
                 skillListElement.appendChild(listItem);
             });
@@ -479,7 +481,7 @@ function addExperience(jobID, spinner, content, modal) {
                 listItem.innerHTML = `
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">${experience.name}</div>
-                        ${experience.duration}
+                        ${experience.duration} years
                     </div>
                     <i class="fa-solid fa-square-minus min-icon" onclick="deleteExperience(${jobID},'spinnerExperience','editExperience','experienceToggle')"></i>
                 `;
@@ -672,6 +674,145 @@ function deleteRequirements(jobID, spinner, content, modal, requirementsID) {
   });
 }
 /*************************************************************************************************************************************************************/
+function addLanguage(jobID, spinner, content, modal) {
+  const url = 'http://127.0.0.1:8000/job/add_job_language/';
+  
+  const skillListElement = document.getElementById('LanguageList' + jobID);
+
+  const language = document.getElementById('language'+ jobID).value;
+  const speaking = document.getElementById('speaking'+ jobID).value;
+  const reading = document.getElementById('reading'+ jobID).value;
+  const writing = document.getElementById('writing'+ jobID).value;
+  
+  const jsonData = {
+    job_post_id: jobID,
+    language: language,
+    speaking: speaking,
+    reading: reading,
+    writing: writing,
+  };
+  
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors, jobID, spinner);
+    
+    } else if (data.status === "success") {
+    
+      showFlashMessage(data.message, "success");
+      skillListElement.innerHTML = '';
+
+            // Re-render list items based on updated data
+            data.languages.forEach(language => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+                listItem.innerHTML = `
+                           <div class="fw-bold">
+                              ${language.name}
+                            </div>
+                             <div>
+                               ${language.speaking}
+                             </div>
+                             <div>
+                                ${language.reading}
+                             </div>
+                             <div>
+                               ${language.writing}
+                             </div>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteLanguage(${jobID},'spinnerEducation','editEducation','EducationToggle',${language.id})"></i>
+                `;
+                skillListElement.appendChild(listItem);
+            });
+      
+      
+    } else if (data.status === "warning") {
+      document.getElementById(spinner + jobID).innerHTML = '<i class="fa fa-check fa-5x text-warning"></i><p>' + data.message + '</p>';
+      showFlashMessage(data.message, "warning");
+      
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function deleteLanguage(jobID, spinner, content, modal, languageID) {
+  const url = 'http://127.0.0.1:8000/job/delete_language/';
+  const skillListElement = document.getElementById('LanguageList' + jobID);
+
+  const jsonData = {
+    job_language_id: languageID,
+    job_post_id : jobID,
+  }
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors, jobID, spinner);
+     
+    } else if (data.status === "success") {
+     
+      showFlashMessage(data.message, "success");
+      skillListElement.innerHTML = '';
+
+            // Re-render list items based on updated data
+           data.languages.forEach(language => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+                listItem.innerHTML = `
+                           <div class="fw-bold">
+                              ${language.name}
+                            </div>
+                             <div>
+                               ${language.speaking}
+                             </div>
+                             <div>
+                                ${language.reading}
+                             </div>
+                             <div>
+                               ${language.writing}
+                             </div>
+                    <i class="fa-solid fa-square-minus min-icon" onclick="deleteLanguage(${jobID},'spinnerEducation','editEducation','EducationToggle',${language.id})"></i>
+                `;
+                skillListElement.appendChild(listItem);
+            });
+      
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+/********************************************************************************************************************************************************8
+*/
 function completeJob(jobID, spinner, content, modal) {
   const url = 'http://127.0.0.1:8000/job/complete_job/';
   /*document.getElementById(spinner + jobID).style.display = 'block';
@@ -739,7 +880,7 @@ function ApproveJob(jobID) {
   })
   .then(data => {
     if (data.status === "error") {
-      handleErrors(data.errors, jobID, spinner);
+      handleErrors(data.errors, jobID);
     } else if (data.status === "success") {
       location.reload();
       showFlashMessage(data.message, "success");
@@ -846,6 +987,45 @@ function move_to_shortlist(appID) {
   };
 
   fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function auto_filter(filter,mode) {
+  const url = 'http://127.0.0.1:8000/job/auto_filter/';
+  
+  const jsonData = {
+    filter: filter,
+    mode:mode,
+  };
+
+  fetch(url, { 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1044,6 +1224,46 @@ function reschedule_interview(interviewID) {
     date:datess,
     start_time:start_timess,
     end_time:end_timess,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+function calender_reschedule_interview(interviewID,start,end) {
+  const url = 'http://127.0.0.1:8000/job/calender_reschedule_interview/';
+ 
+
+  const jsonData = {
+    interviewID: interviewID,
+    start_time:start,
+    end_time:end,
   };
 
   fetch(url, {
@@ -1634,6 +1854,91 @@ function deleteCategory(catid) {
 
 
 
+function addQuiz(job_id) {
+  const url = 'http://127.0.0.1:8000/job/add_quiz/';
+  
+
+  const name = document.getElementById('quiz_title').value;
+ 
+  
+  const jsonData = {
+    quiz: name,
+    job_id:job_id
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+
+function addQuestion(quiz_id) {
+  const url = 'http://127.0.0.1:8000/job/add_quesion/';
+  
+
+  const name = document.getElementById('question_title').value;
+ 
+  
+  const jsonData = {
+    question: name,
+    quiz_id:quiz_id
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 
 
 
@@ -1699,7 +2004,7 @@ function toggleVisibility(divId) {
 
 function toggleV(divId) {
             // Hide all divs
-            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved'];
+            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved','filterd'];
             divs.forEach(function(id) {
                 document.getElementById(id).style.display = 'none';
                 console .log(id);

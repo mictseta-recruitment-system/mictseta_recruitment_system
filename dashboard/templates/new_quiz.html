@@ -1,0 +1,203 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Add Staff{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard.view_staff' %}">vacancy/Jobs</a></li>
+<li class="breadcrumb-item"><a href="{% url 'dashboard.view_staff' %}">{{job.title}}</a></li>
+
+<li class="breadcrumb-item active" aria-current="page">Add Quiz</li>
+{% endblock %}
+
+{% block content %}
+
+
+        <div class="container my-5" id="addStaffPageComplete" style="display: none;">
+            <div class="d-flex flex-column align-items-center">
+                <i class="fa fa-user-plus fa-5x text-success mb-3" aria-hidden="true"></i>
+                <h4 class="mt-3">Quiz Added Successfully</h4>
+                <a href="{% url 'dashboard.view_staff' %}" class="btn btn-warning">View All</a>
+            </div>
+        </div>
+
+        <div id="addStaffPage" class="form-container">
+            <div class="d-flex justify-content-center">
+                <div class="card shadow-lg p-4 w-75">
+                    <h5 class="card-title mb-4">Add New Quiz</h5>
+                    <form>
+                        <div class="row">
+                             <div class="form-group w-100">
+                                    <label for="username">quiz title</label>
+                                    <div class="d-flex justify-content-center">
+                                        <input type="text" class="form-control " id="quiz_title" name="quiz_title" value="{{quiz.title}}" required>
+                                        <button type="button" onclick="addQuiz({{job.id}})" class="btn btn-success m-3 mt-0 mb-0">Save</button>
+                                    </div>
+                                </div>
+                            {% if quiz %}
+                                <div class="form-group w-100">
+                                    <label for="username">Add new Question</label>
+                                    <div class="d-flex justify-content-center">
+                                        <input type="text" class="form-control " id="question_title" name="question_title" required>
+                                        <button type="button" onclick="addQuestion({{quiz.id}})" class="btn btn-outline-success m-3 mt-0 mb-0">Add</button>
+                                    </div>
+                                </div>
+
+                            <div class="">
+                                <h5>Questions </h5>
+                                
+                                <hr>
+                                {% for question in quiz.questions.all %}
+                                <h6>
+                                    {{question.question_text}} ?  
+                                    <button type="button" onclick="toggleAnswer()" class="btn btn-outline-primary m-3 mt-0 mb-0 pt-0 pb-0">add answer</button> 
+                                </h6>
+
+                                <div class="form-group w-100 bg-dark  p-2 mb-2" id="answers" style="display:none;">
+                                   
+                                    <div class="d-flex justify-content-between">
+                                        <div class="w-75">
+                                            <label for="answer" class="text-white">Answer</label>
+                                            <input type="text" class="form-control " id="answer" name="answer" required>
+                                        </div>
+                                        <div cass=" w-100">
+                                            <label for="correct" class="text-white">Correct</label>
+                                            <select  class="form-control " id="correct" >
+                                                 <option value="false" selected>No</option>       
+                                                 <option value="true">Yes</option>       
+                                            </select>
+                                        </div>
+                                        <button type="button" onclick="addStaff()" class="btn btn-primary ">Add</button>
+                                    </div>
+                                </div>
+                                 
+
+                                <select  class="form-control" id = "answer_list">
+                                    <option value="" selected> </option>
+                                     <option value="2">2</option>       
+                                    
+                                     <option value="4">4</option>       
+                                </select>
+                            </div>
+                            <br>
+                            {% endfor %}
+                            {% endif %}
+                            <div class="col-md-6">
+                               <!--  <div class="form-group">
+                                    <label for="username">title</label>
+                                    <input type="text" class="form-control" id="username" name="username" required>
+                                </div> -->
+                                <!-- <div class="form-group">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone:</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="idnumber">ID Number:</label>
+                                    <input type="text" class="form-control" id="idnumber" name="idnumber" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password2">Confirm Password:</label>
+                                    <input type="password" class="form-control" id="password2" name="password2" required>
+                                </div> -->
+                            </div>
+                            <div class="col-md-6">
+                               <!--  <div class="form-group">
+                                    <label for="job_title">Job Title:</label>
+                                    <select class="form-control" id="job_title" name="job_title" required>
+                                        <option value="Executive">Executive</option>
+                                        <option value="CEO">CEO</option>
+                                        <option value="Director">Director</option>
+                                        <option value="Manager">Manager</option>
+                                    </select>
+                                </div> -->
+                                <!-- <div class="form-group">
+                                    <label for="department">Department:</label>
+                                    <select class="form-control" id="department" name="department" required>
+                                        <option value="HR">HR Team</option>
+                                        <option value="IT">IT Staff</option>
+                                        <option value="MANAGER">Manager</option>
+                                        <option value="ADMINISTRATOR">Admin</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="super">Assign Admin Privileges:</label>
+                                    <select class="form-control" id="super" name="super" required>
+                                        <option value="False">No</option>
+                                        <option value="True">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="staff">Is Staff:</label>
+                                    <select class="form-control" id="staff" name="staff" disabled>
+                                        <option value="True" selected>Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="salary">Salary:</label>
+                                    <select class="form-control" id="salary" name="salary" required>
+                                        <option selected>R0,0 - R10,000</option>
+                                        <option>R10,000 - R20,000</option>
+                                        <option>R20,000 - R30,000</option>
+                                        <option>R30,000 - R40,000</option>
+                                        <option>R40,000 - R50,000</option>
+                                        <option>R50,000 - R60,000</option>
+                                        <option>R60,000 +</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rate">Rate per Hour:</label>
+                                    <input type="text" class="form-control" id="rate" name="rate">
+                                </div>
+                                <div class="form-group position-relative">
+                                    <label for="start_time">Start Time:</label>
+                                    <input class="form-control" type="text" id="datetime1" class="times" />
+                                    <script>
+                                        $('#datetime1').datetimepicker({
+                                            format: 'HH:mm:ss'
+                                        });
+                                    </script>
+                                </div>
+                                <div class="form-group position-relative">
+                                    <label for="end_time">End Time:</label>
+                                    <input class="form-control" type="text" id="datetime" />
+                                    <script>
+                                        $('#datetime').datetimepicker({
+                                            format: 'HH:mm:ss'
+                                        });
+                                    </script>
+                                </div>
+                            </div> -->
+                        </div>
+                        <button type="button" onclick="addStaff()" class="btn btn-success">Add User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+   
+    <script>
+    function toggleAnswer() {
+      var element = document.getElementById("answers");
+      if (element.style.display === "none") {
+        element.style.display = "block"; // Show the element
+      } else {
+        element.style.display = "none";  // Hide the element
+      }
+    }
+  </script>
+{% endblock %}
