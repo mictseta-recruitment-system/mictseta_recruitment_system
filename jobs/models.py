@@ -18,6 +18,8 @@ class JobPost(models.Model):
     is_complete = models.BooleanField(null=False, default=False)
     is_approved = models.BooleanField(null=False, default=False)
     is_active = models.BooleanField(null=False, default=True)
+    is_filter= models.BooleanField(null=False, default=False)
+    hide_application = models.BooleanField(null=False,default=False)
     def __str__(self):
         return f'{self.title} '
 
@@ -94,8 +96,15 @@ class JobApplication(models.Model):
     previous_stage = models.CharField(max_length=100, null=True)
     current_stage = models.CharField(max_length=100, null=True)
     status = models.CharField(max_length=100, null=False)
+    
+    hide = models.BooleanField(null=False, default=False)
+    is_filter = models.BooleanField(null=False, default=False)
     filterd_out = models.BooleanField(null=False, default=False)
     is_rejected = models.BooleanField(null=False, default=False)
+    reason = models.CharField(null=True, max_length=100, default="")
+    is_filter_applied = models.BooleanField(null=False, default=False)
+
+
     def __str__(self):
         return f'{self.user.email} - {self.job.title}'
 
@@ -106,7 +115,7 @@ class Interview(models.Model):
     start_time = models.CharField(max_length=225,null=False)
     end_time = models.CharField(max_length=225,null=False)
     def __str__(self):
-        return f'{self.user.application}'
+        return f'{self.application}'
 
 class FeedBack(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -123,6 +132,7 @@ class Quiz(models.Model):
     staff = models.ForeignKey(User, on_delete=models.CASCADE)
     job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
+    is_active = models.BooleanField(default=False)
 
 
     def __str__(self):
@@ -145,7 +155,8 @@ class QuizResults(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    total = models.CharField(max_length=100)
     results =  models.CharField(max_length=225,null=False)
 
     def __str__(self):
-        return self.title
+        return self.results

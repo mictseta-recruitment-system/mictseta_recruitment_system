@@ -21,14 +21,22 @@ class ApplicationFilter:
 
 	def apply_filter(self):
 		self.total = 0
+		for appli in self.applications :
+			appli.is_filter = True
+			appli.save()
+
 		for application in self.filterd_apllications:
 			application.filterd_out = True
+			application.is_filter = True
 			application.save()
+
 			self.total += 1
 
 	def reset_filter(self):
 		for application in self.applications:
 			application.filterd_out = False
+			application.is_filter = False
+			application.reason=""
 			application.save()
 
 	def get_total(self):
@@ -37,12 +45,15 @@ class ApplicationFilter:
 	def rejection_reason(self,reason):
 		for application in self.applications:
 			if application not in self.filterd_apllications:
-				feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{reason}",status="rejected").first()
-				if not application.is_rejected:
-					if not feed_back_exist:
-						application.is_rejected = True
-						feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{reason}",status="rejected")
-						feed_back.save()
+				if application.is_filter_applied == False:
+					application.reason = f'{reason}'
+					application.save()
+				#feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{reason}",status="rejected").first()
+				# if not application.is_rejected:
+				# 	if not feed_back_exist:
+				# 		application.is_rejected = True
+				# 		feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{reason}",status="rejected")
+				# 		feed_back.save() 
 
 	def standerd_filter(self):
 		print(self.applications)
@@ -66,10 +77,10 @@ class ApplicationFilter:
 		print(self.filterd_apllications)
 		self.rejection_reason("don't have qualifications required")
 
-		self.filter_by_language()
-		print("*********language filter ********")
-		print(self.filterd_apllications)
-		self.rejection_reason("Dont have language required")
+		#self.filter_by_language()
+		#print("*********language filter ********")
+		#print(self.filterd_apllications)
+		#self.rejection_reason("Dont have language required")
 
 		self.filter_by_experience()
 		print("********* experience filter ********")
@@ -158,8 +169,9 @@ class ApplicationFilter:
         	# Check if no documents are uploaded
 			Q(documents_count__lt=1)
 		).distinct()
+
     	# Exclude the incomplete users from the original Applications queryset
-		self.filterd_apllications = self.applications.exclude(id__in=incomplete_users)
+		self.filterd_apllications = incomplete_users
 
 	def filter_by_computer_skill(self):
 		job_skill_list = []
@@ -188,9 +200,8 @@ class ApplicationFilter:
 		for application in self.filterd_apllications:
 			if application.job.educations.all():
 				job_experience_list.append(application)
-		print(job_experience_list)
+		
 
-		print("&%&%&%&%&%&%&%&%&%&%&")
 		if job_experience_list:
 			for application in self.filterd_apllications:
 				for academic in application.job.educations.all():
@@ -199,14 +210,13 @@ class ApplicationFilter:
 			valid_applications= self.filterd_apllications.filter(user__qualifications__field_of_study__in=academic_study_list).distinct()
 			self.filterd_apllications = valid_applications
 
+
 	def filter_by_experience(self):
 		experience_list = []
 		job_experience_list = []  
 		for application in self.filterd_apllications:
 			if application.job.experiences.all():
 				job_experience_list.append(application)
-		print(job_experience_list)
-		print("&%&%&%&%&%&%&%&%&%&%&")
 		if job_experience_list:
 			for application in self.filterd_apllications:
 				for experience in application.job.experiences.all():
@@ -220,8 +230,6 @@ class ApplicationFilter:
 		for application in self.filterd_apllications:
 			if application.job.j_languages.all():
 				job_experience_list.append(application)
-		print(job_experience_list)
-		print("&%&%&%&%&%&%&%&%&%&%&")
 		if job_experience_list:
 			for application in self.filterd_apllications:
 				for language in application.job.j_languages.all():

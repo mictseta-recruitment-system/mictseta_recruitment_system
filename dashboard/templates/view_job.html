@@ -5,11 +5,13 @@ View jobs
 {% endblock %}
 {% load static %}
 
-{% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Recruitment</li>
-      <li class="breadcrumb-item active" aria-current="page">Jobs</li>
+  {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      <li class="breadcrumb-item active" aria-current="page"> all </li>
+
       
-{% endblock %}
+ {% endblock %}
 
 
 {% block description %}
@@ -163,7 +165,11 @@ View jobs
                   <td>{{ job.id }}</td>
                   <td>
                       <b>
-                          <a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{ job.title }}</a>
+                         {% if not job.is_active %}
+                          <a href="{% url 'dashboard.job_details' job.id %}" class="text-danger">{{ job.title }}</a>
+                         {% else %}
+                            <a href="{% url 'dashboard.job_details' job.id %}" class="text-dark">{{ job.title }}</a>
+                         {% endif %}
                       </b>
                   </td>
                   <td>
@@ -205,7 +211,7 @@ View jobs
                     <div class="d-flex justify-content-center">
                         {% if not job.is_approved %}
                             {% if job.is_complete %}
-                                <a class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" href="#JobToggle{{ job.id }}">
+                                <a class="btn btn-warning btn-sm me-1"  href="/dashboard/edit_job/{{job.id}}">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <a class="btn btn-success btn-sm me-1" type="button" onclick="ApproveJob({{ job.id }})">
@@ -218,26 +224,34 @@ View jobs
                                 
                             {% endif %}
                         {% else %}
-                            <a class="btn btn-warning btn-sm me-1" data-bs-toggle="modal" href="#JobToggle{{ job.id }}">
+                            <a class="btn btn-warning btn-sm me-1" href="/dashboard/edit_job/{{job.id}}">
                                 <i class="fa fa-edit"></i>
                             </a>
                         {% endif %}
-                        <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})">
-                            <i class="fa fa-trash"></i>
+                        {% if job.is_active %}
+                        <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="Disable">
+                            <i class="fa fa-circle-minus fa-1x"></i>
                         </a>
+                        {% else %}
+                         <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
+                            <i class="fa fa-circle-minus fa-1x"></i>
+                        </a>
+                        {% endif %}
                          <a class="btn btn-outline-info btn-sm" type="button" href="{% url 'dashboard.new_quiz' job.id %}">
                             <i class="fa fa-plus"></i>
-                            add Quiz
+                            Quiz
                         </a>
+
+
                     </div>
                 {% else %}
                     {% if not job.is_approved %}
                         {% if job.is_complete %}
-                        <a class="btn btn-warning btn-sm" data-bs-toggle="modal" href="#JobToggle{{ job.id }}">
+                        <a class="btn btn-warning btn-sm" href="/dashboard/edit_job/{{job.id}}">
                             <i class="fa fa-edit"></i>
                         </a>
                         {% else %}
-                            <a class="btn btn-warning btn-sm" data-bs-toggle="modal" href="#JobToggle{{ job.id }}">
+                            <a class="btn btn-warning btn-sm" href="/dashboard/edit_job/{{job.id}}">
                             <i class="fa fa-spinner"></i>
                         </a>
                         {% endif %}
@@ -249,7 +263,7 @@ View jobs
                 
                 
                       {% if not job.is_approved %}
-                      <a class="btn btn-warning btn-sm" data-bs-toggle="modal" href="#quizToggle{{ job.id }}">
+                      <a class="btn btn-warning btn-sm" href="/dashboard/edit_job/{{job.id}}">
                           <i class="fa fa-edit"></i>
                       </a>
                       {% else %}

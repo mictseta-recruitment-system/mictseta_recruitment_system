@@ -3,8 +3,15 @@
 {% block title %}Job Applications {% endblock %}
 
 {% block breadcrumbs %}
-    <li class="breadcrumb-item active" aria-current="page"> Jobs/Vacancy </li>
-      <li class="breadcrumb-item active" aria-current="page"> Applications </li>
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      {% if filtered %}
+      <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{applications.0.job.id}}/"  class="btn btn-outline p-0"> {{applications.0.job.title}}</a> </li>
+
+      {% else %}
+      <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> all </a> </li>
+      {% endif %}
+      <li class="breadcrumb-item active" aria-current="page" ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Applications </a></li>
  {% endblock %}
 
 {% block content %}
@@ -14,10 +21,19 @@
     {% for applied_job in applied_jobs %}
 
       {% if applied_job.status == "closed" %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
+          <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
+
+      {% elif applied_job.id == applications.0.job.id %}
+          {% if filtered %}
+            <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-warning m-1">filter by : {{applied_job.title.title}}
+             </a>
+          {% else %}
+             <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
+             </a>
+           {% endif %}
       {% else %}
-        <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
-       </a>
+            <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-success m-1">filter by : {{applied_job.title.title}}
+           </a>
       {% endif %}
     {% endfor %}
  
@@ -27,18 +43,203 @@
           <div id="applications" style="display:block;">
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
-                  <h6>ALL Application List</h6> 
+                  {% if filtered %}
+                    <h6><b>{{applications.0.job.title}} List</b></h6>
+                  {% else %}
+                  <h6><b>ALL Application List</b></h6>
+                  {% endif %}
                   {% if filtered %}
                   <div>
-                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button>
-                        <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button>
+                       <!--  <button class="btn btn-danger" onclick="auto_filter('{{applications.0.job.id}}','strict')">Strict filter</button> -->
+                       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#strict"> strict filter
+                              </button>
+                              <div class="modal fade" id="strict" tabindex="-1" aria-labelledby="strict" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable  modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="strict">Warning - strict filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b class="text-info">filter applications</b> using the <b class="text-info" >strict</b> method on all applicattions for <b class="text-info"> {{applications.0.job.title}}.</b><br>
+                                    <hr>
+                                    <h4><b>The  <b class="text-danger"> Strict</b> Filter checks the follwiong:</b></h4>
+                                    <br>
+                                    <ol>
+                                      <li><b>Profile</b> - checks applications with complete profile information</li>
+                                      <li><b>Soft skill filter</b> -  checks applications with required soft skills and proficency level </li>
+                                      <li><b>Computer skill filter</b> - checks applications with required computer skills and proficency level</li>
+                                      <li><b>academics filter</b> -  checks applications with required academic qualifications and must be completed</li>
+                                      <li><b>experience filter</b> - checks applications with matching experience </li>
+                                      <li><b>years experience filter</b> - checks applications wif years of experince is relavent to that of the vacancy </li>
+
+                                      <li><b>description similarity filter</b> - looks for similarity between applicants cover letter and vacancy job description </li>
+
+                                        <li><b>Applicant must complete:</b></li>
+                                          <ul>
+                                            <li> 1 or more softskills</li>
+                                            <li> 1 or more computerskills</li>
+                                             <li> 1 or more working expereince</li>
+                                              <li> 1 or more qualifications</li>
+                                               <li>must have address</li>
+                                                <li>1 or more languages</li>
+                                                 
+                                          </ul>
+
+
+
+                                     
+                                    </ol>
+                                    <i class="fa fa-circle-info text-info"> </i> This changes can be undone by selecting the<b class="text-danger"> Reset</b> button.<br>
+                                    <i class="fa fa-circle-info text-info"> </i>  Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="auto_filter('{{applications.0.job.id}}','strict')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                       
+                        <!-- <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button> -->
+                         <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#standard"> Standard filter
+                              </button>
+                              <div class="modal fade" id="standard" tabindex="-1" aria-labelledby="standard" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable  modal-lg">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="standard">Warning - standard filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> this will <b class="text-primary">filter applications</b> using the <b class="text-primary">standard</b> method on all applicattions for <b class="text-primary"> {{applications.0.job.title}}.</b><br>
+                                    <hr>
+                                    <h4><b>The  <b class="text-primary"> Standard </b> Filter checks the follwiong:</b></h4>
+                                    <br>
+                                    <ul>
+                                      <li><b>Profile</b> - checks applications with complete profile information</li>
+                                      <li><b>Soft skill filter</b> -  checks applications with required soft skills </li>
+                                      <li><b>Computer skill filter</b> - checks applications with required computer skills </li>
+                                      <li><b>academics filter</b> -  checks applications with required academic qualifications</li>
+                                      <li><b>experience filter</b> - checks applications with complete experience </li>
+                                      <li><b>supporting documents filter</b> - checks applications with uploaded supporting documents </li>
+                                     
+                                    </ul>
+                                   <i class="fa fa-circle-info text-info"> </i> This changes can be undone by selecting the<b class="text-danger"> Reset</b> button.<br>
+                                  <i class="fa fa-circle-info text-info"> </i>   Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="auto_filter('{{applications.0.job.id}}','standerd')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                       
+
+                        {% if applications.0.job.is_filter %}
+                        <!--   <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button> -->
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#apply"> <i class="fa fa-check"></i> Apply filter
+                              </button>
+                              <div class="modal fade" id="apply" tabindex="-1" aria-labelledby="apply" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="apply">Warning - apply filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>apply</b> all <b>filters</b> that have been added on selected applications <br>
+                                    <br>
+                                   <i class="fa fa-circle-info text-info"> </i> This change cannot be reversed, Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="apply_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                           
+                            <!-- <button class="btn btn-outline-info" onclick="reset_filter('{{applications.0.job.id}}')"> <i class="fa fa-cog"></i> Reset</button> -->
+                              <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#reset"> <i class="fa fa-cog"></i> Reset
+                              </button>
+                              <div class="modal fade" id="reset" tabindex="-1" aria-labelledby="reset" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="reset">Warning - Reset filter</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>reset</b> all <b>filters</b> that have been added on selected applications but not yet <b>Applied</b><br>
+                                    <br>
+                                    <i class="fa fa-circle-info text-info"> </i> This change cannot be reversed, Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success"onclick="reset_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% if applications.0.job.hide_application %}
+                               <!-- <button class="btn btn-outline-success" onclick="show_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye"></i> Show</button> -->
+
+                                  <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#show"></i><i class="fa fa-eye"></i>  show
+                              </button>
+                              <div class="modal fade" id="show" tabindex="-1" aria-labelledby="show" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="show">Warning - Show filtered applications </h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>show</b> all applications that have <b>filters applied</b> (moved to filtered stage or rejected)<br>
+                                    <br>
+                                    <i class="fa fa-circle-info text-info"> </i> Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="show_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% elif not applications.0.job.hide_application %}
+                            <!--  <button class="btn btn-outline-danger" onclick="hide_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye-slash"></i> Hide</button>
+ -->
+ <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#hide"> <i class="fa fa-cog"></i><i class="fa fa-eye-slash"></i>  hide
+                              </button>
+                              <div class="modal fade" id="hide" tabindex="-1" aria-labelledby="hide" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="hide">Warning - hide filtered applications </h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <i class="fa fa-circle-info text-info"> </i> This will <b>hide</b> all applications that have <b>filters applied</b> (moved to filtered stage or rejected)<br> 
+                                    <br>
+                                    <i class="fa fa-circle-info text-info"> </i> Are you sure you want to continue ?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                      <button type="button" class="btn btn-success" onclick="show_filter('{{applications.0.job.id}}')">YES</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                             
+                            {% endif %}
+                        {% endif %}
                   </div>
                   {% else %}
-                    <div> 
+                  <!--   <div> 
                         <button class="btn btn-dark-outline" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-cog"></i> </button>
-                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button>
-                        <button class="btn btn-info" onclick="auto_filter('all','standerd')">Standard filter</button>
-                    </div>
+                        <button class="btn btn-danger" onclick="auto_filter('all','strict')">Strict filter</button> -->
+                    
                   {% endif %}
                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog">
@@ -66,6 +267,7 @@
                           <thead>
                               <tr>
                                   <th class="bg-dark text-white">Job Title</th>
+                                  <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
@@ -75,29 +277,52 @@
                           <tbody> 
                                
                           {% for application in applications %}
-                          {% if application.status == "pending" %}
-                           <tr class="text-dark">
-                              <td>{{application.job.title}}</td>
-                              {% if application.status == 'rejected' %}
-                              <td><button class="btn btn-danger p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'approved' %}
-                              <td><button class="btn btn-success p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'interview' %}
-                              <td><button class="btn btn-info p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'short-list' %}
-                              <td><button class="btn btn-dark p-0">{{application.job.status}}</button></td>
-                              {% elif application.status == 'pending' %}
-                              <td><button class="btn btn-warning p-0">{{application.job.status}}</button></td>
-                              {% else %}
-                              <td><button class="btn btn-outline-info p-0">{{application.job.status}}</button></td>
-                              
-                              {% endif %}
-                              <td>{{application.date}}</td>
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
-                                <i class="fa fa-eye"> </i></a>
-                             <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
-                           </td>
-                          </tr>
+                          {% if application.status == "pending" and not application.hide %}
+                            {% if application.is_filter %}
+                              {% if application.filterd_out == True %}
+                               <tr class="text-sucess" >
+                                  <td class="text-success">{{application.job.title}}</td>
+                                  <td class="text-success"> {{application.user.first_name}} {{application.user.last_name}}</td>
+                                  <td class="text-success"><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                  
+                                 
+                                  <td class="text-success">{{application.date}}</td>
+                                  <td class="text-success"> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                    <i class="fa fa-eye"> </i></a>
+                                 <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                               </td>
+                              </tr>
+                              {% elif application.filterd_out == False %} 
+                               <tr class="text-danger text-danger"  >
+                                  <td class="text-danger">{{application.job.title}}</td>
+                                  <td class=" text-danger"> {{application.user.first_name}} {{application.user.last_name}}</td>
+                                  <td class=" text-danger"><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                  
+                                 
+                                  <td class=" text-danger">{{application.date}}</td>
+                                  <td class=" text-danger"> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                    <i class="fa fa-eye"> </i>
+                                </a>
+                                  <button class="btn btn-outline-danger p-0">{{application.reason}}</button>
+                                 <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                               </td>
+                              </tr>
+                              {%endif%}
+                            {% else %}
+                             <tr class="text-sucess" >
+                                  <td class="">{{application.job.title}}</td>
+                                  <td class=""> {{application.user.first_name}} {{application.user.last_name}}</td>
+                                  <td class=""><button class="btn btn-warning p-0">{{application.status}}</button></td>
+                                  
+                                 
+                                  <td class="">{{application.date}}</td>
+                                  <td class=""> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                    <i class="fa fa-eye"> </i></a>
+                                 <!--   <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a> -->
+                               </td>
+                              </tr>
+                            {% endif %}
+
                           {% endif%}
                               {% endfor %}                 
                           </tbody>
@@ -125,8 +350,37 @@
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   <h6>Filtered Application List</h6> 
-                  
-                  <button class="btn btn-warning">Auto Short-list</button>
+                  {% if filtered %}
+                <!--   <button class="btn btn-warning" onclick="auto_move_to_shortlist('{{applications.0.job.id}}')">Auto Short-list</button> -->
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Auto Short-list
+                  </button>
+                  <div class="modal fade" id="auto-shortlist" tabindex="-1" aria-labelledby="auto-shortlist" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="auto-shortlist">Warning - Auto Shortlisting</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          <i class="fa fa-circle-info text-info"> </i> This will move all applications on ther <b class="text-primary">filtered</b> applications stage to <b class="text-primary">shortlist</b> stage.
+
+                          <br>
+                          <br>
+                       <i class="fa fa-circle-info text-info"> </i> This changes cannot be <b class="text-danger">reversed.</b>  
+                       <br>
+
+                       <i class="fa fa-circle-info text-info"> </i>Are you sure you want to continue ?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                          <button type="button" class="btn btn-success"  onclick="auto_move_to_shortlist('{{applications.0.job.id}}')" >YES</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  {% endif %}
                 </div>
 
                 <div class="card-body" style="overflow-x: scroll;"> 
@@ -136,7 +390,8 @@
                               <tr>
                           
                                   <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">Job status</th>
+                                    <th class="bg-dark text-white">Candidate</th>
+                                  <th class="bg-dark text-white">status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
@@ -145,26 +400,20 @@
                           <tbody> 
                                
                           {% for application in applications %}
-              
-                          {% if application.filterd_out == True %}
+               
+                          {% if application.filterd_out == True and application.is_filter_applied == True and application.status == 'pending' %}
                            <tr class="text-dark">
                               <td>{{application.job.title}}</td>
 
-                                {% if application.status == 'rejected' %}
-                                <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'approved' %}
-                                <td><button class="btn btn-success p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'interview' %}
-                                <td><button class="btn btn-info p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'short-list' %}
-                                <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
-                                {% elif application.status == 'pending' %}
+                                 <td> {{application.user.first_name}} {{application.user.last_name}}</td>
+                                
+                               
                                 <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
-                                {% else %}
-                                <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
-                                {% endif %}
+                               
+                               
+
                               <td>{{application.date}}</td>
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
                                <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td>
                           </tr>
@@ -201,9 +450,9 @@
                           <thead>
                               <tr>
                                  <th class="bg-dark text-white">Job Title</th>
+                                  <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">P. stage</th>
                                   <th class="bg-dark text-white">C. stage</th>
-                                  <th class="bg-dark text-white">Job status</th>
                                   <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
@@ -216,30 +465,23 @@
                            <tr class="text-dark">
                               
                               <td>{{application.job.title}}</td>
+                              <td>{{application.user.first_name}} {{application.user.last_name}}</td>
                               <td>{{application.previous_stage}}</td>
                               <td>{{application.current_stage}}</td>
-                                  {% if application.status == 'rejected' %}
-                                  <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'approved' %}
-                                  <td><button class="btn btn-success p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'interview' %}
-                                  <td><button class="btn btn-info p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'short-list' %}
-                                  <td><button class="btn btn-dark p-0">{{application.status}}</button></td>
-                                  {% elif application.status == 'pending' %}
-                                  <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
-                                  {% else %}
-                                  <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
-                                  {% endif %}
+                                  
+                                  
                               <td>{{application.date}}</td>
                               <td> 
-                                     <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
+                                <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-plus"></i> interview
                               </button>
 
-                                <a class="btn btn-danger p-1" onclick="reject_applicantion({{application.id}})" data-bs-placement="top" title="Reject application">
+                                <a class="btn btn-danger p-1"data-bs-toggle="modal" data-bs-target="#exampleModal{{application.id}}">
                                   <i class="fa fa-trash"></i> 
+                                  Reject
                                 </a>
+                                 <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                <i class="fa fa-eye"> </i></a>
                               </td>
                           </tr>
                           {% endif %}
@@ -298,7 +540,27 @@
       </div>
     </div>
 
-
+<div class="modal fade" id="exampleModal{{application.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Rejection Note</b></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+        <label for="message" class="form-label"><h6><i class="fa fa-circle-info text-info"> </i> Add Note or Message to outline Application Rejection</h6></label>
+        <label for="message" class="form-label">message/note</label>
+          <input class="form-control" type="text" id="message{{application.id}}" required></input>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="reject_applicantion({{application.id}})">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
 
                         {% endfor %}
            </div>   
@@ -315,9 +577,9 @@
                           <thead>
                               <tr>
                                   <th class="bg-dark text-white">Job Title</th>
-                                  <th class="bg-dark text-white">P. stage</th>
+                                  <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">C. stage</th>
-                                  <th class="bg-dark text-white">Interview Date</th>
+                                  <th class="bg-dark text-white">Date</th>
                                   <th class="bg-dark text-white">start time</th>
                                   <th class="bg-dark text-white">end time</th>
                                   <th class="bg-dark text-white">Action</th>
@@ -331,7 +593,7 @@
                            <tr class="text-dark">
                              
                               <td>{{interview.application.job.title}}</td>
-                              <td>{{interview.application.previous_stage}}</td>
+                              <td>{{interview.application.user.first_name}} {{interview.application.user.last_name}}</td>
                               <td>{{interview.application.current_stage}}</td>
                               <td>{{interview.date}}</td>
                               <td><b>{{interview.start_time}}</b></td>
@@ -341,11 +603,13 @@
                                <i class="fa fa-edit"> </i>
                                Reschedule
                               </button>
-                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
+                                <a href="{% url 'dashboard.jobsekeer_details' interview.application.user.profile.uuid interview.application.job.id %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i></a> 
 
                               <a onclick="approve_interview({{interview.application.id}})" class="btn btn-success p-1 mx-1" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i></a>
-                              <a onclick="reject_applicantion({{interview.application.id}})" class="btn btn-danger p-1 mx-1" data-bs-placement="top" title="Reject interview"><i class="fa fa-trash"></i></a>
-                            
+                              <a class="btn btn-danger p-1"data-bs-toggle="modal" data-bs-target="#exampleModals{{application.id}}">
+                                  <i class="fa fa-trash"></i> 
+                                  Reject
+                                </a>
                               </td>
                           </tr>
                           {% endif %}
@@ -382,7 +646,30 @@
           </div>
         </div>
       </div>
+
     </div>
+
+    <div class="modal fade" id="exampleModals{{application.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Rejection Note</b></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+        <label for="message" class="form-label"><h6><i class="fa fa-circle-info text-info"></i>  Add Note or Message to outline Application Rejection</h6></label>
+        <label for="message" class="form-label">message - requied field</label>
+          <input class="form-control" type="text" id="messages{{interview.id}}" required></input>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="reject_applicantion('{{interview.application.id}}', '{{interview.id}}')">Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
                               {% endfor %}                 
                           </tbody>
                           <tfoot>
@@ -480,7 +767,8 @@
                               <td>{{application.previous_stage}}</td>
                               <td>{{application.current_stage}}</td>
                               <td>{{application.date}}</td>
-                                  {% if application.status == 'rejected' %}
+
+                                {% if application.status == 'rejected' %}
                                 <td><button class="btn btn-danger p-0">{{application.status}}</button></td>
                                 {% elif application.status == 'approved' %}
                                 <td><button class="btn btn-success p-0">{{application.status}}</button></td>
@@ -493,8 +781,9 @@
                                 {% else %}
                                 <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
                                 {% endif %}
+
                               <td> 
-                                <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
+                                <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="View Profile"><i class="fa fa-eye"></i> </a> 
                                 <a onclick="move_to_shortlist({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">short-list</a>
                               </td>
                           </tr>
@@ -532,11 +821,11 @@
                               <tr>
 
                                     <th class="bg-dark text-white">Job Title</th>
-                                                                    <th class="bg-dark text-white">P. stage</th>
-                                                                   <th class="bg-dark text-white">C. stage</th>
-                                                                    <th class="bg-dark text-white">Date</th>
-                                                                   <th class="bg-dark text-white">App. status</th>
-                                                                    <th class="bg-dark text-white">Action</th>
+                                    <th class="bg-dark text-white">P. stage</th>
+                                    <th class="bg-dark text-white">C. stage</th>
+                                    <th class="bg-dark text-white">Date</th>
+                                    <th class="bg-dark text-white">App. status</th>
+                                    <th class="bg-dark text-white">Action</th>
                               </tr>
                           </thead>
                           <tbody> 
@@ -562,7 +851,7 @@
                                 {% else %}
                                 <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
                                 {% endif %}
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid %}"><i class="fa fa-eye"></i></a> </td>
+                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}"><i class="fa fa-eye"></i></a> </td>
                           
                           </tr>
                           {% endif %}

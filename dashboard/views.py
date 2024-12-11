@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -134,7 +134,8 @@ def filter_job_application(request,jobID):
 		job_applications = JobApplication.objects.filter(job__id=jobID)
 		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		cnt=0
-		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs, 'cnt':cnt,'filtered':True})
+		interview = Interview.objects.filter(application__job__id=jobID)
+		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs,'interviews':interview, 'cnt':cnt,'filtered':True})
 	else:
 		return redirect('render_auth_page')
 
@@ -242,6 +243,57 @@ def view_jobs(request):
 	else:
 		return redirect('render_auth_page')
 
+
+@csrf_protect
+def edit_job(request, jobID):
+	if request.user.is_authenticated:
+		current_time = now()
+		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+				return HttpResponse("<h1>Request denied: you are on leave</h1>")
+		try:
+			job = JobPost.objects.get(id=int(jobID))
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+
+			job_title = JobTitle.objects.all()
+			industry = Industry.objects.all()
+
+			languages = LanguageList.objects.all()
+			readings = ReadingProficiencyList.objects.all()
+			speakings = SpeakingProficiencyList.objects.all()
+			writings = WritingProficiencyList.objects.all()
+			computer_skills = ComputerSkillsList.objects.all()
+			computer_prof = ComputerProficiency.objects.all()
+			soft_skill = SoftSkillsList.objects.all()
+			soft_prof = SoftProficiency.objects.all()
+			qualification = Qualification.objects.all()
+			nqf_level = NQF.objects.all()
+			
+			return render(request,'edit_job.html',
+				{
+				'job':job, 
+				'notify_len':notify_len,
+				'job_titles':job_title, 
+				'industries':industry,
+				'computer_skills':computer_skills,
+				'computer_profs':computer_prof,
+				'soft_skills':soft_skill,
+				'soft_profs':soft_prof,
+				'nqf_levels' : nqf_level,
+				'qualifications':qualification,
+				'languages' : languages,
+				'readings' : readings,
+				'writings' : writings,
+				'speakings':speakings
+			})
+		except Exception as e:
+			return HttpResponse(f"<h1> Sever Error : Job not Found : {e}</h1>")
+	else:
+		return redirect('render_auth_page')
+
 @csrf_protect
 def job_details(request, jobID):
 	if request.user.is_authenticated:
@@ -337,7 +389,7 @@ def update_staff(request, staffID):
 	else:
 		return redirect('render_auth_page')
 
-def jobsekeer_details(request, seekerID):
+def jobsekeer_details(request, seekerID,jobID):
 	if request.user.is_authenticated:
 		
 		seeker = User.objects.get(profile__uuid=seekerID)
@@ -346,9 +398,14 @@ def jobsekeer_details(request, seekerID):
 				notify_len = len(Notification.objects.filter(is_seen=False))
 			else:
 				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
-			print(seeker.profile.age)
-			print(seeker.profile.gender)
-			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len})
+			application = JobApplication.objects.filter(user=seeker,job__id=int(jobID)).first()
+			feedback = FeedBack.objects.filter(user=seeker,job=application.job)
+			quiz_id = Quiz.objects.filter(job=application.job).first()
+			if quiz_id:
+				quiz = QuizResults.objects.filter(user=seeker, quiz=quiz_id).first()
+			else:
+				quiz = {}
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:

@@ -4,13 +4,19 @@
 
 
 
-{% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Application</li>
-      <li class="breadcrumb-item active" aria-current="page">Job seeker/</li>
-
-      <li class="breadcrumb-item active" aria-current="page">{{user.staffprofile.department}}</li>
+     {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
       
-     {% endblock %} 
+      <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{application.job.id}}/"  class="btn btn-outline p-0"> {{application.job.title}} </a></li>
+      
+      <li class="breadcrumb-item " ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Application </a></li>
+      
+     
+      <li class="breadcrumb-item active" aria-current="page"> {{application.user.first_name}} {{application.user.last_name}} </li>
+
+   
+ {% endblock %}
 
 
 {% load static %}
@@ -20,231 +26,665 @@
 
 <div class="row p-2 ">
 
-	<div class="col-sm-10 col-md-4 d-flex justify-content-center p-3 ">
-		<div class="card shadow p-3 mb-5  rounded" s>
-		 
-		 {% if seeker.profileimage.image.url %}
-
- 			<img src="{{emp.profileimage.image.url}}" class="card-img-top" alt="..." style="height: 290px;">
-		  {% else %}
-		  <img src="{% static 'dashboard/images/default_user.jpg' %}" class="card-img-top" alt="...">
-
-		 {% endif %}
-		  <div class="card-body">
-		  	
- 
-		    <h5 class="card-title">{{seeker.first_name}} {{seeker.last_name}}</h5>
-
-		    <p class="card-text d-flex justify-content-between mt-3"><span><b>Gender:</b> {{seeker.profile.gender}}</span>  <span><b>Age:</b> {{seeker.profile.age}}</span> </p>
-		  </div>
-		  <ul class="list-group list-group-flush " style="cursor: pointer;">
-		    <li class="list-group-item emp-profile" onclick="toggleVisibility('profileinformation')">Profile Informaton </li>
-		    <li class="list-group-item emp-profile" onclick="toggleVisibility('companyinformation')">Company Information</li>
-		    <li class="list-group-item emp-profile" onclick="toggleVisibility('vacanciesc')">Vacancies created</li>
-		    <li class="list-group-item emp-profile" onclick="toggleVisibility('supporrting_documents')">Supporting Documents</li>
-
-		  </ul>
-
-		  <!-- <div class="card-body">
-		    <a href="#" class="card-link">Download CV</a>
-		    <a href="#" class="card-link">Download ID</a>
-		  </div> -->
-		</div>
-	</div>
-
-	<div class="col-sm-12 col-md-8 shadow p-3 mb-5 bg-body rounded" >
-
-		<div class="container" id="infopage" style="display: block;">
-		
-	        <div class="d-flex justify-content-center mt-5">
-	            <div>
-	              <i class="fa fa-eye fa-5x text-info mt-5 pt-5" aria-hidden="true" style="margin-left: 90px;"></i>
-	              <br>
-	            <h4 class="mt-3">Click Something To View</h4>
-	            </div>
-	        </div>
+<!-- Combined Profile Sidebar and Details -->
+<div class="col-sm-12 col-md-12 d-flex justify-content-center p-3">
+    <div class="card shadow p-4 mb-5 bg-body rounded" style="width: 100%;">
+        <div class="row">
+    <!-- Profile Sidebar -->
+<!-- <div class="col-sm-12 col-md-4 d-flex justify-content-center p-3">
+    <div class="text-center shadow-sm p-4 rounded border bg-light d-flex flex-column align-items-center">
+        <div class="rounded-circle border d-flex align-items-center justify-content-center position-relative mb-3" style="height: 150px; width: 150px; cursor: pointer;" onclick="removeImage('{{ emp.id }}')">
+            {% if emp.profileimage.image.url %}
+                <img src="{{ emp.profileimage.image.url }}" class="rounded-circle" style="height: 150px; width: 150px; object-fit: cover;">
+            {% else %}
+                <i class="fas fa-user position-absolute" style="font-size: 50px; color: black;"></i>
+            {% endif %}
+          
+            <i class="fas fa-user position-absolute" style="font-size: 50px; color: black;"></i>
         </div>
-      
-		<div id="profileinformation" style="display:none;">
-			<h4 class="">Profile Information</h4>
-			<hr>
-			<div class="row d-flex justify-content-between ">
-				<div class="col-6 shadow-sm p-3 rounded">
 
-					<h5>Names</h5>
-					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>First Name:</b> <span>{{seeker.first_name}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Last Name:</b> <span>{{seeker.last_name}}</span> </p>
-				</div>
+        <h5 class="font-weight-bold">{{ emp.first_name }} {{ emp.last_name }}</h5>
+        <p class="text-muted mb-2 text-center">
+            <strong>Gender:</strong> {{ emp.staffprofile.gender }} <br>
+            <strong>Age:</strong> {{ emp.staffprofile.age }}
+        </p>
 
-				<div class="col-6 shadow-sm p-3 rounded">
-					<h5>Personal</h5>
-					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>Date of Birth:</b> <span>{{seeker.profile.dob}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Gender :</b> <span>{{seeker.profile.gender}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Age :</b> <span>{{seeker.profile.age}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>ID number :</b> <span>{{seeker.profile.idnumber}}</span> </p>
-				</div>
-					<div class="col-6 shadow-sm p-3 rounded">
-					<h5>Other</h5>
-					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>Maritial Status:</b> <span>{{seeker.profile.maritial_status}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Race :</b> <span>{{seeker.profile.race}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Disability :</b> <span>{{seeker.profile.disability}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Linkedin profile :</b> <span>{{seeker.profile.linkedin_profile}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Personal website:</b> <span>{{seeker.profile.personal_website}}</span> </p>
-				</div>
-				<div class="col-6 shadow-sm p-3 rounded">
-					<h5>Contact</h5>
-					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>Email:</b> <span>{{seeker.email}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Phone:</b> <span>{{seeker.profile.phone}}</span> </p>
-				</div>
-					
+        {% if emp.id == user.id or user.is_superuser %}
+        <form id="image-upload-form" method="post" enctype="multipart/form-data" class="mt-3">
+            <div class="mb-3">
+                <input class="form-control form-control-sm" name="image" id="image" type="file" accept="image/*">
+                <input type="hidden" name="empID" id="empID" value="{{ emp.id }}">
+                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="uploadImage()">Upload Image</button>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</div> -->
 
-			</div>
-		</div>
 
-		<div id="companyinformation" style="display:none;">
-			<h4 class="">Company Information</h4>
-			<hr>
-			<div class="row d-flex justify-content-between ">
-				<div class="col-6 shadow-sm p-3 rounded">
+            <!-- Profile Details -->
+            <div class="col-12">
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                		
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#profileinformation" type="button" role="tab" aria-controls="profileinformation" aria-selected="true">
+                            <i class="fa fa-user"></i> Profile Information
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-company-tab" data-bs-toggle="pill" data-bs-target="#companyinformation" type="button" role="tab" aria-controls="companyinformation" aria-selected="false">
+                            <i class="fa fa-building"></i> Application Information
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-vacancies-tab" data-bs-toggle="pill" data-bs-target="#vacanciesc" type="button" role="tab" aria-controls="vacanciesc" aria-selected="false">
+                            <i class="fa fa-briefcase"></i>Experiences & Skills
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-supporting_documents-tab" data-bs-toggle="pill" data-bs-target="#supporting_documents" type="button" role="tab" aria-controls="supporting_documents" aria-selected="false">
+                            <i class="fa fa-calendar-check"></i> supporting documents
+                        </button>
+                    </li>
+                </ul>
 
-					<h5>Position</h5>
-					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>Job Title:</b> <span>{{emp.staffprofile.job_title}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Department:</b> <span>{{emp.staffprofile.department}}</span> </p>
-				</div>
 
-				<div class="col-6 shadow-sm p-3 rounded">
-					<h5>Profile</h5>
-					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>Admin Previlages :</b> <span>{% if emp.is_superuser %} YES{% else %} NO {% endif %}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Is Staff:</b> <span>{% if emp.is_staff %} YES{% else %} NO {% endif %}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Hire Date :</b> <span>{{emp.staffprofile.hire_date}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Salary :</b> <span>R {{emp.staffprofile.salary}}</span> </p>
-				</div>
-				<div class="col-6 shadow-sm p-3 rounded">
-					<h5>Work Details</h5>
-					<hr style="width:25%;">
-					<p class="mx-3 d-flex justify-content-between"><b>Rate per hour:</b> <span>R {{emp.shift.rate}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Work time (start):</b> <span>{{emp.shift.start_time}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Work Time (end): </b> <span>{{emp.shift.end_time}}</span> </p>
-					<p class="mx-3 d-flex justify-content-between"><b>Working hours: </b> <span>{{emp.shift.working_hours}}</span> </p>
-					
-				</div>
-				
-			</div>
-		</div>
 
-		<div id="vacanciesc" style="display:none;">
-			<h4 class="">Vacancies created</h4>
-			<hr>
-			<div class="row d-flex justify-content-center ">
-				
-				<table class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Job title</th>
-              <th>Posted Date</th>
-              <th>Date of expiry</th>
-              
-              <th>Status</th>
-              <th>completed</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for job in emp.jobs.all %}
- 
-            <tr>
-              <td>{{job.id}}</td>
-              <td><a href="{% url 'dashboard.job_details' job.id %}">{{job.title}}</a></td>
-              <td>{{job.start_date}}</td>
-              <td>{{job.end_date}}</td>
-
-            
 
              
-              
-              {% if job.is_complete %}
-                  {% if job.is_approved %}
-                  <td><button class="btn btn-success" disabled>{{job.status}}</button></td>
-                  {% else %}
-                  <td><button class="btn btn-warning" disabled>{{job.status}}</button></td>
-                  {% endif %}
-                 <td><button class="btn btn-success" disabled>Yes</button></td>
-                      {% if emp.is_superemp %}
-                      <td>
-                        {% if not job.is_approved %}
-                        <a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a>
-                        <a class="btn btn-success m-1" type="button" onclick="ApproveJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true" style="font-size: 12px;"></i> </a>
-
-                        {% endif %}
-                        <a class="btn btn-danger"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
-                      </td>
-                      {% else %}
-                          {% if not job.is_approved %}
-                            <td><a class="btn btn-warning" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-edit" aria-hidden="true"></i> </a></td>
-                          {% endif %}
-                      {% endif %}
-
-              {% else %}
-              <td><button class="btn btn-info" disabled><b>{{job.status}}</b></td>
-              
-              <td><button class="btn btn-danger" disabled>No</button></td>
-              
-
-              <td>
-                <button class="btn btn-success" data-bs-toggle="modal" href="#JobToggle{{job.id}}" role="button" style="font-size: 12px;"> <i class="fa fa-spinner" aria-hidden="true"></i> </button> 
-                <a class="btn btn-danger m-1"   type="button" onclick="deleteJob({{job.id}})" role="button" style="font-size: 12px;"style="font-size: 12px;">  <i class="fa fa-trash" aria-hidden="true"></i> </a>
-              </td>
-              {% endif %}
-            </tr>
-        
-           {% endfor %}
-    
-       </tbody>
-        </table>
-
-		</div>
-
-
-		
-	</div>
-
-	<div id="supporrting_documents" style="display:none;">
-			<h4 class="">Supporting Documents</h4>
-			<hr>
-			<div class="row d-flex justify-content-center ">
-					<table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-               
+                <!-- Tab Content -->
+                <div class="tab-content" id="pills-tabContent">
+                    <!-- Profile Information -->
+                    <div class="tab-pane fade show active" id="profileinformation" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <h4>Profile Information</h4>
+                        <hr style="color: blue;">
+                        <div class="row">
+                            <div class="col-6 shadow-sm p-3 rounded">
+                                <h5>Names</h5>
+                                <hr style="color: red;">
+                                <p><b>First Name:</b> {{seeker.first_name}}</p>
+                                <p><b>Last Name:</b> {{seeker.last_name}}</p>
+                            </div>
+                            <div class="col-6 shadow-sm p-3 rounded">
+                                <h5>Personal</h5>
+                                <hr style="color: red;">
+                                <p><b>Date of Birth:</b> {{ seeker.profile.dob }}</p>
+                                <p><b>Gender:</b>  {{ seeker.profile.gender }}</p>
+                                <p><b>Age:</b>  {{ seeker.profile.age }}</p>
+                                <p><b>ID Number:</b> {{seeker.profile.idnumber}}</p>
+                                <p><b>Marital Status:</b> {{ seeker.profile.maritial_status }}</p>
+                                <p><b>Race:</b> {{ seeker.profile.race }}</p>
+                            </div>
+                            <div class="col-6 shadow-sm p-3 rounded">
+                                <h5>Contact</h5>
+                                <hr style="color: red;">
+                                <p><b>Email:</b> {{ seeker.email }}</p>
+                                <p><b>Phone:</b> {{ seeker.profile.phone }}</p>
+                                <p><b>LinkedIn:</b> <a href="{{ seeker.profile.linkedin_profile }}" target="_blank">{{ seeker.profile.linkedin_profile }}</a></p>
+                                <p><b>Personal Website:</b> {{ seeker.profile.personal_website }}</p>
+                            </div>
+                            <div class="col-6 shadow-sm p-3 rounded">
+                                <h5>Cover letter</h5>
+                                <hr style="color: red;">
+                                <p>{{ seeker.profile.cover_letter }}</p>
+                               
+                            </div>
+                            <div class="col-6 shadow-sm p-3 rounded">
+                                <h5>Address</h5>
+                                <hr style="color: red;">
+                                 {% if seeker.address.street_address_line %}
+                                <p><strong>Street Address:</strong> <span id="display_residential_street_address">{{seeker.address.street_address_line}}</span></p>
+                                <p><strong>City:</strong> <span id="display_residential_city">{{user.address.city}}</span></p>
+                                <p><strong>Province:</strong> <span id="display_residential_province">{{user.address.province}}</span></p>
+                                <p><strong>Postal Code:</strong> <span id="display_residential_postal_code">{{user.address.postal_code}}</span></p>
                 
-                <th>Document Type</th>
-                <th>Date Uploaded</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-				
-					{% for document in seeker.supportingdocuments_set.all %}
-                    <tr>
-                        <td>{{ document.document_type }}</td>
-                        <td>{{ document.uploaded_at }}</td>
-                       
-                        <td><a href="{{document.document.url}}" class="btn btn-primary my-1"> View </a>  <a href="{{document.document.url}}" class="btn btn-dark my-1" download> Download </a> 
-                       
-                    </tr>
-                    {% endfor %}
-              
-          </tbody>
-        </table>
-		</div>
-		</div>
+                                {% else %}
+                                    <p>No address details available.</p>
+                                {% endif %}
+                               
+                            </div>
+                            <div class="col-6 shadow-sm p-3 rounded">
+                                <h5>Refference</h5>
+                                <hr style="color: red;">
+                                 {% for reference in seeker.reference.all %}
+								                    <p><strong>Work Experience:</strong>{{ reference.working_experince }} - {{ reference.working_experince.job_title }}</p>
+								                    <p><strong>Full Name:</strong> {{ reference.full_name }}</p>
+								                    <p><strong>Contact Information:</strong> {{ reference.phone }}</p>
+								                    <p><strong>Position/Relationship:</strong> {{ reference.position }}</p>
+								                    
+								                    
+								                    <hr>
+								                {% empty %}
+								                    <p>No references available.</p>
+								                {% endfor %}
+                               
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="tab-pane fade" id="companyinformation" role="tabpanel" aria-labelledby="pills-company-tab">
+                    	<div class="d-flex justify-content-between">
+                    		
+                        <h4> 	Application Information </h4>
+                        	{% if application.filterd_out == True and application.is_filter_applied == True and application.status == 'pending' %}
+                        	<a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a>
+                        	{% elif application.status == "short_list" %}
+                        	<div>
+                        		<button type="button" class="btn btn-success p-1"   onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
+                               <i class="fa fa-plus"></i> interview
+                              </button>
+
+                               <!--  <a class="btn btn-danger p-1" onclick="reject_applicantion({{application.id}})" data-bs-placement="top" title="Reject application">
+                                  <i class="fa fa-trash"></i> Reject
+                                </a> -->
+                                <button type="button" class="btn btn-danger " data-bs-toggle="modal" data-bs-target="#exampleModal">
+															 <i class="fa fa-trash"></i> Reject
+															</button>
+                        	</div>
+                        	{% elif application.status == "interview" %}
+                        	<div>
+                        	<a onclick="approve_interview({{application.id}})" class="btn btn-success p-1 mx-1" data-bs-placement="top" title="Approve interview"><i class="fa fa-check"></i>Approve Application</a>
+                        	 <!-- <a class="btn btn-danger p-1" onclick="reject_applicantion({{application.id}})" data-bs-placement="top" title="Reject application">
+                                  
+                                </a> -->
+
+                              <button type="button" class="btn btn-danger " data-bs-toggle="modal" data-bs-target="#exampleModal">
+															 <i class="fa fa-trash"></i> Reject
+															</button>
+
+                            </div>
+                           {% elif application.status == "rejected" %}
+                           	<a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a>
+                        	{% endif %}
+                    	</div>
+                        <hr style="color: blue;">
+                        <div class="row">
+                        		<div class="col-6 shadow-lg p-3 rounded mb-5 d-flex justify-content-between w-100">
+                            <div class="col-6">
+                                <h5>Application </h5>
+                                <hr style="color: red;">
+                                <p><b>Job Title:</b> {{application.job.title}} </p>
+                                <p><b>Date:</b> {{application.date}}</p>
+                                <p><b>Status:</b> {{application.status}}</p>
+                                <p><b>Previous Stage: </b> {{application.previous_stage}} </p>
+                                <p><b>Current Stage: </b> {{application.current_stage}} </p>
+                            </div>
+                            <div class="col-6">
+                                <h5>Filter Information</h5>
+                                <hr style="color: red;">
+                                <p><b>is application filterd: </b> {% if application.is_filter %}YES{% else %}NO{% endif %}</p>
+
+                                {% if application.filterd_out %}
+                                		<p><b>Can Move to next Stage:</b> YES</p>
+                                {% else %}
+                                 		<p><b>Can Move to next Stage:</b> NO</p>
+                                {% endif %}
+
+                                {% if not application.filterd_out%}
+                                <ul>
+                               		<li> <p><b>Reason: </b> {{application.reason}} </p></li>
+                                	
+                                </ul>
+                                {% endif %}
+
+                                {% if application.is_rejected %}
+                                <p><b>Is Rejected:</b> YES</p>
+                                <ul>
+                                		<li> <p><b>Reason: </b> {{application.reason}} </p></li>
+                                	
+                                </ul>
+                                {% endif %}
+                               
+
+                                <p><b>Is filter applied:</b> {% if application.is_filter_applied %}YES{% else %}NO{% endif %}</p>
+                                <!-- Salary is not displayed -->
+                            </div>
+                          </div>
+                             <div class="col-12 shadow-lg p-3 rounded mb-5">
+                                <h5>Quiz Results</h5>
+                                <hr style="color: blue;">
+                                <table class="table">
+                                    <thead class="bg-dark">
+                                        <tr class="text-white">
+                                            
+                                          <th style="padding: 10px; text-align: left; font-weight: bold;">Date </th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Quiz name</th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Results</th>
+                                       
+                                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-secondary">
+                                      <tr>
+                                      	<td>
+                                      		{{quiz.date}}
+                                      	</td>
+                                      	<td>
+                                      			{{quiz.quiz}}
+                                      	</td>
+                                      	<td>
+                                      			{{quiz.results}}
+                                      	</td>
+
+                                      </tr>
+                                     </tbody>
+                                </table>
+                                <!-- Salary is not displayed -->
+                            </div>
+                             {% if application.application.all %}
+                          <div class="col-12 shadow-lg p-3 rounded mb-5">
+                                <h5>Interview Date</h5>
+                                <hr style="color: blue;">
+											        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+											            <thead>
+											                <tr style="background-color: #f8f8f8; border-bottom: 2px solid #ddd;">
+											                    <th style="padding: 10px; text-align: left; font-weight: bold;">Job Title</th>
+											                    <th style="padding: 10px; text-align: left; font-weight: bold;">Date</th>
+											                    <th style="padding: 10px; text-align: left; font-weight: bold;">Start Time</th>
+											                    <th style="padding: 10px; text-align: left; font-weight: bold;">End Time</th>
+											                </tr>
+											            </thead>
+											            <tbody>
+											               
+											                    {% for interview in application.application.all %}
+											                    <tr style="border-bottom: 1px solid #eee;">
+											                        <td style="padding: 10px;">{{ interview.application.job.title }}</td>
+											                        <td style="padding: 10px;">{{ interview.date }}</td>
+											                        <td style="padding: 10px;">{{ interview.start_time }}</td>
+											                        <td style="padding: 10px;">{{ interview.end_time }}</td>
+											                    </tr>
+											                    {% endfor %}
+											             
+											               
+											            </tbody>
+											        </table>
+
+                            </div>
+                             {% endif %}
+                            <div class="col-12 shadow-lg p-3 rounded">
+                                <h5>Application stages </h5>
+                                <hr style="color: blue;">
+                                <table class="table table-bordered table-striped bg-dark">
+                                    <thead class="bg-dark">
+                                        <tr class="text-white">
+                                            
+                                          <th style="padding: 10px; text-align: left; font-weight: bold;">Date Changed</th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Message</th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Status</th>
+                                       
+                                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-secondary">
+                                        {% for feedback in feedbacks %}
+                                        
+                                        <tr class="text-white bg-dark">
+                                           
+                                             <td style="padding: 10px;">{{ feedback.timestamp|date:"Y-m-d" }}</td>
+                                            <td style="padding: 10px;">{{ feedback.message }}</td>
+                                            <td style="padding: 10px;">
+                                                {% if feedback.status == "pending" %}
+                                
+                                <button class="btn btn-warning pt-0 pb-0"> {{ feedback.status }}</button>
+                                {% elif feedback.status == "rejected" %}
+                                 <button class="btn btn-danger pt-0 pb-0"> {{ feedback.status }}</button>
+                                 {% elif feedback.status == "approved" %}
+                                  <button class="btn btn-success pt-0 pb-0"> {{ feedback.status }}</button>
+                                  {% elif feedback.status == "Interview" %}
+                                 <button class="btn btn-success pt-0 pb-0"> {{ feedback.status }}</button>
+                                 {% elif feedback.status == "Short-List" %}
+                                 <button class="btn btn-info pt-0 pb-0"> {{ feedback.status }}</button>
+                                 {% else %}
+                                 <button class="btn btn-dark pt-0 pb-0"> {{ feedback.status }}</button>
+
+                                {% endif %}
+                                            </td>
+                                                               
+                                           
+                                        </tr>
+                                       
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vacancies Created -->
+                    <div class="tab-pane fade" id="vacanciesc" role="tabpanel" aria-labelledby="pills-vacancies-tab">
+                        <h4>Experiences & Skills & Qualifications</h4>
+                        <hr style="color: blue;">
+                        <div class="row">
+                        	<div class="col-6  p-0   border-end border-dark">
+                                <h5 class="p-2"><b> {{seeker.first_name }} {{ seeker.last_name}} Application Details</b></h5>
+                                <hr style="color: black;">
+                               
+								              
+                            </div>
+                            <div class="col-6  p-0 rounded ">
+                                <h5 class="p-2"> <b>Job Requried details</b></h5>
+                                <hr style="color: black;">
+                               
+                            </div>
+                          
+                            <div class="col-6  p-3 border-end border-dark">
+                                <h5>Work Experience {% if 'experience' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}
+															</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded"style="max-height: 310px; overflow-y: scroll; overflow-x: auto;  background-color: rgb(238, 246, 255); ">
+                                {% for experience in seeker.working_expereince.all %}
+								                    <p><strong>Job Title:</strong> {{ experience.job_title.title }}</p>
+								                    <p><strong>Start Date:</strong> {{ experience.start_date }}</p>
+								                    <p><strong>End Date:</strong> {{ experience.end_date }}</p>
+
+								                    <hr>
+								                {% empty %}
+								                    <p>No working experience available.</p>
+								                {% endfor %}
+								              </div>
+                            </div>
+                            <div class="col-6  p-3 rounded ">
+                                <h5>Required Work Experience</h5>
+                                <hr style="color: red;">
+                                <div class="p-3  border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+	                              
+
+											                {% for experience in application.job.experiences.all %}
+											               
+											                    <div class="ms-2 me-auto">
+											                      <div class="fw-bold">{{experience.name}}</div>
+											                       {{experience.duration}} years
+											                       {{application.job.title}}
+											                       
+											                    </div>
+											                    
+											             	<hr style="color: black;">
+											                 {% empty %}
+									                    <p>No Experience available.</p>
+											                {% endfor %}
+											              
+                                </div>
+                            </div>
+
+
+                            <div class="col-6  p-3 border-end border-dark">
+                                <h5>Academic Qualification {% if 'academic' in application.reason or 'Academic' in application.reason or 'Qualification' in application.reason or 'qualification' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3  border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                {% for qualification in seeker.qualifications.all %}
+                                    <p><strong>Field of study:</strong> {{ qualification.field_of_study }}</p>
+                                    <p><strong>NQF Level:</strong> {{ qualification.nqf_level }}</p>
+                                   
+                                    <p><strong>Institution:</strong> {{ qualification.institution }}</p>
+                                    <p><strong>Start date:</strong> {{ qualification.start_date }}</p>
+                                    <p><strong>End date:</strong> {{ qualification.end_date }}</p>
+                                    <p><strong>Status:</strong> {{ qualification.status }}</p>
+                                    <hr>
+                                {% empty %}
+                                    <p>No academic qualifications available.</p>
+                                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6  p-3  ">
+                                <h5>Required Academic Qualification</h5>
+                                <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                            
+										                {% for education in application.job.educations.all %}
+										             
+										                    <div class="ms-2 me-auto">
+										                      <div class="fw-bold">{{education.field_of_study}}</div>
+										                       {{education.nqf_level}}
+										                    </div>    
+										              
+										                <hr style="color: black;">
+										                 {% empty %}
+									                    <p>No Qualification  available.</p>
+										                {% endfor %}
+										            
+										            </div>
+                               
+                            </div>
+
+
+                             <div class="col-6  p-3  border-end border-dark">
+                                <h5>Soft Skills  {% if 'soft' in application.reason or 'Soft' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                {% for skill in seeker.softskills_set.all %}
+								                    <p><strong>Soft Skill:</strong> {{ skill.skill }}</p>
+								                    <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
+								                
+
+								                    <hr>
+								                {% empty %}
+								                    <p>No soft skills available.</p>
+								                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6 p-3 ">
+                                <h5>Required Soft Skills</h5>
+                                <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+                                 
+																{% for skill in application.job.S_skills.all %}
+																  
+																       <div class="ms-2 me-auto">
+																         <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+																                      {{skill.level}} 
+																       </div>
+																                    
+																   <hr style="color: black;">
+																     {% empty %}
+									                    <p>No Soft skills available.</p>
+																                
+																 {% endfor %}
+																 
+																</div>
+                                
+                            </div>
+                             <div class="col-6  p-3 border-end border-dark">
+                                <h5>Computer Skills  {% if 'computer' in application.reason or 'Computer' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%}</h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded"  style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                 {% for skill in seeker.computerskills_set.all %}
+									                    <p><strong>Skill:</strong> {{ skill.skill }}</p>
+									                    <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
+									                  
+
+									                    <hr>
+									                {% empty %}
+									                    <p>No computer skills available.</p>
+									                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6 p-3  ">
+                                <h5>Required Computer Skills</h5>
+                                <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+                                
+									                {% for skill in application.job.C_skills.all %}
+									               
+									                    <div class="ms-2 me-auto">
+									                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+									                      {{skill.level}} 
+									                    </div>
+
+									                    <hr>
+									                    {% empty %}
+									                    <p>No computer skills available.</p>
+									              
+									                {% endfor %}
+									              
+									             </div>
+                               
+                            </div>
+                      
+
+
+                        <div class="col-6  p-3  border-end border-dark">
+                                <h5>Language {% if 'language' in application.reason or 'Language' in application.reason or 'Langauge' in application.reason  or 'langauge' in application.reason %} <i class="fa fa-times fa-x3 text-danger"></i>{% endif%} </h5>
+                                <hr style="color: skyblue;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+
+                                  {% for language in seeker.language_set.all %}
+                                    <p><strong>Language:</strong> {{ language.language }}</p>
+                                    <p><strong>Reading Level:</strong> {{ language.reading_proficiency }}</p>
+                                    <p><strong>Writing Level:</strong> {{ language.writing_proficiency }}</p>
+                                    <p><strong>Speaking Level:</strong> {{ language.speaking_proficiency }}</p>
+                   
+                                    <hr>
+                                    {% empty%}
+                               			<p>No Languages available.</p>
+                                {% endfor %}
+                              </div>
+                            </div>
+                            <div class="col-6 p-3">
+                                <h5>Required Lanuage </h5>
+                                 <hr style="color: red;">
+                                <div class="p-3 border border-dark-subtle rounded" style="max-height: 310px; overflow-y: scroll; overflow-x: scroll; background-color: rgb(238, 246, 255);">
+                                 {% for langauge in application.job.j_languages.all %}
+									            
+									                    <div class="ms-2 me-auto">
+									                      <div class="fw-bold"> Language : {{langauge}} </div>
+									                      <span> Speaking : {{langauge.speaking_proficiency.proficiency}} </span> <br>
+									                       <span> Reading :{{langauge.reading_proficiency.proficiency}}  </span> <br>
+									                        <span> Writing : {{langauge.writing_proficiency.proficiency}}</span> 
+									                    </div>
+									                    <hr>
+									             		  {% empty %}
+									                    <p>No Languages skills available.</p>
+									                
+									                {% endfor %}
+									                
+									            
+                               
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <!-- supporting_documents -->
+                    <div class="tab-pane fade" id="supporting_documents" role="tabpanel" aria-labelledby="pills-supporting_documents-tab">
+                        <h4 class="">Supporting Documents</h4>
+												<hr>
+												<div class="row d-flex justify-content-center ">
+														<table class="table table-bordered table-striped">
+									            <thead>
+									              <tr>
+									               
+									                
+									                <th>Document Type</th>
+									                <th>Date Uploaded</th>
+									                <th>Action</th>
+									              </tr>
+									            </thead>
+									            <tbody>
+													
+														{% for document in seeker.documents.all %} 
+									                    <tr>
+									                        <td>{{ document.document_type }}</td>
+									                        <td>{{ document.uploaded_at }}</td>
+									                       
+									                        <td><a href="{{document.document.url}}" class="btn btn-primary my-1"> View </a>  <a href="{{document.document.url}}" class="btn btn-dark my-1" download> Download </a> 
+									                       
+									                    </tr>
+									                    {% endfor %}
+									              
+									          </tbody>
+									        </table>
+											</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+ <div class="modal fade"id="interview{{application.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog ">
+        <div class="modal-content ">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Set Interview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Title</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" value="{{seeker.first_name}} {{seeker.last_name}} - {{seeker.email}}" disabled>
+            </div>
+            <div class="form-group w-100">
+              <label for="endDate">Select Date</label>
+              <input type="date" value="" class="form-control" id="date_time{{application.id}}">
+            </div>
+            <div class="d-flex justify-content-between">
+              <div class="form-group w-100 m-1" style="position:relative;">
+                <label for="start_time">Start Time:</label>
+                <input class="form-control" value="" type="time" id="date_start_time{{application.id}}" value="" />
+              </div>
+              <div class="form-group w-100 m-1 " style="position:relative;" value="">
+                <label for="end_time">End Time:</label>
+                <input class="form-control" type="time" value="" id="date_end_time{{application.id}}" value="" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="set_interview({{application.id}})">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Rejection Note</b></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+       	<label for="message" class="form-label"><h6><i class="fa fa-circle-info text-info"> </i> Add Note or Message to outline Application Rejection</h6></label>
+       	<label for="message" class="form-label">message - requied field</label>
+       		<input class="form-control" type="text" id="message{{application.id}}" required></input>
+       </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" onclick="reject_applicantion({{application.id}})">Reject</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+	
+	  function openModal(modalId,appId) {
+      var modalElement = document.getElementById(modalId);
+      var modal = new bootstrap.Modal(modalElement);
+       flatpickr("#date_end_time"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+                  flatpickr("#date_start_time"+appId, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                  });
+      // Show the modal
+      modal.show();
+
+      // Initialize datetimepicker once the modal is fully shown
+     
+    }
+</script>
 {% endblock %}

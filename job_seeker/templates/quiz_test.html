@@ -1,0 +1,91 @@
+{% extends 'job_seeker_dashboard.html' %}
+
+{% block title %}Quiz - test{% endblock %}
+
+
+
+{% block content %}
+
+
+        <div class="container my-5" id="addStaffPageComplete" style="display: none;">
+            <div class="d-flex flex-column align-items-center">
+                <i class="fa fa-user-plus fa-5x text-success mb-3" aria-hidden="true"></i>
+                <h4 class="mt-3">Quiz Added Successfully</h4>
+                <a href="{% url 'dashboard.view_staff' %}" class="btn btn-warning">View All</a>
+            </div>
+        </div>
+
+        <div id="addStaffPage" class="form-container">
+            <div class="d-flex justify-content-center">
+                <div class="card shadow-lg p-4 w-75">
+                    <h5 class="card-title mb-4">Quiz Rules </h5>
+                   
+                    	
+                        <div class="row">
+                             <div class="form-group w-100">
+                                    <ul>
+                                    	<li>
+                                    		you have to complete the test before the time runs out
+                                    	</li>
+                                    	<li>
+                                    		if time runs out before you finish, the test will submit automatically 
+                                    	</li>
+                                    	<li>
+                                    		you have 30 minutes to complete  he quiz
+                                    	</li>
+                                    	<li>
+                                    		Answer all questons 
+                                    	</li>
+                                    </ul>
+                                </div>
+                            {% if quiz %}
+                               <!--  <div class="form-control w-100">
+                                    <label for="username">Answer the following questions </label>
+                                </div> -->
+                                <hr>
+                            <div class="w-100">
+                                <h5>Questions </h5>
+                                
+                                <hr>
+                                 <form method="post"  id='myForm' >
+                                 	<input type="text" name="quiz" value="{{quiz.id}}" hidden>
+                                 	<input type="text" name="jobID" value="{{jobID}}" hidden>
+                                {% for question in quiz.questions.all %}
+                                <h6>
+                                    {{question.question_text}} ?
+                                </h6>
+                                    <select class="form-control" name="question{{question.id}}">
+                                    	<option value="" selected>
+                                    		Choose answer
+                                    	</option>
+                                    	{% for answer in question.answers.all %}
+                                    	<option value="{{answer.id}}" >
+                                    		{{answer.answer_text}}
+                                    	</option>
+                                    	{% endfor %}
+                                    </select> 
+                                    <br>
+                                    <br>
+                                
+                                {% endfor %}
+                                </form>
+                                
+                      
+                            {% endif %}
+                         
+
+                        </div> 
+                        {% if quiz in user.quizresults_set.all %}
+						<button type="button"   class="btn btn-info w-100" disabled>Quiz Already Submited</button>
+						{% else %}
+						<button type="button" onclick="take_quiz()"  class="btn btn-info w-100">Submit and apply</button>
+
+						{% endif %}
+                       
+                    
+                </div>
+            </div>
+        </div>
+   
+  
+{% endblock %}

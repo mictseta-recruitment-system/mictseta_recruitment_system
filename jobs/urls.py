@@ -30,6 +30,13 @@ urlpatterns = [
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
     path('move_to_shortlist/', views.move_to_shortlist, name='move_to_shortlist'),
     path('auto_filter/', views.auto_filter, name='auto_filter'),
+    path('apply_filter/', views.apply_filter, name='apply_filter'),
+     path('hide_filter/', views.hide_filter, name='hide_filter'),
+     path('show_filter/', views.show_filter, name='show_filter'),
+     path('reset_filter/', views.reset_filter, name='reset_filter'),
+    path('auto_move_to_shortlist/', views.auto_move_to_shortlist, name='auto_move_to_shortlist'),
+    
+   
     path('approve_interview/', views.approve_interview, name='approve_interview'),
     path('reject_applicantion/', views.reject_applicantion, name='reject_applicantion'),
     path('purge/', views.purge, name='purge'),
@@ -43,8 +50,8 @@ urlpatterns = [
     path('add_answer/', views.add_answer, name='add_answer'),
     path('delete_answer/', views.delete_answer, name='delete_answer'),
     path('take_quiz/', views.take_quiz, name='take_quiz'),
+     path('enable_or_disable_quiz/', views.enable_or_disable_quiz, name='enable_or_disable_quiz'),
 
-    
 
 
     # path('delete_user/', views.delete_user, name='delete_user')

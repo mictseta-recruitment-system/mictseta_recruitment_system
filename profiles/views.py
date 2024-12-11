@@ -651,6 +651,38 @@ def add_staff(request):
     except Exception as e:
         return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
    
+@csrf_protect
+def enable_disable_staff(request):
+    if not request.user.is_authenticated:    
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.user.is_superuser:
+        return JsonResponse({'errors': { "Unauthorized" : ['You dont have the The Permission to make this request']}, 'status':'error'}, status=403)
+
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+        
+    current_time = now()
+    for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+        if leave.start_date <= current_time <= leave.end_date:
+            return HttpResponse("Request denied: you are on leave")
+
+    username = json_data.get('username')
+    if not username:
+        return JsonResponse({'errors': { "invalid staff" : ['Staff username cannot be empty']}, 'status':'error'}, status=403)
+    staff = User.objects.filter(username=username).first()
+    if not staff:
+        return JsonResponse({'errors': { "invalid staff" : ['Staff does not exists']}, 'status':'error'}, status=403)
+    if staff.is_active:
+        staff.is_active = False
+    else:
+        staff.is_active = True
+        
+    staff.save()
+    return JsonResponse({'message':f'Staff profile for {staff.first_name} {staff.last_name} is updated successfuly', 'status':'success'}, status=201) 
 
 @csrf_protect
 def update_staff(request):

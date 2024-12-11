@@ -45,20 +45,21 @@
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                displayModalFeedback(false, data.errors,"personalDetailsModals");
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
+                  displayModalFeedback(false, "An unknown error occurred","personalDetailsModals");
               }
             } else if (data.status === "success") {
                 
-                showFlashMessage(data.message, "success");
+                 displayModalFeedback(true, data.message,"personalDetailsModals");
 
             } else if (data.status === "warning") {
                 
-                showFlashMessage(data.message, "warning");
+                 displayModalFeedback(false, data.message,"personalDetailsModals");
             }
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+               displayModalFeedback(false, "An unknown error occurred","personalDetailsModals");
             console.error("Error:", error);
           });
     }
@@ -96,20 +97,20 @@
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                  displayModalFeedback(false, data.errors,"academicQualificationsModals");
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
+                   displayModalFeedback(false, "An unknown error occurred","academicQualificationsModals");
+
               }
             } else if (data.status === "success") {
-                location.reload();
-                showFlashMessage(data.message, "success");
+                displayModalFeedback(true, data.message,"academicQualificationsModals");
 
             } else if (data.status === "warning") {
       
-                showFlashMessage(data.message, "warning");
-            }
+            displayModalFeedback(false, data.message,"academicQualificationsModals");            }
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+             displayModalFeedback(false, "An unknown error occurred","academicQualificationsModals");
             console.error("Error:", error);
           });
     }
@@ -142,20 +143,22 @@
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                  displayModalFeedback(false, data.errors,"languageProficiencyModals");
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
+                               displayModalFeedback(false, "An unknown error occurred","languageProficiencyModals");
+
               }
             } else if (data.status === "success") {
                
-                showFlashMessage(data.message, "success");
-                 location.reload();
+                displayModalFeedback(true, data.message,"languageProficiencyModals");
             } else if (data.status === "warning") {
       
-                showFlashMessage(data.message, "warning");
+                displayModalFeedback(false, data.message,"languageProficiencyModals");
             }
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+                           displayModalFeedback(false, "An unknown error occurred","languageProficiencyModals");
+
             console.error("Error:", error);
           });
     }
@@ -184,20 +187,24 @@
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                 displayModalFeedback(false, data.errors,"computerSkillsModals");
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
+                                displayModalFeedback(false, "An unknown error occurred","computerSkillsModals");
+
               }
             } else if (data.status === "success") {
-               
-                showFlashMessage(data.message, "success");
-                 location.reload();
+             
+          displayModalFeedback(true, data.message,"computerSkillsModals");
+
             } else if (data.status === "warning") {
       
-                showFlashMessage(data.message, "warning");
+                
+                 displayModalFeedback(false, data.message,"computerSkillsModals");
             }
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+                            displayModalFeedback(false, "An unknown error occurred","computerSkillsModals");
+
             console.error("Error:", error);
           });
     }
@@ -226,20 +233,23 @@
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                displayModalFeedback(false, data.errors,"softSkillsModals");
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
+                displayModalFeedback(false, "An unknown error occurred","softSkillsModals");
               }
             } else if (data.status === "success") {
                
-                showFlashMessage(data.message, "success");
-                 location.reload();
+                 displayModalFeedback(true, data.message,"softSkillsModals");
             } else if (data.status === "warning") {
       
-                showFlashMessage(data.message, "warning");
+               displayModalFeedback(false, data.errors,"softSkillsModals");
             }
+
+
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+                          displayModalFeedback(false, "An unknown error occurred","softSkillsModals");
+
             console.error("Error:", error);
           });
     }
@@ -271,20 +281,23 @@ function handle_update_address_button_click() {
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                displayModalFeedback(false, data.errors,"addressDetailsModals");
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
+                                          displayModalFeedback(false, "An unknown error occurred","addressDetailsModals");
+
               }
             } else if (data.status === "success") {
                
-                showFlashMessage(data.message, "success");
-                 location.reload();
+                displayModalFeedback(true, data.message,"addressDetailsModals");
+                 
             } else if (data.status === "warning") {
       
-                showFlashMessage(data.message, "warning");
+               displayModalFeedback(false, data.message,"addressDetailsModals");
             }
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+                                      displayModalFeedback(false, "An unknown error occurred","addressDetailsModals");
+
             console.error("Error:", error);
           });
     }
@@ -329,20 +342,25 @@ function handle_update_working_experince_button_click() {
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                displayModalFeedback(false, data.errors,"addExperienceModals");
+
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
+                displayModalFeedback(false, "An unknown error occurred","addExperienceModals");
+
               }
             } else if (data.status === "success") {
                
-                showFlashMessage(data.message, "success");
-                 location.reload();
+             displayModalFeedback(true, data.message,"addExperienceModals");
+
             } else if (data.status === "warning") {
       
-                showFlashMessage(data.message, "warning");
+                displayModalFeedback(false, data.message,"addExperienceModals");
             }
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+            
+            displayModalFeedback(false, "An unknown error occurred","addExperienceModals");
+
             console.error("Error:", error);
           });
     }
@@ -375,20 +393,20 @@ function handle_update_reference_button_click() {
              console.log(data.errors)
               if (data.errors) {
                 handleErrors(data.errors);
+                 displayModalFeedback(false, data.errors,"referencesModals");
               } else {
-                showFlashMessage("An unknown error occurred", "danger");
-              }
+                 displayModalFeedback(false, "An unknown error occurred","referencesModals");              }
             } else if (data.status === "success") {
                
-                showFlashMessage(data.message, "success");
-                 location.reload();
+                 displayModalFeedback(true, data.message,"referencesModals");
+                 
             } else if (data.status === "warning") {
       
-                showFlashMessage(data.message, "warning");
+                 displayModalFeedback(false, data.message,"referencesModals");
             }
           })
           .catch((error) => {
-            showFlashMessage("An unexpected error occurred", "danger");
+           displayModalFeedback(false, "An unknown error occurred","referencesModals");
             console.error("Error:", error);
           });
     }
@@ -421,17 +439,63 @@ function uploadDocument(d_type, event) {
     .then(data => {
     
         if (data.status === 'success') {
-            showFlashMessage('document uploaded successfully ', "success");
-        
+            displayModalFeedback(true, data.message,"supportingDocumentsModals");
         } else {
           
-            showFlashMessage('Error uploading document: ' + JSON.stringify(data.errors), "danger");
+            displayModalFeedback(false, data.errors,"supportingDocumentsModals");
         }
     })
     .catch(error => {
         console.error('Error:', error);
         showFlashMessage(error, "danger");
     });
+}
+
+function take_quiz() {
+  const url = 'http://127.0.0.1:8000/job/take_quiz/';
+  
+  const form = document.getElementById('myForm');
+ 
+  const formData = new FormData(form);
+
+  // Example: Convert formData to JSON object if needed
+  const formDataObject = {};
+  formData.forEach((value, key) => {
+    formDataObject[key] = value;
+  });
+
+  console.log(formData)
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(formDataObject),
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+      location.reload();
+      showFlashMessage(data.message, "success");
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
 }
 
 
@@ -478,4 +542,33 @@ document.getElementById('flash-message-container').innerHTML=``;
       }
     }
   }
+}
+
+function displayModalFeedback(success, message,modal) {
+    const modalBody = document.getElementById(modal);
+
+    // Create feedback content
+    if (success) {
+        modalBody.innerHTML = `
+            <div class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+                <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                <p class="mt-3 text-success">${message}</p>
+            </div>
+        `;
+    } else {
+        const errorMessage = typeof message === 'string' ? message : Object.entries(message)
+            .map(([key, errors]) => `${key}: ${errors.join(', ')}`).join('<br>');
+
+        modalBody.innerHTML = `
+            <div class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+                <i class="fas fa-times-circle text-danger" style="font-size: 5rem;"></i>
+                <p class="mt-3 text-danger">${errorMessage}</p>
+            </div>
+        `;
+    }
+
+    // Wait for 6 seconds and refresh the page
+    setTimeout(() => {
+        window.location.reload();
+    }, 6000);
 }

@@ -32,7 +32,7 @@
             transition: transform 0.3s;
             margin-bottom: 20px;
             padding: 15px;
-        }
+        } 
 
         .card:hover {
             transform: translateY(-5px);
@@ -133,6 +133,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'log_out' %}">Logout</a>
                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'generate_cv' %}">Generate cv</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -144,27 +147,27 @@
             <div class="row progress-container">
                 <div class="col-6">
                     <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">80% Personal Details</div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_profile}}%;" aria-valuenow="{{stat_profile}}" aria-valuemin="0" aria-valuemax="100">{{stat_profile}}% Personal Details</div>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">70% Address Details</div>
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{stat_address}}%;" aria-valuenow="{{stat_address}}" aria-valuemin="0" aria-valuemax="100">{{stat_address}}% Address Details</div>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">90% Academic Qualifications</div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_academic}}%;" aria-valuenow="{{stat_academic}}" aria-valuemin="0" aria-valuemax="100">{{stat_academic}}% Academic Qualifications</div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="progress">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60% Language Proficiency</div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{stat_lang}}%;" aria-valuenow="{{stat_lang}}" aria-valuemin="0" aria-valuemax="100">{{stat_lang}}% Language Proficiency</div>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50% Computer Skills</div>
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{stat_comp}}%;" aria-valuenow="{{stat_comp}}" aria-valuemin="0" aria-valuemax="100">{{stat_comp}}% Computer Skills</div>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 95%;" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">95% Soft Skills</div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_soft}}%;" aria-valuenow="{{stat_soft}}" aria-valuemin="0" aria-valuemax="100">{{stat_soft}}% Soft Skills</div>
                     </div>
                     <div class="progress">
-                        <div class="progress-bar bg-secondary" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40% Supporting Documents</div>
+                        <div class="progress-bar bg-secondary" role="progressbar" style="width: {{stat_doc}}%;" aria-valuenow="{{stat_doc}}" aria-valuemin="0" aria-valuemax="100">{{stat_doc}}% Supporting Documents</div>
                     </div>
                 </div>
             </div>
@@ -194,7 +197,7 @@
                                 <p><strong>First Name:</strong> {{ user.first_name }}</p>
                                 <p><strong>Surname:</strong> {{ user.last_name }}</p>
                                 <p><strong>Gender:</strong> {{ user.profile.gender }}</p>
-                                <p><strong>Marital Status:</strong> {{ user.profile.marital_status }}</p>
+                                <p><strong>Marital Status:</strong> {{ user.profile.maritial_status }}</p>
                                 <p><strong>Race:</strong> {{ user.profile.race }}</p>
                                 <p><strong>Date of Birth:</strong> {{ user.profile.dob }}</p>
                                 <p><strong>Disability:</strong> {{ user.profile.disability }}</p>
@@ -466,7 +469,7 @@
                 </button>
             </div>
             
-            <div class="modal-body">
+            <div class="modal-body" id="personalDetailsModals">
                 <form>
                     <div class="row">
                         <div class="col-md-6 col-12"> <!-- col-12 ensures full width on mobile -->
@@ -575,7 +578,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="addressDetailsModals">
                 <form method="post">
                     {% csrf_token %}
                     <div class="row">
@@ -637,7 +640,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="academicQualificationsModals">
                 <form id="academicQualificationForm">
                     <div class="form-group">
                         <label for="institution" class="form-label">Institution</label>
@@ -709,7 +712,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="languageProficiencyModals">
                     <form>
                         <div class="form-group">
                             <label for="language">Language:</label>
@@ -772,7 +775,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="computerSkillsModals">
                 <form id="computerSkillsForm">
                     <div class="form-group">
                         <label for="skill1">Computer Skill</label>
@@ -815,7 +818,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="softSkillsModals">
                     <form id="softSkillsForm">
                         <div class="form-group">
                             <label for="softskill1">Soft Skill</label>
@@ -826,10 +829,6 @@
                                 {% endfor %}
                             </select>
                         </div>
-                       <!--  <div class="form-group" id="other-soft-skill-group" style="display: none;">
-                            <label for="otherSoftSkill">Specify Skill</label>
-                            <input type="text" class="form-control" id="otherSoftSkill" name="otherSoftSkill">
-                        </div> -->
                         <div class="form-group">
                             <label for="proficiency1">Proficiency Level</label>
                             <select id="proficiency1" class="form-control" name="proficiency1">
@@ -859,7 +858,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="addExperienceModals">
                 <form>
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -934,7 +933,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="referencesModals">
                 <form id="referenceForm">
                    
                         
@@ -982,7 +981,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="supportingDocumentsModals">
                 Upload your supporting documents here.
                 <!-- Add document upload forms -->
                 <form id="license-upload-form" method="POST" enctype="multipart/form-data">

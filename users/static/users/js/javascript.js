@@ -1,37 +1,4 @@
 
-function deleteUser(username) {
-    
-    const url = 'http://127.0.0.1:8000/user/delete_user/';  // Replace with your actual endpoint URL
-    const data = {
-        username: username,
-    };
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')  // Function to get CSRF token
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'success') {
-            location.reload();
-            showFlashMessage(result.message, "success");
-           
-        } else {
-            
-            showFlashMessage(result.errors, "danger");
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showFlashMessage(error, "danger");
-        showFlashMessage('An error occurred. Check the console for details.', "danger");
-       
-    });
-}
 
 function handleErrors(errors) {
   for (const key in errors) {

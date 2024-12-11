@@ -28,16 +28,18 @@ urlpatterns = [
     path('login_events/', views.login_events, name="dashboard.login_events"),
     path('job_applications/', views.job_applications, name="dashboard.job_applications"),
     path('calender/', views.calender, name="dashboard.calender"),
+    path('edit_job/<jobID>', views.edit_job, name="dashboard.edit_job"),
     
-    path('jobsekeer_details/<seekerID>', views.jobsekeer_details, name="dashboard.jobsekeer_details"),
-     path('filter_job_application/<int:jobID>', views.filter_job_application, name='filter_job_application'),
+    
+    path('jobsekeer_details/<seekerID>/<jobID>', views.jobsekeer_details, name="dashboard.jobsekeer_details"),
+    path('filter_job_application/<int:jobID>', views.filter_job_application, name='filter_job_application'),
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),
     path('leave/report/pdf/', views.leave_generate_pdf_report, name='dashboard.leave_generate_pdf_report'),
     path('login_events/report/pdf/', views.login_events_generate_pdf_report, name='dashboard.login_events_generate_pdf_report'),
     path('crud_events/report/pdf/', views.crud_events_generate_pdf_report, name='dashboard.crud_events_generate_pdf_report'),
 
     path('new_quiz/<job_id>', views.new_quiz, name="dashboard.new_quiz"),
-    
+   
 
 
     

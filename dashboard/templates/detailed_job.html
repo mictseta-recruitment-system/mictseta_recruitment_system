@@ -1,19 +1,27 @@
 {% extends 'dashboard_base.html' %}
 
- {% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Recruitment</li>
-      <li class="breadcrumb-item active" aria-current="page">Manage</li>
-      <li class="breadcrumb-item active" aria-current="page">Job Details</li>
+
+     {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      <li class="breadcrumb-item active" aria-current="page"> {{job.title}} </li>
+
       
-     {% endblock %}
+ {% endblock %}
 
 {% block head %} Job Details {% endblock %}
-
+ 
 {% block content %}
-<div class="job-details-container">
+
+<div class="job-details-container mt-5">
   <div class="card shadow  mb-5 bg-body rounded">
-    <div class="card-header">
-      Job Title: <span id="jobTitle">{{job.title}}</span>
+    <div class="card-header d-flex justify-content-between">
+      <span>Job Title: <span id="jobTitle">{{job.title}}</span></span>
+      <div>
+        <a href="/dashboard/filter_job_application/{{job.id}}"  class="btn btn-info ">view Applications </a>
+        <a href=" /dashboard/edit_job/{{job.id}}"  class="btn btn-warning "><i class="fa fa-edit"></i> edit </a>
+       
+      </div>
     </div>
     <div class="card-body">
       <p class="card-text">

@@ -41,6 +41,10 @@
         .navbar-custom .nav-link:hover {
             color: #d5d5d5; 
         }
+        .flash1{
+            display: fixed;
+            z-index: 1000;
+        }
 
         .sidebar {
             background-color: #ffffff;
@@ -208,6 +212,7 @@
                 <li><a href="{% url 'application_tracking' %}"><i class="fas fa-search"></i> Application Tracking</a></li>
                 <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i> Interviews</a></li>
                 <li><a href="{% url 'feedback' %}"><i class="fas fa-comments"></i> Feedback</a></li>
+                 <li><a href="{% url 'generate_cv' %}"><i class="fas fa-note"></i> Generate cv</a></li>
                 <hr>
                 <li><a href="{% url 'log_out' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
@@ -215,7 +220,7 @@
 
         <div class="content">
             <div class="inner-content-box">
-                <div id="flash-message-container"></div>
+                <div id="flash-message-container" class="flash1"></div>
                 {% block content %}
                 {% endblock %}
             </div>

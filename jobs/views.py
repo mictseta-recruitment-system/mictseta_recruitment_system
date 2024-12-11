@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 import json
 from django.http import HttpResponse, JsonResponse
@@ -14,6 +14,8 @@ from datetime import datetime
 from django.utils.timezone import now
 from django.utils import timezone
 from .custom_decorators import check_leave, change_application_status
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your views here.
@@ -199,6 +201,7 @@ def add_job(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+
 @check_leave
 @csrf_protect
 def get_jobs(request):
@@ -234,6 +237,13 @@ def move_to_interview(request):
 				
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to interview stage",status="Processing")
 				feed_back.save()
+				send_mail(
+			        'Updated Application Status',
+			        'Dear Applicant. \n Your application was successfully moved to the <h1><b>Interview Stage </b></h1> \n kindly check your application tracking status to stay updated \n Best Regards \n MICT SETA',
+			        settings.DEFAULT_FROM_EMAIL,
+			        ['221649921@edu.vut.ac.za','sixskies25@gmail.com'],  
+			        fail_silently=False,
+			    )
 				return JsonResponse({'message': f'{applicant.user.email} moved to interview stage', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -255,14 +265,48 @@ def move_to_shortlist(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status = "short_list"
-				applicant.previous_stage = "auto filtering stage"
+				applicant.previous_stage = applicant.current_stage
 				applicant.current_stage = "short listing stage"
 				applicant.staff = request.user
+				applicant.is_rejected = False 
+				applicant.filterd_out = True 
+				applicant.reason = ""
 				applicant.save()
 				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to Short-List stage",status="Short-List")
 				feed_back.save()
 				print(feed_back)
 				return JsonResponse({'message': f'{applicant.user.email} moved to short-list stage', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+@check_leave
+@csrf_protect
+def auto_move_to_shortlist(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			try:
+				jobID = json_data.get('jobID')
+				job = JobPost.objects.filter(id=int(jobID)).first()
+				if job :
+					for applicant in job.jobapplication_set.all():
+						if applicant.status == "pending":
+							applicant.status = "short_list"
+							applicant.previous_stage = "auto filtering stage"
+							applicant.current_stage = "short listing stage"
+							applicant.staff = request.user
+							applicant.save()
+							feed_back = FeedBack.objects.create(user=applicant.user,job=job,message="moved to Short-List stage",status="Short-List")
+							feed_back.save()
+							print(feed_back)
+				return JsonResponse({'message': f'all moved to short-list stage', 'status': 'success'}, status=201)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
 
@@ -313,8 +357,116 @@ def auto_filter(request):
 		except Exception as e:
 			return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=500)
 
-		
+	job_post = JobPost.objects.get(id=filters)
+	job_post.is_filter = True
+	job_post.save()		
 	return JsonResponse({'message': f'{applications.get_total()} applications filtered', 'status': 'success'}, status=201)
+
+
+@check_leave
+@csrf_protect
+def apply_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	filters = json_data.get('filter')	
+	
+
+	filter_id = int(filters)
+	applications = JobApplication.objects.filter(job__id=filter_id).all()
+	for application in applications:
+		application.is_filter_applied = True
+		application.save()
+		feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{application.reason}",status="rejected").first()
+		if not application.filterd_out:
+			application.is_rejected = True
+			application.save()
+
+			if not feed_back_exist:
+				feed_back = FeedBack.objects.create(user=application.user,job=application.job,message=f"{application.reason}",status="rejected")
+				feed_back.save() 
+		
+	return JsonResponse({'message': f'Filter applied  successfully', 'status': 'success'}, status=201)
+
+
+@check_leave
+@csrf_protect
+def hide_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	jobID = json_data.get('jobID')	
+	
+	job_id = int(jobID)
+	job = JobPost.objects.filter(id=job_id).first()
+	job.hide_application = True
+	job.save()
+	print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+	print(job)
+	applications = JobApplication.objects.filter(job__id=job_id).all()
+	for application in applications:
+		if application.is_filter_applied:
+			application.hide = True
+			application.save()
+	return JsonResponse({'message': f'hide applications', 'status': 'success'}, status=201)
+
+@check_leave
+@csrf_protect
+def show_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	jobID = json_data.get('jobID')	
+	
+	job_id = int(jobID)
+	job = JobPost.objects.filter(id=job_id).first()
+	job.hide_application = False
+	job.save()
+	applications = JobApplication.objects.filter(job__id=job_id).all()
+	for application in applications:
+		if application.is_filter_applied:
+			application.hide = False
+			application.save()
+	return JsonResponse({'message': f'show applications', 'status': 'success'}, status=201)
+
+@check_leave
+@csrf_protect
+def reset_filter(request):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
+	if not request.method == 'POST':
+		return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception:
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+	jobID = json_data.get('jobID')	
+	
+	job_id = int(jobID)
+	applications = JobApplication.objects.filter(job__id=job_id).all()
+	for application in applications:
+		if not application.is_filter_applied:
+			application.hide = False
+			application.filterd_out = False
+			application.is_filter = False
+			application.reason=""
+			application.save()
+	return JsonResponse({'message': f'show applications', 'status': 'success'}, status=201)
 
 
 @check_leave
@@ -375,14 +527,17 @@ def reject_applicantion(request):
 			try:
 				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
 				applicant.status ="rejected"
-				applicant.previous_stage = "short listing stage"
+				applicant.previous_stage = applicant.current_stage
 				applicant.current_stage = "rejected stage"
 				applicant.staff = request.user
+				applicant.is_rejected = True
+				applicant.filterd_out = False
+				applicant.reason = json_data.get('reason')
 				applicant.save()
-				interview = Interview.objects.get(application=applicant)
+				interview = Interview.objects.filter(application=applicant).first()
 				if interview:
 					interview.delete()
-				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application Rejected",status="rejected")
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message=f"Application Rejected due to {json_data.get('reason')}",status="rejected")
 				feed_back.save()
 				return JsonResponse({'message': f'{applicant.user.email} Application is rejected', 'status': 'success'}, status=201)
 			except Exception as e:
@@ -441,7 +596,69 @@ def set_interview(request):
 				interview = Interview.objects.create(user=user,application=applicant,date=data['date'],start_time=data['start_time'],end_time=data['end_time'])
 				interview.save()
 				applicant.status = "interview"
-				applicant.previous_stage = "short listing stage"
+				applicant.previous_stage = applicant.current_stage
+				applicant.current_stage = "interview stage"
+				applicant.staff = request.user
+				applicant.save()
+				feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="Application set for interview",status="Interview")
+				feed_back.save()
+				return JsonResponse({'message': ' Interview Scheduled successfully', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@check_leave
+@csrf_protect
+def auto_set_interview(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+				data = {
+						jobID: json_data.get('jobID')
+				}
+			
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+			try:
+				date_format = "%Y-%m-%d"
+				end_date = datetime.strptime(data['date'], date_format)
+				current_date =datetime.now(None)
+				if current_date >= end_date:
+					return JsonResponse({'errors': {'Date':'Interview date cannot older than the current date'}, 'status':'error'}, status=404)
+				time_format = "%H:%M"
+				
+				start_time = datetime.strptime(data['start_time'], time_format)
+				end_time = datetime.strptime(data['end_time'], time_format)
+				print(data)
+				start_datetime = datetime.combine(end_date, start_time.time())
+				print(data)
+				end_datetime = datetime.combine(end_date, end_time.time())
+				print(data)
+				if start_datetime > end_datetime:
+					return JsonResponse({'errors': {'Time': 'Interview start time must be earlier than the end time'},'status': 'error'},status=404)
+			except Exception as e:
+				return JsonResponse({'errors': {'Date':f'Choose the correct date or time'}, 'status':'error'}, status=404)
+
+			try:
+				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
+				user = applicant.user 
+				exists = Interview.objects.filter(user=user,application=applicant).first()
+				if exists:
+					return JsonResponse({"errors":{'Interview ':['Applicant aleady set for an interview']}, "status":"error"}, status=400)
+				interview = Interview.objects.create(user=user,application=applicant,date=data['date'],start_time=data['start_time'],end_time=data['end_time'])
+				interview.save()
+				applicant.status = "interview"
+				applicant.previous_stage = applicant.current_stage
 				applicant.current_stage = "interview stage"
 				applicant.staff = request.user
 				applicant.save()
@@ -1044,8 +1261,12 @@ def delete_job(request):
 				return JsonResponse({'errors': {'job post':['Job does not exists']}, 'status': 'error'}, status=400)
 			try:
 				update_job_post = JobPost.objects.get(id=int(data['job_id']))
-				update_job_post.delete()
-				noty = Notification.objects.create(user=request.user, action="Delete Job Post", job_title=update_job_post.title, status="Deleted")
+				if update_job_post.is_active:
+					update_job_post.is_active = False
+				else:
+					update_job_post.is_active = True
+				update_job_post.save()
+				noty = Notification.objects.create(user=request.user, action="Delete Job Post", job_title=update_job_post.title.title, status="Deleted")
 				noty.save()
 				return JsonResponse({'message': 'Job Post removed Successfully', 'status': 'success'}, status=201)
 			except Exception as e:
@@ -1081,6 +1302,8 @@ def delete_job_skill(request):
 				job_skill = ComputerSkill.objects.get(name=name)
 				job_skill.delete()
 			except Exception as e:
+				return JsonResponse({'errors': {'Skill':[f'{e} ']}, 'status': 'error'}, status=400)
+
 				name = SoftSkillsList.objects.get(skill=data['job_skill_id'])
 				exists = SoftSkill.objects.filter(job_post=job_post, name=name).exists()
 				if not exists:
@@ -1442,19 +1665,19 @@ def add_answer(request):
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 
     data = {
-    	'answer' : 'answer',
-    	'question' : 'question_id',
-    	'is_correct': 'is_correct'
+    	'answer' : json_data.get('answer'),
+    	'question' : json_data.get('question_id'),
+    	'is_correct': json_data.get('is_correct')
     }
 
-    if not data['answer'] or data['answer'] != "":
+    if not data['answer'] or data['answer'] == "":
     	return JsonResponse({'errors':'Answer name can not be empty', 'status':'error'})
-    if not data['question'] or data['question'] != "":
+    if not data['question'] or data['question'] == "":
     	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})
-    if not data['is_correct'] or data['is_correct'] != "":
+    if not data['is_correct'] or data['is_correct'] == "":
     	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})    	
     
-    question = question.objects.filter(id=int(data['question'])).first()
+    question = Question.objects.filter(id=int(data['question'])).first()
     if not question:
     	return JsonResponse({'errors':'Selected Question was not found', 'status':'error'})
 
@@ -1480,18 +1703,53 @@ def delete_answer(request):
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 
     data = {
-    	'answer' : 'answer_id'
+    	'answer' : json_data.get('answer_id')
     }
-
-    if not data['answer'] or data['answer'] != "":
+    print(data)
+    if not data['answer'] or data['answer'] == "":
     	return JsonResponse({'errors':'answer name can not be empty', 'status':'error'})
 
-    answer = answer.objects.filter(id=int(data['answer_id'])).first()
+    answer = Answer.objects.filter(id=int(data['answer'])).first()
     if not answer:
     	return JsonResponse({'errors':'Selected answer does not exist', 'status':'error'})
     answer.delete()
-    
     return JsonResponse({'message': 'answer added successfully', 'status': 'success'}, status=200)
+
+@check_leave
+@csrf_protect	
+def enable_or_disable_quiz(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    data = {
+    	'status' : json_data.get('status'),
+    	'quiz' : json_data.get('quiz_id')
+    }
+    print(data)
+    if not data['status'] or data['status'] == "":
+    	return JsonResponse({'errors':'status name can not be empty', 'status':'error'})
+    if not data['quiz'] or data['quiz'] == "":
+    	return JsonResponse({'errors':'quiz name can not be empty', 'status':'error'})
+
+    quiz = Quiz.objects.filter(id=int(data['quiz'])).first()
+    if not quiz:
+    	return JsonResponse({'errors':'Selected status does not exist', 'status':'error'})
+    if data['status'] == "enable":
+    	quiz.is_active = True
+    	quiz.save()
+    elif data['status'] == "disable":
+    	quiz.is_active = False
+    	quiz.save()
+    else:
+    	return JsonResponse({'errors': { "Quiz" : ['Error updating quiz ']}, 'status':'error'}, status=403)
+
+    return JsonResponse({'message': 'quiz status is updated Successfully', 'status': 'success'}, status=200)
 
 
 @csrf_protect
@@ -1505,39 +1763,37 @@ def take_quiz(request):
     except Exception :
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
 
-    data ={
-		    'quiz_id':json_data.get('quiz_id'),
-		   	'quiz_data':{
-		   				'question_id':json_data.get('question_id'),
-					    'answer_id' : json_data.get("answer_id")
-		   			}
-		   }
+    # data ={
+	# 	    'quiz_id':json_data.get('quiz_id'),
+	# 	   	'quiz_data':{
+	# 	   				'question_id':json_data.get('question_id'),
+	# 				    'answer_id' : json_data.get("answer_id")
+	# 	   			}
+	# 	   }
+    
     score = 0
-    total = len(data)
-    quiz = Quiz.objects.filter(id=int(data['quiz_id'])).first()
-    for _, results in data.items():
-    	
-    	for key, value in results:
-    		if key == "answer_id":
-    			answer = Answer.objects.filter(id=int(value)).first()
+    total = len(json_data) - 2
+   
+    for key, value in json_data.items():
+    	if value != "" and key != "quiz":
+    		answer = Answer.objects.filter(id=int(value)).first()
+    		if answer:
     			if answer.is_correct:
-    				score += 1
-
+    				score +=1
     total_score = (score/total) * 100
 
-    if total_score >= 70.0 :
-    	quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="passed" )
-    else:
-    	quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="failed" )
-    	   
+    quiz = json_data.get('quiz')
+    quiz = Quiz.objects.filter(id=int(quiz)).first()
+    if quiz:
+    	if total_score >= 60.0 :
+    		quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="passed", total=total_score )
+    		return redirect('job_application', jobID=int(json_data.get('jobID')))
+    	else:
+    		quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="failed", total=total_score)
+      
     quiz_results.save()
 
-    # if not data['answer'] or data['answer'] != "":
-    # 	return JsonResponse({'errors':'Answer name can not be empty', 'status':'error'})
-    # if not data['question'] or data['question'] != "":
-    # 	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})
-    # if not data['is_correct'] or data['is_correct'] != "":
-    # 	return JsonResponse({'errors':'Question  can not be empty', 'status':'error'})    	
+    return JsonResponse({'message': 'quiz Submitedd Successfully', 'status': 'success'}, status=200)
+
     
     
-    return JsonResponse({'message': 'quiz submitted successfully', 'status': 'success'}, status=200)
