@@ -86,12 +86,15 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         },
-                        child: JobdisplayerPage(
-                          jobTitle: job['title'],
-                          jobDescription: job['description'],
-                          jobDue: date.substring(0, 10),
-                          // date: job['start_date'],
-                          location: job['location'],
+                        child: Card(
+                          elevation:15,
+                          child: JobdisplayerPage(
+                            jobTitle: job['title'],
+                            jobDescription: job['description'],
+                            jobDue: date.substring(0, 10),
+                            // date: job['start_date'],
+                            location: job['location'],
+                          ),
                         ),
                       ),
                     );
