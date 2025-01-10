@@ -4,221 +4,178 @@
 
 {% block content %}
 {% load static %}
+
 <style>
-  *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins" sans-serif;
-  }  
-    
-    
     body {
-        
-        background-color: #f9f9f9;
-
-        
-    }
-    .main {
+        font-family: 'Open Sans', sans-serif;
         height: 100vh;
-        overflow: hidden;
+        margin: 0;
         display: flex;
-        justify-content: center; /* Center content horizontally */
-        align-items: center; /* Center content vertically */
+        justify-content: center;
+        align-items: center;
     }
-
-    
-
-
-   
 
     .form-container {
-        width: 470px; /* Increased width */
-        height: 680px;
-        text-align:center ;  
-        background-color: hsla(213, 27%, 68%, 0.586); /* Initial background */
-        border-radius: 15px; /* Rounded corners */
-        box-shadow: 0 20px 25px rgba(1, 21, 171, 0.707); /* Subtle shadow for depth */
-        margin: 50px auto;
-        padding: 1px; /* Padding inside the container */
-        position: relative; /* For positioning the oval background */
-        animation: changeColorSignIn 0.5s forwards; /* Initial animation */
-    }
-
-    h1 {
-        font-size: 2rem; 
-        color: #000;
-        margin-bottom: 1.2rem;
-    }
-
-    h6 {
-        font-size: 18px;
-        color: #0693e3;
+        background-color: #ffffff;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        padding: 20px;  
+        border-radius: 5px;
+        width: 100%;
+        max-width: 900px;
+        max-height: 85vh;
         text-align: center;
-        margin-bottom: 30px;
+        margin-top: 0; 
+    }
+
+    .form-container h1,
+    .form-container h3 {
+        color: #003366;
+        margin-top: 0;  /* Removed space between heading and box */
+        margin-bottom: 0; /* Removed space between heading and form elements */
     }
 
     .input-group {
         margin-bottom: 10px;
-        position: relative;
     }
 
     .input-group input {
-        width: 91%; 
-        outline: none;
-        padding: 12px 20px;
-        border: 1px solid #fff; 
-        color: #fff;
-        border-radius: 20px;
-        font-size: 1rem;
-        font-weight: normal;
-        transition: all 0.3s ease; /* Transition for animation */
+        border: 2px solid #ddd;
+        padding: 10px;
+        font-size: 12px;
+        border-radius: 4px;
+        width: 50%;
     }
 
     .input-group input:focus {
-        border: 2px solid #0693e3; /* Change border color on focus */
-        background-color: #f0f8ff; /* Change background color on focus */
+        border-color: #007acc;
+        box-shadow: 0 0 5px rgba(65, 86, 101, 0.5);
     }
 
     .input-group label {
         position: absolute;
-        top: 5px; /* Adjusted to position label slightly above input */
-        left: 15px;
-        font-size: 16px;
-        color: #999;
-        transition: all 0.1s ease; /* Transition for label animation */
-    }
-
-    .input-group input:focus + label,
-    .input-group input:not(:placeholder-shown) + label {
-        top: -15px; /* Adjusted to move label higher when focused or not empty */
-        left: 10px;
         font-size: 12px;
-        color: #0693e3; /* Change label color when focused */
+        color: #007acc;
+        transition: 0.2s;
     }
 
-    .input-group .eye-icon {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        font-size: 18px;
-        color: #333;
+    .input-group input:focus + label {
+        top: -20px;
+        font-size: 10px;
     }
-    input:hover{
-        border: 1px solid rgb(192, 192, 192);
+
+    .btn-primary {
+        background-color:#003366;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+        width: 100%;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #005f99;
     }
 
     .remember-forgot {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+        font-size: 12px;
+        color: #555;
     }
 
-    .remember-forgot label {
+    .register-link {
+        margin-top: 15px;
         font-size: 14px;
-        color: #333333;
     }
 
-    .remember-forgot a {
-        font-size: 14px;
-        color: #0693e3;
+    .register-link a {
+        color: #007acc;
         text-decoration: none;
     }
 
-    .remember-forgot a:hover {
-        text-decoration: underline;
+    .spinner {
+        display: none;
+        margin: 20px auto;
     }
 
-    .btn {
-        width: 90%;
-        padding: 10px 0;
-        margin-top: 1.8rem;
-        outline: none;
-        border: none;  
-        border-radius: 20px;
-        font-size: 1rem;
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .eye-icon {
         cursor: pointer;
-        color: #fff;
-        background-color: rgb(17,107,143);
-        transition: background-color 0.3s ease;
-    }
-button:hover{
-    background-color: rgb(17,107,143,104, .707);
-}
-   
-    
-
-    .right-section h1 {
-        color: black;
-    }
-    .flashmessage{
         position: absolute;
-        margin-top: 100px;
-        margin-left: 30px;
-        z-index: 10000;
-
+        right: 10px;
+        top: 35%;
+        font-size: 18px;
     }
+
+
 </style>
 
 <div class="main">
     <div class="filled-right-section">
-        <div class="oval-background"></div> <!-- Oval Background with Gradient -->
+        <div class="oval-background"></div>
         <div id="flash-message-container" class="flashmessage"></div>
         <div class="right-section">
             <div class="form-container" id="form-container">
+                <!-- Sign-In Form -->
                 <div class="wrapper" id="wrapper-sign-in">
                     <form action="" id="login-form" method="POST">
                         {% csrf_token %}
-                       <h3>Welcome back</h3>
-                       <p>Please log in using your personal information to stay connected with us.</p>
+                        <h3>Welcome back</h3>
+                        <p>Please log in to stay connected with us.</p>
                         <h1>Login</h1>
-                        <div class="spinner"></div>
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder=" " id="lemail" aria-label="Email" aria-describedby="basic-addon1" required>
-                            <label for="lemail">Email Address</label> <!-- Label for animation -->
+
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder=" " id="lemail" aria-label="Email" required>
+                            <label for="lemail">Email Address</label>
                         </div>
-                        <div class="input-group mb-3">
+                        <div class="input-group">
                             <input type="password" name="password" id="lpassword" class="form-control" placeholder=" " required>
-                            <label for="lpassword">Password</label> <!-- Label for animation -->
-                            <i class="eye-icon" id="toggle-password-login">&#128065;</i> <!-- Eye icon -->
+                            <label for="lpassword">Password</label>
+                            <i class="eye-icon" id="toggle-password-login">&#128065;</i>
                         </div>
                         <div class="remember-forgot">
                             <label><input type="checkbox"> Remember Me</label>
                             <a href="{% url 'find_account' %}">Forgot Password?</a>
                         </div>
-                        <button type="button" class="btn btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
+                        <button type="button" class="btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
                         <div class="register-link">
                             <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
                         </div>
                     </form>
                 </div>
-    
+
+                <!-- Sign-Up Form -->
                 <div class="wrapper" id="wrapper-sign-up" style="display: none;">
                     <form action="" id="signup-form" method="POST">
                         <h1>Sign Up</h1>
-                        <h6>Add your details to create an account and start preparing your documents.</h6>
-                        <div class="input-group mb-3">
+                        <h6>Add your details to create an account.</h6>
+
+                        <div class="input-group">
                             <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder=" " required>
-                            <label for="idnumber">ID Number</label> <!-- Label for animation -->
+                            <label for="idnumber">ID Number</label>
                         </div>
-                        <div class="input-group mb-3">
+                        <div class="input-group">
                             <input type="email" name="email" id="email" class="form-control" placeholder=" " required>
-                            <label for="email">Email Address</label> <!-- Label for animation -->
+                            <label for="email">Email Address</label>
                         </div>
-                        <div class="input-group mb-3">
+                        <div class="input-group">
                             <input type="password" name="password" id="password" class="form-control" placeholder=" " required>
-                            <label for="password">Password</label> <!-- Label for animation -->
-                            <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> <!-- Eye icon -->
+                            <label for="password">Password</label>
+                            <i class="eye-icon" id="toggle-password-signup1">&#128065;</i>
                         </div>
-                        <div class="input-group mb-3">
+                        <div class="input-group">
                             <input type="password" name="password2" id="password2" class="form-control" placeholder=" " required>
-                            <label for="password2">Confirm Password</label> <!-- Label for animation -->
-                            <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> <!-- Eye icon -->
+                            <label for="password2">Confirm Password</label>
+                            <i class="eye-icon" id="toggle-password-signup2">&#128065;</i>
                         </div>
-                        <button type="button" class="btn btn-primary" id="btn-sign-up" onclick="handle_sign_up_button_click()">Create account</button>
+                        <button type="button" class="btn-primary" id="btn-sign-up" onclick="handle_sign_up_button_click()">Create Account</button>
                         <div class="register-link">
                             <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
                         </div>
@@ -230,71 +187,50 @@ button:hover{
 </div>
 
 <script>
+    // Sign In/Sign Up Toggle
     document.getElementById('btn-sign-up').addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('wrapper-sign-in').style.display = 'none';
         document.getElementById('wrapper-sign-up').style.display = 'block';
-
-        // Change container color to sign-up animation
-        const container = document.getElementById('form-container');
-        container.style.animation = 'changeColorSignUp 0.5s forwards';
+        document.getElementById('form-container').style.animation = 'changeColorSignUp 0.5s forwards';
     });
 
     document.getElementById('btn-sign-in').addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('wrapper-sign-in').style.display = 'block';
         document.getElementById('wrapper-sign-up').style.display = 'none';
-
-        // Change container color to sign-in animation
-        const container = document.getElementById('form-container');
-        container.style.animation = 'changeColorSignIn 0.5s forwards';
+        document.getElementById('form-container').style.animation = 'changeColorSignIn 0.5s forwards';
     });
 
-    // Function to handle Enter key press
+    // Password Toggle visibility
+    document.getElementById('toggle-password-login').addEventListener('click', function() {
+        togglePasswordVisibility('lpassword');
+    });
+    document.getElementById('toggle-password-signup1').addEventListener('click', function() {
+        togglePasswordVisibility('password');
+    });
+    document.getElementById('toggle-password-signup2').addEventListener('click', function() {
+        togglePasswordVisibility('password2');
+    });
+
+    function togglePasswordVisibility(passwordId) {
+        const passwordInput = document.getElementById(passwordId);
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+    }
+
+    // Handle form submission with Enter key
     function handleEnterKeyPress(event, buttonId) {
         if (event.key === 'Enter') {
             document.getElementById(buttonId).click();
         }
     }
 
-    // Add event listeners for sign-in inputs
-    document.getElementById('lemail').addEventListener('keydown', function(event) {
-        handleEnterKeyPress(event, 'btn-signin');
-    });
-    document.getElementById('lpassword').addEventListener('keydown', function(event) {
-        handleEnterKeyPress(event, 'btn-signin');
-    });
-
-    // Add event listeners for sign-up inputs
-    document.getElementById('idnumber').addEventListener('keydown', function(event) {
-        handleEnterKeyPress(event, 'btn-sign-up');
-    });
-    document.getElementById('email').addEventListener('keydown', function(event) {
-        handleEnterKeyPress(event, 'btn-sign-up');
-    });
-    document.getElementById('password').addEventListener('keydown', function(event) {
-        handleEnterKeyPress(event, 'btn-sign-up');
-    });
-    document.getElementById('password2').addEventListener('keydown', function(event) {
-        handleEnterKeyPress(event, 'btn-sign-up');
-    });
-
-    document.getElementById('toggle-password-login').addEventListener('click', function() {
-        const passwordInput = document.getElementById('lpassword');
-        const type = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = type;
-    });
-
-    document.getElementById('toggle-password-signup1').addEventListener('click', function() {
-        const passwordInput = document.getElementById('password');
-        const type = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = type;
-    });
-
-    document.getElementById('toggle-password-signup2').addEventListener('click', function() {
-        const passwordInput = document.getElementById('password2');
-        const type = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = type;
+    // Event listeners for form fields
+    ['lemail', 'lpassword', 'idnumber', 'email', 'password', 'password2'].forEach(id => {
+        document.getElementById(id).addEventListener('keydown', function(event) {
+            handleEnterKeyPress(event, event.target.id === 'lemail' || event.target.id === 'lpassword' ? 'btn-signin' : 'btn-sign-up');
+        });
     });
 
     function handle_sign_in_button_click() {
