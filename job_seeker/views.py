@@ -291,7 +291,10 @@ def job_information(request, jobID):
 def quiz_test(request, jobID):
     job = JobPost.objects.filter(id=int(jobID)).first()
     if job:
-        quiz = Quiz.objects.get(job=job)
+        try:
+            quiz = Quiz.objects.get(job=job)
+        except Exception as e:
+            return render(request, 'error_quiz.html')
         quiz_results = QuizResults.objects.filter(user=request.user, quiz=quiz).first()
         if quiz_results:
              return render(request, 'done_quiz.html')

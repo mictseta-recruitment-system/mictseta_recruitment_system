@@ -9,6 +9,7 @@ def change_application_status(function=None):
 			for application in applications:
 				if application.job.status=="closed":
 					application.status = 'rejected'
+					application.reason = "system closed the job - Expired"
 					application.save()
 					cleened = [interview.delete() for interview in interviews if interview.application == application]
 			return view_func(request,*args,**kwargs)

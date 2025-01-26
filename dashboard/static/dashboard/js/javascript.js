@@ -113,8 +113,8 @@ function addJob() {
 function updateJob(jobID,spinner,content) {
   // Replace with your actual endpoint URL
   const url = 'http://127.0.0.1:8000/job/update_job/';
-  document.getElementById('spinner' ).style.display = 'block';
-  document.getElementById('editJob' ).style.display = 'none';
+  
+ 
 
   // Extract values from input fields
   const title = document.getElementById('title').value;
@@ -168,13 +168,11 @@ function updateJob(jobID,spinner,content) {
              showFlashMessage("An unknown error occurred", "danger");
           }
   } else if (data.status === "success") {
-    document.getElementById(spinner + jobID).innerHTML =" ";
-    document.getElementById(spinner + jobID).innerHTML =' <i class="fa fa-check fa-5x text-success"></i><p >' +data.message+'</p>';
-                
+   
     showFlashMessage(data.message, "success");
     
-    sleeper(jobID,'true',spinner,content);
-    $('#myModal').modal('show');
+   window.location.reload(true);
+
 
 
   } else if (data.status === "warning") {
@@ -908,8 +906,8 @@ function completeJob(jobID, spinner, content, modal) {
       handleErrors(data.errors, jobID, spinner);
       sleeper(jobID, 'false', spinner, content);
     } else if (data.status === "success") {
-      document.getElementById('modal-b' + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
-      showFlashMessage(data.message, "success");
+      /*document.getElementById('modal-b' + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
+      */showFlashMessage(data.message, "success");
       location.reload();
       showFlashMessage(data.message, "success");
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/

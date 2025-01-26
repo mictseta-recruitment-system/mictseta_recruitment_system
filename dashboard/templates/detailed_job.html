@@ -18,6 +18,10 @@
     <div class="card-header d-flex justify-content-between">
       <span>Job Title: <span id="jobTitle">{{job.title}}</span></span>
       <div>
+         <a class="btn btn-success " type="button" href="{% url 'dashboard.new_quiz' job.id %}">
+                            <i class="fa fa-plus"></i>
+                           Add/Edit  Quiz
+                        </a>
         <a href="/dashboard/filter_job_application/{{job.id}}"  class="btn btn-info ">view Applications </a>
         <a href=" /dashboard/edit_job/{{job.id}}"  class="btn btn-warning "><i class="fa fa-edit"></i> edit </a>
        

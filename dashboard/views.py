@@ -391,8 +391,9 @@ def update_staff(request, staffID):
 
 def jobsekeer_details(request, seekerID,jobID):
 	if request.user.is_authenticated:
-		
+		print(seekerID, "--------", jobID)
 		seeker = User.objects.get(profile__uuid=seekerID)
+		print(seeker, seeker.id)
 		if request.user.is_staff:
 			if request.user.is_superuser:
 				notify_len = len(Notification.objects.filter(is_seen=False))
@@ -401,8 +402,10 @@ def jobsekeer_details(request, seekerID,jobID):
 			application = JobApplication.objects.filter(user=seeker,job__id=int(jobID)).first()
 			feedback = FeedBack.objects.filter(user=seeker,job=application.job)
 			quiz_id = Quiz.objects.filter(job=application.job).first()
+			print(quiz_id, "---", quiz_id.id)
 			if quiz_id:
-				quiz = QuizResults.objects.filter(user=seeker, quiz=quiz_id).first()
+				quiz = QuizResults.objects.filter(user=seeker, quiz=quiz_id.id).first()
+				print(quiz)
 			else:
 				quiz = {}
 			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz})
@@ -428,8 +431,7 @@ def employee_details(request, empID):
 
 def manage_leave(request):
 	if request.user.is_authenticated:
-		
-		
+
 		if request.user.is_staff:
 			#emps = User.objects.filter(is_staff=True)
 			from django.db.models import Count

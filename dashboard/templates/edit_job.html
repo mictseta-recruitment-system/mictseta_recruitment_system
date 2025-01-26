@@ -96,15 +96,50 @@
                     <div class="tab-pane fade show active" id="profileinformation" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <h4 class="d-flex justify-content-between">
                             <span>Job/Vacancy Information</span>
-                            {% if job.is_active %}
+
+                            <span>Satus: 
+                                {% if job.status == "closed" %}
+                                 <span class="text-danger">
+                                     <b>{{job.status}}</b>
+                                 </span>
+                                 {% elif job.status == "open" %}
+                                    <span class="text-success">
+                                         <b>{{job.status}}</b>
+                                    </span>
+                                 {% else %}
+                                    <span class="text-warning">
+                                         <b>{{job.status}}</b>
+                                    </span>
+                                 {% endif %}
+                             </span>
+                             <div>
+                                {% if user.is_superuser %}
+                             {% if not job.is_approved %}
+                            {% if job.is_complete %}
+                               
+                                <a class="btn btn-success btn-sm me-1" type="button" onclick="ApproveJob({{ job.id }})">
+                                    <i class="fa fa-check"></i> Approve Job
+                                </a>  
+                            {% endif %}
+                           
+                        {% endif %}
+                        {% endif %}
+
+
+                            {% if job.is_active and job.status == "open" %}
                             <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="Disable">
-                                <i class="fa fa-circle-minus fa-1x"></i> Disable
+                                <i class="fa fa-circle-minus fa-1x"></i> Disable / close
+                            </a>
+                            {% elif not job.is_active and job.status == "closed" %}
+                             <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
+                                <i class="fa fa-circle-minus fa-1x"></i>Enable / open
                             </a>
                             {% else %}
-                             <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
-                                <i class="fa fa-circle-minus fa-1x"></i>Enable
-                            </a>
+                                 <button class="btn btn-warning btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable" disabled>
+                                <i class="fa fa-spinner fa-1x"></i> In process
+                            </button>
                             {% endif %}
+                        </div>
                         </h4>
                         <hr style="color: blue;">
                         <div class="row">
@@ -189,7 +224,13 @@
                                     </div>
                                 </div>
                             </form>
-                            <button class="btn btn-primary" onclick="updateJob({{ job.id }}, 'spinner', 'editJob')">Save & Continue</button>
+                            <button class="btn btn-primary" onclick="updateJob({{ job.id }}, 'spinner', 'editJob')">Save & update</button>
+
+                            {% if not job.is_complete %}
+                             <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-success mt-2 ">Submit for approval</button>
+                            {% endif %}
+
+                            
                            
                         </div>
                     </div>
@@ -201,15 +242,51 @@
                         <h4 class="d-flex justify-content-between"> 
                             <span>Vacancy/Job Requirements </span>
                         </h4>
-                            {% if job.is_active %}
+                        <h4>
+                         <span>Satus: 
+                                {% if job.status == "closed" %}
+
+                                 <span class="text-danger">
+                                     <b>{{job.status}}</b>
+                                 </span>
+                                 {% elif job.status == "open" %}
+                                    <span class="text-success">
+                                         <b>{{job.status}}</b>
+                                    </span>
+                                 {% else %}
+                                    <span class="text-warning">
+                                         <b>{{job.status}}</b>
+                                    </span>
+                                 {% endif %}
+                             </span>
+                        </h4>
+                             <div>
+                            {% if user.is_superuser %}
+                                 {% if not job.is_approved %}
+                                {% if job.is_complete %}
+                                   
+                                    <a class="btn btn-success btn-sm me-1" type="button" onclick="ApproveJob({{ job.id }})">
+                                        <i class="fa fa-check"></i> Approve Job
+                                    </a>  
+                                {% endif %}
+                               
+                            {% endif %}
+                            {% endif %}
+
+                            {% if job.is_active and job.status == "open" %}
                             <a class="btn btn-danger btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="Disable">
-                                <i class="fa fa-circle-minus fa-1x"></i> Disable
+                                <i class="fa fa-circle-minus fa-1x"></i> Disable / close
+                            </a>
+                            {% elif not job.is_active and job.status == "closed" %}
+                             <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
+                                <i class="fa fa-circle-minus fa-1x"></i>Enable / open
                             </a>
                             {% else %}
-                             <a class="btn btn-success btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable">
-                                <i class="fa fa-circle-minus fa-1x"></i>Enable
-                            </a>
+                                 <button class="btn btn-warning btn-sm" type="button" onclick="deleteJob({{ job.id }})" title="enable" disabled>
+                                <i class="fa fa-spinner fa-1x"></i> In process
+                            </button>
                             {% endif %}
+                        </div>
                         
                     	</div>
                         <hr style="color: blue;">
@@ -382,6 +459,11 @@
                              
                             
                         </div>
+                        {% if job.is_complete %}
+
+                        {% else %}
+                        <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-success w-100  ">Submit for approval</button>
+                        {% endif %}
                     </div>
 
                     <!-- Vacancies Created -->

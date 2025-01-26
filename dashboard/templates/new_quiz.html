@@ -23,10 +23,10 @@
 
         <div id="addStaffPage" class="form-container">
             <div class="d-flex justify-content-center">
-                <div class="card shadow-lg p-4 w-75">
+                <div class="card shadow-lg p-4 w-75 mt-3">
                     <h5 class="card-title mb-4">Add New Quiz</h5>
                     <form>
-                        <div class="row">
+                        <div class="">
                              <div class="form-group w-100">
                                     <label for="username">quiz title</label>
                                     <div class="d-flex justify-content-center">
@@ -77,13 +77,13 @@
                                     {% if answer.is_correct %}
                                    <li class="list-group-item text-success d-flex justify-content-between">
                                        {{answer.answer_text}} 
-                                       <button class="btn btn-danger p-1" onclick="deleteAnswer({{answer.id}})">
-                                            <li class="fa fa-trash text-white" > </li>
+                                       <button class="btn btn-outline-danger text-danger p-1" onclick="deleteAnswer({{answer.id}})">
+                                            <li class="fa fa-trash " > </li>
                                         </button>
                                    </li>
                                    {% else %}
                                     <li class="list-group-item d-flex justify-content-between">
-                                       {{answer.answer_text}} <button class="btn btn-danger p-1 "onclick="deleteAnswer({{answer.id}})"><li class="fa fa-trash text-white" onclick="deleteAnswer({{answer.id}})"> </li></button>
+                                       {{answer.answer_text}} <button class="btn btn-outline-danger b p-1 "onclick="deleteAnswer({{answer.id}})"><li class="fa fa-trash text-danger" onclick="deleteAnswer({{answer.id}})"> </li></button>
                                    </li>
                                    {% endif %}
                                 {% endfor %}
@@ -194,9 +194,8 @@
                                     </script>
                                 </div>
                             </div> -->
-                        </div> 
                         {% if quiz %}
-                        <div class="row w-100 mt-2">
+                        <div class=" mt-2">
                             {% if not quiz.is_active %}
                             <div class="d-flex justify-content-center">    
                                 <button type="button" onclick="enableOrDisableQuiz('enable', {{quiz.id}})" class="btn btn-info w-75">Enable Quiz</button>
@@ -208,6 +207,7 @@
                             {% endif %}
                         </div>
                         {% endif%}
+                        </div> 
                     </form>
                 </div>
             </div>

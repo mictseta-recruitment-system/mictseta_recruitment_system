@@ -22,7 +22,7 @@ class JobPost(models.Model):
     hide_application = models.BooleanField(null=False,default=False)
     def __str__(self):
         return f'{self.title} '
-
+ 
 class Academic(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='educations')
     field_of_study = models.ForeignKey(Qualification, on_delete=models.CASCADE) 
@@ -157,6 +157,13 @@ class QuizResults(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     total = models.CharField(max_length=100)
     results =  models.CharField(max_length=225,null=False)
+
+class QuizAnswers(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.results

@@ -462,7 +462,7 @@ function take_quiz() {
   const formDataObject = {};
   formData.forEach((value, key) => {
     formDataObject[key] = value;
-  });
+  }); 
 
   console.log(formData)
 

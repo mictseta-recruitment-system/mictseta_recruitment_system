@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers
 from config.models import JobTitle, Industry
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from .filters import ApplicationFilter
@@ -117,7 +117,7 @@ def job_application(request, jobID):
 		exists = JobApplication.objects.filter(user=request.user, job=job).exists()
 		if exists:
 			return JsonResponse({'errors': {'Application' : ['Application already exists']}, 'status': 'error'}, status=400)
-		new_application = JobApplication.objects.create(user=request.user, job=job, status="pending", current_stage="initial stage")
+		new_application = JobApplication.objects.create(user=request.user, job=job, status="pending", current_stage="initial stage", reason="initial stage")
 		new_application.save()
 		try:
 			feed_back = FeedBack(user=request.user,job=new_application.job,message="your application is being processed",status="pending")
@@ -1263,8 +1263,13 @@ def delete_job(request):
 				update_job_post = JobPost.objects.get(id=int(data['job_id']))
 				if update_job_post.is_active:
 					update_job_post.is_active = False
+					print('working')
+					update_job_post.status = "closed"
+					print("updated job pust to closed")
 				else:
 					update_job_post.is_active = True
+					update_job_post.status = "open"
+					print("updated job pust to open")
 				update_job_post.save()
 				noty = Notification.objects.create(user=request.user, action="Delete Job Post", job_title=update_job_post.title.title, status="Deleted")
 				noty.save()
@@ -1520,7 +1525,7 @@ def approve_job(request):
 				job_post.is_approved = True
 				job_post.status = "open"
 				job_post.save()
-				noty = Notification.objects.create(user=request.user, action="Job Approval", job_title=job_post.title, status=job_post.status)
+				#noty = Notification.objects.create(user=request.user, action="Job Approval", job_title=job_post.title, status=job_post.status)
 				noty.save()
 				return JsonResponse({'message': 'Job Post approved successfully', 'status': 'success'}, status=200)
 			except Exception as e:
@@ -1769,31 +1774,42 @@ def take_quiz(request):
 	# 	   				'question_id':json_data.get('question_id'),
 	# 				    'answer_id' : json_data.get("answer_id")
 	# 	   			}
-	# 	   }
+	# 	   } 
+    print("--------------------------------")
+    print(json_data)
     
+    print("--------------------------------")
     score = 0
     total = len(json_data) - 2
    
+    quiz = json_data.get('quiz')
+    quiz = Quiz.objects.filter(id=int(quiz)).first()
     for key, value in json_data.items():
     	if value != "" and key != "quiz":
+    		try:
+    			question = Question.objects.filter(id=int(key)).first()
+    		except ValueError:
+    			pass
     		answer = Answer.objects.filter(id=int(value)).first()
+    		quiz_answers = QuizAnswers.objects.create(user=request.user, quiz=quiz, question=question, answer=answer)
+    		quiz_answers.save()
     		if answer:
     			if answer.is_correct:
     				score +=1
     total_score = (score/total) * 100
 
-    quiz = json_data.get('quiz')
-    quiz = Quiz.objects.filter(id=int(quiz)).first()
+    
     if quiz:
     	if total_score >= 60.0 :
     		quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="passed", total=total_score )
-    		return redirect('job_application', jobID=int(json_data.get('jobID')))
+    		
     	else:
     		quiz_results = QuizResults.objects.create(user=request.user, quiz=quiz,results="failed", total=total_score)
       
+      	
     quiz_results.save()
-
-    return JsonResponse({'message': 'quiz Submitedd Successfully', 'status': 'success'}, status=200)
+    return redirect('job_application', jobID=int(json_data.get('jobID')))
+    # return JsonResponse({'message': 'quiz Submitedd Successfully', 'status': 'success'}, status=200)
 
     
     
