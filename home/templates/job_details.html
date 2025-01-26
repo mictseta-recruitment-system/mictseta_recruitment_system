@@ -80,14 +80,82 @@
             <div class="details">
               <p><strong>Location:</strong> South Africa</p>
               <p><strong>Closing Date:</strong> {{ job.end_date }}</p>
-              <p><strong>Job Type:</strong> {{ job.type|capfirst }}</p>
+              <p><strong>Job Type:</strong> {{ job.job_type|capfirst }}</p>
+              <p><strong>Industry:</strong> {{job.industry}}</p>
+              <p><strong>Status:</strong> {{job.status}}</p>
+
+
+
               <p><strong>Job Description:</strong> {{ job.description|capfirst }}</p>
               <hr />
-              <h3>Requirements</h3>
-              <p>{{ job.requirements|capfirst }}</p>
+              <h3>Academic Requirements</h3>
+             <ul class="list-group list-group-flush" style="background-color: inherit;">
+                {% for education in job.educations.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start" style="background-color: inherit;">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{education.field_of_study}}</div>
+                       {{education.nqf_level}}
+                    </div>    
+                </li>
+                
+                {% endfor %}
+              </ul>
+              <hr />
+              <h4>Skills & Knowledge Requirements</h4>
+              <ul class="list-group list-group-flush" style="background-color: inherit;">
+                {% for skill in job.C_skills.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start" style="background-color: inherit;">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+                      {{skill.level}} 
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+                {% for skill in job.S_skills.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start" style="background-color: inherit;">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{skill.name}} -  {% if skill.is_required %} <span class="text-danger">required</span>{% endif %}</div>
+                      {{skill.level}} 
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+              </ul>
               <hr />
               <h4>Experience</h4>
-              <p>Here will be experience details</p>
+               <ul class="list-group list-group-flush" style="background-color: inherit;">
+                {% for experience in job.experiences.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-start" style="background-color: inherit;">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{experience.name}}</div>
+                       {{experience.duration}} years
+                       
+                    </div>
+                    
+                </li>
+                
+                {% endfor %}
+              </ul>
+                 <hr />
+              <h4>Job Requirements & Responsibilities </h4>
+              <ul class="list-group list-group-flush">
+              {% for requirement in job.requirements.all %}
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold"></div>
+                    {{requirement.description}}
+                  </div>
+                  
+                  
+              </li>
+              
+              {% endfor %}
+            </ul>
+
+             
             </div>
 
             <!-- Buttons -->
@@ -95,7 +163,13 @@
               {% if user.is_staff %}
               <a href="{% url 'home' %}" class="btn btn-outline-danger">Back</a>
               {% else %}
-              <a id="apply-button" href="{% url 'job_application' job.id %}" class="btn btn-outline-success">Apply Now</a>
+              {% if user.is_athenticated %}
+              <a id="apply-button" href="{% url 'quiz_test' job.id %}" class="btn btn-outline-success">Apply Now</a>
+              {% else %}
+            
+
+               <a id="apply-button" href="{% url 'render_auth_page' %}" class="btn btn-outline-success">Apply Now</a>
+                {% endif %}
               {% endif %}
             </div>
           </div>
