@@ -107,12 +107,6 @@ def quiz_results(request,quiz_id, user_id, application_id):
 		user = User.objects.filter(id=int(user_id)).first()
 		application = JobApplication.objects.filter(id=int(application_id)).first()
 
-
-		print(quiz_result)
-		for res in quiz_result:
-			print(res.question)
-			print(res.answer)
-
 		return render(request, 'quiz_results.html', {'results':quiz_result, 'application':application, 'seeker':user, 'answers':answers})
 	else:
 		return redirect('render_auth_page')
@@ -414,9 +408,8 @@ def update_staff(request, staffID):
 
 def jobsekeer_details(request, seekerID,jobID):
 	if request.user.is_authenticated:
-		print(seekerID, "--------", jobID)
+		
 		seeker = User.objects.get(profile__uuid=seekerID)
-		print(seeker, seeker.id)
 		if request.user.is_staff:
 			if request.user.is_superuser:
 				notify_len = len(Notification.objects.filter(is_seen=False))
