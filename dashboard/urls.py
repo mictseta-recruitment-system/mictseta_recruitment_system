@@ -39,7 +39,9 @@ urlpatterns = [
     path('crud_events/report/pdf/', views.crud_events_generate_pdf_report, name='dashboard.crud_events_generate_pdf_report'),
 
     path('new_quiz/<job_id>', views.new_quiz, name="dashboard.new_quiz"),
+    path('quiz_results/<int:quiz_id>/<int:user_id>/<int:application_id>/', views.quiz_results, name="dashboard.quiz_results"),
    
+
 
 
     

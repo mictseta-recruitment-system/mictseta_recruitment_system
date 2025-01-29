@@ -141,9 +141,9 @@
               </ul>
                  <hr />
               <h4>Job Requirements & Responsibilities </h4>
-              <ul class="list-group list-group-flush">
+              <ul class="list-group list-group-flush" style="background-color: inherit;">
               {% for requirement in job.requirements.all %}
-              <li class="list-group-item d-flex justify-content-between align-items-start">
+              <li class="list-group-item d-flex justify-content-between align-items-start" style="background-color: inherit;">
                   <div class="ms-2 me-auto">
                     <div class="fw-bold"></div>
                     {{requirement.description}}
@@ -159,11 +159,11 @@
             </div>
 
             <!-- Buttons -->
-            <div class="d-grid gap-2 col-6 mx-auto">
+            <div class="d-grid gap-2 col-6 mx-auto mt-5">
               {% if user.is_staff %}
               <a href="{% url 'home' %}" class="btn btn-outline-danger">Back</a>
               {% else %}
-              {% if user.is_athenticated %}
+              {% if user.is_authenticated %}
               <a id="apply-button" href="{% url 'quiz_test' job.id %}" class="btn btn-outline-success">Apply Now</a>
               {% else %}
             

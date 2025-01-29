@@ -6,12 +6,12 @@
 	
 <div class="container justify-content-center">
     <div class="col-6 reset-password-card">
-        <h1>Forgot Your Password?</h1>
-        <h3>Click on the button below to reset your password</h3>
-        <a href="" class="btn btn-secondary btn-block" id="links">
-            Reset Password Now
+        <h1>Reset password link was sent successfully</h1>
+        <h3>CHeck your email, and click on the reset password link</h3>
+        <a href="{% url 'sign_in'%}" class="btn btn-secondary btn-block" >
+            Go to login
         </a>
-        <button type="button" class="btn-back" onclick="history.back()">Back</button>
+        <a id="links" href=""> {{link}}</a>
 
     </div>
     <style>
@@ -122,7 +122,8 @@
         // Check if the value exists in localStorage
         if (passedValue) {
             // Assign the value to the href attribute
-            item.href = passedValue;
+            item.innerHTML  = passedValue;
+            item.href  = passedValue;
         } else {
             console.log("No value found in localStorage for 'value'");
         }
