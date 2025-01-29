@@ -245,6 +245,12 @@ def generate_cv(request):
 def address_details(request):
     return render(request, 'address_details.html')
 
+
+
+def hiring_process(request):
+    return render(request, 'hiring_process.html')
+
+
 def academic_qualifications(request):
     
     return render(request, 'academic_qualifications.html')

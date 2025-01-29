@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -94,6 +95,22 @@ def view_staff(request):
 		return render(request,'view_staff.html',{'staffs':staff,'notify_len':notify_len})
 	else:
 		return redirect('render_auth_page')
+
+
+@csrf_protect
+def quiz_results(request,quiz_id, user_id, application_id):
+	if request.user.is_authenticated:
+
+
+		quiz_result = QuizAnswers.objects.filter(user=user_id, quiz=quiz_id).all()
+		answers = Answer.objects.all()
+		user = User.objects.filter(id=int(user_id)).first()
+		application = JobApplication.objects.filter(id=int(application_id)).first()
+
+		return render(request, 'quiz_results.html', {'results':quiz_result, 'application':application, 'seeker':user, 'answers':answers})
+	else:
+		return redirect('render_auth_page')
+
 
 @change_application_status
 @csrf_protect
@@ -391,9 +408,8 @@ def update_staff(request, staffID):
 
 def jobsekeer_details(request, seekerID,jobID):
 	if request.user.is_authenticated:
-		print(seekerID, "--------", jobID)
+		
 		seeker = User.objects.get(profile__uuid=seekerID)
-		print(seeker, seeker.id)
 		if request.user.is_staff:
 			if request.user.is_superuser:
 				notify_len = len(Notification.objects.filter(is_seen=False))

@@ -1,0 +1,43 @@
+{% extends 'dashboard_base.html' %}
+
+
+
+{% block title %}Job Details{% endblock %}
+  {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      
+      <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{application.job.id}}/"  class="btn btn-outline p-0"> {{application.job.title}} </a></li>
+      
+      <li class="breadcrumb-item " ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Application </a></li>
+      
+     
+    <li class="breadcrumb-item active" aria-current="page"> {{application.user.first_name}} {{application.user.last_name}} </li>
+
+    <li class="breadcrumb-item active" aria-current="page"> Quiz Results </li>
+   
+ {% endblock %}
+{% load static %}
+
+{% block content %}
+    <div class='bod'>
+        <div class="results-container">
+            <h1>Quiz Results</h1>
+
+            {% for result in results %}
+            <div class="question">
+                <h3>Question 1: {{result.question}}</h3>
+                <p>{{application.user.first_name}} Answer: <span class="your-answer">{{result.answer}}</span></p>
+                {% for ans in answers %}
+                    {% if ans.question == result.question and ans.is_correct == True %}
+                        
+                         <p>Correct Answer: <span class="correct">{{ans.answer_text}}</span></p>
+                        
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

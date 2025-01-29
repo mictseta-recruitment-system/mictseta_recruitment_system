@@ -151,6 +151,9 @@ class Answer(models.Model):
     answer_text = models.CharField(max_length=200)
     is_correct = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.answer_text
+
 class QuizResults(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
@@ -166,4 +169,4 @@ class QuizAnswers(models.Model):
 
 
     def __str__(self):
-        return self.results
+        return self.quiz.title

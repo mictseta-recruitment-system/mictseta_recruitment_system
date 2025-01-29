@@ -178,6 +178,30 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about_us' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact_us' %}">Contact</a>
+                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Logout</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  Are you sure you want to logout?
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><a class="dropdown-item" href="{% url 'log_out' %}">Yes Logout</a></button>
+                                  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </li>
                 </li>
             </ul>
         </div>
@@ -206,12 +230,11 @@
 
             <ul>
                 <hr>
-                <li><a href="{% url 'my_profile' %}"><i class="fas fa-user"></i> My profile</a></li>
+                <li><a href="{% url 'job_seeker_dashboard' %}" ><i class="fas fa-user"></i> My profile</a></li>
                 <hr>
                 <li><a href="{% url 'jobseeker.job_details' %}"><i class="fas fa-info-circle"></i> Job Details</a></li>
                 <li><a href="{% url 'application_tracking' %}"><i class="fas fa-search"></i> Application Tracking</a></li>
                 <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i> Interviews</a></li>
-                <li><a href="{% url 'feedback' %}"><i class="fas fa-comments"></i> Feedback</a></li>
                  <li><a href="{% url 'generate_cv' %}"><i class="fas fa-note"></i> Generate cv</a></li>
                 <hr>
                 <li><a href="{% url 'log_out' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>

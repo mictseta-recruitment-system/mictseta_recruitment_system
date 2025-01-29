@@ -116,40 +116,7 @@ body {
 }
 
 /* Social Media Icons Styles */
-.social-media-icons {
-  position: fixed;
-  top: 30%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 1000;
-  padding: 0px;
-  background: none;
-}
 
-.social-media-icons ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.social-media-icons li {
-  margin: 0px 0;
-}
-
-.social-media-icons a {
-  display: block;
-  font-size: 22px;
-  color: black; /* Set icon color to black */
-  padding: 5px;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.social-media-icons a:hover {
-  transform: scale(1.1);
-  color: #007bff; /* Optional: Change color on hover */
-}
 
 /* Navbar Styles */
 #navbar {

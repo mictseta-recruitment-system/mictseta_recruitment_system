@@ -249,10 +249,14 @@
                                     <thead class="bg-dark">
                                         <tr class="text-white">
                                             
-                                          <th style="padding: 10px; text-align: left; font-weight: bold;">Date </th>
-                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Quiz name</th>
-                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Results</th>
-                                         <th style="padding: 10px; text-align: left; font-weight: bold;">Action</th>
+                                          <th style="padding: 10px; text-align: left; font-weight: bold;">Date 
+                                          </th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Quiz name
+                                        </th>
+                                        <th style="padding: 10px; text-align: left; font-weight: bold;">Results
+                                        </th>
+                                         <th style="padding: 10px; text-align: left; font-weight: bold;">Action
+                                         </th>
                                        
                                                             
                                         </tr>
@@ -269,7 +273,7 @@
                                       			{{quiz.results}}
                                       	</td>
                                         <td>
-                                            {{quiz.link}}
+                                            <a href="{% url 'dashboard.quiz_results' quiz.quiz.id application.user.id application.id %}">link</a>
                                         </td>
                                       </tr>
                                      </tbody>

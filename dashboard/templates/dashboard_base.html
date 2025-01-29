@@ -168,7 +168,62 @@
   font-weight: bold;
   font-size: 15px;
 }
+        .bod {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
+        .results-container {
+            width: 80%;
+            max-width: 900px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .results-container h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .question h3 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .question p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+
+        .your-answer {
+            color: #007bff;
+        }
   </style>
 
   {% block styles %}
@@ -181,13 +236,16 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item d-flex align-items-center"> <!-- Flex alignment for vertical centering -->
-                <a href="{% url 'dashboard.get_notifications' %}">
-                    <button type="button" class="btn btn-primarys position-relative p-0 mr-2" style="background-color: grey;"> <!-- Set background color to grey -->
-                        <i class="fas fa-bell fa-2x text-light"></i>
+      <ul class="navbar-nav ml-auto w-100% d-flex justify-content-between"> <!-- Full width and space between items -->
+        <li class="nav-item d-flex align-items-center flex-grow-1"> <!-- Flex alignment for vertical centering and full width -->
+          <a href="{% url 'dashboard.get_notifications' %}">
+            <button type="button" class="btn btn-primarys position-relative p-0 mr-2" style="background-color: grey;"> <!-- Set background color to grey -->
+              <i class="fas fa-bell fa-2x text-light"></i>
+            </button>
+          </a>
+          <span class="ml-3 text-dark w-100 text-center" style="font-size: 20px; font-weight: 600; text-transform: uppercase; margin: 0; background-color: grey;"></span> <!-- Full width background color -->
+        </li>
                         {% if user.notifications or user.is_superuser %}
                             {% if notify_len %}
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
