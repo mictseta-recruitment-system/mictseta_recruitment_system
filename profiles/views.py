@@ -748,7 +748,7 @@ def update_staff(request):
                             else:
                                 pass
                         except Exception as e:
-                                    return JsonResponse({"errors":{'data':[f'e']}, "status":"error"}, status=400)
+                                    return JsonResponse({"errors":{'data':[f'e']}, "status":"errorrrrss"}, status=400)
                         try:
                             exist = User.objects.filter(username=data['username']).exists()
                             if exist :
@@ -758,7 +758,7 @@ def update_staff(request):
                             else:
                                 pass
                         except Exception as e:
-                                    return JsonResponse({"errors":{'data':[f'e']}, "status":"error"}, status=400)                        
+                                    return JsonResponse({"errors":{'data':[f'e']}, "status":"errormmmm"}, status=400)                        
                         try:
                             exist = User.objects.filter(staffprofile__phone=data['phone'], id=data['idnumber']).exists()
                             if not exist:
@@ -770,7 +770,7 @@ def update_staff(request):
                                 else: 
                                     return JsonResponse({"errors":f"phone:{data['phone']} is already taken", "status":"error"}, status=400)
                         except Exception as e:
-                            return JsonResponse({"errors":f'{e}', "status":"error"}, status=400)
+                            return JsonResponse({"errors":f'{e}', "status":"errorfffff"}, status=400)
                         
                     else:
                         return JsonResponse({"errors":f'User:staff Uer does not exist', "status":"error"}, status=400)
@@ -793,8 +793,8 @@ def update_staff(request):
                         user.shift.save()
                         user.save()
                         return JsonResponse({'message':f'Staff profile for {user.first_name} {user.last_name} is updated successfuly', 'status':'success'}, status=201) 
-                    except Exception as e:
-                        return JsonResponse({'errors': f'{e}', 'status':'error'}, status=404)
+                    except ValueError as e:
+                        return JsonResponse({'errors': f'{e}', 'status':'errorzzzzz'}, status=404)
                 else:
                     return JsonResponse({"errors":form.errors, "status":"error"}, status=400)
             else:
