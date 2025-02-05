@@ -54,7 +54,7 @@
             </div>
             <div class="form-group w-100 m-1">
                 <label for="idnumber">ID Number:</label>
-                <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{staff.staffprofile.idnumber}}" >
+                <input type="text" class="form-control" id="idnumber" name="idnumber" value="{{staff.staffprofile.idnumber}}"  disabled>
             </div>
             <div class="form-group  m-1">
                 
@@ -66,10 +66,12 @@
                 <label for="job_title">Job Title:</label>
                 <select class="form-control" id="job_title" name="job_title" value="{{staff.staffprofile.job_title}}" required>
                     <option value="Executive" selected>{{staff.staffprofile.job_title}}</option>
-                    <option value="Executive">Executive</option>
-                    <option value="CEO">CEO</option>
-                    <option value="Director">Director</option>
-                	<option value="Manager">Manager</option>
+                   <option value="Assistant">Assistant</option>
+                                        <option value="Coordinator">Coordinator</option>
+                                        <option value="Manager">Manager</option>
+                                        <option value="Director">Director</option>
+                                        <option value="Executive">Executive</option>
+                                       
                 </select>
             </div>
             <div class="form-group w-100 m-1">
@@ -77,10 +79,10 @@
                
                 <select class="form-control" id="department" name="department" value="{{staff.staffprofile.department}}" required>
                      <option value="HR" selected>{{staff.staffprofile.department}}</option>
-                    <option value="HR">HR Team</option>
-                    <option value="IT">IT Staff</option>
-                    <option value="MANAGER">Manager</option>
-                    <option value="ADMINISTRATOR">Admin</option>
+                    <option value="HR">HR</option>
+                                        <option value="IT">IT</option>
+                                        <option value="FINANCE">Finance</option>
+                                        <option value="LINE">Line</option>
                 </select>
             </div>
             <div class="form-group w-100 m-1">

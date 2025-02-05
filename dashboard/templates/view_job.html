@@ -131,9 +131,9 @@ View jobs
   <div class="card-header d-flex justify-content-between " style="height:50px;">
 
     <h6>Jobs / Vacancy List</h6> 
-
+    {% if user.staffprofile.department == "LINE" and user.staffprofile.job_title == "Manager" %}
     <a href="{% url 'dashboard.add_job' %}" class="btn btn-success py-0" style=""><i class="fa fa-plus" aria-hidden="true"></i> Add Job/ Vacancy</a> 
-
+    {% endif %}
   </div>
   
 

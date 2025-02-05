@@ -61,6 +61,7 @@ def sign_in(request):
 		if form.is_valid() :
 			user = User.objects.get(email=email)
 			user = authenticate(request, username=user.username, password=password)
+			print(user)
 			if user is not None:
 				login(request, user)
 				if user.is_staff:
@@ -69,7 +70,7 @@ def sign_in(request):
 				return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success', 'user_type':'seeker'}, status=200)
 				
 			else:
-				return JsonResponse({'errors':{'password':[' is incorrect']}, 'status':'error'}, status=400)
+				return JsonResponse({'errors':{'Error':['Oops Something went wrong is either incorrect credentials or your account is Deactivated']}, 'status':'error'}, status=400)
 		else:
 			return JsonResponse({'errors': form.errors, 'status':'error'}, status=400)
 	else:
@@ -128,11 +129,18 @@ def reset_password_link(request):
 		except Exception :
 			user = False
 		if user:
-			token = default_token_generator.make_token(user)
-			uid = urlsafe_base64_encode(force_bytes(user.profile.uuid))
-			reset_link = f"http://127.0.0.1:8000/auth/reset_password/{uid}/{token}/"
-			print(reset_link)
-			return JsonResponse({"message":"link generated successfuly","link":reset_link, "status":"success"}, status=201)
+			if user.is_staff:
+				token = default_token_generator.make_token(user)
+				uid = urlsafe_base64_encode(force_bytes(user.id))
+				reset_link = f"http://127.0.0.1:8000/auth/reset_password_staff/{uid}/{token}/"
+				print(reset_link)
+				return JsonResponse({"message":"link generated successfuly","link":reset_link, "status":"success"}, status=201)
+			else:
+				token = default_token_generator.make_token(user)
+				uid = urlsafe_base64_encode(force_bytes(user.profile.uuid))
+				reset_link = f"http://127.0.0.1:8000/auth/reset_password/{uid}/{token}/"
+				print(reset_link)
+				return JsonResponse({"message":"link generated successfuly","link":reset_link, "status":"success"}, status=201)
 		else:
 			return JsonResponse({"errors":{"email":["Not Found"]}, "status":"error"}, status=404)
 	else:
@@ -164,6 +172,34 @@ def reset_password(request, uidb64, token):
 	if user is not None and default_token_generator.check_token(user, token):
 		if request.method == 'POST':
 			data = request.POST
+			password = data['new_password']
+			re_password = data['new_password2']
+			print(re_password)
+			if password != re_password:
+				return render(request, 'reset_password.html')
+			else:	
+				user.password = make_password(password)
+				user.save()
+				print(user)
+				return render(request,'complete_reset.html')
+		
+	return render(request, 'reset_password.html')
+
+
+@csrf_exempt
+def reset_password_staff(request, uidb64, token):
+	try:
+		uid = force_str(urlsafe_base64_decode(uidb64))
+		user = User.objects.get(id=uid)
+		print(uid, "8"*20)
+	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+
+	print(token)
+	if user is not None and default_token_generator.check_token(user, token):
+		if request.method == 'POST':
+			data = request.POST
+			print(data)
 			password = data['new_password']
 			re_password = data['new_password2']
 			print(re_password)

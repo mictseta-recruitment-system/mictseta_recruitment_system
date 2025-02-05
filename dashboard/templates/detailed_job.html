@@ -13,6 +13,50 @@
  
 {% block content %}
 
+
+<div class="card shadow  mb-5 mt-5 bg-body rounded">
+
+  <div class="card-body">
+    <div class="stage">
+    <div class="progress-container" id="progressBar">
+        <div class="step">1</div>
+        <div class="step">2</div>
+        <div class="step">3</div>
+        <div class="step">4</div>
+        <div class="step">5</div>
+        <div class="step">6</div>
+        <div class="step">7</div>
+        <div class="step">8</div>
+        <div class="step">9</div>
+    </div>
+    <div class="label-container">
+        <div class="label">Identifying</div>
+        <div class="label">Requisition</div>
+        <div class="label">Advertisement</div>
+        <div class="label">Application</div>
+        <div class="label">Screening</div>
+        <div class="label">Interview</div>
+        <div class="label">Verification</div>
+        <div class="label">Offer</div>
+        <div class="label">Complete</div>
+    </div>
+    <script>
+        let current_step = {{job.current_step}};
+        let steps = document.querySelectorAll(".step");
+        
+        steps.forEach((step, index) => {
+            if (index < current_step - 1) {
+                step.classList.add("completed");
+            } else if (index === current_step - 1) {
+                step.classList.add("current");
+            }
+        });
+    </script>
+  </div>
+  </div>
+
+</div>
+
 <div class="job-details-container mt-5">
   <div class="card shadow  mb-5 bg-body rounded">
     <div class="card-header d-flex justify-content-between">

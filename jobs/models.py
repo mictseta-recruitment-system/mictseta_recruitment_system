@@ -20,8 +20,17 @@ class JobPost(models.Model):
     is_active = models.BooleanField(null=False, default=True)
     is_filter= models.BooleanField(null=False, default=False)
     hide_application = models.BooleanField(null=False,default=False)
+    current_step = models.IntegerField(null=False, default=1)
     def __str__(self):
         return f'{self.title} '
+
+class Alert(models.Model):
+    vacancy = models.ForeignKey(User, on_delete=models.CASCADE)
+    note = models.CharField(max_length=250, null=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    completed = models.BooleanField(null=False, default=False)
+    step = models.IntegerField(null=False)
+
  
 class Academic(models.Model):
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name='educations')

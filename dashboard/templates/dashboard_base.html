@@ -55,25 +55,42 @@
       z-index: 2060;
     }
     
-    .sidebar {
-    width: 210px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    height: 100vh; /* Full height of the viewport */
-    overflow-y: auto; /* Enable vertical scrolling */
-    padding-top: 0px;
-    background: linear-gradient(to bottom right, #007bff, #477dfc);
+    {% if user.is_superuser and user.staffprofile.department == "LINE" %}
+         .sidebar {
+            z-index: 3000;
+            width: 210px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            height: 100vh; /* Full height of the viewport */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-top: 0px;
+            background: darkblue;
+        }
+
+    {% else %}
+     .sidebar {
+        width: 210px;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        height: 100vh; /* Full height of the viewport */
+        overflow-y: auto; /* Enable vertical scrolling */
+        padding-top: 0px;
+        background: linear-gradient(to bottom right, #007bff, #477dfc);
 }
+    {% endif %}
+   
 
 
     .navbar {
   z-index: 2000;
   position: fixed;
-  width: auto; /* Adjust the width as needed */
+  /* Adjust the width as needed */
   top: 0;
-  right: 50px; /* Aligns the navbar to the right */
+  right: 0px; /* Aligns the navbar to the right */
   background-color: white;
   padding: 10px;
   display: flex;
@@ -224,20 +241,96 @@
         .your-answer {
             color: #007bff;
         }
+        .stage {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: ;
+                        flex-direction: column;
+        }
+        .progress-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            
+            position: relative;
+        }
+        .progress-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: #ccc;
+            z-index: -1;
+            transform: translateY(-50%);
+        }
+        .step {
+            width: 40px;
+            height: 40px;
+            background-color: gray;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            position: relative;
+            transition: background-color 0.3s;
+            z-index: 1;
+        }
+        .step.completed {
+            background-color: green;
+        }
+        .step.current {
+            background-color: orange;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 5px;
+            background-color: #ccc;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+        .step.completed::after {
+            background-color: green;
+        }
+        .label-container {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            
+            margin-top: 10px;
+        }
+        .label {
+            text-align: center;
+            font-size: 12px;
+            width: 40px;
+            overflow: visible;
+        }
   </style>
 
   {% block styles %}
   {% endblock %}
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light">
+  <nav class="navbar navbar-expand-lg navbar-light w-100">
     <a class="navbar-brand" href="#"></a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav" >
+        <span class=" text-dark" style="font-size: 20px; font-weight: 600; text-transform: uppercase;  margin-left: 200px">
+        {{user.staffprofile.department}} {{user.staffprofile.job_title}}</span>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item d-flex align-items-center"> <!-- Flex alignment for vertical centering -->
                 <a href="{% url 'dashboard.get_notifications' %}">
@@ -254,12 +347,14 @@
                     </button>
                 </a>
                 <!-- Added margin to the text for spacing -->
-                <span class="ml-3 text-dark" style="font-size: 20px; font-weight: 600; text-transform: uppercase; margin: 0;">Administrator System</span>
+                
             </li>
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-user-circle" style="color: grey; font-size: 30px; margin-right: 10px;"></i> <!-- Grey user icon -->
+                    {{user.first_name}} {{user.last_name}}
+                    <i class="fas fa-user-circle px-3" style="color: grey; font-size: 30px; margin-right: 10px;"></i> <!-- Grey user icon -->
+                  
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -287,14 +382,14 @@
         <i class="fas fa-tachometer-alt"></i> Dashboard
     </a>
     <div class="collapse" id="dashboardMenu">
-        {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+        {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "LINE" %}
             <a href="{% url 'dashboard.panel' %}" class="pl-4">Panel</a>
         {% else %}
             <a href="{% url 'dashboard.emp_panel' %}" class="pl-4">Panel</a>
         {% endif %}
     </div>
 
-    {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "MANAGER" %}
+    {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "LINE" %}
     <!-- Divider -->
     <hr style="border-top: 1px solid #ffffff;">
 
@@ -370,7 +465,7 @@
 
     <!-- Divider -->
     <hr style="border-top: 1px solid #ffffff;">
-
+    {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "IT" %}
     <div class="menu-section">
         <a href="#" data-toggle="collapse" data-target="#aduit_logMenu" aria-expanded="false" aria-controls="aduit_logMenu">
             <i class="fas fa-bar-chart"></i> Audit Log
@@ -388,6 +483,7 @@
         <i class="fa fa-database mt-3 ml-2 position-absolute text-white" aria-hidden="true"></i>
         <a href="{% url 'dashboard.backup_database' %}" class="ml-4">Backup / Restore</a>
     </div>
+    {% endif %}
 </div>
 
 <div class="main-content">

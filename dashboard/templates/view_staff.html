@@ -39,6 +39,7 @@ Manage Users
                                <th class="bg-dark text-white">ID</th>
                                 <th class="bg-dark text-white">Name</th>
                                 <th class="bg-dark text-white">Email</th>
+                                <th class="bg-dark text-white">Department</th>
                                 <th class="bg-dark text-white">Role</th>
                                 <th class="bg-dark text-white">is Active</th>
                                 <th class="bg-dark text-white">Action</th>
@@ -54,10 +55,11 @@ Manage Users
                                     <td><img src="{% static 'dashboard/images/default_user.jpg' %}" class="rounded-circle" alt="..." style="width:30px;height: 30px;"><b>{{staff.first_name}} {{staff.last_name}}</b></td>
                                   {% endif %}
 
-                                <td>{{staff.email}}</td>
+                                 <td>{{staff.email}}</td>
+                                <td>{{staff.staffprofile.department}}</td>
                                 {% if staff.is_staff %}
                                
-                                <td>{{staff.staffprofile.department}}</td>
+                                <td>{{staff.staffprofile.job_title}}</td>
                                 {% else %}
                                 <td>Applicant</td>
                                 {% endif %}
