@@ -20,6 +20,39 @@
 
 {% block content %}
 
+<style>
+  /* Ensure modals are always on top */
+  .modal {
+      z-index: 1050 !important;
+  }
+  
+  /* Ensure the modal backdrop is properly layered */
+  .modal-backdrop {
+      z-index: 1040 !important;
+  }
+  
+  /* Fix for elements potentially overlapping the modal */
+  body.modal-open {
+      overflow: hidden; /* Prevents background scrolling */
+      padding-right: 0 !important; /* Prevents shifting due to scrollbar */
+  }
+  
+  /* Ensure modals are fully visible */
+  .modal-dialog {
+      position: relative;
+      margin: auto;
+      top: 30%;
+      transform: translateY(-50%);
+  }
+  
+  /* Fix for Bootstrap 5 modal backdrop issue */
+  .modal.show {
+      display: block !important;
+  }
+  
+  </style>
+  
+
 <div class="card shadow  mb-3 mt-5 bg-body rounded">
 
   <div class="card-body">
