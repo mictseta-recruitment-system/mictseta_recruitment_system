@@ -65,7 +65,7 @@ def sign_in(request):
 			if user is not None:
 				login(request, user)
 				if user.is_staff:
-					return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success', 'user_type':'staff'}, status=200)
+					return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success', 'user_type':'staff', 'department':user.staffprofile.department}, status=200)
 					
 				return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success', 'user_type':'seeker'}, status=200)
 				

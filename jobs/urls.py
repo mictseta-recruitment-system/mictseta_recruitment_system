@@ -51,7 +51,12 @@ urlpatterns = [
     path('delete_answer/', views.delete_answer, name='delete_answer'),
     path('take_quiz/', views.take_quiz, name='take_quiz'),
      path('enable_or_disable_quiz/', views.enable_or_disable_quiz, name='enable_or_disable_quiz'),
-
+     
+     path('requisition/', views.requisition, name='requisition'),
+     path('approve_requisition/', views.approve_requisition, name='approve_requisition'),
+     path('approve_requisition_ceo/', views.approve_requisition_ceo, name='approve_requisition_ceo'),
+    
+  
 
 
     # path('delete_user/', views.delete_user, name='delete_user')

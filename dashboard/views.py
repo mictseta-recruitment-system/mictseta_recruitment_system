@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -79,8 +79,17 @@ def emp_panel(request):
 		for cat in categoreis:
 			cats.append(cat.name)
 			data.append(len(Task.objects.filter(category=cat, is_complete=False, assigned_to=request.user)))
-		
-		return render(request,'emp_panel.html', {'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data)})
+		alerts = None
+		if request.user.staffprofile.department == "FINANCE":
+			alerts = Alert.objects.filter(step=2).all()
+		if request.user.staffprofile.department == "CEO":
+			alerts = Alert.objects.filter(step=2, completed=True).all()
+		if request.user.staffprofile.department == "HR":
+			alerts = Alert.objects.filter(step=3, status="pending").all()
+		if request.user.staffprofile.department == "LINE":
+			alerts = Alert.objects.filter(step=3,status="approved").all()
+
+		return render(request,'emp_panel.html', {'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data), 'alerts':alerts})
 	else:
 		return redirect('render_auth_page')
 
@@ -156,6 +165,16 @@ def filter_job_application(request,jobID):
 	else:
 		return redirect('render_auth_page')
 
+@csrf_protect
+def application_jobs(request):
+	if request.user.is_authenticated:
+		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
+		for vacancy in applied_jobs:
+			appl = vacancy.jobapplication_set.all()
+			print(appl)
+		return render(request,'application_jobs.html',{'applied_jobs':applied_jobs})
+	else:
+		return redirect('render_auth_page')
 
 @csrf_protect
 def add_job(request):
@@ -288,7 +307,7 @@ def edit_job(request, jobID):
 			soft_prof = SoftProficiency.objects.all()
 			qualification = Qualification.objects.all()
 			nqf_level = NQF.objects.all()
-			
+			print(job.is_complete, job.current_step)
 			return render(request,'edit_job.html',
 				{
 				'job':job, 

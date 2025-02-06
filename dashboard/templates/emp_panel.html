@@ -57,6 +57,8 @@ Employee Panel
 #startShiftButton:hover {
     background-color: #2980b9; /* Darker blue on hover */
 }
+
+  
 {% endblock %}
 
 
@@ -80,7 +82,7 @@ Employee Panel
 <input type="text" name="{{status}}" value="{{status}}" id="status" hidden>
 <input type="text" name="link" value="{% url 'end_attendace' user.id %}" id="links" hidden> -->
 
-<div class="row">
+<div class="row mt-4">
     <!-- <div class="col-12 col-lg-6 shadow-lg rounded p-3 ">
         <div>
             <h3 id="countdownHeader">Shift starts in</h3>
@@ -102,10 +104,56 @@ Employee Panel
             
         </div>
     </div> -->
+
+<div class="col-6">
+    <div class="noti-body mx-2">
+        <div class="notif-container">
+            {% for alert in alerts %}
+            <div class="notif-card">
+                <div class="notif-card-content">
+                    <h3>{{alert.vacancy}} 
+                        
+                        {% if user.staffprofile.department == "CEO" and alert.vacancy.req_ceo_approval %}
+                        <span class="notif-status notif-completed">Completed</span>
+                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_ceo_approval%}
+                            <span class="notif-status notif-pending">Pending</span>
+                        {% endif %}
+
+                        {% if user.staffprofile.department == "FINANCE" and alert.vacancy.req_finance_approval %}
+                        <span class="notif-status notif-completed">Completed</span>
+                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_finance_approval%}
+                            <span class="notif-status notif-pending">Pending</span>
+                        {% endif %}
+
+                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or alert.vacancy.status == "open" %}
+                        <span class="notif-status notif-completed">Completed</span>
+                        {% elif  user.staffprofile.department == "HR" and  alert.vacancy.status == "waiting" %}
+                            <span class="notif-status notif-pending">Pending</span>
+                        {% endif %}
+
+                      </h3>  
+                    <p class="notif-note">{{alert.note}}</p>
+                    <p class="notif-timestamp">timestamp: {{alert.timestamp}}</p>
+                </div>
+                <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
+            </div>
+            {% endfor %}
+
+
+           
+            
+            
+            
+        </div>
+    </div>
     
-        <div class="col-12 col-lg-6 ">
+</div>
+    
+
+<div class="col-6">
+    <div class="mb-3">
             <div class="card" style="width:100%;height:100%;">
-              <div class="card-body shadow-lg rounded-2" style="width:100%;height:100%;">
+              <div class="card-body shadow- rounded-2" style="width:100%;height:100%;">
                 <h5 class="card-title">Pending Tasks</h5>
                 <canvas id="pendingTask" style="width:100%;height:100%;"></canvas>
               </div>
@@ -113,9 +161,9 @@ Employee Panel
           </div>
 
     
-    <div class="col-12 col-lg-6 mt-3">
+    <div class="">
         <div>
-            <div class="card shadow-lg rounded-2 " style="max-height:330px;">
+            <div class="card shadow- rounded-2 " style="max-height:330px;">
               <h5 class="card-header d-flex justify-content-between">
                 <span>
                     <i class="fas fa-bell text-dark"  > 
@@ -174,6 +222,9 @@ Employee Panel
         </div>
 
     </div>
+    
+
+</div>
 
 </div>
 

@@ -42,6 +42,7 @@ urlpatterns = [
     path('quiz_results/<int:quiz_id>/<int:user_id>/<int:application_id>/', views.quiz_results, name="dashboard.quiz_results"),
    
 
+    path('application_jobs', views.application_jobs, name="dashboard.application_jobs"),
 
 
     

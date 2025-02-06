@@ -17,6 +17,27 @@
 <div class="card shadow  mb-5 mt-5 bg-body rounded">
 
   <div class="card-body">
+     <h5> 
+        {% if job.current_step == 1 %}
+            Current stage : Identify Vacancy
+        {% elif job.current_step == 2 %}
+             Current stage : Requisition Process
+        {% elif job.current_step == 3 %}
+             Current stage : Vacancy Advertisement 
+        {% elif job.current_step == 4 %}
+             Current stage : Application Process
+        {% elif job.current_step == 5 %}
+             Current stage : Screening and Nomination
+        {% elif job.current_step == 6 %}
+             Current stage : Shortlisting and Interview
+        {% elif job.current_step == 7 %}
+             Current stage : Verification and Approval 
+        {% elif job.current_step == 8 %}
+             Current stage : Offer letter and Candidate Feedback
+        {% elif job.current_step == 9 %}
+             Current stage : Vacancy Cylce Complete
+        {% endif %}
+    </h5>
     <div class="stage">
     <div class="progress-container" id="progressBar">
         <div class="step">1</div>
@@ -62,13 +83,17 @@
     <div class="card-header d-flex justify-content-between">
       <span>Job Title: <span id="jobTitle">{{job.title}}</span></span>
       <div>
-         <a class="btn btn-success " type="button" href="{% url 'dashboard.new_quiz' job.id %}">
-                            <i class="fa fa-plus"></i>
-                           Add/Edit  Quiz
-                        </a>
+        {% if job.current_step >= 4 %}
         <a href="/dashboard/filter_job_application/{{job.id}}"  class="btn btn-info ">view Applications </a>
-        <a href=" /dashboard/edit_job/{{job.id}}"  class="btn btn-warning "><i class="fa fa-edit"></i> edit </a>
-       
+        {% endif %}
+
+        {% if job.current_step <= 4 %}
+         <a class="btn btn-success " type="button" href="{% url 'dashboard.new_quiz' job.id %}">
+           <i class="fa fa-plus"></i>
+             Edit  Quiz
+        </a>
+        <a href=" /dashboard/edit_job/{{job.id}}"  class="btn btn-warning "><i class="fa fa-edit"></i> edit vacancy</a>
+       {% endif %}
       </div>
     </div>
     <div class="card-body">

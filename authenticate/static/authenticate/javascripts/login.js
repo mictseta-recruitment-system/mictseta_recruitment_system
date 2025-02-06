@@ -39,8 +39,13 @@ function handle_sign_in_button_click() {
         }
       } else if (data.status === "success") {
         if (data.user_type === "staff") {
-          showFlashMessage(data.message, "success");
-          window.location.href = "/dashboard";
+          if (data.department === "ADMINISTRATOR") {
+            showFlashMessage(data.message, "success");
+            window.location.href = "/dashboard";
+          } else{
+            showFlashMessage(data.message, "success");
+            window.location.href = "/dashboard/emp_panel";
+          }
         } else {
           showFlashMessage(data.message, "success");
           window.location.href = "/";

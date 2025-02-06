@@ -1,0 +1,30 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Applications {% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      {% if filtered %}
+      <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{applications.0.job.id}}/"  class="btn btn-outline p-0"> {{applications.0.job.title}}</a> </li>
+
+      {% else %}
+      <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> all </a> </li>
+      {% endif %}
+      <li class="breadcrumb-item active" aria-current="page" ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Applications </a></li>
+ {% endblock %}
+
+
+ {% block content %}
+<div class="  mt-3 ">
+       <a href="{% url 'dashboard.job_applications' %}" class="btn btn-info m-1">filter by : ALL
+       </a>
+    {% for applied_job in applied_jobs %}
+
+      
+          <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
+
+      
+
+    {% endfor %}
+ {% endblock%}

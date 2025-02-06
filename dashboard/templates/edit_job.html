@@ -23,7 +23,27 @@
 <div class="card shadow  mb-3 mt-5 bg-body rounded">
 
   <div class="card-body">
-    <h4>Current stage : Identify Vacancy</h4>
+    <h5> 
+        {% if job.current_step == 1 %}
+            Current stage : Identify Vacancy
+        {% elif job.current_step == 2 %}
+             Current stage : Requisition Process
+        {% elif job.current_step == 3 %}
+             Current stage : Vacancy Advertisement 
+        {% elif job.current_step == 4 %}
+             Current stage : Application Process
+        {% elif job.current_step == 5 %}
+             Current stage : Screening and Nomination
+        {% elif job.current_step == 6 %}
+             Current stage : Shortlisting and Interview
+        {% elif job.current_step == 7 %}
+             Current stage : Verification and Approval 
+        {% elif job.current_step == 8 %}
+             Current stage : Offer letter and Candidate Feedback
+        {% elif job.current_step == 9 %}
+             Current stage : Vacancy Cylce Complete
+        {% endif %}
+    </h5>
     <div class="stage">
     <div class="progress-container" id="progressBar">
         <div class="step">1</div>
@@ -79,14 +99,21 @@
                 <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
                 		
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#profileinformation" type="button" role="tab" aria-controls="profileinformation" aria-selected="true">
+                        <button class="nav-link {% if job.current_step != 3 %}active{% endif %}" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#profileinformation" type="button" role="tab" aria-controls="profileinformation" aria-selected="true">
                             <i class="fa fa-user"></i> Vacancy/job Information
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-company-tab" data-bs-toggle="pill" data-bs-target="#companyinformation" type="button" role="tab" aria-controls="companyinformation" aria-selected="false">
+                        {% if job.current_step >= 3 %}
+
+                        <button class="nav-link {% if job.current_step == 3 %}active{% endif %}" id="pills-company-tab" data-bs-toggle="pill" data-bs-target="#companyinformation" type="button" role="tab" aria-controls="companyinformation" aria-selected="false">
                             <i class="fa fa-building"></i> Vacancy/job Requirements
                         </button>
+                        {% else %}
+                        <button class="btn btn-secondary mx-2" disabled >
+                            <i class="fa fa-lock"></i> Vacancy/job Requirements
+                        </button>
+                        {% endif %}
                     </li>
                     <!-- <li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-vacancies-tab" data-bs-toggle="pill" data-bs-target="#vacanciesc" type="button" role="tab" aria-controls="vacanciesc" aria-selected="false">
@@ -107,7 +134,7 @@
                 <!-- Tab Content -->
                 <div class="tab-content" id="pills-tabContent">
                     <!-- Profile Information -->
-                    <div class="tab-pane fade show active" id="profileinformation" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="tab-pane fade show {% if job.current_step != 3 %}active{% endif %}" id="profileinformation" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <h4 class="d-flex justify-content-between">
                             <span>Job/Vacancy Information</span>
 
@@ -238,19 +265,31 @@
                                     </div>
                                 </div>
                             </form>
-                            <button class="btn btn-primary" onclick="updateJob({{ job.id }}, 'spinner', 'editJob')">Save & update</button>
+                            
 
                             {% if not job.is_complete and job.current_step == 1 %}
-                                 <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-success mt-2 ">Submit Requisition</button>
+                                {% if user.staffprofile.department == "LINE" and user.staffprofile.job_title == "Manager" %}
+                                <button class="btn btn-primary" onclick="updateJob({{ job.id }}, 'spinner', 'editJob')">Save & update</button>
+                                 <button type="button" role="button" onclick="submit_requisition({{job.id}})" class="btn btn-success mt-2 ">Submit Requisition</button>
+                                {% endif %}
+                                
 
-                            {% elif not job.is_complete and job.current_step == 2 %}
+                            {% elif not job.is_complete and job.current_step == 2  %}
+                                {% if user.staffprofile.department == "FINANCE" and not job.req_finance_approval %}
+                                 <button type="button" role="button" onclick="approve_requisition({{job.id}})" class="btn btn-success mt-2 ">Approve Requisition</button>
+                                {% elif user.staffprofile.department == "CEO" and  job.req_finance_approval %}
+                                     <button type="button" role="button" onclick="approve_requisition_ceo({{job.id}})" class="btn btn-success mt-2 ">Approve Requisition</button>
+                                {% endif %}
 
                             {% elif not job.is_complete and job.current_step == 3 %}
-
+                            {% if user.staffprofile.department == "HR"%}
+                             <button class="btn btn-primary" onclick="updateJob({{ job.id }}, 'spinner', 'editJob')">Save & update</button>
+                            <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-success mt-2 ">Submit for approval</button>
+                            {% endif %}
                             {% elif not job.is_complete and job.current_step == 4 %}
 
                             {% elif not job.is_complete and job.current_step == 5 %}
-                             <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-success mt-2 ">Submit for approval</button>
+                             
                             
                             {% endif %}
 
@@ -260,7 +299,7 @@
                     </div>
 
                     <!-- Company Information -->
-                    <div class="tab-pane fade" id="companyinformation" role="tabpanel" aria-labelledby="pills-company-tab">
+                    <div class="tab-pane fade show {% if job.current_step == 3 %}active{% endif %}" id="companyinformation" role="tabpanel" aria-labelledby="pills-company-tab">
                     	<div class="d-flex justify-content-between">
                     		
                         <h4 class="d-flex justify-content-between"> 
@@ -318,10 +357,12 @@
                          <div class="col-6 shadow-lg p-3 rounded mb-5 d-flex justify-content-between w-100">
                             <div class="col-6">
                                 <h5 class="d-flex justify-content-between">
-                                    <span>Computer Skills</span>  
+                                    <span>Computer Skills</span>
+                                    {% if user.staffprofile.department == "HR" %}  
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#computer_skill">
                                       <i class="fa fa-plus"> </i> add
                                     </button>
+                                    {% endif %}
 
                                 </h5>
                                 <hr style="color: red;">
@@ -340,9 +381,11 @@
                             <div class="col-6">
                                 <h5 class="d-flex justify-content-between">
                                     <span>Soft Skills</span>
+                                    {% if user.staffprofile.department == "HR" %}
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#soft_skill">
                                       <i class="fa fa-plus"> </i> add
                                     </button>
+                                    {% endif %}
                                 </h5>
                                 <hr style="color: red;">
                                 {% for skill in job.S_skills.all %}
@@ -359,7 +402,7 @@
                                 <!-- Salary is not displayed -->
                             </div>
                           </div>
-                             
+                            
                             
                         </div>
 
@@ -369,9 +412,11 @@
                             <div class="col-6">
                                 <h5 class="d-flex justify-content-between">
                                     <span>Qualification</span>
+                                    {% if user.staffprofile.department == "HR" %}
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#qualification_d">
                                          <i class="fa fa-plus"></i> add
                                     </button>
+                                    {% endif %}
                                 </h5>
                                 <hr style="color: red;">
                                  <ul class="list-group list-group-flush">
@@ -391,9 +436,11 @@
                             <div class="col-6">
                                 <h5 class="d-flex justify-content-between"> 
                                     <span>Experience</span>
+                                    {% if user.staffprofile.department == "HR" %}
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#experience_d">
                                       <i class="fa fa-plus"></i> add
                                     </button>
+                                    {% endif %}
                                 </h5>
                                 <hr style="color: red;">
                                 
@@ -423,9 +470,11 @@
                             <div class="col-6">
                                 <h5 class="d-flex justify-content-between">
                                     <span>Duties & Responsibilities</span>
+                                    {% if user.staffprofile.department == "HR" %}
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#requirements_d">
                                      <i class="fa fa-plus"></i> add
                                     </button>
+                                    {% endif %}
                                 </h5>
                                 <hr style="color: red;">
                                  <ul class="list-group list-group-flush">
@@ -445,9 +494,11 @@
                             <div class="col-6">
                                 <h5 class="d-flex justify-content-between" > 
                                     <span>Languages</span>
+                                    {% if user.staffprofile.department == "HR" %}
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#language_d">
                                       <i class="fa fa-plus"></i> add
                                     </button>
+                                    {% endif %}
 
                                 </h5>
                                 <hr style="color: red;">
@@ -481,13 +532,20 @@
                             </div>
                           </div>
                              
-                            
+                             {% if not job.is_complete and job.current_step == 3 %}
+                            {% if user.staffprofile.department == "HR"%}
+                             {% if job.quiz %}
+                            <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-info mt-2 ">Submit for approval</button>
+                            {% else %}
+                                <a class="btn btn-success " type="button" href="{% url 'dashboard.new_quiz' job.id %}">
+                                <i class="fa fa-plus"></i>
+                               Add Short Questions
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
                         </div>
-                        {% if job.is_complete %}
-
-                        {% else %}
-                        <button type="button" role="button" onclick="completeJob({{job.id}})" class="btn btn-success w-100  ">Submit for approval</button>
-                        {% endif %}
+                        
                     </div>
 
                     <!-- Vacancies Created -->

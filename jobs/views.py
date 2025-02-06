@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers,Alert
 from config.models import JobTitle, Industry
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from .filters import ApplicationFilter
@@ -200,6 +200,78 @@ def add_job(request):
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+@check_leave
+@csrf_protect
+def requisition(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+   
+    jobID = json_data.get('job_post_id')
+    print(jobID)
+    vacancy = JobPost.objects.get(id=int(jobID))
+    vacancy.current_step += 1
+    vacancy.save()
+    alert = Alert.objects.create(note="Vacancy submitted for Requsition Approval", vacancy=vacancy, step=vacancy.current_step, status="pending")
+    alert.save()
+    return JsonResponse({'message': 'Vacancy submitted for requisition approval', 'status': 'success'}, status=201)
+
+@check_leave
+@csrf_protect
+def approve_requisition(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+   
+    jobID = json_data.get('job_post_id')
+    print(jobID)
+    vacancy = JobPost.objects.get(id=int(jobID))
+    vacancy.req_finance_approval = True
+    vacancy.save()
+    alert = Alert.objects.get(vacancy=vacancy, step=2)
+    alert.completed = True
+    alert.save()
+    
+    return JsonResponse({'message': 'Requisition Approved, Submitted to CEO', 'status': 'success'}, status=201)
+
+@check_leave
+@csrf_protect
+def approve_requisition_ceo(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+   
+    jobID = json_data.get('job_post_id')
+    print(jobID)
+    vacancy = JobPost.objects.get(id=int(jobID))
+    if vacancy.req_finance_approval:
+    	vacancy.req_ceo_approval = True
+    	vacancy.current_step += 1
+    	vacancy.save()
+    else:
+    	return JsonResponse({'errors': { "Missing step" : ['Finance must approve first']}, 'status':'error'}, status=403)
+
+    alert = Alert.objects.create(note="Requisition Approved, Prepare Vacancy for Advertisment", vacancy=vacancy, step=vacancy.current_step, status="pending")
+    alert.save()
+    return JsonResponse({'message': 'Requisation Approved by ceo', 'status': 'success'}, status=201)
+
 
 
 @check_leave
@@ -1492,6 +1564,8 @@ def complete_job(request):
 				job_post.save()
 				noty = Notification.objects.create(user=request.user, action="Submitted Job for Approval", job_title=job_post.title.title, status=job_post.status)
 				noty.save()
+				alert = Alert.objects.create(note="Vacancy submitted for Advertisment Approval", vacancy=job_post, step=job_post.current_step, status="approved")
+				alert.save()
 				return JsonResponse({'message': 'Job Post submitted. waiting approval by Land Mananger', 'status': 'success'}, status=200)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
@@ -1524,9 +1598,12 @@ def approve_job(request):
 				job_post = JobPost.objects.get(id=int(data['job_post_id']))
 				job_post.is_approved = True
 				job_post.status = "open"
+				job_post.current_step += 1
 				job_post.save()
-				#noty = Notification.objects.create(user=request.user, action="Job Approval", job_title=job_post.title, status=job_post.status)
+				noty = Notification.objects.create(user=request.user, action="Vacancy Approved for Advertisment", job_title=job_post.title.title, status=job_post.status)
 				noty.save()
+				alert = Alert.objects.create(note="Vacancy Approved for Advertisment, accepting applications", vacancy=job_post, step=job_post.current_step, status="pending")
+				alert.save()
 				return JsonResponse({'message': 'Job Post approved successfully', 'status': 'success'}, status=200)
 			except Exception as e:
 				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)

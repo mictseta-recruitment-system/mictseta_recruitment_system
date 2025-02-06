@@ -21,14 +21,17 @@ class JobPost(models.Model):
     is_filter= models.BooleanField(null=False, default=False)
     hide_application = models.BooleanField(null=False,default=False)
     current_step = models.IntegerField(null=False, default=1)
+    req_finance_approval = models.BooleanField(null=False, default=False)
+    req_ceo_approval = models.BooleanField(null=False, default=False)
     def __str__(self):
         return f'{self.title} '
 
 class Alert(models.Model):
-    vacancy = models.ForeignKey(User, on_delete=models.CASCADE)
+    vacancy = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name="alert3")
     note = models.CharField(max_length=250, null=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(null=False, default=False)
+    status = models.CharField(max_length=250, null=False,default="pending")
     step = models.IntegerField(null=False)
 
  
@@ -139,7 +142,7 @@ class FeedBack(models.Model):
 
 class Quiz(models.Model):
     staff = models.ForeignKey(User, on_delete=models.CASCADE)
-    job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    job = models.ForeignKey(JobPost, on_delete=models.CASCADE,related_name="quiz")
     title = models.CharField(max_length=200)
     is_active = models.BooleanField(default=False)
 
