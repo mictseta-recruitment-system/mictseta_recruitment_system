@@ -100,8 +100,9 @@
                   {% if filtered %}
                   <div>
                        <!--  <button class="btn btn-danger" onclick="auto_filter('{{applications.0.job.id}}','strict')">Strict filter</button> -->
+                       {% if applications.0.job.current_step > 4 %}
                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#strict"> strict filter
-                              </button>
+                     </button>
                               <div class="modal fade" id="strict" tabindex="-1" aria-labelledby="strict" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable  modal-lg">
                                   <div class="modal-content">
@@ -152,7 +153,7 @@
                        
                         <!-- <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button> -->
                          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#standard"> Standard filter
-                              </button>
+                          </button>
                               <div class="modal fade" id="standard" tabindex="-1" aria-labelledby="standard" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable  modal-lg">
                                   <div class="modal-content">
@@ -184,6 +185,10 @@
                                   </div>
                                 </div>
                               </div>
+                        {% else %}
+                            <button type="button" class="btn btn-info" > Start Screening and Nomination process
+                          </button>
+                        {% endif %}
                        
 
                         {% if applications.0.job.is_filter %}

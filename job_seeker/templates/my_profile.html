@@ -180,39 +180,66 @@
             <div class="row">
 
                 <!-- Module 1: Personal Details -->
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="section-title">
-                                <i class="fas fa-user icon"></i>
-                                <h5>Personal Details</h5>
-                                <div class="profile-actions">
-                                    <button class="btn btn-link" data-toggle="modal" data-target="#personalDetailsModal">
-                                        <i class="fas fa-plus fa-lg"></i> Add/Edit
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="profile-info">
-                                <p><strong>ID Number:</strong> {{ user.profile.idnumber }}</p>
-                                <p><strong>First Name:</strong> {{ user.first_name }}</p>
-                                <p><strong>Surname:</strong> {{ user.last_name }}</p>
-                                <p><strong>Gender:</strong> {{ user.profile.gender }}</p>
-                                <p><strong>Marital Status:</strong> {{ user.profile.maritial_status }}</p>
-                                <p><strong>Race:</strong> {{ user.profile.race }}</p>
-                                <p><strong>Date of Birth:</strong> {{ user.profile.dob }}</p>
-                                <p><strong>Disability:</strong> {{ user.profile.disability }}</p>
-                                <p><strong>Email:</strong> {{ user.email }}</p>
-                                <p><strong>Phone Number:</strong> {{ user.profile.phone }}</p>
-                                <p><strong>LinkedIn Profile:</strong>
-                                    <a href="{{ user.profile.linkedin_profile }}" target="_blank">{{ user.profile.linkedin_profile }}</a>
-                                </p>
-                                <p><strong>Personal Website:</strong> {{ user.profile.personal_website }}</p>
-                                <p><strong>Cover Letter:</strong></p>
-                                <textarea class="form-control" rows="6" readonly>{{ user.profile.cover_letter }}</textarea>
-                            </div>
-                        </div>
+   <div class="col-md-12">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user-circle fa-2x text-primary me-2"></i>
+                    <h5 class="mb-0">Personal Details</h5>
+                </div>
+                <button class="btn btn-primary rounded-circle shadow" data-toggle="modal" data-target="#personalDetailsModal">
+                    <i class="fas fa-pen"></i>
+                </button>
+            </div>
+            
+            <div class="profile-info">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>ID Number:</strong> {{ user.profile.idnumber }}</li>
+                            <li class="list-group-item"><strong>First Name:</strong> {{ user.first_name }}</li>
+                            <li class="list-group-item"><strong>Surname:</strong> {{ user.last_name }}</li>
+                            <li class="list-group-item"><strong>Gender:</strong> {{ user.profile.gender }}</li>
+                            <li class="list-group-item"><strong>Marital Status:</strong> {{ user.profile.maritial_status }}</li>
+                            <li class="list-group-item"><strong>Race:</strong> {{ user.profile.race }}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Date of Birth:</strong> {{ user.profile.dob }}</li>
+                            <li class="list-group-item"><strong>Disability:</strong> {{ user.profile.disability }}</li>
+                            <li class="list-group-item"><strong>Email:</strong> 
+                                <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
+                            </li>
+                            <li class="list-group-item"><strong>Phone:</strong> 
+                                <a href="tel:{{ user.profile.phone }}" class="text-decoration-none">{{ user.profile.phone }}</a>
+                            </li>
+                            <li class="list-group-item"><strong>LinkedIn:</strong>
+                                <a href="{{ user.profile.linkedin_profile }}" target="_blank" class="text-decoration-none">
+                                    <i class="fab fa-linkedin text-primary"></i> LinkedIn Profile
+                                </a>
+                            </li>
+                            <li class="list-group-item"><strong>Personal Website:</strong> 
+                                <a href="{{ user.profile.personal_website }}" target="_blank" class="text-decoration-none">
+                                    {{ user.profile.personal_website }}
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+                
+                <div class="mt-3">
+                    <strong>Cover Letter:</strong>
+                    <textarea class="form-control mt-2" rows="6" readonly>{{ user.profile.cover_letter }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
                 <!-- Module 2: Address Details -->
                 <div class="col-md-12">

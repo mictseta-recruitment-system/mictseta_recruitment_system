@@ -148,7 +148,7 @@ def job_seeker_dashboard(request):
     proficiency = SoftProficiency.objects.all()
     job_title = JobTitle.objects.all()
 
-    working_experience = WorkingExpereince.objects.filter(user=request.user).all()
+    working_experience = WorkingExpereince.objects.filter(user=request.user.id).all()
 
     print('--------------------------------------------------')
     print(institution)
