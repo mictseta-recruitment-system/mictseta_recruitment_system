@@ -171,7 +171,7 @@ function updateJob(jobID,spinner,content) {
    
     showFlashMessage(data.message, "success");
     
-   window.location.reload(true);
+  
 
 
 
@@ -949,7 +949,7 @@ function approve_requisition(jobID) {
       handleErrors(data.errors);
     } else if (data.status === "success") {
       showFlashMessage(data.message, "success");
-      location.reload();
+      
       showFlashMessage(data.message, "success");
     
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
@@ -991,7 +991,7 @@ function approve_requisition_ceo(jobID) {
       handleErrors(data.errors);
     } else if (data.status === "success") {
       showFlashMessage(data.message, "success");
-      location.reload();
+      
       showFlashMessage(data.message, "success");
     
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
@@ -1036,7 +1036,7 @@ function completeJob(jobID, spinner, content, modal) {
     } else if (data.status === "success") {
       /*document.getElementById('modal-b' + jobID).innerHTML = '<i class="fa fa-check fa-5x text-success"></i><p>' + data.message + '</p>';
       */showFlashMessage(data.message, "success");
-      location.reload();
+    
       showFlashMessage(data.message, "success");
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
       
@@ -1079,7 +1079,7 @@ function ApproveJob(jobID) {
       handleErrors(data.errors);
     } else if (data.status === "success") {
       showFlashMessage(data.message, "success");
-      location.reload();
+      
       showFlashMessage(data.message, "success");
     
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
@@ -1121,7 +1121,7 @@ function deleteJob(jobID) {
       handleErrors(data.errors, jobID);
     } else if (data.status === "success") {
       showFlashMessage(data.message, "success");
-      location.reload()
+     
       showFlashMessage(data.message, "success");
     
       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
@@ -1163,7 +1163,7 @@ function move_to_interview(appID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
       showFlashMessage(data.message, "success");
     } else if (data.status === "warning") {
       
@@ -1203,7 +1203,7 @@ function move_to_shortlist(appID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1241,7 +1241,7 @@ function auto_move_to_shortlist(appID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+      
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1280,7 +1280,7 @@ function auto_filter(filter,mode) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1319,7 +1319,7 @@ function apply_filter(filter) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+      
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1357,7 +1357,7 @@ function show_filter(jobID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1395,7 +1395,7 @@ function hide_filter(jobID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1432,7 +1432,7 @@ function reset_filter(jobID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+ 
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1471,7 +1471,7 @@ function approve_interview(appID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1521,7 +1521,7 @@ function reject_applicantion(appID, intvw) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+    
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1557,7 +1557,7 @@ function purge() {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+    
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -1825,7 +1825,7 @@ function disableUser(username) {
     .then(response => response.json())
     .then(result => {
         if (result.status === 'success') {
-            location.reload();
+            
             showFlashMessage(result.message, "success");
            
         } else {
@@ -1905,12 +1905,12 @@ function backup_database(){
               handleErrors(data.errors);
           } else if (data.status === "success") {
             showFlashMessage(data.message, "success");
-            location.reload() 
+            
                       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
                       
           } else if (data.status === "warning") {
             showFlashMessage(data.message, "warning");
-            location.reload()
+         
                   
           }
       })
@@ -1938,14 +1938,13 @@ function restore_database(id){
               handleErrors(data.errors);
           } else if (data.status === "success") {
             showFlashMessage(data.message, "success");
-            location.reload()
+       
                     
                       /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
                       
           } else if (data.status === "warning") {
             showFlashMessage(data.message, "warning");
-            location.reload()
-                  
+           
           }
       })
       .catch(error => {
@@ -1978,7 +1977,7 @@ function delete_database(id){
                       
           } else if (data.status === "warning") {
             showFlashMessage(data.message, "warning");
-            location.reload()
+        
                   
           }
       })
@@ -2025,7 +2024,7 @@ function addTask() {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2076,7 +2075,7 @@ function updateTask(taskID) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+      
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2114,7 +2113,7 @@ function deleteTask(taskid) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+   
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2151,7 +2150,7 @@ function checkTask(taskid) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+ 
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2193,7 +2192,7 @@ function addCategory() {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+    
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2275,7 +2274,7 @@ function deleteCategory(catid) {
     } else if (data.status === "success") {
       
       showFlashMessage(data.message, "success");
-      location.reload();
+    
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2320,7 +2319,7 @@ function addQuiz(job_id) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+   
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2363,7 +2362,7 @@ function addQuestion(quiz_id) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+ 
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2406,7 +2405,7 @@ function addAnswer(question_id) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+   
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2445,7 +2444,7 @@ function deleteAnswer(answer) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+     
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");
@@ -2485,7 +2484,7 @@ function enableOrDisableQuiz(status, quiz_id) {
     } else if (data.status === "success") {
    
       showFlashMessage(data.message, "success");
-      location.reload();
+      
     } else if (data.status === "warning") {
       
       showFlashMessage(data.message, "warning");

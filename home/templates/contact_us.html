@@ -12,11 +12,14 @@
     <link rel="shortcut icon" href="{% static 'home/images/webicon.png' %}" type="image/x-icon">  
     <style>
       /* Custom styles */
-      body {
-          margin: 0;
-          padding: 0;
-      }
-    
+        body {
+            margin: 0;
+            padding: 0;
+            background-size: contain; /* Ensures the image doesn't stretch */
+            background-position: center; /* Centers the image */
+            background-repeat: no-repeat; /* Prevents repeating the image */
+            height: 100vh; /* Ensure the background covers the full viewport height */
+        }
       #navbar {
           position: sticky;
           top: 0;
