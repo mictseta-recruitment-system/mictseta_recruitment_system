@@ -168,11 +168,26 @@ def filter_job_application(request,jobID):
 @csrf_protect
 def application_jobs(request):
 	if request.user.is_authenticated:
-		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
+		applied_jobs = JobPost.objects.all()
+		vac_list = []
+
 		for vacancy in applied_jobs:
 			appl = vacancy.jobapplication_set.all()
-			print(appl)
-		return render(request,'application_jobs.html',{'applied_jobs':applied_jobs})
+    
+			data = {
+		        'vacancy': vacancy,
+		        'applications': appl.count(),
+		        'filtered': vacancy.jobapplication_set.filter(status="pending").count(),  # Corrected the typo here
+		        'shortlist': vacancy.jobapplication_set.filter(status="short_list").count(),
+		        'interview': vacancy.jobapplication_set.filter(status="interview").count(),
+		        'selected': vacancy.jobapplication_set.filter(status="selected").count(),
+		        'rejected': vacancy.jobapplication_set.filter(status="rejected").count(),
+		        'onboard': vacancy.jobapplication_set.filter(status="approved").count()
+		    }
+    
+			vac_list.append(data)
+		vac_list.reverse()
+		return render(request,'application_jobs.html',{'vac_list':vac_list})
 	else:
 		return redirect('render_auth_page')
 

@@ -95,7 +95,10 @@ Add Job Ad
           <input list="assigned_tos" class="form-control" name="assigned_to" id="assigned_to" placeholder="Select user here">
           <datalist id="assigned_tos">
             {% for emp in employees %}
-              <option value="{{emp.email}}">{{emp.first_name}} {{emp.last_name}} - {{emp.staffprofile.department}}</option>
+              {% if emp.staffprofile.department == "HR" %}
+                <option value="{{emp.email}}">{{emp.first_name}} {{emp.last_name}} - {{emp.staffprofile.department}}</option>
+              {% endif %}
+            
             {% endfor %}
           </datalist>
         </div>

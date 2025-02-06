@@ -17,14 +17,101 @@
 
  {% block content %}
 <div class="  mt-3 ">
-       <a href="{% url 'dashboard.job_applications' %}" class="btn btn-info m-1">filter by : ALL
-       </a>
-    {% for applied_job in applied_jobs %}
+     
 
-      
-          <a href="{% url 'filter_job_application' applied_job.id %}" class="btn btn-danger m-1">filter by : {{applied_job.title.title}}</a>
 
-      
+<div class="container mt-5">
+     <div class="mb-3 position-relative">
+    <input type="text" id="searchBar" class="form-control shadow-sm rounded-pill px-4 py-2" placeholder="🔍 Search by vacancy title...">
+</div>
+    <h2 class="text-center mb-4">My Vacancies</h2>
+    <div class="row" id="jobList">
+        {% for job in vac_list %}
+        
+        <div class="col-md-6 mb-4  job-card-container">
+            <div class="job-card p-3">
+              <div class="d-flex justify-content-between">
+               <a href="{% url 'filter_job_application' job.vacancy.id %}" > <h5 class="text-primary vacancy-title">{{ job.vacancy.title }}</h5></a>
+                 <h6>
+                  {% if job.vacancy.current_step == 1 %}
+                      Current stage : Identify Vacancy
+                  {% elif job.vacancy.current_step == 2 %}
+                       Current stage : Requisition Process
+                  {% elif job.vacancy.current_step == 3 %}
+                       Current stage : Vacancy Advertisement 
+                  {% elif job.vacancy.current_step == 4 %}
+                       Current stage : Application Process
+                  {% elif job.vacancy.current_step == 5 %}
+                       Current stage : Screening and Nomination
+                  {% elif job.vacancy.current_step == 6 %}
+                       Current stage : Shortlisting and Interview
+                  {% elif job.vacancy.current_step == 7 %}
+                       Current stage : Verification and Approval 
+                  {% elif job.vacancy.current_step == 8 %}
+                       Current stage : Offer letter and Candidate Feedback
+                  {% elif job.vacancy.current_step == 9 %}
+                       Current stage : Vacancy Cylce Complete
+                  {% endif %}
+                </h6>
+                
+              </div>
 
-    {% endfor %}
+
+                <p class="text-muted">Total Applications: <strong>{{ job.applications }}</strong></p>
+
+                <div class="row">
+                    <div class="col-6">
+                        <p class="status-text">Pending: {{ job.filtered }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="status-text">Shortlisted: {{ job.shortlist }}</p>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <p class="status-text">Interview: {{ job.interview }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="status-text">Selected: {{ job.selected }}</p>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <p class="status-text">Rejected: {{ job.rejected }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p class="status-text">Onboard: {{ job.onboard }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+        <p class="text-center">No job applications found.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.getElementById("searchBar").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let jobCards = document.querySelectorAll(".job-card-container");
+        
+        jobCards.forEach(card => {
+            let title = card.querySelector(".vacancy-title").textContent.toLowerCase();
+            if (title.includes(filter)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+</script>
+
+
+
+
+    
  {% endblock%}

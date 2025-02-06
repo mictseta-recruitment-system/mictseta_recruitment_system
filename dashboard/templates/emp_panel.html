@@ -108,7 +108,9 @@ Employee Panel
 <div class="col-6">
     <div class="noti-body mx-2">
         <div class="notif-container">
+
             {% for alert in alerts %}
+            {% if alert.vacancy.assigned_to == user and user.staffprofile.department == "HR" %}
             <div class="notif-card">
                 <div class="notif-card-content">
                     <h3>{{alert.vacancy}} 
@@ -137,6 +139,40 @@ Employee Panel
                 </div>
                 <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
             </div>
+            
+
+             {% elif  user.staffprofile.department == "LINE" or  user.staffprofile.department == "CEO" or user.staffprofile.department == "LINE" or  user.staffprofile.department == "FINANCE"  %}
+            <div class="notif-card">
+                <div class="notif-card-content">
+                    <h3>{{alert.vacancy}} 
+                        
+                        {% if user.staffprofile.department == "CEO" and alert.vacancy.req_ceo_approval %}
+                        <span class="notif-status notif-completed">Completed</span>
+                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_ceo_approval%}
+                            <span class="notif-status notif-pending">Pending</span>
+                        {% endif %}
+
+                        {% if user.staffprofile.department == "FINANCE" and alert.vacancy.req_finance_approval %}
+                        <span class="notif-status notif-completed">Completed</span>
+                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_finance_approval%}
+                            <span class="notif-status notif-pending">Pending</span>
+                        {% endif %}
+
+                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or alert.vacancy.status == "open" %}
+                        <span class="notif-status notif-completed">Completed</span>
+                        {% elif  user.staffprofile.department == "HR" and  alert.vacancy.status == "waiting" %}
+                            <span class="notif-status notif-pending">Pending</span>
+                        {% endif %}
+
+                      </h3>  
+                    <p class="notif-note">{{alert.note}}</p>
+                    <p class="notif-timestamp">timestamp: {{alert.timestamp}}</p>
+                </div>
+                <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
+            </div>
+           
+            {% endif %}
+
             {% endfor %}
 
 

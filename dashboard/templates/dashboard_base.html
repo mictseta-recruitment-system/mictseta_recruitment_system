@@ -375,6 +375,29 @@
         .notif-action-btn:hover {
             background: #0056b3;
         }
+
+          .job-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-left: 5px solid #007bff;
+        }
+        .job-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .status-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+        }
+        #searchBar:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
   </style>
 
   {% block styles %}
