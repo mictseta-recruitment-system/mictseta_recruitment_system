@@ -31,6 +31,7 @@ urlpatterns = [
     path('edit_job/<jobID>', views.edit_job, name="dashboard.edit_job"),
     
     
+     path('jobsekeer_details_score/<seekerID>/<jobID>', views.jobsekeer_details_score, name="dashboard.jobsekeer_details_score"),
     path('jobsekeer_details/<seekerID>/<jobID>', views.jobsekeer_details, name="dashboard.jobsekeer_details"),
     path('filter_job_application/<int:jobID>', views.filter_job_application, name='filter_job_application'),
     path('attendance/report/pdf/', views.attendance_generate_pdf_report, name='dashboard.attendance_generate_pdf_report'),

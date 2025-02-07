@@ -83,12 +83,13 @@ def emp_panel(request):
 		if request.user.staffprofile.department == "FINANCE":
 			alerts = Alert.objects.filter(step=2).all()
 		if request.user.staffprofile.department == "CEO":
-			alerts = Alert.objects.filter(step=2, completed=True).all()
+			alerts = Alert.objects.filter(step=2, completed=True)
 		if request.user.staffprofile.department == "HR":
-			alerts = Alert.objects.filter(step=3, status="pending").all()
+			alerts = Alert.objects.filter(Q(step=3, status="pending") | Q(step=5))
 		if request.user.staffprofile.department == "LINE":
-			alerts = Alert.objects.filter(step=3,status="approved").all()
+			alerts = Alert.objects.filter(Q(step=3, status="approved") | Q(step=4))
 
+		alerts = alerts.order_by('-id')
 		return render(request,'emp_panel.html', {'notifications':notification.reverse(), 'notify_len':notify_len, 'cats':json.dumps(cats), 'datas':json.dumps(data), 'alerts':alerts})
 	else:
 		return redirect('render_auth_page')
@@ -97,10 +98,13 @@ def emp_panel(request):
 def view_staff(request):
 	if request.user.is_authenticated:
 		staff = User.objects.filter(is_staff=True)
+		staff = staff.order_by('-id')
 		if request.user.is_superuser:
 			notify_len = len(Notification.objects.filter(is_seen=False))
+			notify_len = notify_len.order_by('-id')
 		else:
 			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+			notify_len = notify_len.order_by('-id')
 		return render(request,'view_staff.html',{'staffs':staff,'notify_len':notify_len})
 	else:
 		return redirect('render_auth_page')
@@ -115,24 +119,27 @@ def quiz_results(request,quiz_id, user_id, application_id):
 		answers = Answer.objects.all()
 		user = User.objects.filter(id=int(user_id)).first()
 		application = JobApplication.objects.filter(id=int(application_id)).first()
+		notify_len = notify_len.order_by('-id')
 
 		return render(request, 'quiz_results.html', {'results':quiz_result, 'application':application, 'seeker':user, 'answers':answers})
 	else:
 		return redirect('render_auth_page')
 
 
-@change_application_status
+
 @csrf_protect
 def job_applications(request):
 	if request.user.is_authenticated:
 		applications = JobApplication.objects.all()
 		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		interview = Interview.objects.all()
+		applications = applications.order_by('-id')
+		interview = interview.order_by('-id')
 		return render(request, 'job_applications.html', {'applications':applications,'interviews':interview, 'applied_jobs':applied_jobs})
 	else:
 		return redirect('render_auth_page')
 
-@change_application_status
+
 @csrf_protect
 def calender(request):
 	if request.user.is_authenticated:
@@ -158,10 +165,9 @@ def calender(request):
 def filter_job_application(request,jobID):
 	if request.user.is_authenticated:
 		job_applications = JobApplication.objects.filter(job__id=jobID)
-		applied_jobs = JobPost.objects.filter(jobapplication__isnull=False).distinct()
 		cnt=0
 		interview = Interview.objects.filter(application__job__id=jobID)
-		return render(request,'job_applications.html',{'applications':job_applications,'applied_jobs':applied_jobs,'interviews':interview, 'cnt':cnt,'filtered':True})
+		return render(request,'job_applications.html',{'applications':job_applications,'interviews':interview, 'cnt':cnt,'filtered':True})
 	else:
 		return redirect('render_auth_page')
 
@@ -225,70 +231,40 @@ def update_job(request):
 	else:
 		return redirect('render_auth_page')
 
-@change_application_status
+
 @csrf_protect
 def view_jobs(request):
 	if request.user.is_authenticated:
 		current_time = now()
-		for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
-			if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
-				return HttpResponse("<h1>Request denied: you are on leave</h1>")
-		
+		# for leave in request.user.leave_set.all():  # Ensure you call the method and use the correct related name
+		# 	if leave.start_date <= current_time <= leave.end_date and leave.status == "Approved":
+		# 		return HttpResponse("<h1>Request denied: you are on leave</h1>")
 		jobs = JobPost.objects.all()
-		
 		for job in jobs:
 			if job.status != "closed":
 				if current_time > job.end_date :
-					job.status = "closed"
+					job.status = "expired"
 					job.save()
 
 		all_jobs = len(jobs)
 		open_jobs= len(JobPost.objects.filter(status="open"))
-		pending_jobs = len(JobPost.objects.filter(status="waiting"))
-		pending_jobs = len(JobPost.objects.filter(status="pending")) + pending_jobs
-		closed_jobs = len(JobPost.objects.filter(status="closed"))
+		pending_jobs = len(JobPost.objects.filter(Q(status="waiting") | Q(status="pending")))
+		closed_jobs = len(JobPost.objects.filter(Q(status="closed") | Q(status="expired")))
+
 		if request.user.is_superuser:
 			notify_len = len(Notification.objects.filter(is_seen=False))
+			
 		else:
 			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
-		if request.user.is_superuser:
-			employees = User.objects.filter(is_staff=True)
-		else:
-			employees = User.objects.filter(id=request.user.id)
-		job_title = JobTitle.objects.all()
-		industry = Industry.objects.all()
-
-		languages = LanguageList.objects.all()
-		readings = ReadingProficiencyList.objects.all()
-		speakings = SpeakingProficiencyList.objects.all()
-		writings = WritingProficiencyList.objects.all()
-		computer_skills = ComputerSkillsList.objects.all()
-		computer_prof = ComputerProficiency.objects.all()
-		soft_skill = SoftSkillsList.objects.all()
-		soft_prof = SoftProficiency.objects.all()
-		qualification = Qualification.objects.all()
-		nqf_level = NQF.objects.all()
+		jobs = jobs.order_by('-id')
 		return render(request,'view_job.html',
-			{
-			'employees':employees,
-			'notify_len':notify_len,
+			{	
 			'jobs':jobs, 
 			'all_jobs':all_jobs,
 			'open_jobs':open_jobs, 
 			'pending_jobs':pending_jobs,
 			'closed_jobs':closed_jobs, 
-			'job_titles':job_title, 
-			'industries':industry,
-			'computer_skills':computer_skills,
-			'computer_profs':computer_prof,
-			'soft_skills':soft_skill,
-			'soft_profs':soft_prof,
-			'nqf_levels' : nqf_level,
-			'qualifications':qualification,
-			'languages' : languages,
-			'readings' : readings,
-			'writings' : writings,
-			'speakings':speakings
+			'notify_len':notify_len,
 			},
 			status=200)
 	else:
@@ -459,6 +435,30 @@ def jobsekeer_details(request, seekerID,jobID):
 			else:
 				quiz = {}
 			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz})
+		else:
+			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
+	else:
+		return redirect('render_auth_page')
+
+def jobsekeer_details_score(request, seekerID,jobID):
+	if request.user.is_authenticated:
+		
+		seeker = User.objects.get(profile__uuid=seekerID)
+		if request.user.is_staff:
+			if request.user.is_superuser:
+				notify_len = len(Notification.objects.filter(is_seen=False))
+			else:
+				notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
+			application = JobApplication.objects.filter(user=seeker,job__id=int(jobID)).first()
+			feedback = FeedBack.objects.filter(user=seeker,job=application.job)
+			quiz_id = Quiz.objects.filter(job=application.job).first()
+			print(quiz_id, "---", quiz_id.id)
+			if quiz_id:
+				quiz = QuizResults.objects.filter(user=seeker, quiz=quiz_id.id).first()
+				print(quiz)
+			else:
+				quiz = {}
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:

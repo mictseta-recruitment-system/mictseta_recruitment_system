@@ -55,6 +55,8 @@ urlpatterns = [
      path('requisition/', views.requisition, name='requisition'),
      path('approve_requisition/', views.approve_requisition, name='approve_requisition'),
      path('approve_requisition_ceo/', views.approve_requisition_ceo, name='approve_requisition_ceo'),
+     path('screening/', views.screening, name='screening'),
+    
     
   
 

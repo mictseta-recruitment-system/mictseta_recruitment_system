@@ -1006,6 +1006,48 @@ function approve_requisition_ceo(jobID) {
     showFlashMessage(error.message, "danger");
   });
 }
+
+function screening(jobID) {
+  const url = 'http://127.0.0.1:8000/job/screening/';
+  /*document.getElementById(spinner + jobID).style.display = 'block';
+  document.getElementById(content + jobID).style.display = 'none';*/
+ 
+  
+  const jsonData = {
+    job_post_id: jobID 
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+    } else if (data.status === "success") {
+      showFlashMessage(data.message, "success");
+      
+      showFlashMessage(data.message, "success");
+    
+      /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+      
+    } else if (data.status === "warning") {
+      showFlashMessage(data.message, "warning");
+  
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 /***************************************************************************************************************************************************************8*/
 
 function completeJob(jobID, spinner, content, modal) {

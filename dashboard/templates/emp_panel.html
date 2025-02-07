@@ -127,9 +127,9 @@ Employee Panel
                             <span class="notif-status notif-pending">Pending</span>
                         {% endif %}
 
-                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or alert.vacancy.status == "open" %}
+                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or alert.vacancy.status == "open" and alert.step < 4 or alert.step == 5 and alert.status == "approved"  %}
                         <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "HR" and  alert.vacancy.status == "waiting" %}
+                        {% elif  user.staffprofile.department == "HR" and  alert.vacancy.status == "waiting" or alert.vacancy.status == "open" and alert.step > 4 %}
                             <span class="notif-status notif-pending">Pending</span>
                         {% endif %}
 
@@ -137,7 +137,12 @@ Employee Panel
                     <p class="notif-note">{{alert.note}}</p>
                     <p class="notif-timestamp">timestamp: {{alert.timestamp}}</p>
                 </div>
+                {% if alert.step == 5 %}
+                    <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
+
+                {% else %}
                 <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
+                {% endif %}
             </div>
             
 
@@ -158,9 +163,16 @@ Employee Panel
                             <span class="notif-status notif-pending">Pending</span>
                         {% endif %}
 
-                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or alert.vacancy.status == "open" %}
+                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or user.staffprofile.department == "HR" and alert.vacancy.status == "open" or user.staffprofile.department == "HR" and alert.vacancy.step < 5 and alert.status == "pending" %}
+
                         <span class="notif-status notif-completed">Completed</span>
                         {% elif  user.staffprofile.department == "HR" and  alert.vacancy.status == "waiting" %}
+                            <span class="notif-status notif-pending">Pending</span>
+                        {% endif %}
+
+                        {% if user.staffprofile.department == "LINE" and alert.status == "approved" %}
+                        <span class="notif-status notif-completed">Completed</span>
+                        {% elif  user.staffprofile.department == "LINE" and alert.status == "pending" %}
                             <span class="notif-status notif-pending">Pending</span>
                         {% endif %}
 

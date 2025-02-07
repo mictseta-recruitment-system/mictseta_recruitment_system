@@ -171,7 +171,7 @@ class ApplicationFilter:
 		).distinct()
 
     	# Exclude the incomplete users from the original Applications queryset
-		self.filterd_apllications = incomplete_users
+		self.filterd_apllications = self.applications.exclude(id__in=incomplete_users)
 
 	def filter_by_computer_skill(self):
 		job_skill_list = []
@@ -212,17 +212,16 @@ class ApplicationFilter:
 
 
 	def filter_by_experience(self):
-		experience_list = []
-		job_experience_list = []  
-		for application in self.filterd_apllications:
-			if application.job.experiences.all():
-				job_experience_list.append(application)
-		if job_experience_list:
-			for application in self.filterd_apllications:
-				for experience in application.job.experiences.all():
-					experience_list.append(experience.name)
-			valid_applications= self.filterd_apllications.filter(user__working_expereince__job_title__title__in=experience_list).distinct()
-			self.filterd_apllications = valid_applications
+	    experience_list = set()  # Use a set to avoid duplicates
+	    for application in self.filterd_apllications:
+	        for experience in application.job.experiences.all():
+	            experience_list.add(experience.name)
+	    print(experience_list)
+	    if experience_list:
+	        valid_applications = self.filterd_apllications.filter(
+	            user__working_expereince__job_title__title__in=experience_list
+	        ).distinct()
+	        self.filterd_apllications = valid_applications
 
 	def filter_by_language(self):
 		language_list = []

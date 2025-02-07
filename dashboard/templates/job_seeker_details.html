@@ -24,6 +24,112 @@
 {% block content %}
 
 
+{% if score %}
+
+   <button id="pipOpenScoreboard" class="openScoreboard-btn" title="Open Scoreboard"></button>
+     <div id="pipScoreboard" class="pipScoreboard">
+    <div class="pipScoreboardHeader" id="pipDragHandle">
+      <span>Application Scorecard</span>
+      <button id="pipMinimizeScoreboard">−</button>
+      <button id="pipCloseScoreboard">×</button>
+    </div>
+
+    <div class="pipScoreboardContent">
+      <h3>Rubric</h3>
+      <form>
+
+      <table class="pipTable">
+        <tr>
+          <th>Criteria</th>
+          <th>Excellent (5)</th>
+          <th>Good (4)</th>
+          <th>Average (3)</th>
+          <th>Poor (2)</th>
+          <th>Failing (1)</th>
+        </tr>
+        <tr>
+          <td colspan="6" class="pipCriteriaHeader">Computer Skills Required</td>
+        </tr>
+        <tr>
+          <td>Python programming</td>
+          <td><input type="radio" name="pipPython" value="5"> <span class="pipPointLabel">5</span></td>
+          <td><input type="radio" name="pipPython" value="4"> <span class="pipPointLabel">4</span></td>
+          <td><input type="radio" name="pipPython" value="3"> <span class="pipPointLabel">3</span></td>
+          <td><input type="radio" name="pipPython" value="2"> <span class="pipPointLabel">2</span></td>
+          <td><input type="radio" name="pipPython" value="1"> <span class="pipPointLabel">1</span></td>
+        </tr>
+     <tr>
+          <td>C++ Programming</td>
+          <td><input type="radio" name="pipPython" value="5"> <span class="pipPointLabel">5</span></td>
+          <td><input type="radio" name="pipPython" value="4"> <span class="pipPointLabel">4</span></td>
+          <td><input type="radio" name="pipPython" value="3"> <span class="pipPointLabel">3</span></td>
+          <td><input type="radio" name="pipPython" value="2"> <span class="pipPointLabel">2</span></td>
+          <td><input type="radio" name="pipPython" value="1"> <span class="pipPointLabel">1</span></td>
+        </tr>
+     <tr>
+          <td colspan="6" class="pipCriteriaHeader">Soft Skills Required</td>
+        </tr>
+     <tr>
+          <td>Team Leeader</td>
+          <td><input type="radio" name="pipPython" value="5"> <span class="pipPointLabel">5</span></td>
+          <td><input type="radio" name="pipPython" value="4"> <span class="pipPointLabel">4</span></td>
+          <td><input type="radio" name="pipPython" value="3"> <span class="pipPointLabel">3</span></td>
+          <td><input type="radio" name="pipPython" value="2"> <span class="pipPointLabel">2</span></td>
+          <td><input type="radio" name="pipPython" value="1"> <span class="pipPointLabel">1</span></td>
+        </tr>
+
+      </table>
+      <button class="btn btn-success w-100  mt-4 "> Submit Scorecard </button>
+      </form>
+
+    </div>
+
+    <div class="pipResizeHandle"></div>
+  </div>
+
+   <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const scoreboard = document.getElementById('pipScoreboard');
+    const openButton = document.getElementById('pipOpenScoreboard');
+    const minimizeButton = document.getElementById('pipMinimizeScoreboard');
+    const closeButton = document.getElementById('pipCloseScoreboard');
+    const dragHandle = document.getElementById('pipDragHandle');
+
+    openButton.addEventListener('click', () => {
+      scoreboard.style.display = 'block';
+    });
+
+    minimizeButton.addEventListener('click', () => {
+      scoreboard.classList.toggle('minimized');
+    });
+
+    closeButton.addEventListener('click', () => {
+      scoreboard.style.display = 'none';
+      scoreboard.classList.remove('minimized');
+    });
+
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    dragHandle.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - scoreboard.offsetLeft;
+      offsetY = e.clientY - scoreboard.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        scoreboard.style.left = `${e.clientX - offsetX}px`;
+        scoreboard.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  });
+  </script>
+{% endif %}
 <div class="row p-2 ">
 
 <!-- Combined Profile Sidebar and Details -->

@@ -117,8 +117,17 @@
       </p>
       <p class="card-text">
         <strong>Status:</strong> <span id="status">{{job.status}}</span>
-
       </p>
+       <p class="card-text">
+        <strong>Issued by:</strong> <span id="status">{{ job.user.email }}</span>
+      </p>
+
+       <p class="card-text">
+        <strong>Responsible HOD:</strong> <span id="status">{{ job.assigned_to.email }}</span>
+      </p>
+
+
+      
     </div>
     <div class="card-footer">
       <a href="{% url 'dashboard.view_jobs' %}" class="btn btn-secondary">Back to Job List</a>

@@ -272,6 +272,28 @@ def approve_requisition_ceo(request):
     alert.save()
     return JsonResponse({'message': 'Requisation Approved by ceo', 'status': 'success'}, status=201)
 
+@check_leave
+@csrf_protect
+def screening(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+   
+    jobID = json_data.get('job_post_id')
+    vacancy = JobPost.objects.get(id=int(jobID))
+    vacancy.current_step += 1
+    vacancy.save()
+    alert = Alert.objects.filter(vacancy=vacancy, step=5).first()
+    alert.status = approved
+    alert.save()
+    alert = Alert.objects.create(note="Vacancy Approved for Screening and Nomination", vacancy=vacancy, step=vacancy.current_step, status="pending")
+    alert.save()
+    return JsonResponse({'message': 'Vacancy Approved for Screening and Nomination', 'status': 'success'}, status=201)
 
 
 @check_leave

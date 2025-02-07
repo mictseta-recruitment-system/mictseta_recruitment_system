@@ -88,9 +88,64 @@
 </div>
 
        <div class="row justify-content-center">
-         <div class="col-9 mt-2">
+
+<div class="col-12 mt-4">
+  <div class="card p-0 shadow mb-1 rounded">
+    <div class="card-body">
+      <ul id="applicants" class="list-group list-group-flush d-flex flex-row justify-content-between" style="cursor: pointer;">
+        <li class="list-group-item emp-profile active" onclick="toggleV('applications')">All Applications</li>
+        {% if applications.0.job.current_step <= 4 %}
+        <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Filtered Applications
+        </li>
+        {% else %}
+        <li class="list-group-item emp-profile" onclick="toggleV('filterd')">Filtered Applications
+        </li>
+        {% endif %}
+
+        {% if applications.0.job.current_step <= 4 %}
+        <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Shortlisting
+        </li>
+        {% else %}
+        <li class="list-group-item emp-profile" onclick="toggleV('shortlistss')">Short-listed</li>
+        {% endif %}
+
+        {% if applications.0.job.current_step < 6 %}
+        <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Interview
+        </li>
+        {% else %}
+        <li class="list-group-item emp-profile" onclick="toggleV('interview')">Interview</li>
+        {% endif %}
+
+        {% if applications.0.job.current_step < 7 %}
+          <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Selected
+          </li>
+        {% else %}
+        <li class="list-group-item emp-profile" onclick="toggleV('approved')">Selected</li>
+        
+         {% endif %}
+
+        {% if applications.0.job.current_step <= 4 %}
+          <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Rejected
+          </li>
+        {% else %}
+        <li class="list-group-item emp-profile" onclick="toggleV('on_hold')">Rejected</li>
+        {% endif %}
+
+        {% if applications.0.job.current_step <= 7 %}
+          <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Onboarding
+          </li>
+        {% else %}
+        <li class="list-group-item emp-profile" onclick="toggleV('approved')">Onboarding</li>
+         <li class="list-group-item emp-profile" onclick="toggleV('approved')"></li>
+         {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- %%%%%%%%%%%%%%%%%%5 -->
+<div class="col-12 ">
           <div id="applications" style="display:block;">
-            <div class="card shadow-lg mt-3 rounded">
+            <div class="card shadow-lg  rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   {% if filtered %}
                     <h6><b>{{applications.0.job.title}} List</b></h6>
@@ -186,7 +241,12 @@
                                 </div>
                               </div>
                         {% else %}
-                            <button type="button" class="btn btn-info" > Start Screening and Nomination process
+                          {% if user.staffprofile.department == "LINE" %}
+                            {% if applications|length >= 1 %}
+                            <button type="button" class="btn btn-info" onclick="screening({{applications.0.job.id}})"> Start Screening and Nomination process
+                            {% endif %}
+                          {% endif %}
+                          
                           </button>
                         {% endif %}
                        
@@ -397,7 +457,7 @@
               </script>
              </div>
            </div> 
-------------
+
 
 
           <div id="filterd" style="display:none;">
@@ -406,7 +466,7 @@
                   <h6>Filtered Application List</h6> 
                   {% if filtered %}
                 <!--   <button class="btn btn-warning" onclick="auto_move_to_shortlist('{{applications.0.job.id}}')">Auto Short-list</button> -->
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Auto Short-list
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Submit list
                   </button>
                   <div class="modal fade" id="auto-shortlist" tabindex="-1" aria-labelledby="auto-shortlist" aria-hidden="true">
                     <div class="modal-dialog">
@@ -467,9 +527,14 @@
                                
 
                               <td>{{application.date}}</td>
-                              <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
-                                <i class="fa fa-eye"> </i></a>
-                               <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td>
+                              <td> 
+                                {% if user.staffprofile.department == "HR" %}
+                                <a href="{% url 'dashboard.jobsekeer_details_score' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                <i class="fa fa-edit"> </i> Score</a>
+                                {% else %}
+                                .
+                                {% endif %}
+                              <!--  <a onclick="move_to_shortlist({{application.id}})" class="btn btn-success p-1" data-bs-placement="top" title="Move to short list"><i class="fa fa-plus"> </i> short-list</a></td> -->
                           </tr>
                           {% endif%}
 
@@ -492,7 +557,7 @@
               </script>
              </div>
            </div> 
-----------------
+
            <div id="shortlistss" style="display:none;">
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
@@ -934,28 +999,7 @@
 
 
 
-         <div class="col-3 mt-4">
-           <div class="card p- shadow mb-5  rounded" >
-      <div class="card-body">
-        
-      <ul id="applicants" class="list-group list-group-flush " style="cursor: pointer;">
-        <li class="list-group-item emp-profile active" onclick="toggleV('applications')">All Applications</li>
-        <li class="list-group-item emp-profile " onclick="toggleV('filterd')">Filterd Applications</li>
-        <li class="list-group-item emp-profile" onclick="toggleV('shortlistss')">Short-listed</li>
-        <li class="list-group-item emp-profile" onclick="toggleV('interview')">Interview</li>
-        <li class="list-group-item emp-profile" onclick="toggleV('on_hold')">Rejected</li>
-        <li class="list-group-item emp-profile" onclick="toggleV('approved')">Approved/Accepted</li>
-
-      </ul>
- 
-      </div>
-
-      <!-- <div class="card-body">
-        <a href="#" class="card-link">Download CV</a>
-        <a href="#" class="card-link">Download ID</a>
-      </div> -->
-    </div>
-         </div>
+    
        </div>
         
        <script>

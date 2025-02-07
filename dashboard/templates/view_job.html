@@ -147,11 +147,10 @@ View jobs
       <table id="example" class="table table-striped table-hover text-center align-middle">
           <thead>
               <tr class="bg-primary text-white">
-                  <th>ID</th>
+                  
                   <th>Job Title</th>
                   <th>Job Type</th>
-                  <th>Issued By</th>
-                  <th>Responsible</th>
+                  <th>Current Step</th>
                   <th>Date of Expiry</th>
                   <th>Status</th>
                   <th>Completed</th>
@@ -162,7 +161,7 @@ View jobs
               {% for job in jobs %}
               {% if job.user == user or user.is_superuser or job.assigned_to == user %}
               <tr>
-                  <td>{{ job.id }}</td>
+                  
                   <td>
                       <b>
                          {% if not job.is_active %}
@@ -183,8 +182,25 @@ View jobs
                       {{ job.job_type }}
                       {% endif %}
                   </td>
-                  <td>{{ job.user.email }}</td>
-                  <td>{{ job.assigned_to.email }}</td>
+                  <td>{% if job.current_step == 1 %}
+             Identify Vacancy
+        {% elif job.current_step == 2 %}
+              Requisition Process
+        {% elif job.current_step == 3 %}
+              Vacancy Advertisement 
+        {% elif job.current_step == 4 %}
+              Application Process
+        {% elif job.current_step == 5 %}
+              Screening and Nomination
+        {% elif job.current_step == 6 %}
+              Shortlisting and Interview
+        {% elif job.current_step == 7 %}
+              Verification and Approval 
+        {% elif job.current_step == 8 %}
+              Offer letter and Candidate Feedback
+        {% elif job.current_step == 9 %}
+              Vacancy Cylce Complete
+        {% endif %}</td>
                   <td>{{ job.end_date }}</td>
                   <td>
                       {% if job.is_complete %}
@@ -237,10 +253,7 @@ View jobs
                             <i class="fa fa-circle-minus fa-1x"></i>
                         </a>
                         {% endif %}
-                         <a class="btn btn-outline-info btn-sm" type="button" href="{% url 'dashboard.new_quiz' job.id %}">
-                            <i class="fa fa-plus"></i>
-                            Quiz
-                        </a>
+                        
 
 
                     </div>
