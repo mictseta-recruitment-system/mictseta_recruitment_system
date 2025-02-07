@@ -105,6 +105,24 @@
         .bg-warning { background-color: #ffc107 !important; } /* Warning */
         .bg-danger { background-color: #dc3545 !important; } /* Danger */
         .bg-secondary { background-color: #6c757d !important; } /* Secondary */
+
+        .btn-pill {
+        border-radius: 50px; /* Make buttons more pill-like */
+        padding: 0.5rem 1rem; /* Add padding for better appearance */
+        font-size: 0.875rem; /* Adjust font size */
+        width: 100px;
+    
+    }
+
+    .list-group-item {
+        background-color: #f8f9fa; /* Light background for list items */
+        border: 1px solid #dee2e6; /* Border for list items */
+        border-radius: 0.25rem; /* Rounded corners */
+    }
+
+    .list-group-item:hover {
+        background-color: #e2e6ea; /* Darker background on hover */
+    }
     </style>
 </head>
 <body>
@@ -179,304 +197,397 @@
         <div class="content-area">
             <div class="row">
 
-                <!-- Module 1: Personal Details -->
-   <div class="col-md-12">
-    <div class="card shadow-lg border-0 rounded-4">
+   <!-- Module 1: Personal Details -->
+<div class="col-md-12">
+    <div class="card shadow-lg border-0 rounded-4 mb-3">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-user-circle fa-2x text-primary me-2"></i>
                     <h5 class="mb-0">Personal Details</h5>
                 </div>
-                <button class="btn btn-primary rounded-circle shadow" data-toggle="modal" data-target="#personalDetailsModal">
-                    <i class="fas fa-pen"></i>
-                </button>
-            </div>
-            
-            <div class="profile-info">
-                <div class="row">
-                    <div class="col-md-6">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>ID Number:</strong> {{ user.profile.idnumber }}</li>
-                            <li class="list-group-item"><strong>First Name:</strong> {{ user.first_name }}</li>
-                            <li class="list-group-item"><strong>Surname:</strong> {{ user.last_name }}</li>
-                            <li class="list-group-item"><strong>Gender:</strong> {{ user.profile.gender }}</li>
-                            <li class="list-group-item"><strong>Marital Status:</strong> {{ user.profile.maritial_status }}</li>
-                            <li class="list-group-item"><strong>Race:</strong> {{ user.profile.race }}</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Date of Birth:</strong> {{ user.profile.dob }}</li>
-                            <li class="list-group-item"><strong>Disability:</strong> {{ user.profile.disability }}</li>
-                            <li class="list-group-item"><strong>Email:</strong> 
-                                <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
-                            </li>
-                            <li class="list-group-item"><strong>Phone:</strong> 
-                                <a href="tel:{{ user.profile.phone }}" class="text-decoration-none">{{ user.profile.phone }}</a>
-                            </li>
-                            <li class="list-group-item"><strong>LinkedIn:</strong>
-                                <a href="{{ user.profile.linkedin_profile }}" target="_blank" class="text-decoration-none">
-                                    <i class="fab fa-linkedin text-primary"></i> LinkedIn Profile
-                                </a>
-                            </li>
-                            <li class="list-group-item"><strong>Personal Website:</strong> 
-                                <a href="{{ user.profile.personal_website }}" target="_blank" class="text-decoration-none">
-                                    {{ user.profile.personal_website }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="mt-3">
-                    <strong>Cover Letter:</strong>
-                    <textarea class="form-control mt-2" rows="6" readonly>{{ user.profile.cover_letter }}</textarea>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#personalDetails" aria-expanded="false" aria-controls="personalDetails">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#personalDetailsModal">
+                        <i class="fas fa-pen"></i>
+                    </button>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-
-
-                <!-- Module 2: Address Details -->
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="section-title">
-                                <i class="fas fa-map-marker-alt icon"></i>
-                                <h5>Address Details</h5>
-                                <div class="profile-actions">
-                                    <button class="btn btn-link" data-toggle="modal" data-target="#addressDetailsModal">
-                                        <i class="fas fa-plus fa-lg"></i> Add/Edit
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="addressDetailsDisplay" class="profile-info">
-                                {% if user.address.street_address_line %}
-                                <p><strong>Street Address:</strong> <span id="display_residential_street_address">{{user.address.street_address_line}}</span></p>
-                                <p><strong>City:</strong> <span id="display_residential_city">{{user.address.city}}</span></p>
-                                <p><strong>Province:</strong> <span id="display_residential_province">{{user.address.province}}</span></p>
-                                <p><strong>Postal Code:</strong> <span id="display_residential_postal_code">{{user.address.postal_code}}</span></p>
-                
-                                {% else %}
-                                    <p>No address details available.</p>
-                                {% endif %}
-                            </div>
+            <div class="collapse" id="personalDetails">
+                <div class="profile-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>ID Number:</strong> {{ user.profile.idnumber }}</li>
+                                <li class="list-group-item"><strong>First Name:</strong> {{ user.first_name }}</li>
+                                <li class="list-group-item"><strong>Surname:</strong> {{ user.last_name }}</li>
+                                <li class="list-group-item"><strong>Gender:</strong> {{ user.profile.gender }}</li>
+                                <li class="list-group-item"><strong>Marital Status:</strong> {{ user.profile.maritial_status }}</li>
+                                <li class="list-group-item"><strong>Race:</strong> {{ user.profile.race }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Date of Birth:</strong> {{ user.profile.dob }}</li>
+                                <li class="list-group-item"><strong>Disability:</strong> {{ user.profile.disability }}</li>
+                                <li class="list-group-item"><strong>Email:</strong> 
+                                    <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
+                                </li>
+                                <li class="list-group-item"><strong>Phone:</strong> 
+                                    <a href="tel:{{ user.profile.phone }}" class="text-decoration-none">{{ user.profile.phone }}</a>
+                                </li>
+                                <li class="list-group-item"><strong>LinkedIn:</strong>
+                                    <a href="{{ user.profile.linkedin_profile }}" target="_blank" class="text-decoration-none">
+                                        <i class="fab fa-linkedin text-primary"></i> LinkedIn Profile
+                                    </a>
+                                </li>
+                                <li class="list-group-item"><strong>Personal Website:</strong> 
+                                    <a href="{{ user.profile.personal_website }}" target="_blank" class="text-decoration-none">
+                                        {{ user.profile.personal_website }}
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </div>
-
-                <!-- Module 3: Academic Qualifications -->
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="section-title">
-                                <i class="fas fa-graduation-cap icon"></i>
-                                <h5>Academic Qualifications</h5>
-                                <div class="profile-actions">
-                                    <button class="btn btn-link" data-toggle="modal" data-target="#academicQualificationsModal">
-                                        <i class="fas fa-plus fa-lg"></i> Add/Edit
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="academicQualificationsDisplay" class="profile-info">
-                                {% for qualification in user.qualifications.all %}
-                                    <p><strong>Field of study:</strong> {{ qualification.field_of_study }}</p>
-                                    <p><strong>Institution:</strong> {{ qualification.institution }}</p>
-                                    <p><strong>Start date:</strong> {{ qualification.start_date }}</p>
-                                    <p><strong>End date:</strong> {{ qualification.end_date }}</p>
-                                    <p><strong>Status:</strong> {{ qualification.status }}</p>
-                    <a href="{% url 'delete_qualification' qualification.id %}" class="btn btn-danger">Delete</a>
-                                    
-                                    <hr>
-                                {% empty %}
-                                    <p>No academic qualifications available.</p>
-                                {% endfor %}
-                            </div>
-                        </div>
+                    <div class="mt-3">
+                        <strong>Cover Letter:</strong>
+                        <textarea class="form-control mt-2" rows="6" readonly>{{ user.profile.cover_letter }}</textarea>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <!-- Module 4: Language Proficiency -->
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="section-title">
-                                <i class="fas fa-language icon"></i>
-                                <h5>Language Proficiency</h5>
-                                <div class="profile-actions">
-                                    <button class="btn btn-link" data-toggle="modal" data-target="#languageProficiencyModal">
-                                        <i class="fas fa-plus fa-lg"></i> Add/Edit
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="languageProficiencyDisplay" class="profile-info">
-                                {% for language in user.language_set.all %}
-                                    <p><strong>Language:</strong> {{ language.language }}</p>
-                                    <p><strong>Reading Level:</strong> {{ language.reading_proficiency }}</p>
-                                    <p><strong>Writing Level:</strong> {{ language.writing_proficiency }}</p>
-                                    <p><strong>Speaking Level:</strong> {{ language.speaking_proficiency }}</p>
-                    <a href="{% url 'delete_language' language.id %}" class="btn btn-danger">Delete</a>
-
-                                    <hr>
-                               
-                                {% endfor %}
-                            </div>
+<!-- Module 2: Address Details -->
+<div class="col-md-12">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-map-marker-alt fa-2x text-primary me-2"></i>
+                    <h5>Address Details</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#addressDetails" aria-expanded="false" aria-controls="addressDetails">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#addressDetailsModal">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse" id="addressDetails">
+                <div id="addressDetailsDisplay" class="profile-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Street Address:</strong> <span id="display_residential_street_address">{{user.address.street_address_line}}</span></p>
+                            <p><strong>City:</strong> <span id="display_residential_city">{{user.address.city}}</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Province:</strong> <span id="display_residential_province">{{user.address.province}}</span></p>
+                            <p><strong>Postal Code:</strong> <span id="display_residential_postal_code">{{user.address.postal_code}}</span></p>
                         </div>
                     </div>
+                    {% if not user.address.street_address_line %}
+                        <p>No address details available.</p>
+                    {% endif %}
                 </div>
-
-               <!-- Module 5: Computer Skills -->
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-body">
-            <div class="section-title">
-                <i class="fas fa-laptop-code icon"></i>
-                <h5>Computer Skills</h5>
-                <div class="profile-actions">
-                    <button class="btn btn-link" data-toggle="modal" data-target="#computerSkillsModal">
-                        <i class="fas fa-plus fa-lg"></i> Add/Edit
-                    </button>
-                </div>
-            </div>
-            <div id="computerSkillsDisplay" class="profile-info">
-                {% for skill in user.computerskills_set.all %}
-                    <p><strong>Skill:</strong> {{ skill.skill }}</p>
-                    <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
-                    <a href="{% url 'delete_computer_skill' skill.id %}" class="btn btn-danger">Delete</a>
-
-                    <hr>
-                {% empty %}
-                    <p>No computer skills available.</p>
-                {% endfor %}
             </div>
         </div>
     </div>
 </div>
 
-                <!-- Module 6: Soft Skills -->
+<!-- Module 3: Academic Qualifications -->
 <div class="col-md-12">
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-body">
-            <div class="section-title">
-                <i class="fas fa-users icon"></i>
-                <h5>Soft Skills</h5>
-                <div class="profile-actions">
-                    <button class="btn btn-link" data-toggle="modal" data-target="#softSkillsModal">
-                        <i class="fas fa-plus fa-lg"></i> Add/Edit
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-graduation-cap fa-2x text-primary me-2"></i>
+                    <h5>Academic Qualifications</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#academicQualifications" aria-expanded="false" aria-controls="academicQualifications">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#academicQualificationsModal">
+                        <i class="fas fa-pen"></i>
                     </button>
                 </div>
             </div>
-            <div id="softSkillsDisplay" class="profile-info">
-                {% for skill in user.softskills_set.all %}
-                    <p><strong>Soft Skill:</strong> {{ skill.skill }}</p>
-                    <p><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</p>
-                    <a href="{% url 'delete_soft_skill' skill.id %}" class="btn btn-danger">Delete</a>
-
-                    <hr>
-                {% empty %}
-                    <p>No soft skills available.</p>
-                {% endfor %}
+            <div class="collapse" id="academicQualifications">
+                <div id="academicQualificationsDisplay" class="profile-info">
+                    <div class="row">
+                        {% for qualification in user.qualifications.all %}
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush mb-3">
+                                    <div class="list-group-item"><strong>Field of Study:</strong> {{ qualification.field_of_study }}</div>
+                                    <div class="list-group-item"><strong>Institution:</strong> {{ qualification.institution }}</div>
+                                    <div class="list-group-item"><strong>Start Date:</strong> {{ qualification.start_date }}</div>
+                                    <div class="list-group-item"><strong>End Date:</strong> {{ qualification.end_date }}</div>
+                                    <div class="list-group-item"><strong>Status:</strong> {{ qualification.status }}</div>
+                                    <a href="{% url 'delete_qualification' qualification.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No academic qualifications available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-                <!-- Module 7: Working Experience -->
+<!-- Module 4: Language Proficiency -->
 <div class="col-md-12">
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-body">
-            <div class="section-title">
-                <i class="fas fa-briefcase icon"></i>
-                <h5>Working Experience</h5>
-                <div class="profile-actions">
-                    <button class="btn btn-link" data-toggle="modal" data-target="#addExperienceModal">
-                        <i class="fas fa-plus fa-lg"></i> Add/Edit
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-language fa-2x text-primary me-2"></i>
+                    <h5>Language Proficiency</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#languageProficiency" aria-expanded="false" aria-controls="languageProficiency">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#languageProficiencyModal">
+                        <i class="fas fa-pen"></i>
                     </button>
                 </div>
             </div>
-            <div id="workingExperienceDisplay" class="profile-info">
-                {% for experience in user.working_expereince.all %}
-                    <p><strong>Job Title:</strong> {{ experience.job_title.title }}</p>
-                    <p><strong>Company:</strong> {{ experience.company }}</p>
-                    <p><strong>Location:</strong> {{ experience.location }}</p>
-                    <p><strong>Start Date:</strong> {{ experience.start_date }}</p>
-                    <p><strong>End Date:</strong> {{ experience.end_date }}</p>
-                    <p><strong>Description:</strong> {{ experience.description }}</p>
-                    <a href="{% url 'delete_working_experince' experience.id %}" class="btn btn-danger">Delete</a>
-
-                    <hr>
-                {% empty %}
-                    <p>No working experience available.</p>
-                {% endfor %}
+            <div class="collapse" id="languageProficiency">
+                <div id="languageProficiencyDisplay" class="profile-info">
+                    <div class="row">
+                        {% for language in user.language_set.all %}
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush mb-3">
+                                    <div class="list-group-item"><strong>Language:</strong> {{ language.language }}</div>
+                                    <div class="list-group-item"><strong>Reading Level:</strong> {{ language.reading_proficiency }}</div>
+                                    <div class="list-group-item"><strong>Writing Level:</strong> {{ language.writing_proficiency }}</div>
+                                    <div class="list-group-item"><strong>Speaking Level:</strong> {{ language.speaking_proficiency }}</div>
+                                    <a href="{% url 'delete_language' language.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No language proficiency available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-                <!-- Module 8: References -->
+<!-- Module 5: Computer Skills -->
 <div class="col-md-12">
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-body">
-            <div class="section-title">
-                <i class="fas fa-user icon"></i>
-                <h5>References</h5>
-                <div class="profile-actions">
-                    <button class="btn btn-link" data-toggle="modal" data-target="#referencesModal">
-                        <i class="fas fa-plus fa-lg"></i> Add/Edit
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-laptop-code fa-2x text-primary me-2"></i>
+                    <h5>Computer Skills</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#computerSkills" aria-expanded="false" aria-controls="computerSkills">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#computerSkillsModal">
+                        <i class="fas fa-pen"></i>
                     </button>
                 </div>
             </div>
-            <div id="referencesDisplay" class="profile-info">
-                {% for reference in user.reference.all %}
-                    <p><strong>Work Experience:</strong>{{ reference.working_experince }} - {{ reference.working_experince.job_title }}</p>
-                    <p><strong>Full Name:</strong> {{ reference.full_name }}</p>
-                    <p><strong>Contact Information:</strong> {{ reference.phone }}</p>
-                    <p><strong>Position/Relationship:</strong> {{ reference.position }}</p>
-                    
-                    <a href="{% url 'delete_reference' reference.id %}" class="btn btn-danger">Delete</a>
-                    <hr>
-                {% empty %}
-                    <p>No references available.</p>
-                {% endfor %}
+            <div class="collapse" id="computerSkills">
+                <div id="computerSkillsDisplay" class="profile-info">
+                    <div class="row">
+                        {% for skill in user.computerskills_set.all %}
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush mb-3">
+                                    <div class="list-group-item"><strong>Skill:</strong> {{ skill.skill }}</div>
+                                    <div class="list-group-item"><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</div>
+                                    <a href="{% url 'delete_computer_skill' skill.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No computer skills available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-                <!-- Module 9: Supporting Documents --> 
+<!-- Module 6: Soft Skills -->
 <div class="col-md-12">
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-body">
-            <div class="section-title">
-                <i class="fas fa-file-alt icon"></i>
-                <h5>Supporting Documents</h5>
-                <div class="profile-actions">
-                    <button class="btn btn-link" data-toggle="modal" data-target="#supportingDocumentsModal">
-                        <i class="fas fa-plus fa-lg"></i> Add/Edit
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-users fa-2x text-primary me-2"></i>
+                    <h5>Soft Skills</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#softSkills" aria-expanded="false" aria-controls="softSkills">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#softSkillsModal">
+                        <i class="fas fa-pen"></i>
                     </button>
                 </div>
             </div>
-            <div id="supportingDocumentsDisplay" class="profile-info">
-                {% for document in user.documents.all %}
-                    <p><strong>Document Type:</strong> {{ document.document_type }}</p>
-                    <p><strong>Date Uploaded:</strong> {{ document.uploaded_at }}</p>
-                    <p><strong>Action:</strong>
-                        <a href="{{ document.document.url }}" class="btn btn-primary my-1">View</a>
-                        <a href="{{ document.document.url }}" class="btn btn-dark my-1" download>Download</a>
-                        <a href="/profile/delete/delete_supporting_document/{{ document.id }}/" class="btn btn-danger">Delete</a>
-                    </p>
-                    <hr>
-                {% empty %}
-                    <p>No supporting documents available.</p>
-                {% endfor %}
+            <div class="collapse" id="softSkills">
+                <div id="softSkillsDisplay" class="profile-info">
+                    <div class="row">
+                        {% for skill in user.softskills_set.all %}
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush mb-3">
+                                    <div class="list-group-item"><strong>Soft Skill:</strong> {{ skill.skill }}</div>
+                                    <div class="list-group-item"><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</div>
+                                    <a href="{% url 'delete_soft_skill' skill.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No soft skills available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Module 7: Working Experience -->
+<div class="col-md-12">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-briefcase fa-2x text-primary me-2"></i>
+                    <h5>Working Experience</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#workingExperience" aria-expanded="false" aria-controls="workingExperience">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#addExperienceModal">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse" id="workingExperience">
+                <div id="workingExperienceDisplay" class="profile-info">
+                    <div class="row">
+                        {% for experience in user.working_expereince.all %}
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush mb-3">
+                                    <div class="list-group-item"><strong>Job Title:</strong> {{ experience.job_title.title }}</div>
+                                    <div class="list-group-item"><strong>Company:</strong> {{ experience.company }}</div>
+                                    <div class="list-group-item"><strong>Location:</strong> {{ experience.location }}</div>
+                                    <div class="list-group-item"><strong>Start Date:</strong> {{ experience.start_date }}</div>
+                                    <div class="list-group-item"><strong>End Date:</strong> {{ experience.end_date }}</div>
+                                    <div class="list-group-item"><strong>Description:</strong> {{ experience.description }}</div>
+                                    <a href="{% url 'delete_working_experince' experience.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No working experience available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Module 8: References -->
+<div class="col-md-12">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-user fa-2x text-primary me-2"></i>
+                    <h5>References</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#references" aria-expanded="false" aria-controls="references">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#referencesModal">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse" id="references">
+                <div id="referencesDisplay" class="profile-info">
+                    <div class="row">
+                        {% for reference in user.reference.all %}
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush mb-3">
+                                    <div class="list-group-item"><strong>Work Experience:</strong> {{ reference.working_experince }} - {{ reference.working_experince.job_title }}</div>
+                                    <div class="list-group-item"><strong>Full Name:</strong> {{ reference.full_name }}</div>
+                                    <div class="list-group-item"><strong>Contact Information:</strong> {{ reference.phone }}</div>
+                                    <div class="list-group-item"><strong>Position/Relationship:</strong> {{ reference.position }}</div>
+                                    <a href="{% url 'delete_reference' reference.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No references available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Module 9: Supporting Documents --> 
+<div class="col-md-12">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="section-title d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-file-alt fa-2x text-primary me-2"></i>
+                    <h5>Supporting Documents</h5>
+                </div>
+                <div>
+                    <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#supportingDocuments" aria-expanded="false" aria-controls="supportingDocuments">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn btn-secondary rounded-circle shadow" data-toggle="modal" data-target="#supportingDocumentsModal">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse" id="supportingDocuments">
+                <div id="supportingDocumentsDisplay" class="profile-info">
+                    <div class="row">
+                        {% for document in user.documents.all %}
+                            <div class="col-md-6">
+                                <div class="list-group list-group-flush mb-3">
+                                    <div class="list-group-item"><strong>Document Type:</strong> {{ document.document_type }}</div>
+                                    <div class="list-group-item"><strong>Date Uploaded:</strong> {{ document.uploaded_at }}</div>
+                                    <p><strong>Action:</strong>
+                                        <a href="{{ document.document.url }}" class="btn btn-primary my-1">View</a>
+                                        <a href="{{ document.document.url }}" class="btn btn-dark my-1" download>Download</a>
+                                        <a href="/profile/delete/delete_supporting_document/{{ document.id }}/" class="btn btn-danger btn-pill">Delete</a>
+                                    </p>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>No supporting documents available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 

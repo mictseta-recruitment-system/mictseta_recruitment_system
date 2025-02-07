@@ -7,112 +7,142 @@
 
 <style>
     body {
+        
         font-family: 'Open Sans', sans-serif;
         height: 100vh;
         margin: 0;
         display: flex;
         justify-content: center;
         align-items: center;
-    }
+    background-color: #f4f7f9;
+}
 
-    .form-container {
-        background-color: #ffffff;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        padding: 20px;  
-        border-radius: 5px;
-        width: 100%;
-        max-width: 900px;
-        max-height: 85vh;
-        text-align: center;
-        margin-top: 0; 
-    }
+.form-container {
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 20px;  
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 85vh;
+    text-align: center;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-    .form-container h1,
-    .form-container h3 {
-        color: #003366;
-        margin-top: 0;  /* Removed space between heading and box */
-        margin-bottom: 0; /* Removed space between heading and form elements */
-    }
+.form-container h1,
+.form-container h3 {
+    color: #003366;
+    margin: 0;  
+    padding: 10px 0;
+}
 
-    .input-group {
-        margin-bottom: 10px;
-    }
+.input-group {
+    margin: 10px 0;
+    position: relative;
+    width: 100%;
+}
 
-    .input-group input {
-        border: 2px solid #ddd;
-        padding: 10px;
-        font-size: 12px;
-        border-radius: 4px;
-        width: 50%;
-    }
+.input-group input {
+    border: 2px solid #ddd;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #f8f9fa;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+}
 
-    .input-group input:focus {
-        border-color: #007acc;
-        box-shadow: 0 0 5px rgba(65, 86, 101, 0.5);
-    }
+.input-group input:focus {
+    border-color: #007acc;
+    box-shadow: 0 0 8px rgba(0, 122, 204, 0.5);
+    background: white;
+}
 
-    .input-group label {
-        position: absolute;
-        font-size: 12px;
-        color: #007acc;
-        transition: 0.2s;
-    }
+.input-group label {
+    position: absolute;
+    font-size: 12px;
+    color: #007acc;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease-in-out;
+    background: white;
+    padding: 0 5px;
+    pointer-events: none;
+}
 
-    .input-group input:focus + label {
-        top: -20px;
-        font-size: 10px;
-    }
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 10px;
+    color: #003366;
+    background: white;
+    padding: 0 5px;
+}
 
-    .btn-primary {
-        background-color:#003366;
-        border: none;
-        padding: 10px;
-        font-size: 16px;
-        color: white;
-        cursor: pointer;
-        border-radius: 4px;
-        width: 100%;
-        transition: background-color 0.3s ease-in-out;
-    }
+.btn-primary {
+    background-color:#007acc;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+    margin-top: 10px;
+}
 
-    .btn-primary:hover {
-        background-color: #005f99;
-    }
+.btn-primary:hover {
+    background-color: #005f99;
+    transform: translateY(-2px);
+}
 
-    .remember-forgot {
-        display: flex;
-        justify-content: space-between;
-        font-size: 12px;
-        color: #555;
-    }
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #555;
+    margin: 10px 0;
+}
 
-    .register-link {
-        margin-top: 15px;
-        font-size: 14px;
-    }
+.register-link {
+    margin-top: 15px;
+    font-size: 14px;
+}
 
-    .register-link a {
-        color: #007acc;
-        text-decoration: none;
-    }
+.register-link a {
+    color: #007acc;
+    text-decoration: none;
+}
 
-    .spinner {
-        display: none;
-        margin: 20px auto;
-    }
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 
-    .wrapper {
-        display: flex;
-        flex-direction: column;
-    }
+.eye-icon {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #777;
+    transition: color 0.3s;
+}
 
-    .eye-icon {
-        cursor: pointer;
-        position: absolute;
-        right: 10px;
-        top: 35%;
-        font-size: 18px;
-    }
+.eye-icon:hover {
+    color: #007acc;
+}
+
 
 
 </style>
@@ -127,9 +157,13 @@
                 <div class="wrapper" id="wrapper-sign-in">
                     <form action="" id="login-form" method="POST">
                         {% csrf_token %}
-                        <h3>Welcome back</h3>
-                        <p>Please log in to stay connected with us.</p>
-                        <h1>Login</h1>
+                        <img src="{% static 'authenticate/images/logo2.png' %}" alt="Logo" class="inline-logo">
+                        <h3 class="welcome-text">
+                            Welcome back 
+                        </h3>
+                        <p class="subtext">Please log in to stay connected with us.</p>
+                        <h1 class="login-title">Login</h1>
+                        
 
                         <div class="input-group">
                             <input type="email" class="form-control" placeholder=" " id="lemail" aria-label="Email" required>
@@ -154,8 +188,10 @@
                 <!-- Sign-Up Form -->
                 <div class="wrapper" id="wrapper-sign-up" style="display: none;">
                     <form action="" id="signup-form" method="POST">
-                        <h1>Sign Up</h1>
-                        <h6>Add your details to create an account.</h6>
+                        <img src="{% static 'authenticate/images/logo2.png' %}" alt="Logo" class="inline-logo">
+                        <h1 class="signup-title">Sign Up</h1>
+<h6 class="signup-subtext">Add your details to create an account.</h6>
+
 
                         <div class="input-group">
                             <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder=" " required>
