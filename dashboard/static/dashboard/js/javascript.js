@@ -2538,8 +2538,86 @@ function enableOrDisableQuiz(status, quiz_id) {
     showFlashMessage(error.message, "danger");
   });
 }
+/*=======================================================================*/
 
+   
+function add_score_question(scoreboard_id) {
+  const url = 'http://127.0.0.1:8000/job/scoreboard/question/add/';
+  const question_text = document.getElementById('question_text').value;
+   
+  const jsonData = {
+    
+    scoreboard_id:scoreboard_id,
+    question_text:question_text,
+  };
 
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+   
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+function delete_score_question(question_id) {
+  const url = 'http://127.0.0.1:8000/job/scoreboard/question/delete/';
+  const jsonData = {
+    
+    question_id:question_id
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+   
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {

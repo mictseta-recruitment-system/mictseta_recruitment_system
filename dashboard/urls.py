@@ -44,7 +44,8 @@ urlpatterns = [
    
 
     path('application_jobs', views.application_jobs, name="dashboard.application_jobs"),
-
+     path('create_scoreboard/<job_id>', views.create_scoreboard, name='create_scoreboard'),
+    
 
     
 ]

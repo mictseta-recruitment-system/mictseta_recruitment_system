@@ -57,8 +57,9 @@ urlpatterns = [
      path('approve_requisition_ceo/', views.approve_requisition_ceo, name='approve_requisition_ceo'),
      path('screening/', views.screening, name='screening'),
     
-    
-  
+   path('scoreboard/question/add/', views.score_add_question, name='add_question'),
+    path('scoreboard/question/delete/', views.score_delete_question, name='delete_question'),
+
 
 
     # path('delete_user/', views.delete_user, name='delete_user')

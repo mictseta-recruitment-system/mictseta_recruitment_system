@@ -574,7 +574,34 @@
   background-color: #007bff;
   cursor: se-resize;
 }
+ .delete-btn {
+            color: red;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
 
+        .add-question-form {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .add-question-form input {
+            width: 80%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .add-question-form button {
+            padding: 8px 15px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
   </style>
 
   {% block styles %}

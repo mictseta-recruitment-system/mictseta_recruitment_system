@@ -43,5 +43,5 @@ function showFlashMessage(message, type) {
             flashMessageContainer.removeChild(flashMessage);
             location.reload(); // Refresh the page
         }, 500);
-    }, 3500); // Now disappears after 3.5 seconds
+    }, 5500); // Now disappears after 3.5 seconds
 }

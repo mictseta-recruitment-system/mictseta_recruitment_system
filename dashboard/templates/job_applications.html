@@ -156,8 +156,10 @@
                   <div>
                        <!--  <button class="btn btn-danger" onclick="auto_filter('{{applications.0.job.id}}','strict')">Strict filter</button> -->
                        {% if applications.0.job.current_step > 4 %}
+                       {% if user.staffprofile.department == "HR" %}
                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#strict"> strict filter
                      </button>
+                     {% endif %}
                               <div class="modal fade" id="strict" tabindex="-1" aria-labelledby="strict" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable  modal-lg">
                                   <div class="modal-content">
@@ -207,8 +209,10 @@
                               </div>
                        
                         <!-- <button class="btn btn-info" onclick="auto_filter('{{applications.0.job.id}}','standerd')">Standard filter</button> -->
+                        {% if user.staffprofile.department == "HR" %}
                          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#standard"> Standard filter
                           </button>
+                          {% endif %}
                               <div class="modal fade" id="standard" tabindex="-1" aria-labelledby="standard" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable  modal-lg">
                                   <div class="modal-content">
@@ -253,8 +257,10 @@
 
                         {% if applications.0.job.is_filter %}
                         <!--   <button class="btn btn-dark" onclick="apply_filter('{{applications.0.job.id}}')"><i class="fa fa-check"></i> Apply filter</button> -->
+                        {% if user.staffprofile.department == "HR" %}
                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#apply"> <i class="fa fa-check"></i> Apply filter
-                              </button>
+                                </button>
+                          {% endif %}     
                               <div class="modal fade" id="apply" tabindex="-1" aria-labelledby="apply" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -276,8 +282,10 @@
                               </div>
                            
                             <!-- <button class="btn btn-outline-info" onclick="reset_filter('{{applications.0.job.id}}')"> <i class="fa fa-cog"></i> Reset</button> -->
+                               {% if user.staffprofile.department == "HR" %}
                               <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#reset"> <i class="fa fa-cog"></i> Reset
                               </button>
+                              {% endif %}
                               <div class="modal fade" id="reset" tabindex="-1" aria-labelledby="reset" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -299,9 +307,10 @@
                               </div>
                             {% if applications.0.job.hide_application %}
                                <!-- <button class="btn btn-outline-success" onclick="show_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye"></i> Show</button> -->
-
+                               {% if user.staffprofile.department == "HR" %}
                                   <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#show"></i><i class="fa fa-eye"></i>  show
                               </button>
+                              {% endif %}
                               <div class="modal fade" id="show" tabindex="-1" aria-labelledby="show" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -323,9 +332,10 @@
                               </div>
                             {% elif not applications.0.job.hide_application %}
                             <!--  <button class="btn btn-outline-danger" onclick="hide_filter('{{applications.0.job.id}}')"> <i class="fa fa-eye-slash"></i> Hide</button>
- -->
- <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#hide"> <i class="fa fa-cog"></i><i class="fa fa-eye-slash"></i>  hide
+ -->                         {% if user.staffprofile.department == "HR" %}
+                              <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#hide"> <i class="fa fa-cog"></i><i class="fa fa-eye-slash"></i>  hide
                               </button>
+                                {% endif %}
                               <div class="modal fade" id="hide" tabindex="-1" aria-labelledby="hide" aria-hidden="true">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
@@ -466,8 +476,18 @@
                   <h6>Filtered Application List</h6> 
                   {% if filtered %}
                 <!--   <button class="btn btn-warning" onclick="auto_move_to_shortlist('{{applications.0.job.id}}')">Auto Short-list</button> -->
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Submit list
-                  </button>
+                {% if user.staffprofile.department == "HR" %}
+                  {% if not applications.0.job.scoreboard %}
+                  <button type="button" class="btn btn-info" onclick="create_scoreboard('{{applications.0.job.id}}')">Create Scoreboard
+                    </button>
+                  {% else %}
+                   <a href="{% url 'create_scoreboard' applications.0.job.id %}" type="button" class="btn btn-info" >edit Scoreboard
+                    </a>
+
+                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Submit list
+                    </button>
+                    {% endif %}
+                {% endif %}
                   <div class="modal fade" id="auto-shortlist" tabindex="-1" aria-labelledby="auto-shortlist" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
@@ -529,8 +549,10 @@
                               <td>{{application.date}}</td>
                               <td> 
                                 {% if user.staffprofile.department == "HR" %}
+                                 {% if applications.0.job.scoreboard %}
                                 <a href="{% url 'dashboard.jobsekeer_details_score' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-edit"> </i> Score</a>
+                                {% endif %}
                                 {% else %}
                                 .
                                 {% endif %}

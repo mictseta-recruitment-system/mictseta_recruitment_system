@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert,Scoreboard, ScoreQuestion
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -807,3 +807,46 @@ def new_quiz(request, job_id):
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
 		return redirect('render_auth_page')
+
+@check_leave
+@csrf_protect	
+def create_scoreboard(request,job_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+
+    vacancy = JobPost.objects.get(id=int(job_id))
+    scoreboard = Scoreboard.objects.filter(vacancy=vacancy).first()
+    if not scoreboard:
+	    scoreboard = Scoreboard.objects.create(vacancy=vacancy)
+	    for education in vacancy.educations.all():
+	    	question = f"has qualification in {education.field_of_study}"
+	    	score_questions = ScoreQuestion.objects.create(scoreboard=scoreboard, text=question, level="E", max_score=5)
+	    	score_questions.save()
+
+	    for experience in vacancy.experiences.all():
+	    	question = f"has {experience.duration} in {experience.name}"
+	    	score_questions = ScoreQuestion.objects.create(scoreboard=scoreboard, text=question, level="E", max_score=5)
+	    	score_questions.save()
+
+	    for skill in vacancy.C_skills.all():
+	    	question = f"is {skill.level} in {skill.name}"
+	    	score_questions = ScoreQuestion.objects.create(scoreboard=scoreboard, text=question, level="E", max_score=5)
+	    	score_questions.save()
+
+	    for skill in vacancy.S_skills.all():
+	    	question = f"is {skill.level} in {skill.name}"
+	    	score_questions = ScoreQuestion.objects.create(scoreboard=scoreboard, text=question, level="E", max_score=5)
+	    	score_questions.save()
+
+	    for requirement in vacancy.requirements.all():
+	    	question = requirement.description
+	    	score_questions = ScoreQuestion.objects.create(scoreboard=scoreboard, text=question, level="E", max_score=5)
+	    	score_questions.save()
+	    vacancy.scoreboard = True
+	    vacancy.save()
+	    scoreboard.save()
+	    return render(request, 'create_scoreboard.html',{'scoreboard':scoreboard})
+
+    else:
+        return render(request, 'create_scoreboard.html',{'scoreboard':scoreboard})

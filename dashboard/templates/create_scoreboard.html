@@ -1,0 +1,70 @@
+{% extends 'dashboard_base.html' %}
+
+{% block content %}
+<div class="pipScoreboardContent">
+    <h2>Scorecard</h2>
+     <form method="POST" class="add-question-form">
+        {% csrf_token %}
+        <input type="text" id="question_text" name="question_text" placeholder="Enter new question" required>
+        <button type="button" onclick="add_score_question('{{scoreboard.id}}')">Add</button>
+    </form>
+    <hr>
+    <table class="pipTable">
+        <tr>
+            <th>Criteria</th>
+            <th>Excellent (4)</th>
+            <th>Good (3)</th>
+            <th>Fair (2)</th>
+            <th>None (1)</th>
+            
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td colspan="7" class="pipCriteriaHeader">Essentials</td>
+        </tr>
+
+        {% for question in scoreboard.questions.all %}
+        {% if question.level == "E" %}
+        <tr>
+            <td>{{ question.text }}</td>
+            <td><input type="radio" name="score_{{ question.id }}" value="4"> <span class="pipPointLabel">4</span></td>
+            <td><input type="radio" name="score_{{ question.id }}" value="3"> <span class="pipPointLabel">3</span></td>
+            <td><input type="radio" name="score_{{ question.id }}" value="2"> <span class="pipPointLabel">2</span></td>
+            <td><input type="radio" name="score_{{ question.id }}" value="1"> <span class="pipPointLabel">1</span></td>
+            <td>
+                <form method="POST" action="{% url 'delete_question'  %}">
+                    {% csrf_token %}
+                    <button type="button" class="delete-btn" onclick="delete_score_question('{{question.id}}')"><i class="fas fa-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+
+        {% endfor %}
+         <tr>
+            <td colspan="7" class="pipCriteriaHeader">Desireable</td>
+        </tr>
+         {% for question in scoreboard.questions.all %}
+        {% if question.level == "D" %}
+        <tr>
+            <td>{{ question.text }}</td>
+            <td><input type="radio" name="score_{{ question.id }}" value="5"> <span class="pipPointLabel">5</span></td>
+            <td><input type="radio" name="score_{{ question.id }}" value="4"> <span class="pipPointLabel">4</span></td>
+            <td><input type="radio" name="score_{{ question.id }}" value="3"> <span class="pipPointLabel">3</span></td>
+            <td><input type="radio" name="score_{{ question.id }}" value="2"> <span class="pipPointLabel">2</span></td>
+            <td><input type="radio" name="score_{{ question.id }}" value="1"> <span class="pipPointLabel">1</span></td>
+            <td>
+                <form method="POST" action="{% url 'delete_question'  %}">
+                    {% csrf_token %}
+                     <button type="button" class="delete-btn" onclick="delete_score_question('{{question.id}}')"><i class="fas fa-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+        {% endif %}
+
+        {% endfor %}
+    </table>
+
+   
+</div>
+{% endblock %}
