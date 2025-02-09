@@ -49,6 +49,7 @@
                 column-count: 1; /* One column for mobile */
             }
         }
+       
 
         /* Job Cards */
         .masonry-item {
@@ -177,6 +178,127 @@
 .social-media-icons a.instagram {
     background-color: #e4405f; /* Instagram color */
 }
+.filterbar {
+    background-color: #ffffff; /* White background for the filter bar */
+    border-radius: 12px; /* Rounded corners */
+    padding: 15px; /* Padding around the filter bar */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    display: flex; /* Flexbox for layout */
+    justify-content: space-around; /* Space items evenly */
+    align-items: center; /* Center items vertically */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.filterbar:hover {
+    background-color: #e7f1ff; /* Light blue background on hover */
+}
+
+.fancy-select {
+    border: 2px solid #007bff; /* Blue border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside the select */
+    font-size: 1rem; /* Font size */
+    color: #333; /* Dark text color */
+    background-color: #f0f8ff; /* Light blue background for select */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+    position: relative; /* Position for the custom arrow */
+}
+
+.fancy-select:focus {
+    outline: none; /* Remove outline */
+    border-color: #0056b3; /* Darker blue on focus */
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.5); /* Light blue shadow on focus */
+    background-color: #cce5ff; /* Change background on focus */
+}
+
+.fancy-select:hover {
+    background-color: #b3d7ff; /* Change background on hover */
+}
+
+.fancy-select option {
+    padding: 10px; /* Padding for options */
+    background-color: #ffffff; /* White background for options */
+    color: #333; /* Dark text color for options */
+}
+
+/* Custom arrow for the select */
+.fancy-select::after {
+    content: '▼'; /* Down arrow */
+    position: absolute;
+    right: 15px; /* Position it to the right */
+    top: 50%; /* Center it vertically */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    color: #007bff; /* Arrow color */
+    pointer-events: none; /* Prevent interaction */
+}
+
+/* Add a subtle animation on hover */
+.fancy-select:hover {
+    transform: translateY(-2px); /* Slight lift effect */
+    transition: transform 0.2s ease; /* Smooth transition */
+}
+/* Error Message */
+.error-message {
+    display: none; /* Hidden by default */
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb); /* Gradient background */
+    color: #721c24; /* Dark red text */
+    border: 1px solid #f5c6cb; /* Red border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 30px; /* Padding */
+    margin: 20px; /* Margin */
+    text-align: center; /* Center text */
+    font-weight: bold; /* Bold text */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    position: relative; /* Position for icon */
+}
+
+.error-icon {
+    font-size: 60px; /* Larger icon size */
+    margin-bottom: 15px; /* Space between icon and text */
+    color: #dc3545; /* Red color for the icon */
+    animation: bounce 0.5s infinite; /* Bounce animation */
+}
+
+/* Bounce animation for the icon */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+ /* Error Message */
+ .error-message {
+        display: none; /* Hidden by default */
+        background: #f0f4f8; /* Soft light blue background */
+        color: #333; /* Dark gray text */
+        border: 1px solid #b0c4de; /* Light blue border */
+        border-radius: 8px; /* Rounded corners */
+        padding: 20px; /* Padding */
+        margin: 20px; /* Margin */
+        text-align: center; /* Center text */
+        font-weight: normal; /* Normal font weight */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        position: relative; /* Position for icon */
+    }
+
+    .error-icon {
+        font-size: 50px; /* Icon size */
+        margin-bottom: 10px; /* Space between icon and text */
+        color: #007bff; /* Soft blue color for the icon */
+    }
+
+    /* Text styling */
+    .error-message div {
+        font-size: 1.1rem; /* Slightly larger text */
+        line-height: 1.5; /* Better line spacing */
+    }
+
 
     </style>
 </head>
@@ -264,43 +386,84 @@
     </div>
 
 
-   <!-- Filter Bar -->
+  <!-- Filter Bar -->
 <div class="filterbar d-flex justify-content-center gap-3 my-4">
-    <select class="form-select filter" id="jobTypeFilter">
+    <select class="form-select filter fancy-select" id="jobTypeFilter">
         <option selected value="">Choose job-type</option>
-        <option value="Full Time">Full Time</option>
-        <option value="Part Time">Part Time</option>
-        <option value="Partially remote">Partially remote</option>
+        <option value="Permanent">Permanent</option>
+        <option value="Remote">Remote</option>
+        <option value="Contract">Contract</option>
+        <option value="Internship">Internship</option>
+        <option value="Temporary">Temporary</option>
     </select>
     
-    <select class="form-select filter" id="locationFilter">
+    <select class="form-select filter fancy-select" id="locationFilter">
         <option selected value="">Location</option>
         <option value="Johannesburg">Johannesburg</option>
+        <option value="Pretoria">Pretoria</option>
         <option value="Cape Town">Cape Town</option>
         <option value="Durban">Durban</option>
+        <option value="Port Elizabeth">Port Elizabeth</option>
+        <option value="Bloemfontein">Bloemfontein</option>
+        <option value="Pietermaritzburg">Pietermaritzburg</option>
+        <option value="Polokwane">Polokwane</option>
+        <option value="Nelspruit">Nelspruit</option>
+        <option value="Kimberley">Kimberley</option>
+        <option value="Rustenburg">Rustenburg</option>
+        <option value="East London">East London</option>
+        <option value="George">George</option>
+        <option value="Tshwane">Tshwane</option>
+        <option value="Vereeniging">Vereeniging</option>
+        <option value="Soweto">Soweto</option>
+        <option value="Mthatha">Mthatha</option>
+        <option value="Umtata">Umtata</option>
+        <option value="Klerksdorp">Klerksdorp</option>
+        <option value="Worcester">Worcester</option>
+        <option value="Stellenbosch">Stellenbosch</option>
+        <option value="Harrismith">Harrismith</option>
+        <option value="Middelburg">Middelburg</option>
+        <option value="Ladysmith">Ladysmith</option>
+        <option value="Burgersfort">Burgersfort</option>
+        <option value="Thohoyandou">Thohoyandou</option>
+        <option value="Kroonstad">Kroonstad</option>
+        <option value="Wellington">Wellington</option>
+        <option value="Ceres">Ceres</option>
     </select>
 
-    <select class="form-select filter" id="salaryFilter">
-        <option selected value="">Salary</option>
-        <option value="0-5000">R0 - R5,000</option>
-        <option value="5001-10000">R5,001 - R10,000</option>
-        <option value="10001-20000">R10,001 - R20,000</option>
-        <option value="20001-50000">R20,001 - R50,000</option>
+    <select class="form-select filter fancy-select" id="industryFilter">
+        <option selected value="">Choose Industry</option>
+        <option value="">All</option>
+        <option value="healthcare">Healthcare</option>
+        <option value="education">Education</option>
+        <option value="technology">Technology</option>
+        <option value="Business and Finance">Business and Finance</option>
+        <option value="Creative and Media">Creative and Media</option>
+        <option value="Science and Engineering">Science and Engineering</option>
+        <option value="Trades and Services">Trades and Services</option>
     </select>
+</div>
+</div>
+
+<!-- Error Message -->
+<div class="error-message" id="errorMessage">
+    <i class="fas fa-search error-icon"></i>
+    <div>No jobs found matching your criteria. Please try different filters.</div>
 </div>
     
     <!-- Job Listings in Masonry Grid -->
     <div class="masonry-container">
         {% if jobs %}
             {% for job in jobs %}
-                <div class="masonry-item">
+                <div class="masonry-item" 
+                     data-job-type="{{ job.job_type }}" 
+                     data-location="{{ job.location }}" 
+                     data-salary="{{ job.salary }}">
                     <h5 class="job-title"><i class="fas fa-briefcase"></i> {{ job.title|capfirst }}</h5>
                     <div class="job-details">
-                        <i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> South Africa |
+                        <i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> {{ job.location }} |
                         <i class="fas fa-calendar-alt"></i> <strong>Closing Date:</strong> 
                         <span class="end-date">{{ job.end_date }}</span>
                     </div>
-                    
                     <p class="job-description">{{ job.description|capfirst }}</p>
                     <a href="{% url 'job_details' job.id %}" class="job-link">See more...</a>
                 </div>
@@ -309,6 +472,8 @@
             <p>No jobs available.</p>
         {% endif %}
     </div>
+    
+
     <div class="social-media-icons">
         <ul>
             <li><a class="facebook" href="https://www.facebook.com/people/MICT-SETA/100064473800888/" target="_blank"><i class="fab fa-facebook"></i></a></li>
@@ -325,6 +490,48 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const jobTypeFilter = document.getElementById('jobTypeFilter');
+            const locationFilter = document.getElementById('locationFilter');
+            const industryFilter = document.getElementById('industryFilter');
+            const masonryItems = document.querySelectorAll('.masonry-item');
+            const errorMessage = document.getElementById('errorMessage');
+
+            function filterJobs() {
+                const jobType = jobTypeFilter.value;
+                const location = locationFilter.value;
+                const industry = industryFilter.value;
+                let hasVisibleJobs = false;
+
+                masonryItems.forEach(item => {
+                    const jobTypeMatch = jobType ? item.getAttribute('data-job-type') === jobType : true;
+                    const locationMatch = location ? item.getAttribute('data-location') === location : true;
+                    const industryMatch = industry ? item.getAttribute('data-industry') === industry : true;
+
+                    if (jobTypeMatch && locationMatch && industryMatch) {
+                        item.style.display = 'block'; // Show item
+                        hasVisibleJobs = true; // At least one job is visible
+                    } else {
+                        item.style.display = 'none'; // Hide item
+                    }
+                });
+
+                // Show or hide the error message based on job visibility
+                if (hasVisibleJobs) {
+                    errorMessage.style.display = 'none'; // Hide error message
+                } else {
+                    errorMessage.style.display = 'block'; // Show error message
+                }
+            }
+
+            // Event listeners for filters
+            jobTypeFilter.addEventListener('change', filterJobs);
+            locationFilter.addEventListener('change', filterJobs);
+            industryFilter.addEventListener('change', filterJobs);
+        });
+    </script>
 
 </body>
 </html>
