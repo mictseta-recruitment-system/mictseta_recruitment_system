@@ -617,6 +617,7 @@
                                   {% endif %}
                                 {% endfor %}  
                               <td> 
+                                {% if not application.is_approved == "waiting" %}
                                 <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-plus"></i> interview
                               </button>
@@ -625,6 +626,7 @@
                                   <i class="fa fa-trash"></i> 
                                   Reject
                                 </a>
+                              {% endif %}
                                  <a href="{% url 'view_scoreboard' application.job.id application.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
                               </td>

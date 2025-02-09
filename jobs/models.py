@@ -24,6 +24,7 @@ class JobPost(models.Model):
     req_finance_approval = models.BooleanField(null=False, default=False)
     req_ceo_approval = models.BooleanField(null=False, default=False)
     scoreboard = models.BooleanField(null=False, default=False)
+
     def __str__(self):
         return f'{self.title} '
 
@@ -116,6 +117,7 @@ class JobApplication(models.Model):
     is_rejected = models.BooleanField(null=False, default=False)
     reason = models.CharField(null=True, max_length=100, default="")
     is_filter_applied = models.BooleanField(null=False, default=False)
+    is_approved = models.CharField(null=False,max_length=50,default="waiting")
 
 
     def __str__(self):
