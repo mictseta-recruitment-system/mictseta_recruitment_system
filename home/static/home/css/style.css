@@ -221,20 +221,3 @@ nav ul li {
   padding-bottom: 5px;
 }
 
-/* Filterbar Styling */
-.filterbar {
-  top: 120px;
-  left: 20px;
-  position: sticky;
-  display: flex;
-  justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 20px;
-  border-radius: 5px;
-  width: calc(100% - 40px);
-}
-
-.filterbar .form-select {
-  flex: 1;
-  margin-right: 10px;
-}
