@@ -14,18 +14,18 @@ function showFlashMessage(message, type) {
     flashMessage.style.opacity = "0";
     flashMessage.style.transform = "translateX(100%)";
     flashMessage.style.transition = "opacity 0.5s ease-out, transform 0.5s ease-out";
-    
+
     flashMessage.innerHTML = `
         ${message}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: #ddd;">
-            <div id="progress-bar" style="width: 100%; height: 4px; background: #007bff; transition: width 3.5s linear;"></div>
+            <div id="progress-bar" style="width: 100%; height: 4px; background: #007bff; transition: width 2.5s linear;"></div>
         </div>
     `;
     flashMessageContainer.appendChild(flashMessage);
-    
+
     // Trigger transition
     setTimeout(() => {
         flashMessage.style.opacity = "1";
@@ -33,15 +33,15 @@ function showFlashMessage(message, type) {
         document.getElementById("progress-bar").style.width = "0%";
     }, 100);
 
-    // Set a timeout to remove the flash message after 3.5 seconds and refresh the page
+    // Set a timeout to remove the flash message after 2.5 seconds and refresh the page
     setTimeout(() => {
         flashMessage.style.opacity = "0";
         flashMessage.style.transform = "translateX(100%)";
-        
+
         // Remove the element from the DOM after the fade-out transition
         setTimeout(() => {
             flashMessageContainer.removeChild(flashMessage);
             location.reload(); // Refresh the page
         }, 500);
-    }, 5500); // Now disappears after 3.5 seconds
+    }, 4500); // Now disappears after 2.5 seconds
 }

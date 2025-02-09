@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MICSETA | Home</title>
     {% load static %}
-    
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="shortcut icon" href="{% static 'authenticate/images/webicon.png' %}" type="image/x-icon">  
 
     <style>
-        /* Custom styles */
+        /* Global Styles */
         body {
             margin: 0;
             padding: 0;
-            background-size: contain; /* Ensures the image doesn't stretch */
-            background-repeat: no-repeat; /* Prevents repeating the image */
-           
+            background-color: #f4f4f4;
         }
 
         #navbar {
@@ -33,110 +31,84 @@
             margin-top: 20px;
         }
 
-        .social-media-icons ul {
-            list-style-type: none;
-            padding: 0;
+        /* Masonry Grid Layout */
+        .masonry-container {
+            column-count: 3; /* Three columns on large screens */
+            column-gap: 20px; /* Space between columns */
+            padding: 20px;
         }
 
-        .social-media-icons li {
-            display: inline;
-            margin-right: 10px;
+        @media (max-width: 992px) {
+            .masonry-container {
+                column-count: 2; /* Two columns for tablets */
+            }
         }
 
+        @media (max-width: 576px) {
+            .masonry-container {
+                column-count: 1; /* One column for mobile */
+            }
+        }
+
+        /* Job Cards */
+        .masonry-item {
+            display: inline-block;
+            width: 100%;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            break-inside: avoid; /* Prevents breaking inside columns */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Hover Effect */
+        .masonry-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Job Details Styling */
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color:#555555;
+        }
+
+        .job-details {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .job-description {
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .job-link {
+            display: inline-block;
+            margin-top: 9px;
+            color: #007bff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .job-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
         footer {
             text-align: center;
             padding: 20px 0;
             background-color: #f8f9fa;
         }
-
-        @media (max-width: 576px) {
-            .filterbar {
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-        /* Animation styles */
-        .card {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.5s forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .card:nth-child(3n+1) {
-            animation-delay: 0.1s;
-        }
-        .card:nth-child(3n+2) {
-            animation-delay: 0.2s;
-        }
-        .card:nth-child(3n+3) {
-            animation-delay: 0.3s;
-        }
-
-        .card {
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Ensure cards have equal height */
-}
-
-.card-body {
-    flex-grow: 1; /* Allows content to expand within the card */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Ensures buttons stay at the bottom */
-}
-
-
-.col-md-4 {
-    margin-bottom: 20px; /* Adds space below each card */
-}
-
-/* Fade-in animation */
-.card {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.6s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Staggered animation delays */
-.card:nth-child(3n+1) {
-    animation-delay: 0.2s;
-}
-.card:nth-child(3n+2) {
-    animation-delay: 0.4s;
-}
-.card:nth-child(3n+3) {
-    animation-delay: 0.6s;
-}
-
-/* Hover effect */
-.card:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-
-
     </style>
 </head>
 <body>
 
+    <!-- Navbar -->
     <nav id="navbar" class="navbar navbar-expand-lg bg-body-primary">
         <div class="container-fluid">
             <div class="logo" id="logo">
@@ -196,7 +168,9 @@
             </div>
         </div>
     </nav>
-        
+
+
+    <!-- Logout Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -214,79 +188,59 @@
             </div>
         </div>
     </div>
+
+
+   <!-- Filter Bar -->
+<div class="filterbar d-flex justify-content-center gap-3 my-4">
+    <select class="form-select filter" id="jobTypeFilter">
+        <option selected value="">Choose job-type</option>
+        <option value="Full Time">Full Time</option>
+        <option value="Part Time">Part Time</option>
+        <option value="Partially remote">Partially remote</option>
+    </select>
     
-    <div class="filterbar"> 
-        <select class="form-select" aria-label="Default select example">
-            <option selected>Choose job-type</option>
-            <option value="Full Time">Full Time</option>
-            <option value="Part Time">Part Time</option>
-            <option value="Partially remote">Partially remote</option>
-        </select>
-        <select class="form-select" aria-label="Default select example">
-            <option value="">Location</option>
-            <option value="Johannesburg">Johannesburg</option>
-            <option value="Cape Town">Cape Town</option>
-            <option value="Durban">Durban</option>
-            <option value="Pretoria">Pretoria</option>
-            <option value="Port Elizabeth">Port Elizabeth (Gqeberha)</option>
-            <option value="Bloemfontein">Bloemfontein</option>
-            <option value="Polokwane">Polokwane</option>
-            <option value="Nelspruit">Nelspruit (Mbombela)</option>
-            <option value="Kimberley">Kimberley</option>
-            <option value="Rustenburg">Rustenburg</option>
-        </select>
-    </div>
+    <select class="form-select filter" id="locationFilter">
+        <option selected value="">Location</option>
+        <option value="Johannesburg">Johannesburg</option>
+        <option value="Cape Town">Cape Town</option>
+        <option value="Durban">Durban</option>
+    </select>
+
+    <select class="form-select filter" id="salaryFilter">
+        <option selected value="">Salary</option>
+        <option value="0-5000">R0 - R5,000</option>
+        <option value="5001-10000">R5,001 - R10,000</option>
+        <option value="10001-20000">R10,001 - R20,000</option>
+        <option value="20001-50000">R20,001 - R50,000</option>
+    </select>
+</div>
     
-    <div class="row" style="margin-top: 100px;">
+    <!-- Job Listings in Masonry Grid -->
+    <div class="masonry-container">
         {% if jobs %}
             {% for job in jobs %}
-            <div class="col-md-4 d-flex"> <!-- Makes all cards take equal height -->
-                <div class="card w-100 h-100"> <!-- Ensures full height -->
-                    <div class="card-body d-flex flex-column flex-grow-1">
-                        <h5 class="card-title">
-                            <i class="fas fa-briefcase" style="color: #007bff;"></i> {{ job.title|capfirst }}
-                        </h5>
-                        <div class="details">
-                            <i class="fas fa-map-marker-alt" style="color: #6c757d;"></i>
-                            <span><strong>Location</strong>: South Africa</span> |
-                            <i class="fas fa-calendar-alt" style="color: #6c757d;"></i>
-                            <span><strong>Closing Date</strong>: {{ job.end_date }}</span>
-                        </div>
-                        <p class="card-text">{{ job.description|capfirst }}</p>
-                        <div class="mt-auto"> <!-- Pushes button to bottom -->
-                            <a href="{% url 'job_details' job.id %}" class="card-link">See more...</a>
-                        </div>
+                <div class="masonry-item">
+                    <h5 class="job-title"><i class="fas fa-briefcase"></i> {{ job.title|capfirst }}</h5>
+                    <div class="job-details">
+                        <i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> South Africa |
+                        <i class="fas fa-calendar-alt"></i> <strong>Closing Date:</strong> {{ job.end_date }}
                     </div>
+                    <p class="job-description">{{ job.description|capfirst }}</p>
+                    <a href="{% url 'job_details' job.id %}" class="job-link">See more...</a>
                 </div>
-            </div>
-            
             {% endfor %}
         {% else %}
-            <div class="container mt-5">
-                <div class="job-card">
-                    <h3>No Jobs Available.</h3>
-                </div>
-            </div>
+            <p>No jobs available.</p>
         {% endif %}
     </div>
- 
-    <div class="social-media-icons">
-        <ul>
-            <li><a href="https://www.facebook.com/people/MICT-SETA/100064473800888/" target="_blank"><i class="fab fa-facebook"></i></a></li>
-            <li><a href="https://x.com/MictSeta?ref_src=twsrcgoogletwcampserptwgrauthor" target="_blank"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="https://www.linkedin.com/company/mict-seta" target="_blank"><i class="fab fa-linkedin"></i></a></li>
-            <li><a href="https://www.instagram.com/mictseta/?hl=en" target="_blank"><i class="fab fa-instagram"></i></a></li>
-        </ul>
-    </div>
-    
-    <footer class="footer">
+
+    <!-- Footer -->
+    <footer>
         <p>© 2024 All rights reserved | The Media, Information and Communication Technologies Sector Education and Training Authority</p>
     </footer>
- 
-    <script src="{% static 'authenticate/javascripts/index.js'%}"></script>
-    <script src="{% static 'authenticate/javascripts/login.js'%}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
