@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers,Alert,Scoreboard, ScoreQuestion
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers,Alert,Scoreboard, ScoreQuestion,ScoreResult
 from config.models import JobTitle, Industry
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from .filters import ApplicationFilter
@@ -1942,3 +1942,40 @@ def score_delete_question(request):
     scoreboard_id = question.scoreboard.id
     question.delete()
     return JsonResponse({'message': 'Delete Question/Objective  successfully', 'status': 'success'}, status=200)
+
+@csrf_protect
+def submit_scoreboard(request, scoreboard_id,application_id):
+	if not request.method == 'POST':
+		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception :
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+	scoreboard = Scoreboard.objects.filter(id=scoreboard_id).first()
+	application = JobApplication.objects.filter(id=int(application_id)).first()
+	if not application:
+		return JsonResponse({'errors': { "Error" : ['application not found']}, 'status':'error'}, status=403)
+
+	if scoreboard:
+		for question in scoreboard.questions.all():
+			score_key = f"score_{question.id}"
+			score_value = json_data.get(score_key)
+			
+			results = ScoreResult.objects.create(scoreboard=scoreboard,application=application,question=question,score=int(score_value))
+			results.save()
+		 
+		application.status = "short_list"
+		application.previous_stage = application.current_stage
+		application.current_stage = "short listing stage"
+		application.staff = request.user
+		application.is_rejected = False 
+		application.filterd_out = True 
+		application.reason = ""
+		application.save()
+		feed_back = FeedBack.objects.create(user=application.user,job=application.job,message="moved to Short-List stage",status="Short-List")
+		feed_back.save()
+		return JsonResponse({'message': 'Saving Scorecard results', 'status': 'success'}, status=200)
+	else:
+		return JsonResponse({'errors': { "Error" : ['Scorecard not found ']}, 'status':'error'}, status=403)
+

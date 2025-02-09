@@ -594,7 +594,7 @@
                                   <th class="bg-dark text-white">Candidate</th>
                                   <th class="bg-dark text-white">P. stage</th>
                                   <th class="bg-dark text-white">C. stage</th>
-                                  <th class="bg-dark text-white">Date</th>
+                                  <th class="bg-dark text-white">Points</th>
                                   <th class="bg-dark text-white">Action</th>
                                   
                               </tr>
@@ -610,8 +610,12 @@
                               <td>{{application.previous_stage}}</td>
                               <td>{{application.current_stage}}</td>
                                   
-                                  
-                              <td>{{application.date}}</td>
+                                {% for result in results %}
+                                  {% if result.application == application %}
+                                  <td>{{result.points}}</td>
+
+                                  {% endif %}
+                                {% endfor %}  
                               <td> 
                                 <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-plus"></i> interview
@@ -621,7 +625,7 @@
                                   <i class="fa fa-trash"></i> 
                                   Reject
                                 </a>
-                                 <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
+                                 <a href="{% url 'view_scoreboard' application.job.id application.id %}" class="btn btn-primary p-1" data-bs-placement="top" title="view profile">
                                 <i class="fa fa-eye"> </i></a>
                               </td>
                           </tr>

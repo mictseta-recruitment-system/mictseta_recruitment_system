@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Language, JobPost, Academic, ComputerSkill, SoftSkill, Experience, Requirement, JobApplication, Interview, FeedBack, Quiz,QuizResults,Alert
+from .models import Language, JobPost, Academic, ComputerSkill, SoftSkill, Experience, Requirement, JobApplication, Interview, FeedBack, Quiz,QuizResults,Alert,ScoreResult
 # Register your models here.
 
 admin.site.register(Academic)
@@ -15,5 +15,5 @@ admin.site.register(Language)
 admin.site.register(QuizResults)
 admin.site.register(Quiz)
 admin.site.register(Alert)
-
+admin.site.register(ScoreResult)
 

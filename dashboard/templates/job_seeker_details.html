@@ -31,58 +31,69 @@
     <div class="pipScoreboardHeader" id="pipDragHandle">
       <span>Application Scorecard</span>
       <button id="pipMinimizeScoreboard">−</button>
-      <button id="pipCloseScoreboard">×</button>
+      <button id="pipCloseScoreboard" style="font-size:30px; color:white;">×</button>
     </div>
 
+    {% if scored %}
+    <div class="d-flex justify-content-center">
+        <p>Application Scorecard Already submitted</p>
+        <a href="{% url 'dashboard.jobsekeer_details' seeker.id sapplication.job.id %}">view applications list</a>
+    </div>
+    {% else %}
     <div class="pipScoreboardContent">
       <h3>Rubric</h3>
-      <form>
+        <form id="scoreboardForm">
 
-      <table class="pipTable">
-        <tr>
-          <th>Criteria</th>
-          <th>Excellent (5)</th>
-          <th>Good (4)</th>
-          <th>Average (3)</th>
-          <th>Poor (2)</th>
-          <th>Failing (1)</th>
-        </tr>
-        <tr>
-          <td colspan="6" class="pipCriteriaHeader">Computer Skills Required</td>
-        </tr>
-        <tr>
-          <td>Python programming</td>
-          <td><input type="radio" name="pipPython" value="5"> <span class="pipPointLabel">5</span></td>
-          <td><input type="radio" name="pipPython" value="4"> <span class="pipPointLabel">4</span></td>
-          <td><input type="radio" name="pipPython" value="3"> <span class="pipPointLabel">3</span></td>
-          <td><input type="radio" name="pipPython" value="2"> <span class="pipPointLabel">2</span></td>
-          <td><input type="radio" name="pipPython" value="1"> <span class="pipPointLabel">1</span></td>
-        </tr>
-     <tr>
-          <td>C++ Programming</td>
-          <td><input type="radio" name="pipPython" value="5"> <span class="pipPointLabel">5</span></td>
-          <td><input type="radio" name="pipPython" value="4"> <span class="pipPointLabel">4</span></td>
-          <td><input type="radio" name="pipPython" value="3"> <span class="pipPointLabel">3</span></td>
-          <td><input type="radio" name="pipPython" value="2"> <span class="pipPointLabel">2</span></td>
-          <td><input type="radio" name="pipPython" value="1"> <span class="pipPointLabel">1</span></td>
-        </tr>
-     <tr>
-          <td colspan="6" class="pipCriteriaHeader">Soft Skills Required</td>
-        </tr>
-     <tr>
-          <td>Team Leeader</td>
-          <td><input type="radio" name="pipPython" value="5"> <span class="pipPointLabel">5</span></td>
-          <td><input type="radio" name="pipPython" value="4"> <span class="pipPointLabel">4</span></td>
-          <td><input type="radio" name="pipPython" value="3"> <span class="pipPointLabel">3</span></td>
-          <td><input type="radio" name="pipPython" value="2"> <span class="pipPointLabel">2</span></td>
-          <td><input type="radio" name="pipPython" value="1"> <span class="pipPointLabel">1</span></td>
-        </tr>
+              <table class="pipTable">
+                <tr>
+                    <th>Criteria</th>
+                    <th>Excellent (4)</th>
+                    <th>Good (3)</th>
+                    <th>Fair (2)</th>
+                    <th>None (1)</th>
+                    
+                </tr>
+                <tr>
+                    <td colspan="7" class="pipCriteriaHeader">Essentials</td>
+                </tr>
 
-      </table>
-      <button class="btn btn-success w-100  mt-4 "> Submit Scorecard </button>
-      </form>
+                {% for question in scoreboard.questions.all %}
+                {% if question.level == "E" %}
+                <tr>
+                    <td>{{ question.text }}</td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="4"> <span class="pipPointLabel">4</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="3"> <span class="pipPointLabel">3</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="2"> <span class="pipPointLabel">2</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="1"> <span class="pipPointLabel">1</span></td>
+                   
+                </tr>
+                {% endif %}
+
+                {% endfor %}
+                 <tr>
+                    <td colspan="7" class="pipCriteriaHeader">Desireable</td>
+                </tr>
+                 {% for question in scoreboard.questions.all %}
+                {% if question.level == "D" %}
+                <tr>
+                    <td>{{ question.text }}</td>
+                  
+                    <td><input type="radio" name="score_{{ question.id }}" value="4"> <span class="pipPointLabel">4</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="3"> <span class="pipPointLabel">3</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="2"> <span class="pipPointLabel">2</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="1"> <span class="pipPointLabel">1</span></td>
+                   
+                </tr>
+                {% endif %}
+
+                {% endfor %}
+            </table>
+              <button class="btn btn-success w-100  mt-4 " onclick="submit_scorecard({{scoreboard.id}},{{application.id}})"> Submit Scorecard </button>
+        </form>
 
     </div>
+
+    {% endif %}
 
     <div class="pipResizeHandle"></div>
   </div>

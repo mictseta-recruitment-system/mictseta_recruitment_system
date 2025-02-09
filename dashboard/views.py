@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert,Scoreboard, ScoreQuestion
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert,Scoreboard, ScoreQuestion,ScoreResult
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -135,6 +135,7 @@ def job_applications(request):
 		interview = Interview.objects.all()
 		applications = applications.order_by('-id')
 		interview = interview.order_by('-id')
+		
 		return render(request, 'job_applications.html', {'applications':applications,'interviews':interview, 'applied_jobs':applied_jobs})
 	else:
 		return redirect('render_auth_page')
@@ -167,7 +168,24 @@ def filter_job_application(request,jobID):
 		job_applications = JobApplication.objects.filter(job__id=jobID)
 		cnt=0
 		interview = Interview.objects.filter(application__job__id=jobID)
-		return render(request,'job_applications.html',{'applications':job_applications,'interviews':interview, 'cnt':cnt,'filtered':True})
+		data = []
+
+		for application in job_applications:
+			total_score = 0
+			total_questions = 0 
+			points = 0
+			results = ScoreResult.objects.filter(application=application).all()
+			if results:
+				for result in results:
+					total_score += int(result.score)
+					total_questions += 1
+
+				to_add = {
+					'application':application,
+					'points' : round((total_score/(total_questions*4) ) *100,2)
+				}
+				data.append(to_add)
+		return render(request,'job_applications.html',{'applications':job_applications,'interviews':interview, 'cnt':cnt,'filtered':True, 'results':data})
 	else:
 		return redirect('render_auth_page')
 
@@ -434,7 +452,13 @@ def jobsekeer_details(request, seekerID,jobID):
 				print(quiz)
 			else:
 				quiz = {}
-			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz})
+			vacancy = JobPost.objects.get(id=int(jobID))
+			scoreboard = Scoreboard.objects.filter(vacancy=vacancy).first()
+			res = scoreboard.scoreresult_set.filter(application=application)
+			if res:
+				return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True, "scoreboard":scoreboard, 'scored':True})
+
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'scoreboard':scoreboard})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
@@ -458,7 +482,14 @@ def jobsekeer_details_score(request, seekerID,jobID):
 				print(quiz)
 			else:
 				quiz = {}
-			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True})
+			vacancy = JobPost.objects.get(id=int(jobID))
+			scoreboard = Scoreboard.objects.filter(vacancy=vacancy).first()
+			res = scoreboard.scoreresult_set.filter(application=application)
+			if res:
+				return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True, "scoreboard":scoreboard, 'scored':True})
+
+
+			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True, "scoreboard":scoreboard})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
 	else:
@@ -850,3 +881,26 @@ def create_scoreboard(request,job_id):
 
     else:
         return render(request, 'create_scoreboard.html',{'scoreboard':scoreboard})
+
+@check_leave
+@csrf_protect	
+def view_scoreboard(request,job_id, application_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+
+    vacancy = JobPost.objects.get(id=int(job_id))
+    application = JobApplication.objects.get(id=int(application_id))
+    scoreboard = Scoreboard.objects.filter(vacancy=vacancy).first()
+    results = ScoreResult.objects.filter(scoreboard=scoreboard,application=application).all()
+    total_score = 0
+    total_questions = 0 
+    points = 0
+			
+    for result in results:
+        total_score += int(result.score)
+        total_questions += 1
+
+    points = round((total_score/(total_questions*4) ) *100,2)
+   
+    return render(request, 'view_scoreboard.html',{'scoreboard':scoreboard, 'application':application,'points':points, 'total_score':total_score,'full_score':total_questions*4,'total_questions':total_questions, 'results':results})

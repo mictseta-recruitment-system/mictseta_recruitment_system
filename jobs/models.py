@@ -195,16 +195,16 @@ class ScoreQuestion(models.Model):
     scoreboard = models.ForeignKey(Scoreboard, on_delete=models.CASCADE, related_name="questions")
     text = models.TextField()
     level = models.CharField(max_length=50,default="D")
-    max_score = models.IntegerField(default=5)
+    max_score = models.IntegerField(default=4)
 
     def __str__(self):
         return self.text
 
 class ScoreResult(models.Model):
     scoreboard = models.ForeignKey(Scoreboard, on_delete=models.CASCADE, related_name="results")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
+    question = models.ForeignKey(ScoreQuestion, on_delete=models.CASCADE)
     score = models.IntegerField()
 
     def __str__(self):
-        return f"{self.user.username} - {self.score} for {self.question.text}"
+        return f"{self.application.user.username} - {self.score} for {self.question.text}"

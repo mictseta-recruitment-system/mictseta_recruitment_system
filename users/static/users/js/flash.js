@@ -6,7 +6,7 @@ function showFlashMessage(message, type) {
     flashMessage.style.position = "fixed";
     flashMessage.style.top = "70px"; // Moved down
     flashMessage.style.right = "20px";
-    flashMessage.style.zIndex = "5000";
+    flashMessage.style.zIndex = "9999";
     flashMessage.style.minWidth = "320px"; // Reduced width
     flashMessage.style.minHeight = "80px"; // Reduced height
     flashMessage.style.padding = "40px";

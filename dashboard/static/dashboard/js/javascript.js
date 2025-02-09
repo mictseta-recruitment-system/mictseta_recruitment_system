@@ -2619,6 +2619,50 @@ function delete_score_question(question_id) {
   });
 }
 
+function submit_scorecard(scoreboard_id,user_id) {
+    event.preventDefault();
+  const url = 'http://127.0.0.1:8000/job/scoreboard/submit_scoreboard/'+scoreboard_id +'/'+user_id + '/';
+  const form = document.getElementById('scoreboardForm');
+  const formData = new FormData(form);
+
+  // Example: Convert formData to JSON object if needed
+  const formDataObject = {};
+  formData.forEach((value, key) => {
+    formDataObject[key] = value;
+  }); 
+
+  
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(formDataObject),
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+   
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {
     let cookieValue = null;
