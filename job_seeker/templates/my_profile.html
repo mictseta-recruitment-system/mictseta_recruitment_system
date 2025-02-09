@@ -324,12 +324,18 @@
                         {% for qualification in user.qualifications.all %}
                             <div class="col-md-6">
                                 <div class="list-group list-group-flush mb-3">
-                                    <div class="list-group-item"><strong>Field of Study:</strong> {{ qualification.field_of_study }}</div>
-                                    <div class="list-group-item"><strong>Institution:</strong> {{ qualification.institution }}</div>
-                                    <div class="list-group-item"><strong>Start Date:</strong> {{ qualification.start_date }}</div>
-                                    <div class="list-group-item"><strong>End Date:</strong> {{ qualification.end_date }}</div>
-                                    <div class="list-group-item"><strong>Status:</strong> {{ qualification.status }}</div>
-                                    <a href="{% url 'delete_qualification' qualification.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Field of Study:</strong> {{ qualification.field_of_study }}<br>
+                                            <strong>Institution:</strong> {{ qualification.institution }}<br>
+                                            <strong>Start Date:</strong> {{ qualification.start_date }}<br>
+                                            <strong>End Date:</strong> {{ qualification.end_date }}<br>
+                                            <strong>Status:</strong> {{ qualification.status }}
+                                        </div>
+                                        <a href="{% url 'delete_qualification' qualification.id %}" class="btn btn-danger btn-circle">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -366,11 +372,17 @@
                         {% for language in user.language_set.all %}
                             <div class="col-md-6">
                                 <div class="list-group list-group-flush mb-3">
-                                    <div class="list-group-item"><strong>Language:</strong> {{ language.language }}</div>
-                                    <div class="list-group-item"><strong>Reading Level:</strong> {{ language.reading_proficiency }}</div>
-                                    <div class="list-group-item"><strong>Writing Level:</strong> {{ language.writing_proficiency }}</div>
-                                    <div class="list-group-item"><strong>Speaking Level:</strong> {{ language.speaking_proficiency }}</div>
-                                    <a href="{% url 'delete_language' language.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Language:</strong> {{ language.language }}<br>
+                                            <strong>Reading Level:</strong> {{ language.reading_proficiency }}<br>
+                                            <strong>Writing Level:</strong> {{ language.writing_proficiency }}<br>
+                                            <strong>Speaking Level:</strong> {{ language.speaking_proficiency }}
+                                        </div>
+                                        <a href="{% url 'delete_language' language.id %}" class="btn btn-danger btn-circle">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -407,9 +419,15 @@
                         {% for skill in user.computerskills_set.all %}
                             <div class="col-md-6">
                                 <div class="list-group list-group-flush mb-3">
-                                    <div class="list-group-item"><strong>Skill:</strong> {{ skill.skill }}</div>
-                                    <div class="list-group-item"><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</div>
-                                    <a href="{% url 'delete_computer_skill' skill.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Skill:</strong> {{ skill.skill }}<br>
+                                            <strong>Proficiency Level:</strong> {{ skill.proficiency.level }}
+                                        </div>
+                                        <a href="{% url 'delete_computer_skill' skill.id %}" class="btn btn-danger btn-circle">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -446,9 +464,15 @@
                         {% for skill in user.softskills_set.all %}
                             <div class="col-md-6">
                                 <div class="list-group list-group-flush mb-3">
-                                    <div class="list-group-item"><strong>Soft Skill:</strong> {{ skill.skill }}</div>
-                                    <div class="list-group-item"><strong>Proficiency Level:</strong> {{ skill.proficiency.level }}</div>
-                                    <a href="{% url 'delete_soft_skill' skill.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Soft Skill:</strong> {{ skill.skill }}<br>
+                                            <strong>Proficiency Level:</strong> {{ skill.proficiency.level }}
+                                        </div>
+                                        <a href="{% url 'delete_soft_skill' skill.id %}" class="btn btn-danger btn-circle">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -485,13 +509,19 @@
                         {% for experience in user.working_expereince.all %}
                             <div class="col-md-6">
                                 <div class="list-group list-group-flush mb-3">
-                                    <div class="list-group-item"><strong>Job Title:</strong> {{ experience.job_title.title }}</div>
-                                    <div class="list-group-item"><strong>Company:</strong> {{ experience.company }}</div>
-                                    <div class="list-group-item"><strong>Location:</strong> {{ experience.location }}</div>
-                                    <div class="list-group-item"><strong>Start Date:</strong> {{ experience.start_date }}</div>
-                                    <div class="list-group-item"><strong>End Date:</strong> {{ experience.end_date }}</div>
-                                    <div class="list-group-item"><strong>Description:</strong> {{ experience.description }}</div>
-                                    <a href="{% url 'delete_working_experince' experience.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Job Title:</strong> {{ experience.job_title.title }}<br>
+                                            <strong>Company:</strong> {{ experience.company }}<br>
+                                            <strong>Location:</strong> {{ experience.location }}<br>
+                                            <strong>Start Date:</strong> {{ experience.start_date }}<br>
+                                            <strong>End Date:</strong> {{ experience.end_date }}<br>
+                                            <strong>Description:</strong> {{ experience.description }}
+                                        </div>
+                                        <a href="{% url 'delete_working_experince' experience.id %}" class="btn btn-danger btn-circle">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -528,11 +558,17 @@
                         {% for reference in user.reference.all %}
                             <div class="col-md-6">
                                 <div class="list-group list-group-flush mb-3">
-                                    <div class="list-group-item"><strong>Work Experience:</strong> {{ reference.working_experince }} - {{ reference.working_experince.job_title }}</div>
-                                    <div class="list-group-item"><strong>Full Name:</strong> {{ reference.full_name }}</div>
-                                    <div class="list-group-item"><strong>Contact Information:</strong> {{ reference.phone }}</div>
-                                    <div class="list-group-item"><strong>Position/Relationship:</strong> {{ reference.position }}</div>
-                                    <a href="{% url 'delete_reference' reference.id %}" class="btn btn-danger btn-pill">Delete</a>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Work Experience:</strong> {{ reference.working_experince }} - {{ reference.working_experince.job_title }}<br>
+                                            <strong>Full Name:</strong> {{ reference.full_name }}<br>
+                                            <strong>Contact Information:</strong> {{ reference.phone }}<br>
+                                            <strong>Position/Relationship:</strong> {{ reference.position }}
+                                        </div>
+                                        <a href="{% url 'delete_reference' reference.id %}" class="btn btn-danger btn-circle">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -569,13 +605,19 @@
                         {% for document in user.documents.all %}
                             <div class="col-md-6">
                                 <div class="list-group list-group-flush mb-3">
-                                    <div class="list-group-item"><strong>Document Type:</strong> {{ document.document_type }}</div>
-                                    <div class="list-group-item"><strong>Date Uploaded:</strong> {{ document.uploaded_at }}</div>
-                                    <p><strong>Action:</strong>
-                                        <a href="{{ document.document.url }}" class="btn btn-primary my-1">View</a>
-                                        <a href="{{ document.document.url }}" class="btn btn-dark my-1" download>Download</a>
-                                        <a href="/profile/delete/delete_supporting_document/{{ document.id }}/" class="btn btn-danger btn-pill">Delete</a>
-                                    </p>
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>Document Type:</strong> {{ document.document_type }}<br>
+                                            <strong>Date Uploaded:</strong> {{ document.uploaded_at }}
+                                        </div>
+                                        <div>
+                                            <a href="{{ document.document.url }}" class="btn btn-primary my-1">View</a>
+                                            <a href="{{ document.document.url }}" class="btn btn-dark my-1" download>Download</a>
+                                            <a href="/profile/delete/delete_supporting_document/{{ document.id }}/" class="btn btn-danger btn-circle">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         {% empty %}
@@ -587,7 +629,6 @@
         </div>
     </div>
 </div>
-
 
 
 
