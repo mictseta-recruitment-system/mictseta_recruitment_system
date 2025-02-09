@@ -104,6 +104,80 @@
             padding: 20px 0;
             background-color: #f8f9fa;
         }
+        .end-date {
+    background: linear-gradient(135deg, #17a2b8, #0d6efd, grey); /* Gradient effect */
+    color: white;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px; /* More rounded edges */
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    display: inline-block;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    letter-spacing: 1px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.end-date:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.social-media-icons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.social-media-icons ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social-media-icons li {
+    display: inline-block;
+}
+
+.social-media-icons a {
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-color: #007bff; /* Default background color */
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.social-media-icons a:hover {
+    transform: scale(1.1); /* Slight zoom effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+}
+
+.social-media-icons a i {
+    pointer-events: none;
+}
+
+.social-media-icons a.facebook {
+    background-color: #3b5998; /* Facebook color */
+}
+
+.social-media-icons a.twitter {
+    background-color: #00acee; /* Twitter color */
+}
+
+.social-media-icons a.linkedin {
+    background-color: #0077b5; /* LinkedIn color */
+}
+
+.social-media-icons a.instagram {
+    background-color: #e4405f; /* Instagram color */
+}
+
     </style>
 </head>
 <body>
@@ -223,8 +297,10 @@
                     <h5 class="job-title"><i class="fas fa-briefcase"></i> {{ job.title|capfirst }}</h5>
                     <div class="job-details">
                         <i class="fas fa-map-marker-alt"></i> <strong>Location:</strong> South Africa |
-                        <i class="fas fa-calendar-alt"></i> <strong>Closing Date:</strong> {{ job.end_date }}
+                        <i class="fas fa-calendar-alt"></i> <strong>Closing Date:</strong> 
+                        <span class="end-date">{{ job.end_date }}</span>
                     </div>
+                    
                     <p class="job-description">{{ job.description|capfirst }}</p>
                     <a href="{% url 'job_details' job.id %}" class="job-link">See more...</a>
                 </div>
@@ -233,7 +309,15 @@
             <p>No jobs available.</p>
         {% endif %}
     </div>
-
+    <div class="social-media-icons">
+        <ul>
+            <li><a class="facebook" href="https://www.facebook.com/people/MICT-SETA/100064473800888/" target="_blank"><i class="fab fa-facebook"></i></a></li>
+            <li><a class="twitter" href="https://x.com/MictSeta?ref_src=twsrcgoogletwcampserptwgrauthor" target="_blank"><i class="fab fa-twitter"></i></a></li>
+            <li><a class="linkedin" href="https://www.linkedin.com/company/mict-seta" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+            <li><a class="instagram" href="https://www.instagram.com/mictseta/?hl=en" target="_blank"><i class="fab fa-instagram"></i></a></li>
+        </ul>
+    </div>
+    
     <!-- Footer -->
     <footer>
         <p>© 2024 All rights reserved | The Media, Information and Communication Technologies Sector Education and Training Authority</p>
