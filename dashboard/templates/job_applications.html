@@ -481,11 +481,12 @@
                   <button type="button" class="btn btn-info" onclick="create_scoreboard('{{applications.0.job.id}}')">Create Scoreboard
                     </button>
                   {% else %}
+                    {% if not results %}
                    <a href="{% url 'create_scoreboard' applications.0.job.id %}" type="button" class="btn btn-info" >edit Scoreboard
                     </a>
-
-                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Submit list
-                    </button>
+                    {% endif %}
+                  <!-- <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#auto-shortlist">Submit list
+                    </button> -->
                     {% endif %}
                 {% endif %}
                   <div class="modal fade" id="auto-shortlist" tabindex="-1" aria-labelledby="auto-shortlist" aria-hidden="true">

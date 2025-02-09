@@ -135,7 +135,6 @@ def job_applications(request):
 		interview = Interview.objects.all()
 		applications = applications.order_by('-id')
 		interview = interview.order_by('-id')
-		
 		return render(request, 'job_applications.html', {'applications':applications,'interviews':interview, 'applied_jobs':applied_jobs})
 	else:
 		return redirect('render_auth_page')
@@ -185,6 +184,8 @@ def filter_job_application(request,jobID):
 					'points' : round((total_score/(total_questions*4) ) *100,2)
 				}
 				data.append(to_add)
+		
+		
 		return render(request,'job_applications.html',{'applications':job_applications,'interviews':interview, 'cnt':cnt,'filtered':True, 'results':data})
 	else:
 		return redirect('render_auth_page')
@@ -887,7 +888,6 @@ def create_scoreboard(request,job_id):
 def view_scoreboard(request,job_id, application_id):
     if not request.user.is_authenticated:
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-
 
     vacancy = JobPost.objects.get(id=int(job_id))
     application = JobApplication.objects.get(id=int(application_id))
