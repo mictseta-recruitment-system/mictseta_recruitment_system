@@ -43,11 +43,13 @@ class ApplicationFilter:
 		return self.total
 
 	def rejection_reason(self,reason):
+		errors = ['incomplete profile',"DOnt have soft skills required","Dont have computer skills required" ,"don't have qualifications required"]
 		for application in self.applications:
 			if application not in self.filterd_apllications:
 				if application.is_filter_applied == False:
-					application.reason = f'{reason}'
-					application.save()
+					if application.reason not in errors:
+						application.reason = f'{reason}'
+						application.save()
 				#feed_back_exist = FeedBack.objects.filter(user=application.user,job=application.job,message=f"{reason}",status="rejected").first()
 				# if not application.is_rejected:
 				# 	if not feed_back_exist:
@@ -171,8 +173,10 @@ class ApplicationFilter:
 		).distinct()
 
     	# Exclude the incomplete users from the original Applications queryset
-		self.filterd_apllications = self.applications.exclude(id__in=incomplete_users)
-
+		self.filterd_apllications = incomplete_users
+		print("*$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+		print(self.filterd_apllications)
+		print("$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 	def filter_by_computer_skill(self):
 		job_skill_list = []
 		for application in self.filterd_apllications:

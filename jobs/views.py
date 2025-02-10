@@ -289,12 +289,30 @@ def screening(request):
     vacancy.current_step += 1
     vacancy.save()
     alert = Alert.objects.filter(vacancy=vacancy, step=5).first()
-    alert.status = approved
+    alert.status = "approved"
     alert.save()
     alert = Alert.objects.create(note="Vacancy Approved for Screening and Nomination", vacancy=vacancy, step=vacancy.current_step, status="pending")
     alert.save()
     return JsonResponse({'message': 'Vacancy Approved for Screening and Nomination', 'status': 'success'}, status=201)
 
+@check_leave
+@csrf_protect
+def submit_short_list(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+    jobid = json_data.get('jobID')
+    vacancy = JobPost.objects.filter(id=int(jobid))
+    applications = JobApplication.filter(vacancy=vacancy,status="short_list").all()
+   	
+    alert = Alert.objects.create(note="Shortlisted Candidates submited for approval", vacancy=vacancy, step=vacancy.current_step, status="pending")
+    alert.save()
+    return JsonResponse({'message': 'Shortlist submitted', 'status': 'success'}, status=201)
 
 @check_leave
 @csrf_protect

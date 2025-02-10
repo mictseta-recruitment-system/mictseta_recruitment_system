@@ -29,4 +29,5 @@ urlpatterns = [
     path('taskmanager/', include("task_manager.urls")),
     path('rest_api/',include('rest_api.urls')),
     path('accounts/', include('allauth.urls')),
+    path('ai/', include('AI.urls')),
 ]

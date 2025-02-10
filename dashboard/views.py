@@ -101,10 +101,9 @@ def view_staff(request):
 		staff = staff.order_by('-id')
 		if request.user.is_superuser:
 			notify_len = len(Notification.objects.filter(is_seen=False))
-			notify_len = notify_len.order_by('-id')
+			
 		else:
 			notify_len = len(Notification.objects.filter(user=request.user,is_seen=False))
-			notify_len = notify_len.order_by('-id')
 		return render(request,'view_staff.html',{'staffs':staff,'notify_len':notify_len})
 	else:
 		return redirect('render_auth_page')
@@ -455,10 +454,12 @@ def jobsekeer_details(request, seekerID,jobID):
 				quiz = {}
 			vacancy = JobPost.objects.get(id=int(jobID))
 			scoreboard = Scoreboard.objects.filter(vacancy=vacancy).first()
-			res = scoreboard.scoreresult_set.filter(application=application)
-			if res:
-				return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True, "scoreboard":scoreboard, 'scored':True})
-
+			try:
+				res = scoreboard.scoreresult_set.filter(application=application)
+				if res:
+					return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True, "scoreboard":scoreboard, 'scored':True})
+			except Exception as e:
+				pass
 			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'scoreboard':scoreboard})
 		else:
 			return HttpResponse(f"<h1> Sever Error : Permission Denied </h1>")
@@ -484,11 +485,13 @@ def jobsekeer_details_score(request, seekerID,jobID):
 			else:
 				quiz = {}
 			vacancy = JobPost.objects.get(id=int(jobID))
+
 			scoreboard = Scoreboard.objects.filter(vacancy=vacancy).first()
-			res = scoreboard.scoreresult_set.filter(application=application)
+			
+			res = scoreboard.results.filter(application=application)
 			if res:
 				return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True, "scoreboard":scoreboard, 'scored':True})
-
+			
 
 			return render(request, 'job_seeker_details.html',{'seeker':seeker,'notify_len':notify_len,'application':application,'feedbacks':feedback,'quiz':quiz,'score':True, "scoreboard":scoreboard})
 		else:

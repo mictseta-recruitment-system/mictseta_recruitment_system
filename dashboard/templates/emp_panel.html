@@ -137,7 +137,7 @@ Employee Panel
                     <p class="notif-note">{{alert.note}}</p>
                     <p class="notif-timestamp">timestamp: {{alert.timestamp}}</p>
                 </div>
-                {% if alert.step == 5 %}
+                {% if alert.step == 5  or alert.step == 4 %}
                     <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
 
                 {% else %}
@@ -180,7 +180,12 @@ Employee Panel
                     <p class="notif-note">{{alert.note}}</p>
                     <p class="notif-timestamp">timestamp: {{alert.timestamp}}</p>
                 </div>
+                {% if alert.step == 5  or alert.step == 4 %}
+                    <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
+
+                {% else %}
                 <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
+                {% endif %}
             </div>
            
             {% endif %}

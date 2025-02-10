@@ -37,7 +37,7 @@
     {% if scored %}
     <div class="d-flex justify-content-center">
         <p>Application Scorecard Already submitted</p>
-        <a href="{% url 'dashboard.jobsekeer_details' seeker.id sapplication.job.id %}">view applications list</a>
+        <a href="{% url 'filter_job_application' application.job.id %}">view applications list</a>
     </div>
     {% else %}
     <div class="pipScoreboardContent">
