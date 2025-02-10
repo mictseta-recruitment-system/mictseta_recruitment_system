@@ -4,7 +4,11 @@
 
   <p id="response"></p>
 
-  <input type="text" class="inputgroup " id="send"> <button class="btn btn-success" onclick="chat()">send</button>
+  <input type="text" class="inputgroup " id="question"> <button class="btn btn-success" onclick="chat()">send</button>
+
+  <br>
+  <br>
+  <a href="{% url 'train_model' %}"> Train Model</a>
 
 
 
@@ -16,14 +20,15 @@
 <script type="text/javascript">
   
 function chat() {
-  const url = 'http://127.0.0.1:8000/ai/chat/';
+  const url = 'http://127.0.0.1:8000/ai/chat_live/';
   const response = document.getElementById('response');
+  const question = document.getElementById('question').value;
   /*document.getElementById(spinner + jobID).style.display = 'block';
   document.getElementById(content + jobID).style.display = 'none';*/
  
   
   const jsonData = {
-    job_post_id: jobID 
+    question: question 
   };
 
   fetch(url, {

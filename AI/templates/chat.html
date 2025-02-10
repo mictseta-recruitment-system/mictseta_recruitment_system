@@ -12,18 +12,18 @@
 
 
 
-
 <script type="text/javascript">
-	
+  
 function chat() {
-  const url = 'http://127.0.0.1:8000/ai/chat/';
+  const url = 'http://127.0.0.1:8000/ai/chat_live/';
   const response = document.getElementById('response');
+  const question = document.getElementById('question').value;
   /*document.getElementById(spinner + jobID).style.display = 'block';
   document.getElementById(content + jobID).style.display = 'none';*/
  
   
   const jsonData = {
-    job_post_id: jobID 
+    question: question 
   };
 
   fetch(url, {
@@ -39,8 +39,8 @@ function chat() {
   })
   .then(data => {
     if (data.status === "success") {
-    	console.log(data.message);
-   		response.innerHTML = data.message;
+      console.log(data.message);
+      response.innerHTML = data.message;
 
       
     } 
