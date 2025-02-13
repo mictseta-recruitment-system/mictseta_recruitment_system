@@ -3,6 +3,8 @@
 {% block title %}Job Applications {% endblock %}
 
 {% block breadcrumbs %}
+
+
     <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
     <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
       {% if filtered %}
@@ -15,6 +17,34 @@
  {% endblock %}
 
 {% block content %}
+<style>
+  /* Center modal on the screen */
+.modal-dialog-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensure the modal is centered even on shorter screens */
+  margin: 0 auto; /* Center horizontally */
+}
+
+/* Additional modal styles for responsiveness */
+.modal-dialog {
+  max-width: 800px; /* Set a max width for large modals */
+  width: 100%; /* Make sure the modal can resize */
+}
+
+/* Optional: Apply padding and margin adjustments to the modal content for better spacing */
+.modal-content {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* Optional: Adjust modal header for more clarity */
+.modal-header {
+  padding: 15px;
+}
+
+</style>
 {% if applications %}
 <div class="card shadow  mb-3 mt-5 bg-body rounded">
 
