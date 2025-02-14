@@ -141,7 +141,12 @@ Employee Panel
                     <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
 
                 {% else %}
+
                 <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
+                {% endif %}
+                {% if alert.step == 6 %}
+                    <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
+
                 {% endif %}
             </div>
             

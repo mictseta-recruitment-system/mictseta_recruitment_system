@@ -93,7 +93,7 @@
   <div class="card p-0 shadow mb-1 rounded">
     <div class="card-body">
       <ul id="applicants" class="list-group list-group-flush d-flex flex-row justify-content-between" style="cursor: pointer;">
-        <li class="list-group-item emp-profile active" onclick="toggleV('applications')">All Applications</li>
+        <li class="list-group-item emp-profile {% if applications.0.job.current_step == 5 %}{% elif applications.0.job.current_step == 5  %}{% else %}active{%endif%}" onclick="toggleV('applications')">All Applications</li>
         {% if applications.0.job.current_step <= 4 %}
         <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Filtered Applications
         </li>
@@ -106,7 +106,7 @@
         <li class="list-group-item emp-profile" style="background-color:lightgray;"><i class="fa fa-lock"></i> Shortlisting
         </li>
         {% else %}
-        <li class="list-group-item emp-profile" onclick="toggleV('shortlistss')">Short-listed</li>
+        <li class="list-group-item emp-profile {% if applications.0.job.current_step == 5 %}active{% else %}{%endif%}"  onclick="toggleV('shortlistss')">Short-listed</li>
         {% endif %}
 
         {% if applications.0.job.current_step < 6 %}
@@ -144,7 +144,7 @@
 </div>
 <!-- %%%%%%%%%%%%%%%%%%5 -->
 <div class="col-12 ">
-          <div id="applications" style="display:block;">
+          <div id="applications" {% if applications.0.job.current_step == 5 %} style="display:none;"  {% else %}  style="display:block;" {% endif %}>
             <div class="card shadow-lg  rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   {% if filtered %}
@@ -581,13 +581,13 @@
              </div>
            </div> 
 
-           <div id="shortlistss" style="display:none;">
+           <div id="shortlistss" {% if applications.0.job.current_step == 5 %} style="display:block;" {% else %} style="display:none;" {% endif %} >
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
                   <h6>ALL Short-Listed Candidates List List</h6> 
-                {% if user.staffprofile.department == "HR" %}
-                 <button class="btn btn-primary" onclick="submit_short_list({{application.job.id}})">
-                   submit shortlist
+                {% if user.staffprofile.department == "LINE" and applications.0.job.current_step == 5 %}
+                 <button class="btn btn-success" onclick="submit_short_list({{applications.0.job.id}})">
+                   Approve shortlist
                  </button>
                  {% endif %}
                 </div>
@@ -623,7 +623,7 @@
                                   {% endif %}
                                 {% endfor %}  
                               <td> 
-                                {% if not application.is_approved == "waiting" %}
+                                {% if application.job.current_step == 6 %}
                                 <button type="button" class="btn btn-success p-1" onclick="openModal('interview{{application.id}}','{{application.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-plus"></i> interview
                               </button>
@@ -752,6 +752,8 @@
                               <td><b>{{interview.start_time}}</b></td>
                               <td><b>{{interview.end_time}}</b></td>
                               <td> 
+
+                                {% if user.is_admin == True%}
                               <button type="button" class="btn btn-warning p-1 mb-1 mx-1" onclick="openModal1('interviews{{interview.id}}','{{interview.id}}')" data-bs-placement="top" title="Schedule interview">
                                <i class="fa fa-edit"> </i>
                                Reschedule
@@ -763,6 +765,10 @@
                                   <i class="fa fa-trash"></i> 
                                   Reject
                                 </a>
+                              {% else %}
+                                <a href="{% url 'interview_panel' %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i> start</a> 
+
+                              {% endif %}
                               </td>
                           </tr>
                           {% endif %}

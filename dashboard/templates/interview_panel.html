@@ -1,0 +1,50 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+
+{% load static %}
+
+{% block content %}
+
+    <div class="interview-container">
+        <h1>Interview  Panel</h1>
+	 <div class="container mt-4">
+        <div class="card shadow-sm p-3">
+            <div class="card-body">
+                <h5 class="card-title">Application Details</h5>
+                <hr>
+                <p class="mb-1"><strong>Application ID:</strong> 001</p>
+                <p class="mb-1"><strong>Vacancy:</strong> Web Developer</p>
+                <p class="mb-0"><strong>Applicant:</strong> Jeff Nengovhela</p>
+            </div>
+        </div>
+    </div>
+          <h1>Interviewers </h1>
+        <div class="interview-grid" id="interview-ratingsList">
+            <div class="interview-card">
+                <div class="interview-info">
+                    <strong>John Doe</strong>
+                    <span class="interview-department">(Marketing)</span>
+                    <span>80%</span>
+                    <div class="interview-note">"Great effort! Keep improving."</div>
+                </div>
+                <div class="interview-timestamp">Rated on: 2024-02-13 14:30</div>
+                <a href="#" class="interview-view-button">View Details</a>
+            </div>
+            <div class="interview-card">
+                <div class="interview-info">
+                    <strong>Jane Smith</strong>
+                    <span class="interview-department">(Engineering)</span>
+                    <span>100%</span>
+                    <div class="interview-note">"Outstanding performance!"</div>
+                </div>
+                <div class="interview-timestamp">Rated on: 2024-02-13 15:00</div>
+                <a href="#" class="interview-view-button">View Details</a>
+            </div>
+        </div>
+        <div class="interview-average">Average Rating: --%</div>
+     
+
+    </div>
+{% endblock %}

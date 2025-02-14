@@ -907,3 +907,12 @@ def view_scoreboard(request,job_id, application_id):
     points = round((total_score/(total_questions*4) ) *100,2)
    
     return render(request, 'view_scoreboard.html',{'scoreboard':scoreboard, 'application':application,'points':points, 'total_score':total_score,'full_score':total_questions*4,'total_questions':total_questions, 'results':results})
+
+
+@check_leave
+@csrf_protect	
+def interview_panel(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+   
+    return render(request, 'interview_panel.html')

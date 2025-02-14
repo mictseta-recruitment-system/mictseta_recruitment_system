@@ -288,7 +288,7 @@ def screening(request):
     vacancy = JobPost.objects.get(id=int(jobID))
     vacancy.current_step += 1
     vacancy.save()
-    alert = Alert.objects.filter(vacancy=vacancy, step=5).first()
+    alert = Alert.objects.filter(vacancy=vacancy, step=4).first()
     alert.status = "approved"
     alert.save()
     alert = Alert.objects.create(note="Vacancy Approved for Screening and Nomination", vacancy=vacancy, step=vacancy.current_step, status="pending")
@@ -307,10 +307,14 @@ def submit_short_list(request):
     except Exception :
         return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
     jobid = json_data.get('jobID')
-    vacancy = JobPost.objects.filter(id=int(jobid))
-    applications = JobApplication.filter(vacancy=vacancy,status="short_list").all()
-   	
-    alert = Alert.objects.create(note="Shortlisted Candidates submited for approval", vacancy=vacancy, step=vacancy.current_step, status="pending")
+    vacancy = JobPost.objects.filter(id=int(jobid)).first()
+    #applications = JobApplication.filter(vacancy=vacancy,status="short_list").all()
+    vacancy.current_step += 1
+    vacancy.save()
+    alert = Alert.objects.filter(vacancy=vacancy, step=4).first()
+    alert.status = "approved"
+    alert.save()
+    alert = Alert.objects.create(note="Shortlisted Candidates approved", vacancy=vacancy, step=vacancy.current_step, status="completed")
     alert.save()
     return JsonResponse({'message': 'Shortlist submitted', 'status': 'success'}, status=201)
 

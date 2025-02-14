@@ -46,6 +46,7 @@ urlpatterns = [
     path('application_jobs', views.application_jobs, name="dashboard.application_jobs"),
      path('create_scoreboard/<job_id>', views.create_scoreboard, name='create_scoreboard'),
      path('view_scoreboard/<job_id>/<application_id>', views.view_scoreboard, name='view_scoreboard'),
+     path('interview_panel/', views.interview_panel, name='interview_panel'),
     
 
     
