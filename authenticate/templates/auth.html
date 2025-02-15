@@ -6,221 +6,257 @@
 {% load static %}
 
 <style>
-    body {
-        
-        font-family: 'Open Sans', sans-serif;
-        height: 100vh;
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    background-color: #f4f7f9;
-}
+    :root {
+            --primary-color: #003366;
+            --accent-color: #007acc;
+            --background-color: #f4f7f9;
+            --text-color: #333;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s ease;
+        }
 
-.form-container {
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    padding: 20px;  
-    border-radius: 10px;
-    width: 100%;
-    max-width: 400px;
-    max-height: 85vh;
-    text-align: center;
-    margin: 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.form-container h1,
-.form-container h3 {
-    color: #003366;
-    margin: 0;  
-    padding: 10px 0;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-.input-group {
-    margin: 10px 0;
-    position: relative;
-    width: 100%;
-}
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
 
-.input-group input {
-    border: 2px solid #ddd;
-    padding: 12px;
-    font-size: 14px;
-    border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
-    background: #f8f9fa;
-    transition: all 0.3s ease-in-out;
-    outline: none;
-}
+        .form-container {
+            padding: 40px 30px;
+        }
 
-.input-group input:focus {
-    border-color: #007acc;
-    box-shadow: 0 0 8px rgba(0, 122, 204, 0.5);
-    background: white;
-}
+        .logo {
+            display: block;
+            width: 120px;
+            margin: 0 auto 30px;
+        }
 
-.input-group label {
-    position: absolute;
-    font-size: 12px;
-    color: #007acc;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: all 0.3s ease-in-out;
-    background: white;
-    padding: 0 5px;
-    pointer-events: none;
-}
+        .title {
+            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
-    top: -10px;
-    font-size: 10px;
-    color: #003366;
-    background: white;
-    padding: 0 5px;
-}
+        .subtitle {
+            color: #666;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
 
-.btn-primary {
-    background-color:#007acc;
-    border: none;
-    padding: 12px;
-    font-size: 16px;
-    color: white;
-    cursor: pointer;
-    border-radius: 8px;
-    width: 100%;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
-    margin-top: 10px;
-}
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
 
-.btn-primary:hover {
-    background-color: #005f99;
-    transform: translateY(-2px);
-}
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+        }
 
-.remember-forgot {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #555;
-    margin: 10px 0;
-}
+        .input-group input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1);
+            outline: none;
+        }
 
-.register-link {
-    margin-top: 15px;
-    font-size: 14px;
-}
+        .input-group label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: 0 5px;
+            color: #666;
+            font-size: 14px;
+            transition: var(--transition);
+            pointer-events: none;
+        }
 
-.register-link a {
-    color: #007acc;
-    text-decoration: none;
-}
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 12px;
+            color: var(--accent-color);
+        }
 
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
 
-.eye-icon {
-    cursor: pointer;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #777;
-    transition: color 0.3s;
-}
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-.eye-icon:hover {
-    color: #007acc;
-}
+        .forgot-password {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
 
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
 
+        .btn-submit:hover {
+            background-color: #0066aa;
+            transform: translateY(-1px);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .toggle-form a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        .password-toggle:hover {
+            color: var(--accent-color);
+        }
+
+        #wrapper-sign-up {
+            display: none;
+        }
 
 </style>
 
-<div class="main">
-    <div class="filled-right-section">
+<body>
+    <!-- <div class="filled-right-section"> -->
         <div class="oval-background"></div>
         <div id="flash-message-container" class="flashmessage"></div>
-        <div class="right-section">
+        <div class="container">
             <div class="form-container" id="form-container">
                 <!-- Sign-In Form -->
-                <div class="wrapper" id="wrapper-sign-in">
+                <div  id="wrapper-sign-in">
                     <form action="" id="login-form" method="POST">
                         {% csrf_token %}
-                        <img src="{% static 'authenticate/images/logo2.png' %}" alt="Logo" class="inline-logo">
-                        <h3 class="welcome-text">
+                        <img src="{% static 'authenticate/images/logo2.png' %}" alt="Logo" class="logo">
+                        <h1 class="title">
                             Welcome back 
-                        </h3>
-                        <p class="subtext">Please log in to stay connected with us.</p>
-                        <h1 class="login-title">Login</h1>
+                        </h1>
+                        <p class="subtitle">Please log in to stay connected with us.</p>
                         
 
                         <div class="input-group">
-                            <input type="email" class="form-control" placeholder=" " id="lemail" aria-label="Email" required>
+                            <input type="email" placeholder=" " id="lemail" aria-label="Email" required>
                             <label for="lemail">Email Address</label>
                         </div>
                         <div class="input-group">
-                            <input type="password" name="password" id="lpassword" class="form-control" placeholder=" " required>
+                            <input type="password" name="password" id="lpassword" placeholder=" " required>
                             <label for="lpassword">Password</label>
-                            <i class="eye-icon" id="toggle-password-login">&#128065;</i>
+                            <span  class="password-toggle" onclick="togglePasswordVisibility('lpassword', this)">👁️</span>
+                            <!-- <i class="eye-icon" id="toggle-password-login">&#128065;</i> -->
                         </div>
                         <div class="remember-forgot">
-                            <label><input type="checkbox"> Remember Me</label>
+                            <label  class="remember-me"><input type="checkbox"> Remember Me</label>
                             <a href="{% url 'find_account' %}">Forgot Password?</a>
                         </div>
-                        <button type="button" class="btn-primary" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
-                        <div class="register-link">
+                        <button type="button" class="btn-submit" id="btn-signin" onclick="handle_sign_in_button_click()">Login</button>
+                        <div class="toggle-form">
                             <p>Don't have an account? <a href="#" id="btn-sign-up">Sign Up</a></p>
                         </div>
                     </form>
                 </div>
 
                 <!-- Sign-Up Form -->
-                <div class="wrapper" id="wrapper-sign-up" style="display: none;">
+                <div id="wrapper-sign-up">
                     <form action="" id="signup-form" method="POST">
-                        <img src="{% static 'authenticate/images/logo2.png' %}" alt="Logo" class="inline-logo">
-                        <h1 class="signup-title">Sign Up</h1>
-<h6 class="signup-subtext">Add your details to create an account.</h6>
+                        <img src="{% static 'authenticate/images/logo2.png' %}" alt="Logo" class="logo">
+                        <h1 class="title">Create Account</h1>
+                        <h6 class="subtitle">Add your details to create an account.</h6>
 
 
                         <div class="input-group">
                             <input type="text" name="idnumber" id="idnumber" class="form-control" placeholder=" " required>
-                            <label for="idnumber">ID Number</label>
+                            <label for="idnumber" >ID Number</label>
                         </div>
                         <div class="input-group">
                             <input type="email" name="email" id="email" class="form-control" placeholder=" " required>
-                            <label for="email">Email Address</label>
+                            <label for="email" >Email Address</label>
                         </div>
                         <div class="input-group">
                             <input type="password" name="password" id="password" class="form-control" placeholder=" " required>
-                            <label for="password">Password</label>
-                            <i class="eye-icon" id="toggle-password-signup1">&#128065;</i>
+                            <label for="password" >Password</label>
+                            <!-- <i class="eye-icon" id="toggle-password-signup1">&#128065;</i> -->
+                            <span class="password-toggle" onclick="togglePasswordVisibility('password', this)">👁️</span>
                         </div>
                         <div class="input-group">
                             <input type="password" name="password2" id="password2" class="form-control" placeholder=" " required>
                             <label for="password2">Confirm Password</label>
-                            <i class="eye-icon" id="toggle-password-signup2">&#128065;</i>
+                            <!-- <i class="eye-icon" id="toggle-password-signup2">&#128065;</i> -->
+                            <span class="password-toggle" onclick="togglePasswordVisibility('password', this)">👁️</span>
                         </div>
-                        <button type="button" class="btn-primary" id="btn-sign-up" onclick="handle_sign_up_button_click()">Create Account</button>
-                        <div class="register-link">
+                        <button type="button" class="btn-submit" id="btn-sign-up" onclick="handle_sign_up_button_click()">Create Account</button>
+                        <div class="toggle-form">
                             <p>Already have an account? <a href="#" id="btn-sign-in">Sign In</a></p>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    <!-- </div> -->
+<body>
 
 <script>
     // Sign In/Sign Up Toggle
@@ -238,7 +274,25 @@
         document.getElementById('form-container').style.animation = 'changeColorSignIn 0.5s forwards';
     });
 
+    function toggleForms() {
+        const signIn = document.getElementById('wrapper-sign-in');
+        const signUp = document.getElementById('wrapper-sign-up');
+        if (signIn.style.display === 'none') {
+            signIn.style.display = 'block';
+            signUp.style.display = 'none';
+        } else {
+            signIn.style.display = 'none';
+            signUp.style.display = 'block';
+        }
+    }
+
     // Password Toggle visibility
+    function togglePasswordVisibility(inputId, icon) {
+        const input = document.getElementById(inputId);
+        input.type = input.type === 'password' ? 'text' : 'password';
+        icon.textContent = input.type === 'password' ? '👁️' : '👁️‍🗨️';
+    }
+
     document.getElementById('toggle-password-login').addEventListener('click', function() {
         togglePasswordVisibility('lpassword');
     });
