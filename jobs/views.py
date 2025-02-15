@@ -53,7 +53,7 @@ def serialize_job_skills(Skills):
 
 def serialize_job_academics(Academics):
 	academics = []
-	for Academic_ in Academics:
+	for Academic_ in Acadesmics:
 		academic= {
 			'level'		:	Academic_.nqf_level.level,
 			'qualification'		:Academic_.field_of_study.name	,
