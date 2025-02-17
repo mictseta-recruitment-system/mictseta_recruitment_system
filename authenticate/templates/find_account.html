@@ -4,109 +4,142 @@
 
 {% block content %}
 
-<div class="container justify-content-center">
-	<div id="flash-message-container" class="flashmessage"></div>
-    <div class="col-6 reset-password-card">
-		<h1>Forgot Password?</h1>
-		<p>You can reset your password here.</p>
+<div class="container">
+	<div id="flash-message-container" class="flash-message"></div>
+    <div class="card">
+		<h1 class="title">Forgot Password?</h1>
+		<p class="subtitle">You can reset your password here.</p>
 		<form method="POST">
 			{% csrf_token %}
-            <div class="form-group input-group mb-3">
+            <div class="form-group">
 
-				<input type="email" class="form-control" placeholder="Email address" aria-label="Email" name="email" id="femail" required>
+				<input type="email" class="input-field" placeholder="Email address" aria-label="Email" name="email" id="femail" required>
+				<span class="input-icon">✉️</span>
 			</div>
 			<input type="button" name="submit" value="Reset Password" class="btn btn-primary" onclick="handle_forgot_button_click()" id='btn-forgot'/>
-			<button type="button" class="btn-back" onclick="history.back()">Back</button>
+			<button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
 
 		</form>
 	</div>
 	<style>
+		:root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f4f7f9;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
 		body {
-			font-family: Arial, sans-serif;
-			background-color: #f8f9fa;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			margin: 0;
+			font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
 		}
-
+		* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 		.container {
-			display:flex;
-			justify-content: center;
-			align-items: center;
 			width: 100%;
+            max-width: 400px;
 		  }
 
-		  .reset-password-card {
-			background-color: #ffffff;
-			border: 2px solid #007bff;
-			padding: 40px;
-			border-radius: 8px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-			text-align: center;
-			max-width: 600px;
-			width: 100%;
-			margin-top: 70px;
+		  .card {
+			background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
 		  }
 
-		  h1 {
-			font-size: 30px;
-			margin: 30px 0 10px;
-		  }
+		  .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
 
 		  .form-group {
-			margin-bottom: 30px;
+			position: relative;
+            margin-bottom: 24px;
 		  }
+		  .input-field {
+            width: 100%;
+            padding: 12px;
+            padding-right: 40px;
+            border: 2px solid #e1e5e9;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: var(--card-background);
+        }
 
-		  .input-group-text {
-			background-color: #007bff;
-			color: #ffffff;
-			border:#007bff;
-			border-radius: 4px 0 0 4px;
-			padding: 10px;
-			font-size: 20px;
-		  }
+        .input-field:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
 
-		  .form-control {
-			width: 100%;
-			padding: 10px;
-			font-size: 20px;
-			border: 1px solid #ced4da;
-			border-radius: 0 4px 4px 0;
-		  }
+        .input-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007bff;
+            pointer-events: none;
+        }
 
-		  .btn {
-			background-color: #007bff;
-			color: #ffffff;
-			border: none;
-			padding: 10px 20px;
-			font-size: 16px;
-			border-radius: 4px;
-			cursor: pointer;
-			width: 100%;
-		  }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
 
-		  .btn:hover {
-			background-color: #0056b3;
-		  }
-		  .btn-back {
-			background-color: #6c757d;
-			color: #ffffff;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 4px;
-			font-size: 20px;
-			cursor: pointer;
-			transition: background-color 0.3s ease;
-			width: 100%;
-			margin-top: 10px;
-		}
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            margin-bottom: 12px;
+        }
 
-		.btn-back:hover {
-			background-color: #5a6268;
-		}
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
 
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .flash-message {
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px;
+            }
+        }
 	</style>		
 </div>
 

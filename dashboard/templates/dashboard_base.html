@@ -22,7 +22,7 @@
 
   <link rel="stylesheet" href="{% static 'dashboard/css/dataTables.bootstrap5.css' %}">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
  
 
@@ -30,6 +30,74 @@
 
   {% load static %}
   <style>
+    :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --sidebar-width: 280px;
+            --header-height: 60px;
+        }
+    .sidebar-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .profile {
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+.breadcrumb-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.breadcrumb-item a {
+  color: var(--primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.breadcrumb-item a:hover {
+  color: var(--primary-dark);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%234b5563'%3E%3Cpath d='M6.6 13.4L5.2 12l4-4-4-4 1.4-1.4L12 8z'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.4;
+}
 /*    .scroll-bar::-webkit-scrollbar {
     width: 12px; 
     height: 12px; 
@@ -63,55 +131,54 @@
     
     {% if user.is_superuser and user.staffprofile.department == "LINE" %}
          .sidebar {
-            z-index: 3000;
-            width: 210px;
+          width: var(--sidebar-width);
+            height: 100vh;
             position: fixed;
             top: 0;
-            bottom: 0;
             left: 0;
-            height: 100vh; /* Full height of the viewport */
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding-top: 0px;
+            color: white;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 1000;
             background: darkblue;
         }
 
     {% else %}
      .sidebar {
-         z-index: 3000;
-        width: 210px;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        height: 100vh; /* Full height of the viewport */
-        overflow-y: auto; /* Enable vertical scrolling */
-        padding-top: 0px;
-        background: linear-gradient(to bottom right, #007bff, #477dfc);
+      width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(to bottom, var(--primary-color), #0056b3);
+            color: white;
+            overflow-y: auto;
+            transition: all 0.3s;
+            z-index: 1000;
 }
     {% endif %}
    
 
 
     .navbar {
-  z-index: 2000;
-  position: fixed;
-  /* Adjust the width as needed */
-  top: 0;
-  right: 0px; /* Aligns the navbar to the right */
-  background-color: white;
-  padding: 10px;
-  display: flex;
-  justify-content: flex-end; /* Aligns the content to the right */
-}
+      position: fixed;
+            top: 0;
+            right: 0;
+            left: var(--sidebar-width);
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            z-index: 900;
+    }
     .navbar .nav-link {
-      color: black;
+      color: var(--dark-color);
     }
     .navbar .dropdown-menu {
       left: auto;
       right: 0;
     }
     .navbar .nav-link:hover {
-      color: #007bff;
+      color: var(--primary-color);
     }
     
     /* Sidebar Links */
@@ -139,10 +206,11 @@
 
     /* Main Content */
     .main-content {
-      margin-left: 200px;
-      padding: 30px;
-      transition: all 0.3s;
-    }
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            padding-top: calc(var(--header-height) + 20px);
+        }
     
     /* Notifications Badge */
     .badge {
@@ -253,7 +321,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+          flex-direction: column;
         }
         .progress-container {
             display: flex;
@@ -762,85 +830,45 @@
 <body>
   <div id="loading" class="loading">
     <div class="spinner"></div>
-</div>
-  <nav class="navbar navbar-expand-lg navbar-light w-100">
-    <a class="navbar-brand" href="#"></a>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav" >
-        <span class=" text-dark" style="font-size: 20px; font-weight: 600; text-transform: uppercase;  margin-left: 200px">
-        {{user.staffprofile.department}} {{user.staffprofile.job_title}}</span>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item d-flex align-items-center"> <!-- Flex alignment for vertical centering -->
-                <a href="{% url 'dashboard.get_notifications' %}">
-                    <button type="button" class="btn btn-primarys position-relative p-0 mr-2" style="background-color: grey;"> <!-- Set background color to grey -->
-                        <i class="fas fa-bell fa-2x text-light"></i>
-                        {% if user.notifications or user.is_superuser %}
-                            {% if notify_len %}
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ notify_len }}
-                                    <span class="visually-hidden">unread messages</span>
-                                </span>
-                            {% endif %}
-                        {% endif %}
-                    </button>
-                </a>
-                <!-- Added margin to the text for spacing -->
-                
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{user.first_name}} {{user.last_name}}
-                    <i class="fas fa-user-circle px-3" style="color: grey; font-size: 30px; margin-right: 10px;"></i> <!-- Grey user icon -->
-                  
-                </a>
-
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="{% url 'home' %}">Home</a>
-                    <a class="dropdown-item" href="{% url 'dashboard.employee_details' user.id %}">Profile</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'log_out' %}">Logout</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-  </nav>
+  </div>
 
   <div class="sidebar">
     <!-- Centered logo and title -->
-    <div class="text-center py-3">
+    <div class="sidebar-header">
         <img src="{% static 'dashboard/images/image.png' %}" class="rounded-2" alt="..." style="width: 90px; height: 85px;">
         <span class="sidebar-title d-block" style="color: white; font-size: 1.2em; font-weight: bold;">MICTSETA - RMS</span>
     </div>
 
-    <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    <div class="profile">
 
-    <a href="#" data-toggle="collapse" data-target="#dashboardMenu" aria-expanded="false" aria-controls="dashboardMenu">
-        <i class="fas fa-tachometer-alt"></i> Dashboard
-    </a>
-    <div class="collapse" id="dashboardMenu">
-        {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
-            <a href="{% url 'dashboard.panel' %}" class="pl-4">Panel</a>
-        {% else %}
-            <a href="{% url 'dashboard.emp_panel' %}" class="pl-4">Panel</a>
-        {% endif %}
     </div>
 
+    <nav class="mt-6">
+      <h4 class="font-bold text-center text-sm">Menu</h4>
+      <div class="menu-section">
+        <a href="#" data-toggle="collapse" data-target="#dashboardMenu" aria-expanded="false" aria-controls="dashboardMenu" class="nav-link">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+          <i class="fas fa-chevron-down float-end"></i>
+      </a>
+      <div class="collapse" id="dashboardMenu">
+          {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" %}
+              <a href="{% url 'dashboard.panel' %}" >Panel</a>
+          {% else %}
+              <a href="{% url 'dashboard.emp_panel' %}">Panel</a>
+          {% endif %}
+      </div>
+      </div>
     {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "LINE" %}
     <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    
 
     <div class="menu-section">
         <a href="#" data-toggle="collapse" data-target="#usersMenu" aria-expanded="false" aria-controls="usersMenu">
             <i class="fa fa-user-secret" aria-hidden="true"></i> Employees
+            <i class="fas fa-chevron-down float-end"></i>
         </a>
         <div class="collapse" id="usersMenu">
-            <a href="{% url 'dashboard.view_staff' %}" class="pl-4">
+            <a href="{% url 'dashboard.view_staff' %}">
                 <i class="fa fa-users" aria-hidden="true"></i> View all  
             </a>
         </div>
@@ -848,11 +876,12 @@
     {% endif %}
 
     <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    
 
     <div class="menu-section">
         <a href="#" data-toggle="collapse" data-target="#jobsMenu" aria-expanded="false" aria-controls="jobsMenu">
             <i class="fa fa-plug" aria-hidden="true"></i> Recruitment
+            <i class="fas fa-chevron-down float-end"></i>
         </a>
         <div class="collapse" id="jobsMenu">
             <a href="{% url 'dashboard.view_jobs' %}" class="pl-4"><i class="fa fa-cog" aria-hidden="true"></i> Jobs/Vacancy</a>
@@ -862,11 +891,12 @@
     </div>
 
     <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    
 
     <div class="menu-section">
         <a href="#" data-toggle="collapse" data-target="#settingsMenu" aria-expanded="false" aria-controls="settingsMenu">
             <i class="fa fa-calendar-minus-o" aria-hidden="true"></i> Leave
+            <i class="fas fa-chevron-down float-end"></i>
         </a>
         <div class="collapse" id="settingsMenu">
             <a href="{% url 'dashboard.manage_leave' %}" class="pl-4"><i class="fa fa-user-cog" aria-hidden="true"></i> Manage</a>
@@ -877,7 +907,7 @@
     </div>
 
     <!-- Divider -->
-    <!-- <hr style="border-top: 1px solid #ffffff;">
+    <!-- 
 
     <div class="menu-section">
         <a href="">
@@ -885,7 +915,7 @@
         </a>
     </div> -->
     <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    
 
     <div class="menu-section">
         <a href="{% url 'dashboard.task_manager' %}">
@@ -893,11 +923,12 @@
         </a>
     </div>
     <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    
 
     <div class="menu-section">
         <a href="#" data-toggle="collapse" data-target="#notificationsMenu" aria-expanded="false" aria-controls="notificationsMenu">
             <i class="fas fa-bell"></i> Notifications {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}
+            <i class="fas fa-chevron-down float-end"></i>
         </a>
         <div class="collapse" id="notificationsMenu">
             <a href="{% url 'dashboard.get_notifications' %}" class="pl-4">All Notifications {% if noty %}<span class="badge bg-danger">{{noty}}</span>{% endif %}</a>
@@ -906,11 +937,12 @@
     </div>
 
     <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    
     {% if user.is_superuser and user.staffprofile.department == "ADMINISTRATOR" or user.is_superuser and user.staffprofile.department == "IT" %}
     <div class="menu-section">
         <a href="#" data-toggle="collapse" data-target="#aduit_logMenu" aria-expanded="false" aria-controls="aduit_logMenu">
             <i class="fas fa-bar-chart"></i> Audit Log
+            <i class="fas fa-chevron-down float-end"></i>
         </a>
         <div class="collapse" id="aduit_logMenu">
             <a href="{% url 'dashboard.crud_events' %}" class="pl-4"><i class="fa fa-exchange" aria-hidden="true"></i> CRUD Events</a>
@@ -919,27 +951,74 @@
     </div>
 
     <!-- Divider -->
-    <hr style="border-top: 1px solid #ffffff;">
+    
 
     <div class="menu-section">
         <i class="fa fa-database mt-3 ml-2 position-absolute text-white" aria-hidden="true"></i>
         <a href="{% url 'dashboard.backup_database' %}" class="ml-4">Backup / Restore</a>
     </div>
     {% endif %}
+    </nav>
 </div>
 
 <div class="main-content">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <span class="navbar-brand">
+            {{user.staffprofile.department}} {{user.staffprofile.job_title}}
+        </span>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="{% url 'dashboard.get_notifications' %}" class="nav-link position-relative">
+                      <i class="fas fa-bell"></i>
+                        {% if user.notifications or user.is_superuser %}
+                            {% if notify_len %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ notify_len }}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle"href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user-circle"></i> {{user.first_name}} {{user.last_name}}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'home' %}">Home</a></li>
+                        <li><a class="dropdown-item" href="{% url 'dashboard.employee_details' user.id %}">Profile</a></li>
+                        <li><a class="dropdown-item bg-danger" href="{% url 'log_out' %}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="breadcrumb-container">
+  <ol class="breadcrumb">
+    {% block breadcrumbs %}
+    <li class="breadcrumb-item">
+      <a href="#">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Home
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+    {% endblock %}
+  </ol>
+</nav>
     <div class="content">
-        <div id="defaultPage" style="margin-top: 40px;">
-            <div id="flash-message-container"></div>
-            <nav style="--bs-breadcrumb-divider: '>'; color:white;" aria-label="breadcrumb" class="p-3 pb-1 bg-info rounded-2 shadow shadow-sm">
-              <ol class="breadcrumb">
-                {% block breadcrumbs %}
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Library</li>
-                {% endblock %}
-              </ol>
-            </nav>
+      
             <div class="container">
                 {% block description %} {% endblock %}
             </div>
