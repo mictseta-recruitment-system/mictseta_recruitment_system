@@ -3,10 +3,14 @@
 {% block title %}Add Quiz{% endblock %}
 
 {% block breadcrumbs %}
-<li class="breadcrumb-item"><a href="{% url 'dashboard.view_staff' %}">vacancy/Jobs</a></li>
-<li class="breadcrumb-item"><a href="{% url 'dashboard.view_staff' %}">{{job.title}}</a></li>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="{% url 'dashboard.view_staff' %}"><i class="fa-solid fa-briefcase"></i>vacancy/Jobs</a></li>
+<li class="breadcrumb-item"><a href="{% url 'dashboard.view_staff' %}"><i class="fa-solid fa-user-doctor"></i>{{job.title}}</a></li>
 
-<li class="breadcrumb-item active" aria-current="page">Add Quiz</li>
+<li class="breadcrumb-item active" aria-current="page"><i class="fa-solid fa-square-plus"></i>Add Quiz</li>
+    </ol>
+</nav>
 {% endblock %}
 
 

@@ -3,9 +3,9 @@
 {% block title %}Add Staff{% endblock %}
 
  {% block breadcrumbs %}
-    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
-    <li class="breadcrumb-item " ><a href="/dashboard/view_staff/"  class="btn btn-outline p-0"> Staff </a></li>
-      <li class="breadcrumb-item active" aria-current="page"> {{staff.first_name}} {{staff.last_name}}</li>
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"><i class="fas fa-home"></i> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_staff/"  class="btn btn-outline p-0"> <i class="fas fa-user"></i> Staff </a></li>
+      <li class="breadcrumb-item active" aria-current="page"> <i class="fas fa-user"></i> {{staff.first_name}} {{staff.last_name}}</li>
 
       
  {% endblock %}
