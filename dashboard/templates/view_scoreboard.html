@@ -1,95 +1,166 @@
 {% extends 'dashboard_base.html' %}
 
 {% block content %}
-<div class="pipScoreboardContent">
-    <h2>applicant scorecard results</h2>
-    
-    <hr>
 
-    <div class="row g-3">
-    <div class="col-md-6">
-        <div class="p-3 border rounded shadow-sm bg-light">
-            <b>Percentage Obtained:</b> <span class="text-primary">{{ points }}%</span>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="p-3 border rounded shadow-sm bg-light">
-            <b>Obtainable Score:</b> <span class="text-success">{{ full_score }}</span>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="p-3 border rounded shadow-sm bg-light">
-            <b>Applicant Score Obtained:</b> <span class="text-danger">{{ total_score }}</span>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="p-3 border rounded shadow-sm bg-light">
-            <b>Number of Criteria:</b> <span class="text-warning">{{ total_questions }}</span>
-        </div>
-    </div>
-</div>
+{% if interview %}
+    <div class="pipScoreboardContent">
+        <h2>applicant scorecard results</h2>
+        
+        <hr>
 
-    <hr>
-    <table class="pipTable">
-        <tr>
-            <th>Criteria</th>
-            <th>Excellent (4)</th>
-            <th>Good (3)</th>
-            <th>Fair (2)</th>
-            <th>None (1)</th>
-            
-          
-        </tr>
-        <tr>
-            <td colspan="7" class="pipCriteriaHeader">Essentials</td>
-        </tr>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Percentage Obtained:</b> <span class="text-primary">{{ points }}%</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Obtainable Score:</b> <span class="text-success">{{ full_score }}</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Applicant Score Obtained:</b> <span class="text-danger">{{ total_score }}</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Number of Criteria:</b> <span class="text-warning">{{ total_questions }}</span>
+                </div>
+            </div>
+        </div>
 
-        {% for question in scoreboard.questions.all %}
-        {% if question.level == "E" %}
-        <tr>
-            <td>{{ question.text }}</td>
-
-            {% for result in results %}
-            {% if result.question == question %}
+        <hr>
+        <table class="pipTable">
+            <tr>
+                <th>Criteria</th>
+                <th>Excellent (4)</th>
+                <th>Good (3)</th>
+                <th>Fair (2)</th>
+                <th>None (1)</th>
+                
+              
            
-            <td><input type="radio" name="score_{{ question.id }}" value="4" {% if result.score == 4 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">4</span></td>
-            <td><input type="radio" name="score_{{ question.id }}" value="3" {% if result.score == 3 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">3</span></td>
-            <td><input type="radio" name="score_{{ question.id }}" value="2" {% if result.score == 2 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">2</span></td>
-            <td><input type="radio" name="score_{{ question.id }}" value="1" {% if result.score == 1 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">1</span></td>
+             <tr>
+                <td colspan="7" class="pipCriteriaHeader">Desireable</td>
+            </tr>
+             {% for question in scoreboard.interview_questions.all %}
             
-            {% endif %}
+            <tr>
+                <td>{{ question.text }}</td>
+             
+                {% for result in results %}
+                {% if result.question == question %}
+               
+                <td><input type="radio" name="score_{{ question.id }}" value="4" {% if result.score == 4 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">4</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="3" {% if result.score == 3 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">3</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="2" {% if result.score == 2 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">2</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="1" {% if result.score == 1 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">1</span></td>
+                
+                {% endif %}
+                {% endfor %}
+               
+            </tr>
+           
+
             {% endfor %}
+        </table>
 
-           
-        </tr>
-        {% endif %}
+       
+    </div>
 
-        {% endfor %}
-         <tr>
-            <td colspan="7" class="pipCriteriaHeader">Desireable</td>
-        </tr>
-         {% for question in scoreboard.questions.all %}
-        {% if question.level == "D" %}
-        <tr>
-            <td>{{ question.text }}</td>
-         
-            {% for result in results %}
-            {% if result.question == question %}
-           
-            <td><input type="radio" name="score_{{ question.id }}" value="4" {% if result.score == 4 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">4</span></td>
-            <td><input type="radio" name="score_{{ question.id }}" value="3" {% if result.score == 3 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">3</span></td>
-            <td><input type="radio" name="score_{{ question.id }}" value="2" {% if result.score == 2 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">2</span></td>
-            <td><input type="radio" name="score_{{ question.id }}" value="1" {% if result.score == 1 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">1</span></td>
-            
+{% else %}
+    <div class="pipScoreboardContent">
+        <h2>applicant scorecard results</h2>
+        
+        <hr>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Percentage Obtained:</b> <span class="text-primary">{{ points }}%</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Obtainable Score:</b> <span class="text-success">{{ full_score }}</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Applicant Score Obtained:</b> <span class="text-danger">{{ total_score }}</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded shadow-sm bg-light">
+                    <b>Number of Criteria:</b> <span class="text-warning">{{ total_questions }}</span>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <table class="pipTable">
+            <tr>
+                <th>Criteria</th>
+                <th>Excellent (4)</th>
+                <th>Good (3)</th>
+                <th>Fair (2)</th>
+                <th>None (1)</th>
+                
+              
+            </tr>
+            <tr>
+                <td colspan="7" class="pipCriteriaHeader">Essentials</td>
+            </tr>
+
+            {% for question in scoreboard.questions.all %}
+            {% if question.level == "E" %}
+            <tr>
+                <td>{{ question.text }}</td>
+
+                {% for result in results %}
+                {% if result.question == question %}
+               
+                <td><input type="radio" name="score_{{ question.id }}" value="4" {% if result.score == 4 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">4</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="3" {% if result.score == 3 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">3</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="2" {% if result.score == 2 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">2</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="1" {% if result.score == 1 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">1</span></td>
+                
+                {% endif %}
+                {% endfor %}
+
+               
+            </tr>
             {% endif %}
+
             {% endfor %}
-           
-        </tr>
-        {% endif %}
+             <tr>
+                <td colspan="7" class="pipCriteriaHeader">Desireable</td>
+            </tr>
+             {% for question in scoreboard.questions.all %}
+            {% if question.level == "D" %}
+            <tr>
+                <td>{{ question.text }}</td>
+             
+                {% for result in results %}
+                {% if result.question == question %}
+               
+                <td><input type="radio" name="score_{{ question.id }}" value="4" {% if result.score == 4 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">4</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="3" {% if result.score == 3 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">3</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="2" {% if result.score == 2 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">2</span></td>
+                <td><input type="radio" name="score_{{ question.id }}" value="1" {% if result.score == 1 %}checked{% else %} disabled {% endif %}> <span class="pipPointLabel">1</span></td>
+                
+                {% endif %}
+                {% endfor %}
+               
+            </tr>
+            {% endif %}
 
-        {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
 
-   
-</div>
+       
+    </div>
+{% endif %}
 {% endblock %}

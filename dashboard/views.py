@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert,Scoreboard, ScoreQuestion,ScoreResult,InterviewScoreboard,InterviewScoreQuestion,InterviewScoreResult
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert,Scoreboard, ScoreQuestion,ScoreResult,InterviewScoreboard,InterviewScoreQuestion,InterviewScoreResult,Interviewer
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -911,11 +911,22 @@ def view_scoreboard(request,job_id, application_id):
 
 @check_leave
 @csrf_protect	
-def interview_panel(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
-   
-    return render(request, 'interview_panel.html')
+def interview_panel(request,job_id,application_id):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+	vacancy = JobPost.objects.filter(id=int(job_id)).first()
+	applicantion = JobApplication.objects.filter(id=int(application_id)).first()
+	interviewer = Interviewer.objects.filter(application=applicantion).all()
+	inter = Interviewer.objects.filter(user=request.user,application=applicantion).first()
+	total = 0 
+	users = 0 
+	points = 0
+	if interviewer:
+		for inter in interviewer:
+			users += 1
+			total += inter.score
+		points = round((total/users),2)
+	return render(request, 'interview_panel.html', {'vacancy':vacancy, 'application':applicantion,'interviewer':interviewer,'points':points,'inter':inter})
 
 @check_leave
 @csrf_protect	
@@ -932,14 +943,15 @@ def create_interview_scoreboard(request,job_id):
 
 @check_leave
 @csrf_protect	
-def view_interview_scoreboard(request,job_id, application_id):
+def view_interview_scoreboard(request,job_id, application_id,user_id):
     if not request.user.is_authenticated:
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
 
     vacancy = JobPost.objects.get(id=int(job_id))
     application = JobApplication.objects.get(id=int(application_id))
     scoreboard = InterviewScoreboard.objects.filter(vacancy=vacancy).first()
-    results = InterviewScoreResult.objects.filter(scoreboard=scoreboard,application=application).all()
+    results = InterviewScoreResult.objects.filter(scoreboard=scoreboard,application=application,interviewer=int(user_id)).all()
+    
     total_score = 0
     total_questions = 0 
     points = 0
@@ -950,4 +962,39 @@ def view_interview_scoreboard(request,job_id, application_id):
 
     points = round((total_score/(total_questions*4) ) *100,2)
    
-    return render(request, 'view_scoreboard.html',{'scoreboard':scoreboard, 'application':application,'points':points, 'total_score':total_score,'full_score':total_questions*4,'total_questions':total_questions, 'results':results})
+    return render(request, 'view_scoreboard.html',{'scoreboard':scoreboard, 'application':application,'points':points, 'total_score':total_score,'full_score':total_questions*4,'total_questions':total_questions, 'results':results, 'interview':True})
+
+
+@check_leave
+@csrf_protect	
+def start_interview(request,job_id,application_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+    vacancy = JobPost.objects.get(id=int(job_id))
+    scoreboard = InterviewScoreboard.objects.filter(vacancy=vacancy).first()
+    application = JobApplication.objects.filter(id=int(application_id)).first()
+
+    return render(request, 'start_interview.html',{'scoreboard':scoreboard,'vacancy':vacancy,'application':application})
+
+
+@csrf_protect
+def move_to_selected(request,application_id):
+	if not request.user.is_authenticated:
+		return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+		
+	try:
+		applicant = JobApplication.objects.get(id=int(application_id))
+		applicant.status = "selected"
+		applicant.previous_stage = applicant.current_stage
+		applicant.current_stage = "selected stage"
+		applicant.staff = request.user 
+		applicant.reason = "moved to selected stage"
+		applicant.save()
+			# feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to Short-List stage",status="Short-List")
+			# feed_back.save()
+			# print(feed_back)
+	except Exception as e:
+		return e 
+
+	return render(request, 'start_interview.html',{'scoreboard':scoreboard,'vacancy':vacancy,'application':application})

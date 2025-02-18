@@ -1,0 +1,73 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %}Job Details{% endblock %}
+
+
+
+     {% block breadcrumbs %}
+    <li class="breadcrumb-item " aria-current="page"><a href="/dashboard/" class="btn btn-outline p-0"> Dashboard </a></li>
+    <li class="breadcrumb-item " ><a href="/dashboard/view_jobs/"  class="btn btn-outline p-0"> Jobs/Vacancy </a></li>
+      
+      <li class="breadcrumb-item " ><a href="/dashboard/job_details/{{application.job.id}}/"  class="btn btn-outline p-0"> {{application.job.title}} </a></li>
+      
+      <li class="breadcrumb-item " ><a href="/dashboard/job_applications/"  class="btn btn-outline p-0"> Application </a></li>
+      
+     
+      <li class="breadcrumb-item active" aria-current="page"> {{application.user.first_name}} {{application.user.last_name}} </li>
+
+   
+ {% endblock %}
+
+
+{% load static %}
+
+{% block content %}
+<div class="pipScoreboardContent">
+      <h3>Interview rating system</h3>
+      <div>
+          <ul>
+              <li>
+                  Vacancy : {{vacancy}}
+              </li>
+              <li>
+                 candidate : {{application.user.first_name}} {{application.user.last_name}}
+              </li>
+          </ul>
+      </div>
+        <form id="scoreboardForm">
+
+              <table class="pipTable">
+                <tr>
+                    <th>Criteria</th>
+                    <th>Excellent (4)</th>
+                    <th>Good (3)</th>
+                    <th>Fair (2)</th>
+                    <th>None (1)</th>
+                    
+                </tr>
+                
+                 <tr>
+                    <td colspan="7" class="pipCriteriaHeader">Desireable</td>
+                </tr>
+                 {% for question in scoreboard.interview_questions.all %}
+               
+                <tr>
+                    <td>{{ question.text }}</td>
+                  
+                    <td><input type="radio" name="score_{{ question.id }}" value="4"> <span class="pipPointLabel">4</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="3"> <span class="pipPointLabel">3</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="2"> <span class="pipPointLabel">2</span></td>
+                    <td><input type="radio" name="score_{{ question.id }}" value="1"> <span class="pipPointLabel">1</span></td>
+                   
+                </tr>
+              
+
+                {% endfor %}
+            </table>
+            <p class="mt-3 fw-bold">Add note</p>
+            <input type="text" class="form-control bg-light" name="note" placeholder="add note about the candidates performance...">
+              <button class="btn btn-success w-100  mt-4 " onclick="submit_interview_scorecard({{scoreboard.id}},{{application.id}})"> Submit Scorecard </button>
+        </form>
+
+    </div>
+{% endblock %}

@@ -29,6 +29,8 @@ urlpatterns = [
     path('job_application/<int:jobID>', views.job_application, name='job_application'),
     path('move_to_interview/', views.move_to_interview, name='move_to_interview'),
     path('move_to_shortlist/', views.move_to_shortlist, name='move_to_shortlist'),
+    path('move_to_selected/', views.move_to_selected, name='move_to_selected'),
+    
     path('auto_filter/', views.auto_filter, name='auto_filter'),
     path('apply_filter/', views.apply_filter, name='apply_filter'),
      path('hide_filter/', views.hide_filter, name='hide_filter'),
@@ -56,6 +58,10 @@ urlpatterns = [
      path('approve_requisition/', views.approve_requisition, name='approve_requisition'),
      path('approve_requisition_ceo/', views.approve_requisition_ceo, name='approve_requisition_ceo'),
      path('screening/', views.screening, name='screening'),
+     path('submit_selected_list/', views.submit_selected_list, name='submit_selected_list'),
+     path('approve_selected_list/', views.approve_selected_list, name='approve_selected_list'),
+    
+
     
    path('scoreboard/question/add/', views.score_add_question, name='add_question'),
     path('scoreboard/question/delete/', views.score_delete_question, name='delete_question'),
@@ -64,7 +70,9 @@ urlpatterns = [
 
     path('scoreboard/question/add/interview/', views.score_add_interview_question, name='score_add_interview_question'),
     path('scoreboard/question/delete/interview/', views.score_delete_interview_question, name='score_delete_interview_question'),
+    path('scoreboard/submit_scoreboard_interview/<int:scoreboard_id>/<int:application_id>/', views.submit_scoreboard_interview, name='submit_scoreboard_interview'),
     
+   
     
 
 

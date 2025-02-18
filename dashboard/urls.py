@@ -46,9 +46,10 @@ urlpatterns = [
     path('application_jobs', views.application_jobs, name="dashboard.application_jobs"),
      path('create_scoreboard/<job_id>', views.create_scoreboard, name='create_scoreboard'),
      path('view_scoreboard/<job_id>/<application_id>', views.view_scoreboard, name='view_scoreboard'),
-     path('interview_panel/', views.interview_panel, name='interview_panel'),
+     path('interview_panel/<job_id>/<application_id>', views.interview_panel, name='interview_panel'),
      path('create_interview_scoreboard/<job_id>', views.create_interview_scoreboard, name='create_interview_scoreboard'),
-     path('view_interview_scoreboard/<job_id>/<application_id>', views.view_interview_scoreboard, name='view_interview_scoreboard'),
+     path('view_interview_scoreboard/<job_id>/<application_id>/<user_id>/', views.view_interview_scoreboard, name='view_interview_scoreboard'),
+     path('start_interview/<job_id>/<application_id>', views.start_interview, name='start_interview'),
     
 
     

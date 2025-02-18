@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers,Alert,Scoreboard, ScoreQuestion,ScoreResult,InterviewScoreboard,InterviewScoreQuestion,InterviewScoreResult
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers,Alert,Scoreboard, ScoreQuestion,ScoreResult,InterviewScoreboard,InterviewScoreQuestion,InterviewScoreResult,Interviewer
 from config.models import JobTitle, Industry
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from .filters import ApplicationFilter
@@ -789,6 +789,35 @@ def auto_set_interview(request):
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
 
+@check_leave
+@csrf_protect
+def move_to_selected(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			try:
+				applicant = JobApplication.objects.get(id=int(json_data.get('appID')))
+				applicant.status = "Selected"
+				applicant.previous_stage = applicant.current_stage
+				applicant.current_stage = "Selected stage"
+				applicant.staff = request.user
+				applicant.reason = "Moved to selected stage"
+				applicant.job.is_interviewed = True
+				applicant.save()
+				# feed_back = FeedBack.objects.create(user=applicant.user,job=applicant.job,message="moved to Short-List stage",status="Short-List")
+				# feed_back.save()
+				# print(feed_back)
+				return JsonResponse({'message': f'{applicant.user.email} moved to Selected stage', 'status': 'success'}, status=201)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400) 
 
 @check_leave
 @csrf_protect
@@ -2034,3 +2063,120 @@ def score_delete_interview_question(request):
     scoreboard_id = question.scoreboard.id
     question.delete()
     return JsonResponse({'message': 'Delete Question/Objective  successfully', 'status': 'success'}, status=200)
+
+@csrf_protect
+def submit_scoreboard_interview(request, scoreboard_id,application_id):
+	if not request.method == 'POST':
+		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception :
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+	scoreboard = InterviewScoreboard.objects.filter(id=scoreboard_id).first()
+	application = JobApplication.objects.filter(id=int(application_id)).first()
+	if not application:
+		return JsonResponse({'errors': { "Error" : ['application not found']}, 'status':'error'}, status=403)
+	print(json_data)
+	if scoreboard:
+		for question in scoreboard.interview_questions.all():
+			score_key = f"score_{question.id}"
+			score_value = json_data.get(score_key)
+			
+			results = InterviewScoreResult.objects.create(scoreboard=scoreboard,application=application,question=question,score=int(score_value),interviewer=request.user)
+			results.save()
+		scoreboard = InterviewScoreboard.objects.filter(id=scoreboard_id).first()
+		results = InterviewScoreResult.objects.filter(scoreboard=scoreboard,application=application, interviewer=request.user).all()
+		total_score = 0
+		total_questions = 0 
+		points = 0
+			
+		for result in results:
+			total_score += int(result.score)
+			total_questions += 1
+
+		points = round((total_score/(total_questions*4) ) *100,2)
+		interviewer = Interviewer.objects.create(scoreboard=scoreboard,application=application, user=request.user, note=json_data.get('note'),score=points)
+		interviewer.save()
+		application.is_interviewed = True
+		application.save()
+		feed_back = FeedBack.objects.create(user=application.user,job=application.job,message="Interview completed successfully, we will contact you soon",status="Interview")
+		feed_back.save()
+		return JsonResponse({'message': 'Saving Scorecard results', 'status': 'success'}, status=200)
+	else:
+		return JsonResponse({'errors': { "Error" : ['Scorecard not found ']}, 'status':'error'}, status=403)
+
+@check_leave
+@csrf_protect	
+def submit_selected_list(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			data = {
+				'job_post_id' : json_data.get('job_post_id')
+			}
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+	
+			exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			try:
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				job_post.is_approved = True
+				job_post.status = "open"
+				job_post.current_step += 1
+				job_post.save()
+				noty = Notification.objects.create(user=request.user, action="Vacancy Approved for Advertisment", job_title=job_post.title.title, status=job_post.status)
+				noty.save()
+				alert = Alert.objects.create(note="Selected candidates list submitted, waiting approval ", vacancy=job_post, step=job_post.current_step, status="pending")
+				alert.save()
+				return JsonResponse({'message': 'Selected candidates list submitted, waiting approval', 'status': 'success'}, status=200)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+			
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+@check_leave
+@csrf_protect	
+def approve_selected_list(request):
+	if request.user.is_authenticated:
+		if request.method == 'POST':
+			try:
+				json_data = json.loads(request.body)
+			except Exception:
+				return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'}, status=400)
+			data = {
+				'job_post_id' : json_data.get('job_post_id')
+			}
+			for key, value in data.items():
+				if key == None or value == None:
+					return JsonResponse({'errors': {f'{key}':['this field is required ']}, 'status':'error'}, status=404)
+	
+			exists = JobPost.objects.filter(id=int(data['job_post_id'])).exists()
+			if not exists:
+				return JsonResponse({'errors': {'job post':['Job Post does not exist']}, 'status': 'error'}, status=400)
+			try:
+				job_post = JobPost.objects.get(id=int(data['job_post_id']))
+				job_post.is_selected_approved = True
+				job_post.current_step += 1
+				job_post.save()
+				noty = Notification.objects.create(user=request.user, action="Selected candidate list was approved", job_title=job_post.title.title, status=job_post.status)
+				noty.save()
+				alert = Alert.objects.create(note="Selected candidate list was approved ", vacancy=job_post, step=job_post.current_step, status="pending")
+				alert.save()
+				return JsonResponse({'message': 'Selected candidate list was approved', 'status': 'success'}, status=200)
+			except Exception as e:
+				return JsonResponse({"errors":{'server error':[f'{e}']}, "status":"error"}, status=400)
+			
+		else:
+			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
+	else:
+		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)

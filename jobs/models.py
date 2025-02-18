@@ -25,6 +25,8 @@ class JobPost(models.Model):
     req_ceo_approval = models.BooleanField(null=False, default=False)
     scoreboard = models.BooleanField(null=False, default=False)
     interview_scoreboard = models.BooleanField(null=False, default=False)
+    is_interviewed = models.BooleanField(null=False, default=False)
+    is_selected_approved = models.BooleanField(null=False,default=False)
 
 
     def __str__(self):
@@ -120,6 +122,7 @@ class JobApplication(models.Model):
     reason = models.CharField(null=True, max_length=100, default="")
     is_filter_applied = models.BooleanField(null=False, default=False)
     is_approved = models.CharField(null=False,max_length=50,default="waiting")
+    is_interviewed = models.BooleanField(null=False, default=False)
 
 
     def __str__(self):
@@ -233,8 +236,21 @@ class InterviewScoreQuestion(models.Model):
 class InterviewScoreResult(models.Model):
     scoreboard = models.ForeignKey(InterviewScoreboard, on_delete=models.CASCADE, related_name="interview_results")
     application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
+    interviewer= models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(InterviewScoreQuestion, on_delete=models.CASCADE)
     score = models.IntegerField()
 
     def __str__(self):
         return f"{self.application.user.username} - {self.score} for {self.question.text}"
+
+
+class Interviewer(models.Model):
+    scoreboard = models.ForeignKey(InterviewScoreboard, on_delete=models.CASCADE, related_name="interviewers")
+    application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    note = models.CharField(max_length=225,null=True)
+    score = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.application.user.username} - {self.score} for {self.question.text}"
+

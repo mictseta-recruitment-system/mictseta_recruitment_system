@@ -923,6 +923,88 @@ function submit_requisition(jobID) {
   });
 }
 
+function approve_selected_list(jobID) {
+  const url = 'http://127.0.0.1:8000/job/approve_selected_list/';
+  /*document.getElementById(spinner + jobID).style.display = 'block';
+  document.getElementById(content + jobID).style.display = 'none';*/
+ 
+  
+  const jsonData = {
+    job_post_id: jobID 
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+    } else if (data.status === "success") {
+      showFlashMessage(data.message, "success");
+      
+      showFlashMessage(data.message, "success");
+    
+      /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+      
+    } else if (data.status === "warning") {
+      showFlashMessage(data.message, "warning");
+  
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+function submit_selected_list(jobID) {
+  const url = 'http://127.0.0.1:8000/job/submit_selected_list/';
+  /*document.getElementById(spinner + jobID).style.display = 'block';
+  document.getElementById(content + jobID).style.display = 'none';*/
+ 
+  
+  const jsonData = {
+    job_post_id: jobID 
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+    } else if (data.status === "success") {
+      showFlashMessage(data.message, "success");
+      
+      showFlashMessage(data.message, "success");
+    
+      /*sleeper(jobID, 'false', spinner, content); // Pass 'true' to show skillToggle modal*/
+      
+    } else if (data.status === "warning") {
+      showFlashMessage(data.message, "warning");
+  
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 function approve_requisition(jobID) {
   const url = 'http://127.0.0.1:8000/job/approve_requisition/';
   /*document.getElementById(spinner + jobID).style.display = 'block';
@@ -1219,6 +1301,44 @@ function move_to_interview(appID) {
   });
 }
 
+function move_to_selected(appID) {
+  const url = 'http://127.0.0.1:8000/job/move_to_selected/';
+  
+  const jsonData = {
+    appID: appID,
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+     
+      showFlashMessage(data.message, "success");
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 
 function move_to_shortlist(appID) {
   const url = 'http://127.0.0.1:8000/job/move_to_shortlist/';
@@ -2705,6 +2825,51 @@ function add_score_interview_question(scoreboard_id) {
     showFlashMessage(error.message, "danger");
   });
 }
+
+function submit_interview_scorecard(scoreboard_id,user_id) {
+    event.preventDefault();
+  const url = 'http://127.0.0.1:8000/job/scoreboard/submit_scoreboard_interview/'+scoreboard_id +'/'+user_id + '/';
+  const form = document.getElementById('scoreboardForm');
+  const formData = new FormData(form);
+
+  // Example: Convert formData to JSON object if needed
+  const formDataObject = {};
+  formData.forEach((value, key) => {
+    formDataObject[key] = value;
+  }); 
+
+  
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(formDataObject),
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+   
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
 /*==================================================================================*/
 
 function submit_short_list(jobID) {
@@ -2812,7 +2977,7 @@ function toggleVisibility(divId) {
 
 function toggleV(divId) {
             // Hide all divs
-            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved','filterd'];
+            const divs = ['applications', 'shortlistss','interview', 'on_hold','approved','filterd','selected'];
             divs.forEach(function(id) {
                 document.getElementById(id).style.display = 'none';
                 console .log(id);
