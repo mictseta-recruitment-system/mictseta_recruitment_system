@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
 from django.contrib.auth.models import User
-from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert,Scoreboard, ScoreQuestion,ScoreResult
+from jobs.models import JobPost, Notification, JobApplication,Interview,QuizResults,Quiz,Question,Answer,FeedBack, QuizAnswers, Alert,Scoreboard, ScoreQuestion,ScoreResult,InterviewScoreboard,InterviewScoreQuestion,InterviewScoreResult
 from profiles.models import Leave, Attendance, Shift
 from datetime import datetime
 from django.http import HttpResponse, JsonResponse
@@ -916,3 +916,38 @@ def interview_panel(request):
         return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
    
     return render(request, 'interview_panel.html')
+
+@check_leave
+@csrf_protect	
+def create_interview_scoreboard(request,job_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+    vacancy = JobPost.objects.get(id=int(job_id))
+    scoreboard = InterviewScoreboard.objects.filter(vacancy=vacancy).first()
+    if not scoreboard:
+    	scoreboard = InterviewScoreboard.objects.create(vacancy=vacancy)
+    	scoreboard.save()
+    return render(request, 'create_interview_scoreboard.html',{'scoreboard':scoreboard})
+
+@check_leave
+@csrf_protect	
+def view_interview_scoreboard(request,job_id, application_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'errors': { "authentication" : ['you are required to log in ']}, 'status':'error'}, status=403)
+
+    vacancy = JobPost.objects.get(id=int(job_id))
+    application = JobApplication.objects.get(id=int(application_id))
+    scoreboard = InterviewScoreboard.objects.filter(vacancy=vacancy).first()
+    results = InterviewScoreResult.objects.filter(scoreboard=scoreboard,application=application).all()
+    total_score = 0
+    total_questions = 0 
+    points = 0
+			
+    for result in results:
+        total_score += int(result.score)
+        total_questions += 1
+
+    points = round((total_score/(total_questions*4) ) *100,2)
+   
+    return render(request, 'view_scoreboard.html',{'scoreboard':scoreboard, 'application':application,'points':points, 'total_score':total_score,'full_score':total_questions*4,'total_questions':total_questions, 'results':results})

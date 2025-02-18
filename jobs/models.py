@@ -24,6 +24,8 @@ class JobPost(models.Model):
     req_finance_approval = models.BooleanField(null=False, default=False)
     req_ceo_approval = models.BooleanField(null=False, default=False)
     scoreboard = models.BooleanField(null=False, default=False)
+    interview_scoreboard = models.BooleanField(null=False, default=False)
+
 
     def __str__(self):
         return f'{self.title} '
@@ -206,6 +208,32 @@ class ScoreResult(models.Model):
     scoreboard = models.ForeignKey(Scoreboard, on_delete=models.CASCADE, related_name="results")
     application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
     question = models.ForeignKey(ScoreQuestion, on_delete=models.CASCADE)
+    score = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.application.user.username} - {self.score} for {self.question.text}"
+
+
+class InterviewScoreboard(models.Model):
+    vacancy = models.ForeignKey(JobPost, on_delete=models.CASCADE, related_name="interview_scoreboards")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Scoreboard for {self.vacancy.title}"
+
+class InterviewScoreQuestion(models.Model):
+    scoreboard = models.ForeignKey(InterviewScoreboard, on_delete=models.CASCADE, related_name="interview_questions")
+    text = models.TextField()
+    level = models.CharField(max_length=50,default="E")
+    max_score = models.IntegerField(default=4)
+
+    def __str__(self):
+        return self.text
+
+class InterviewScoreResult(models.Model):
+    scoreboard = models.ForeignKey(InterviewScoreboard, on_delete=models.CASCADE, related_name="interview_results")
+    application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
+    question = models.ForeignKey(InterviewScoreQuestion, on_delete=models.CASCADE)
     score = models.IntegerField()
 
     def __str__(self):

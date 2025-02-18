@@ -752,7 +752,12 @@
         <div id="interview" style="display:none;">
             <div class="card shadow-lg mt-3 rounded">
                 <div class="card-header d-flex justify-content-between " style="height:50px;">
-                  <h6>ALL Interview Candidate List</h6> 
+                  <h6 class="d-flex justify-content-between">
+                    <span>
+                  ALL Interview Candidate List    
+                    </span>
+                    <a class="btn btn-primary" href="{% url 'create_interview_scoreboard' applications.0.job.id %}"> create scoreboard</a>
+                </h6> 
                 </div>
 
                 <div class="card-body" style="overflow-x: scroll;"> 

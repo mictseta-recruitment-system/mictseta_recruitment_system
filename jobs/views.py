@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from .forms import AddJobForm, AddJobSkillForm ,AddJobAcademicForm, AddJobExperienceForm, AddJobRequirementForm
-from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers,Alert,Scoreboard, ScoreQuestion,ScoreResult
+from .models import JobPost, Academic, ComputerSkill,SoftSkill, Experience, Requirement,Language, Notification, JobApplication, Interview,FeedBack,QuizResults,Quiz,Question,Answer, QuizAnswers,Alert,Scoreboard, ScoreQuestion,ScoreResult,InterviewScoreboard,InterviewScoreQuestion,InterviewScoreResult
 from config.models import JobTitle, Industry
 from config.models import LanguageList, SpeakingProficiencyList,ReadingProficiencyList,WritingProficiencyList,ComputerSkillsList,ComputerProficiency,SoftSkillsList, SoftProficiency, Institution, Qualification,NQF, JobTitle
 from .filters import ApplicationFilter
@@ -2001,3 +2001,36 @@ def submit_scoreboard(request, scoreboard_id,application_id):
 	else:
 		return JsonResponse({'errors': { "Error" : ['Scorecard not found ']}, 'status':'error'}, status=403)
 
+
+@csrf_protect 
+def score_add_interview_question(request):
+   
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+    scoreboard_id = json_data.get('scoreboard_id')
+    scoreboard = get_object_or_404(InterviewScoreboard, id=int(scoreboard_id))
+    question_text = json_data.get("question_text")
+    if question_text:
+        question = InterviewScoreQuestion.objects.create(scoreboard=scoreboard, text=question_text)
+        question.save()
+        return JsonResponse({'message': 'Added Question/Objective  successfully', 'status': 'success'}, status=200)
+    return JsonResponse({'errors': { "Error" : ['Something went wrong ']}, 'status':'error'}, status=403)
+
+@csrf_protect
+def score_delete_interview_question(request):
+    if not request.method == 'POST':
+        return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+    try:
+        json_data = json.loads(request.body)
+    except Exception :
+        return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+    question_id = json_data.get('question_id')
+    question = get_object_or_404(InterviewScoreQuestion, id=int(question_id))
+    scoreboard_id = question.scoreboard.id
+    question.delete()
+    return JsonResponse({'message': 'Delete Question/Objective  successfully', 'status': 'success'}, status=200)

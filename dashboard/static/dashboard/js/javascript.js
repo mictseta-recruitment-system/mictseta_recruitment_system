@@ -2663,8 +2663,49 @@ function submit_scorecard(scoreboard_id,user_id) {
     showFlashMessage(error.message, "danger");
   });
 }
+/*=================================================================================*/
 
+function add_score_interview_question(scoreboard_id) {
+  const url = 'http://127.0.0.1:8000/job/scoreboard/question/add/interview/';
+  const question_text = document.getElementById('question_text').value;
+   
+  const jsonData = {
+    
+    scoreboard_id:scoreboard_id,
+    question_text:question_text,
+  };
 
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => {
+    return response.json();
+  })
+  .then(data => {
+    if (data.status === "error") {
+      handleErrors(data.errors);
+     
+    } else if (data.status === "success") {
+   
+      showFlashMessage(data.message, "success");
+   
+    } else if (data.status === "warning") {
+      
+      showFlashMessage(data.message, "warning");
+     
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    showFlashMessage(error.message, "danger");
+  });
+}
+/*==================================================================================*/
 
 function submit_short_list(jobID) {
     event.preventDefault();

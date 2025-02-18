@@ -61,6 +61,10 @@ urlpatterns = [
     path('scoreboard/question/delete/', views.score_delete_question, name='delete_question'),
     path('scoreboard/submit_scoreboard/<int:scoreboard_id>/<int:application_id>/', views.submit_scoreboard, name='submit_scoreboard'),
     path('submit_short_list/', views.submit_short_list, name='submit_short_list'),
+
+    path('scoreboard/question/add/interview/', views.score_add_interview_question, name='score_add_interview_question'),
+    path('scoreboard/question/delete/interview/', views.score_delete_interview_question, name='score_delete_interview_question'),
+    
     
 
 
