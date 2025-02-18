@@ -3,6 +3,247 @@
 {% block title %}Job Details{% endblock %}
 
 {% block content %}
+<style>
+    :root {
+    --primary-color: #2563eb;
+    --primary-dark: #1e40af;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+}
+
+.jobs-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Filter Styles */
+.filter-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.filter-select {
+    padding: 0.75rem;
+    border: 1px solid var(--gray-200);
+    border-radius: 0.5rem;
+    background-color: white;
+    color: var(--gray-800);
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.filter-select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.filter-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Job Cards Grid */
+.jobs-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.job-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.3s;
+    border: 1px solid var(--gray-200);
+}
+
+.job-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.job-card-content {
+    padding: 1.5rem;
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.job-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.job-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.badge-type {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.badge-location {
+    background-color: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.job-info {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    color: var(--gray-600);
+    font-size: 0.875rem;
+}
+
+.job-industry i {
+    margin-right: 0.5rem;
+}
+
+.job-description {
+    color: var(--gray-600);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.job-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.job-deadline {
+    color: var(--gray-600);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.job-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.job-link:hover {
+    color: var(--primary-dark);
+}
+
+/* No Jobs Found */
+.no-jobs {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid var(--gray-200);
+}
+
+.no-jobs-icon {
+    font-size: 3rem;
+    color: var(--gray-400);
+    margin-bottom: 1rem;
+}
+
+.no-jobs h3 {
+    color: var(--gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.no-jobs p {
+    color: var(--gray-600);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .job-header {
+        flex-direction: column;
+    }
+
+    .job-badges {
+        width: 100%;
+    }
+
+    .job-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}
+</style>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,82 +278,108 @@
         </ol>
     </nav>
     
-    <div class="card">
-        <div class="card-header">
+    <div class="jobs-container">
+        <div class="filter-card">
             <!-- Filter Form -->
-            <form method="GET">
-                <div class="filter-options">
-                    <label for="job_type">Job Type:</label>
-                    <select id="job_type" name="job_type">
-                        <option value="">All</option>
-                        <option value="full_time">Permanent</option>
-                        <option value="contract">Contract</option>
-                    </select>
+            <form method="GET" class="filter-form">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="job_type">Job Type:</label>
+                        <select id="job_type" name="job_type" class="filter-select">
+                            <option value="">All</option>
+                            <option value="full_time">Permanent</option>
+                            <option value="contract">Contract</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="location">Location:</label>
+                        <select id="location" name="location" class="filter-select">
+                            <option value="">All</option>
+                            <option value="johannesburg">Johannesburg</option>
+                            <option value="pretoria">Pretoria</option>
+                            <option value="cape_town">Cape Town</option>
+                            <option value="Kempton_Park">Kempton Park</option>
+                            <option value="Durban">Durban</option>
+                            <option value="Polokwane">Polokwane</option>
+                            <option value="Tzaneen">Tzaneen</option>
+                            <option value="Vereeniging">Vereeniging</option>
+                            <option value="Centurion">Centurion</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="industry">Industry:</label>
+                        <select id="industry" name="industry" class="filter-select">
+                            <option value="">All</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="education">Education</option>
+                            <option value="technology">Technology</option>
+                            <option value="Business and Finance">Business and Finance</option>
+                            <option value="Creative and Media">Creative and Media</option>
+                            <option value="Science and Engineering">Science and Engineering</option>
+                            <option value="Trades and Services">Trades and Services</option>
+                        </select>
+                    </div>
+                    
 
-                    <label for="location">Location:</label>
-                    <select id="location" name="location">
-                        <option value="">All</option>
-                        <option value="johannesburg">Johannesburg</option>
-                        <option value="pretoria">Pretoria</option>
-                        <option value="cape_town">Cape Town</option>
-                        <option value="Kempton_Park">Kempton Park</option>
-                        <option value="Durban">Durban</option>
-                        <option value="Polokwane">Polokwane</option>
-                        <option value="Tzaneen">Tzaneen</option>
-                        <option value="Vereeniging">Vereeniging</option>
-                        <option value="Centurion">Centurion</option>
-                    </select>
-
-                    <label for="industry">Industry:</label>
-                    <select id="industry" name="industry">
-                        <option value="">All</option>
-                        <option value="healthcare">Healthcare</option>
-                        <option value="education">Education</option>
-                        <option value="technology">Technology</option>
-                        <option value="Business and Finance">Business and Finance</option>
-                        <option value="Creative and Media">Creative and Media</option>
-                        <option value="Science and Engineering">Science and Engineering</option>
-                        <option value="Trades and Services">Trades and Services</option>
-                    </select>
-
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="submit"  class="filter-button">
+                        <i class="fas fa-filter"></i>
+                        Apply Filters
+                    </button>
                 </div>
             </form>
         </div>
-        <div class="card-body">
-            <!-- Job Details List -->
-            <div class="job-details">
-                {% if job_list %}
-                    {% for job in job_list %}
-                        <div class="card mt-5">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ job.title }}</h5>
-                                <h6 class="card-subtitle mb-2">
-                                    <b>Location:</b> <span class="text-muted">{{ job.location }}</span>
-                                    | <b>Industry:</b> <span class="text-muted">{{ job.industry }}</span>
-                                    | <b>Job Type:</b> <span class="text-muted">{{ job.job_type }}</span>
-                                </h6>
-                                <p class="card-text">{{ job.description }}</p>
-                                <a href="#" class="card-link text-muted">Application End Date: {{ job.end_date }}</a>
-                                <a href="{% url 'job_information' job.id %}" class="card-link">See more</a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="card mt-5 border-0">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-center">
-                                <i class="fa-solid fa-triangle-exclamation fa-5x text-warning"></i>
-                            </div>
-                            <div class="d-flex justify-content-center mt-4">
-                                <h5 class="card-title">No Job/Vacancy Available</h5>
-                            </div>
+        <!-- Job Listings -->
+    <div class="jobs-grid">
+        {% if job_list %}
+            {% for job in job_list %}
+            <div class="job-card">
+                <div class="job-card-content">
+                    <div class="job-header">
+                        <h2 class="job-title">{{ job.title }}</h2>
+                        <div class="job-badges">
+                            <span class="badge badge-type">{{ job.job_type }}</span>
+                            <span class="badge badge-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ job.location }}
+                            </span>
                         </div>
                     </div>
-                {% endif %}
+
+                    <div class="job-info">
+                        <span class="job-industry">
+                            <i class="fas fa-building"></i>
+                            {{ job.industry }}
+                        </span>
+                    </div>
+
+                    <p class="job-description">{{ job.description|truncatewords:30 }}</p>
+
+                    <div class="job-footer">
+                        <div class="job-deadline">
+                            <i class="far fa-clock"></i>
+                            Closes: {{ job.end_date|date:"M d, Y" }}
+                        </div>
+                        <a href="{% url 'job_information' job.id %}" class="job-link">
+                            View Details
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-jobs">
+                <div class="no-jobs-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>No Jobs Found</h3>
+                <p>Try adjusting your search filters or check back later for new opportunities.</p>
+            </div>
+        {% endif %}
     </div>
+</div>
 </body>
 
 {% endblock %}

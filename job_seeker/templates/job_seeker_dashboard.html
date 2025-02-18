@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -22,74 +24,156 @@
     <link rel="shortcut icon" href="{% static './authenticate/images/webicon.png' %}" type="image/x-icon">
 
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f1f5f9;
+            --card-background: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
         /* Apply Open Sans font */
-        body, .navbar, .sidebar, .content {
+        body,
+        .navbar,
+        .sidebar,
+        .content {
             font-family: 'Open Sans', sans-serif;
             font-weight: normal;
         }
 
         .navbar-custom {
-            background-color: #ffffff; 
+            background-color: #ffffff;
         }
 
-        .navbar-custom .navbar-brand, 
+        .navbar-custom .navbar-brand,
         .navbar-custom .nav-link {
             color: #333333;
         }
 
-        .navbar-custom .navbar-brand:hover, 
+        .navbar-custom .navbar-brand:hover,
         .navbar-custom .nav-link:hover {
-            color: #d5d5d5; 
+            color: #d5d5d5;
         }
-        .flash1{
+
+        .flash1 {
             display: fixed;
             z-index: 1000;
         }
 
-        .sidebar {
-            background-color: #ffffff;
-            position: -webkit-sticky; /* For Safari */
-            position: sticky;
-            top: 0; /* Stick to the top */
-            max-height: 100vh; /* Limit height */
-            overflow-y: auto; /* Enable vertical scrolling */
-            margin: 0; /* Remove margin */
-            padding: 0; /* Remove padding */
+        .profile-card {
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
         }
 
-        .sidebar ul {
-            list-style-type: none;
-            padding: 10px;
+        .profile-header {
+            padding: 2rem;
+            text-align: center;
         }
 
-        .sidebar ul li {
-            margin: 0;
-            padding: 10px 0; 
-        }
-
-        .sidebar ul li a {
-            margin-right: 10px;
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: var(--card-background);
+            border-radius: 50%;
+            margin: 0 auto;
             display: flex;
             align-items: center;
-            padding: 0px 0px;
-            color: black; /* Sidebar text remains black */
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .sidebar ul li a i {
-            color: #007bff; /* Make icons blue */
-            margin-right: 8px;
+        .profile-avatar i {
+            font-size: 3rem;
+            color: var(--primary-color);
         }
 
-        * Profile Box Styling */
-.profile-box {
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5); /* Blue shadow */
-    margin-bottom: 20px;
-    text-align: center;
-}
+        .profile-info {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+        }
+
+        .info-item label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-item p {
+            font-size: 1rem;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .sidebar {
+            background-color: #ffffff;
+            position: -webkit-sticky;
+            /* For Safari */
+            position: sticky;
+            top: 0;
+            /* Stick to the top */
+            max-height: 100vh;
+            /* Limit height */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+            margin: 0;
+            /* Remove margin */
+            padding: 0;
+            /* Remove padding */
+        }
+
+        .profile-nav {
+            padding: 1rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            list-style: none;
+        }
+
+        .nav-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+            list-style: none;
+        }
+        .nav-item i {
+            margin-right: 1rem;
+            width: 20px;
+        }
+
+        .nav-item.logout {
+            color: #ef4444;
+        }
+
+        .nav-item.logout:hover {
+            background-color: #fee2e2;
+        }
+
+        /* Profile Box Styling */
+        .profile-box {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5);
+            /* Blue shadow */
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
         /* Profile Image Container Styling */
         .profile-image-container {
@@ -112,7 +196,8 @@
 
         .profile-image-container i {
             font-size: 50px;
-            color: #007bff; /* Blue icon */
+            color: #007bff;
+            /* Blue icon */
         }
 
         .profile-image-container img {
@@ -136,36 +221,46 @@
                 height: auto;
                 z-index: 1000;
                 left: -100%;
-                transition: left 0.3s ease; /* Smooth transition */
+                transition: left 0.3s ease;
+                /* Smooth transition */
             }
+
             .sidebar.active {
                 left: 0;
             }
+
             .content {
                 margin-left: 0;
             }
+
             .navbar-custom .navbar-toggler {
                 display: block;
             }
         }
 
         .content {
-            margin-left: 0; /* Ensure no margin on left */
-            padding: 20px; /* Adjust padding as needed */
+            margin-left: 0;
+            /* Ensure no margin on left */
+            padding: 20px;
+            /* Adjust padding as needed */
         }
 
         /* Additional CSS for User Information */
         .profile-box p {
-            margin: 5px 0; /* Adjust vertical spacing between lines */
-            font-size: 16px; /* Optional: Set font size */
+            margin: 5px 0;
+            /* Adjust vertical spacing between lines */
+            font-size: 16px;
+            /* Optional: Set font size */
         }
-        /* User Information Section */
-.profile-box .text-center {
-    text-align: left; /* Left-align text */
-}
 
+        /* User Information Section */
+        .profile-box .text-center {
+            text-align: left;
+            /* Left-align text */
+        }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-custom">
         <a class="navbar-brand" href="#">
@@ -186,35 +281,55 @@
     <div class="container-box">
         <div class="sidebar">
             <!-- Profile Section Box -->
-            <div class="profile-box">
+            <div class="profile-header">
                 <!-- Profile Image Section -->
-                <label for="imageUpload" class="profile-image-container">
+                <label for="imageUpload" class="profile-avatar">
                     <i class="fas fa-user"></i>
-                    <img id="profileImage" src="{% static 'job_seeker/images/default_profile.png' %}" alt="Profile Picture" style="display: none;">
+                    <img id="profileImage" src="{% static 'job_seeker/images/default_profile.png' %}"
+                        alt="Profile Picture" style="display: none;">
                 </label>
                 <input type="file" id="imageUpload" accept="image/*" class="form-control-file">
 
-               <!-- User Information Section -->
-<div class="text-center mt-3">
-    <p><strong>ID Number:</strong></p>
-    <p>{{ user.profile.idnumber }}</p>
-    <p><strong>Email:</strong></p>
-    <p>{{ user.email }}</p>
-</div>
+                <!-- User Information Section -->
+                <div class="profile-info">
+                    <div class="info-item">
+                        <p><strong>ID Number:</strong></p>
+                        <p>{{ user.profile.idnumber }}</p>
+                    </div>
+                    <div class="info-item">
+                        <p><strong>Email:</strong></p>
+                        <p>{{ user.email }}</p>
+                    </div>
+                </div>
 
             </div>
 
-            <ul>
-                <hr>
-                <li><a href="{% url 'job_seeker_dashboard' %}" ><i class="fas fa-user"></i> My profile</a></li>
-                <hr>
-                <li><a href="{% url 'jobseeker.job_details' %}"><i class="fas fa-info-circle"></i> Job Details</a></li>
-                <li><a href="{% url 'application_tracking' %}"><i class="fas fa-search"></i> Application Tracking</a></li>
-                <li><a href="{% url 'interviews' %}"><i class="fas fa-calendar-check"></i> Interviews</a></li>
-                 <li><a href="{% url 'generate_cv' %}"><i class="fas fa-note"></i> Generate cv</a></li>
-                <hr>
-                <li><a href="{% url 'log_out' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-            </ul>
+            <nav class="profile-nav">
+                <a href="{% url 'job_seeker_dashboard' %}" class="nav-item">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="{% url 'jobseeker.job_details' %}" class="nav-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Job Details</span>
+                </a>
+                <a href="{% url 'application_tracking' %}" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>Application Tracking</span>
+                </a>
+                <a href="{% url 'interviews' %}" class="nav-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Interviews</span>
+                </a>
+                <a href="{% url 'generate_cv' %}" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Generate CV</span>
+                </a>
+                <a href="{% url 'log_out' %}" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
         </div>
 
         <div class="content">
@@ -224,10 +339,10 @@
                 {% endblock %}
             </div>
         </div>
-    </div>  
+    </div>
 
     <script src="{% static 'users/js/flash.js' %}"></script>
-    <script src="{% static 'job_seeker/js/script.js' %}"></script> 
+    <script src="{% static 'job_seeker/js/script.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -239,4 +354,5 @@
         });
     </script>
 </body>
+
 </html>

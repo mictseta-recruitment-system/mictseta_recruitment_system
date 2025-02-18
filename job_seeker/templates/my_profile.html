@@ -68,32 +68,159 @@
             color: #fff;
         }
 
-        .progress-container {
-            margin-bottom: 20px;
-        }
+        .dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
 
-        .progress {
-            height: 25px; /* Slightly reduce height for a more compact look */
-            border-radius: 5px; /* Rounded corners */
-            transition: width 0.4s ease; /* Smooth transition */
-            margin-bottom: 15px; /* Space between progress bars */
-        }
+/* Progress Section Styles */
+.progress-section {
+    margin-bottom: 2rem;
+}
 
-        .progress-heading {
-            text-align: center;
-            color: #007bff;
-            margin-bottom: 3px;
-        }
+.progress-heading {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
 
-        .progress-box {
-            background-color: #ffffff; /* White background for the box */
-            border: 1px solid #dddddd; /* Light gray border */
-            border-radius: 8px; /* Rounded corners */
-            padding: 20px; /* Inner padding for spacing */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-            margin-bottom: 0; /* No margin below the progress box */
-        }
+.progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
 
+.progress-card {
+    background: var(--card-background);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.progress-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.progress-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.progress-info i {
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+    color: var(--primary-color);
+}
+
+.progress-info span {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.progress {
+    height: 0.75rem;
+    background-color: var(--border-color);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+/* Profile Sections Styles */
+.profile-sections {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.section-card {
+    background: var(--card-background);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: var(--primary-color);
+    color: white;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+.section-content {
+    padding: 1.25rem;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 0.75rem;
+    border: none;
+}
+
+.modal-header {
+    background: var(--primary-color);
+    color: white;
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .progress-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+/* Button Styles */
+.btn-action {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+    transform: translateY(-1px);
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
         .modal-dialog {
             max-width: 800px; /* Set a maximum width for the modal */
             width: 100%; /* Set the width to 100% of the modal dialog */
@@ -159,37 +286,92 @@
     </nav>
 
     <!-- Progress Bars (Horizontal) -->
-    <div class="container">
-        <h2 class="progress-heading">Progress Overview</h2>
-        <div class="progress-box">
-            <div class="row progress-container">
-                <div class="col-6">
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_profile}}%;" aria-valuenow="{{stat_profile}}" aria-valuemin="0" aria-valuemax="100">{{stat_profile}}% Personal Details</div>
+    <div class="dashboard-container">
+        <div class="progress-section">
+            <h2 class="progress-heading">Profile Completion Status</h2>
+        <!-- <div > -->
+            <!-- <div class="row progress-container"> -->
+                <div class="progress-grid">
+                    <div class="progress-card">
+                        <div class="progress-info">
+                            <i class="fas fa-user"></i>
+                            <span>Personal Details</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_profile}}%;" aria-valuenow="{{stat_profile}}" aria-valuemin="0" aria-valuemax="100">{{stat_profile}}%</div>
+                        </div>
+                        
                     </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: {{stat_address}}%;" aria-valuenow="{{stat_address}}" aria-valuemin="0" aria-valuemax="100">{{stat_address}}% Address Details</div>
+                    <div class="progress-card">
+                        <div class="progress-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Address Details</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{stat_address}}%;" aria-valuenow="{{stat_address}}" aria-valuemin="0" aria-valuemax="100">
+                                {{stat_address}}%
+                            </div>
+                        </div>
                     </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_academic}}%;" aria-valuenow="{{stat_academic}}" aria-valuemin="0" aria-valuemax="100">{{stat_academic}}% Academic Qualifications</div>
+                    <div class="progress-card">
+                        <div class="progress-info">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Academic Qualifications</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_academic}}%;" aria-valuenow="{{stat_academic}}" aria-valuemin="0" aria-valuemax="100">
+                                {{stat_academic}}%
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="progress">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{stat_lang}}%;" aria-valuenow="{{stat_lang}}" aria-valuemin="0" aria-valuemax="100">{{stat_lang}}% Language Proficiency</div>
+                <div class="progress-grid">
+                    <div class="progress-card">
+                        <div class="progress-info">
+                            <i class="fas fa-language"></i>
+                            <span>Language Proficiency</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{stat_lang}}%;" aria-valuenow="{{stat_lang}}" aria-valuemin="0" aria-valuemax="100">
+                                {{stat_lang}}%
+                            </div>
+                        </div>
                     </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: {{stat_comp}}%;" aria-valuenow="{{stat_comp}}" aria-valuemin="0" aria-valuemax="100">{{stat_comp}}% Computer Skills</div>
+                    <div class="progress-card">
+                        <div class="progress-info">
+                            <i class="fas fa-laptop-code"></i>
+                            <span>Computer Skills</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{stat_comp}}%;" aria-valuenow="{{stat_comp}}" aria-valuemin="0" aria-valuemax="100">
+                                {{stat_comp}}%
+                            </div>
+                        </div>
                     </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_soft}}%;" aria-valuenow="{{stat_soft}}" aria-valuemin="0" aria-valuemax="100">{{stat_soft}}% Soft Skills</div>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-secondary" role="progressbar" style="width: {{stat_doc}}%;" aria-valuenow="{{stat_doc}}" aria-valuemin="0" aria-valuemax="100">{{stat_doc}}% Supporting Documents</div>
+                        <div class="progress-card">
+                            <div class="progress-info">
+                                <i class="fas fa-users"></i>
+                                <span>Soft Skills</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{stat_soft}}%;" aria-valuenow="{{stat_soft}}" aria-valuemin="0" aria-valuemax="100">
+                                    {{stat_soft}}%
+                                </div>
+                            </div>
+                        </div>
+                    <div class="progress-card">
+                        <div class="progress-info">
+                            <i class="fa fa-file"></i>
+                            <span>Supporting Documents</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-secondary" role="progressbar" style="width: {{stat_doc}}%;" aria-valuenow="{{stat_doc}}" aria-valuemin="0" aria-valuemax="100">{{stat_doc}}%</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            <!-- </div> -->
+        <!-- </div> -->
+        </div> 
     </div>
     
 
@@ -204,7 +386,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-user-circle fa-2x text-primary me-2"></i>
-                    <h5 class="mb-0">Personal Details</h5>
+                    <h5 class="ml-2">Personal Details</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#personalDetails" aria-expanded="false" aria-controls="personalDetails">
@@ -268,7 +450,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-map-marker-alt fa-2x text-primary me-2"></i>
-                    <h5>Address Details</h5>
+                    <h5 class="ml-2">Address Details</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#addressDetails" aria-expanded="false" aria-controls="addressDetails">
@@ -307,7 +489,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-graduation-cap fa-2x text-primary me-2"></i>
-                    <h5>Academic Qualifications</h5>
+                    <h5 class="ml-2">Academic Qualifications</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#academicQualifications" aria-expanded="false" aria-controls="academicQualifications">
@@ -355,7 +537,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-language fa-2x text-primary me-2"></i>
-                    <h5>Language Proficiency</h5>
+                    <h5 class="ml-2">Language Proficiency</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#languageProficiency" aria-expanded="false" aria-controls="languageProficiency">
@@ -402,7 +584,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-laptop-code fa-2x text-primary me-2"></i>
-                    <h5>Computer Skills</h5>
+                    <h5 class="ml-2">Computer Skills</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#computerSkills" aria-expanded="false" aria-controls="computerSkills">
@@ -447,7 +629,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-users fa-2x text-primary me-2"></i>
-                    <h5>Soft Skills</h5>
+                    <h5 class="ml-2">Soft Skills</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#softSkills" aria-expanded="false" aria-controls="softSkills">
@@ -492,7 +674,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-briefcase fa-2x text-primary me-2"></i>
-                    <h5>Working Experience</h5>
+                    <h5 class="ml-2">Working Experience</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#workingExperience" aria-expanded="false" aria-controls="workingExperience">
@@ -541,7 +723,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-user fa-2x text-primary me-2"></i>
-                    <h5>References</h5>
+                    <h5 class="ml-2">References</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#references" aria-expanded="false" aria-controls="references">
@@ -588,7 +770,7 @@
             <div class="section-title d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-file-alt fa-2x text-primary me-2"></i>
-                    <h5>Supporting Documents</h5>
+                    <h5 class="ml-2">Supporting Documents</h5>
                 </div>
                 <div>
                     <button class="btn btn-primary rounded-circle shadow" data-toggle="collapse" data-target="#supportingDocuments" aria-expanded="false" aria-controls="supportingDocuments">
