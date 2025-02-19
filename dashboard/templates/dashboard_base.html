@@ -171,19 +171,42 @@
     .dropdown-container {
       position: relative;
     }
-    .menu-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      margin: 5px 0;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      white-space: nowrap;
-    }
-    .menu-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
+    /* Sidebar Text Color */
+.sidebar {
+  background: linear-gradient(180deg, var(--primary-dark), var(--primary-light));
+  color: var(--white); /* Ensure text is white */
+}
+
+/* Sidebar Menu Items */
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  margin: 5px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  color: var(--white); /* Ensure text stays white */
+  text-decoration: none; /* Remove underline for links */
+}
+
+/* Sidebar Hover Effect */
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.2); /* Light hover effect */
+  transform: translateX(5px); /* Slight move effect */
+  color: var(--white); /* Keep text white on hover */
+}
+
+/* Sidebar Active and Focus State */
+.menu-item:focus,
+.menu-item:active,
+.menu-item.selected {
+  background: rgba(255, 255, 255, 0.3); /* Highlight selected */
+  font-weight: bold;
+  color: var(--white); /* Ensure text remains white */
+  outline: none; /* Remove focus outline */
+}
+
     .menu-item i {
       font-size: 1.2rem;
       width: 30px;
@@ -795,6 +818,7 @@
         width: 100%;
         text-align: center;
       }
+      
     }
   </style>
 
