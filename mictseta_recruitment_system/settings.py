@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     'dashboard',
     'job_seeker',
     'task_manager',
-    'easyaudit',
     'rest_api',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -65,6 +64,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'rest_framework.authtoken',    
     'rest_framework_simplejwt.token_blacklist',
+    'easyaudit',
     
     
 ]
@@ -277,7 +277,7 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'rest_api/auth/login/'
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email' 
+ACCOUNT_LOGIN_METHODS = {'email'} 
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True  
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True 
 # AUTH_USER_MODEL ='authenticate.Users'

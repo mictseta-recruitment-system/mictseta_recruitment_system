@@ -11,3 +11,4 @@ venv/
 /users/__pycache__
 /users/__pycache__
 sqlite3
+*mict_env
