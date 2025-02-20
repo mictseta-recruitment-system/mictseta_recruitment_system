@@ -6,50 +6,13 @@ Employee Panel
 
 {% block scripts %}
 <style>
-    .notif-card {
-        border: 1px solid #ddd;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .notif-card-content {
-        font-size: 1rem;
-    }
-    .notif-status {
-        display: inline-block;
-        padding: 5px 10px;
-        margin-left: 10px;
-        font-size: 0.8rem;
-    }
-    .notif-completed {
-        background-color: #28a745;
-        color: white;
-    }
-    .notif-pending {
-        background-color: #ffc107;
-        color: white;
-    }
-    .notif-action-btn {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 8px 15px;
-        background-color: #007bff;
-        color: white;
-        border-radius: 5px;
-        text-decoration: none;
-    }
-    .notif-action-btn:hover {
-        background-color: #0056b3;
-    }
-
     /* Responsive Styles */
     @media (max-width: 768px) {
         .notif-container {
             max-height: 300px; /* Adjust height for mobile */
         }
-        .card {
-            max-height: 250px; /* Adjust height for mobile */
+        .notif-card {
+            max-height: none; /* Allow cards to show all content */
         }
         .notif-card-content {
             font-size: 0.9rem; /* Smaller font size for mobile */
@@ -58,8 +21,8 @@ Employee Panel
             font-size: 0.7rem; /* Smaller status font size */
         }
         .notif-action-btn {
-            padding: 6px 12px; /* Smaller button padding */
-            font-size: 0.8rem; /* Smaller button font size */
+            padding: 4px 8px; /* Smaller button padding */
+            font-size: 0.7rem; /* Smaller button font size */
         }
     }
 </style>
@@ -72,15 +35,307 @@ Employee Panel
 {% endblock %}
 
 {% block description %}
- 
 {% endblock %}
 
 {% block content %}
-<div class="row mt-4">
-  <!-- Left Column for Notifications -->
-  <div class="col-md-6 col-sm-12">
-    <div class="noti-body mx-2">
-        <div class="notif-container" style="max-height: 400px; overflow-y: auto;">
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f8f9fa; /* Light background for the page */
+    }
+
+    /* Enhanced Titles */
+    .dashboard-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #007bff, #00bfff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        margin-bottom: 20px;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .dashboard-title i {
+        margin-right: 10px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Card Styling */
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+        background: linear-gradient(90deg, #007bff, #00bfff);
+        color: white;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .card-header h5 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .card-header h5 i {
+        margin-right: 10px;
+    }
+
+    /* Notification Cards */
+    .notif-container {
+        height: 50%;
+        max-height: 20vh; /* Set a maximum height for the container */
+        overflow-y: auto; /* Enable vertical scrolling */
+        display: flex;
+        flex-direction: column;
+        width: 40%; /* Increase the width of the container */
+        max-width: 1000px; /* Set a maximum width for larger screens */
+        margin: 0 auto; /* Center the container */
+    }
+
+    .notif-card {
+        width: 100%; /* Set to 100% for full width */
+        display: flex;
+        align-items: center;
+        flex-direction: column; /* Ensure content stacks vertically */
+        margin-bottom: 10px; /* Space between cards */
+        padding: 15px; /* Padding inside the card */
+        background: #fff; /* Card background color */
+        border: 1px solid #e0e0e0; /* Card border */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        transition: transform 0.2s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    }
+
+    .notif-card:hover {
+        transform: translateY(-2px); /* Lift effect on hover */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    }
+
+    .notif-card-content {
+        width: 100%;
+    }
+
+    .notif-status {
+        margin-left: 10px; /* Space between vacancy and status */
+    }
+
+    .notif-action-btn {
+        padding: 6px 12px; /* Button padding */
+        background: #007bff; /* Button background color */
+        color: white; /* Button text color */
+        border-radius: 4px; /* Rounded button corners */
+        text-decoration: none; /* Remove underline */
+        transition: background 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+    }
+
+    .notif-action-btn:hover {
+        background: #0056b3; /* Darker background on hover */
+        transform: scale(1.05); /* Slightly enlarge on hover */
+    }
+
+    .notif-note {
+        font-size: 1rem; /* Font size for note */
+        margin-bottom: 5px; /* Space below note */
+        color: #555; /* Gray color for note */
+    }
+
+    .notif-timestamp {
+        font-size: 0.875rem; /* Smaller font for timestamp */
+        color: #666; /* Gray color for timestamp */
+    }
+
+    /* Badges */
+    .badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
+    .bg-success {
+        background: #28a745;
+    }
+
+    .bg-warning {
+        background: #ffc107;
+    }
+
+    .bg-danger {
+        background: #dc3545;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: #6c757d;
+    }
+
+    .empty-state p {
+        font-size: 1.2rem;
+        color: #6c757d;
+    }
+
+    /* Buttons */
+    .btn-outline-light {
+        border: 1px solid #fff;
+        color: #fff;
+        transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .btn-outline-light:hover {
+        background: #fff;
+        color: #007bff;
+    }
+
+    /* Chart Container */
+    .chart-container {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    /* Card Header (h4) Styling */
+h4.card-header {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #007bff, #00bfff); /* Gradient background */
+    color: white; /* White text for contrast */
+    padding: 15px 20px; /* Padding for spacing */
+    border-radius: 12px 12px 0 0; /* Rounded top corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+h4.card-header i {
+    margin-right: 10px; /* Space between icon and text */
+}
+
+h4.card-header:hover {
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Card Content Styling */
+.card-content {
+    padding: 20px;
+    background: #fff; /* White background for content */
+    border-radius: 0 0 12px 12px; /* Rounded bottom corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.card-content:hover {
+    transform: translateY(-2px); /* Lift effect on hover */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+/* Status Badges */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px; /* Pill-shaped badges */
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase; /* Uppercase text for badges */
+}
+
+.badge.bg-success {
+    background: #28a745; /* Green for success */
+}
+
+.badge.bg-warning {
+    background: #ffc107; /* Yellow for warning */
+    color: #000; /* Black text for contrast */
+}
+
+.badge.bg-danger {
+    background: #dc3545; /* Red for danger */
+}
+
+/* Hover Effects for Buttons */
+.btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.btn-primary {
+    background: #007bff; /* Primary button color */
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #0056b3; /* Darker shade on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.btn-outline-light {
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background: #fff;
+    color: #007bff;
+}
+
+/* Animation for Cards */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-in-out; /* Fade-in animation for cards */
+}
+
+</style>
+
+
+
+<!-- Left Column for Notifications -->
+<div class="col-12 h-100"> <!-- Added h-100 for full height -->
+    <div class="noti-body">
+        <div class="notification-container" style="max-height: 400px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
             {% for alert in alerts %}
                 {% if alert.vacancy.assigned_to == user and user.staffprofile.department == "HR" %}
                     <div class="notif-card">
@@ -152,75 +407,73 @@ Employee Panel
             {% endfor %}
         </div>
     </div>
-  </div>
+</div>
 
-  <!-- Right Column for Pending Tasks -->
-  <div class="col-md-6 col-sm-12">
+<div class="row">
+   <!-- Left Column for Notifications -->
+<div class="col-md-6 col-sm-12 mb-4"> <!-- Added mb-4 for margin-bottom -->
+    <!-- Notification Container for Staff -->
+    <div class="card shadow rounded-2" style="max-height: 400px;"> <!-- Increased max-height -->
+        <h5 class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+            <span>
+                <i class="fas fa-bell text-white"></i> Notifications
+            </span>
+            <a href="{% url 'dashboard.get_notifications' %}" class="btn btn-outline-light p-0 px-2">View All</a>
+        </h5>
+        <div class="card-body" style="overflow-y: auto;"> <!-- Enable vertical scrolling -->
+            <ul class="list-group list-group-flush">
+                {% if notifications %}
+                    {% for notific in notifications %}  <!-- Removed slice:":3" to show all notifications -->
+                        {% if notific.is_seen %}
+                            <!-- Skip seen notifications -->
+                        {% elif user.is_superuser or user.id == notific.user.id %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold text-left">
+                                        {{ notific.action }} 
+                                        {% if notific.status == "open" %}
+                                            <button class="btn btn-success text-white p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
+                                        {% elif notific.status == "waiting" or notific.status == "pending" %}
+                                            <button class="btn btn-warning text-dark p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
+                                        {% else %}
+                                            <button class="btn btn-danger text-white p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
+                                        {% endif %}
+                                    </div>
+                                    {{ notific.job_title }}, {{ notific.timestamp }}
+                                </div>
+                                <a href="{% url 'dashboard.delete_notifications' notific.id %}">
+                                    <span class="badge text-bg-danger rounded-pill">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fa fa-bell-slash fa-3x text-muted"></i>
+                        <p class="text-muted">No notifications available.</p>
+                    </div>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
 
-      <!-- Notification Container for Staff -->
-      <div class="card shadow rounded-2 mb-4" style="max-height:330px;">
-          <h5 class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-              <span>
-                  <i class="fas fa-bell text-white"></i> Notifications
-              </span>
-              <a href="{% url 'dashboard.get_notifications' %}" class="btn btn-outline-light p-0 px-2">View All</a>
-          </h5>
-          <div class="card-body" style="overflow-y: scroll;">
-              <ul class="list-group list-group-flush">
-                  {% if notifications %}
-                      {% for notific in notifications %}
-                          {% if notific.is_seen %}
-                          {% elif user.is_superuser or user.id == notific.user.id %}
-                              <li class="list-group-item d-flex justify-content-between align-items-start">
-                                  <div class="ms-2 me-auto">
-                                      <div class="fw-bold text-left">
-                                          {{ notific.action }} 
-                                          {% if notific.status == "open" %}
-                                              <button class="btn btn-success text-white p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
-                                          {% elif notific.status == "waiting" or notific.status == "pending" %}
-                                              <button class="btn btn-warning text-dark p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
-                                          {% else %}
-                                              <button class="btn btn-danger text-white p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
-                                          {% endif %}
-                                      </div>
-
-                                      {{ notific.job_title }}, {{ notific.timestamp }}
-                                  </div>
-                                  <a href="{% url 'dashboard.delete_notifications' notific.id %}">
-                                      <span class="badge text-bg-danger rounded-pill">
-                                          <i class="fa fa-times" aria-hidden="true"></i>
-                                      </span>
-                                  </a>
-                              </li>
-                          {% endif %}
-                      {% endfor %}
-                  {% else %}
-                      <div class="d-flex justify-content-center">
-                          <i class="fa fa-bell-slash fa-5x text-danger" aria-hidden="true"></i>
-                      </div>
-                      <div class="d-flex justify-content-center mt-5">
-                          <h5><b>Oops</b>, You don't have <b class="text-danger">Notifications</b> yet </h5>
-                      </div>
-                  {% endif %}
-              </ul>
-          </div>
-      </div>
-      
-      <!-- Pending Tasks Chart Below Notifications -->
-      <div class="mb-4">
-          <div class="card shadow rounded-2">
-              <h5 class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-                  <span>
-                      <i class="fas fa-tasks text-white"></i> Pending Tasks
-                  </span>
-              </h5>
-              <div class="card-body shadow rounded-2" style="width:100%;height:100%;">
-                  <canvas id="pendingTask" style="width:100%;height:100%;"></canvas>
-              </div>
-          </div>
-      </div>
-
-  </div>
+    <!-- Right Column for Pending Tasks -->
+    <div class="col-md-6 col-sm-12 mb-4"> <!-- Added mb-4 for margin-bottom -->
+        <!-- Pending Tasks Chart -->
+        <div class="card shadow rounded-2">
+            <h5 class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                <span>
+                    <i class="fas fa-tasks text-white"></i> Pending Tasks
+                </span>
+            </h5>
+            <div class="card-body shadow rounded-2" style="width:100%;height:100%;">
+                <canvas id="pendingTask" style="width:100%;height:100%;"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
@@ -233,7 +486,7 @@ Employee Panel
 {% block chart %}
 <script>
     let category = JSON.parse('{{ cats|escapejs }}');  // Parse the JSON data
-    let datas = JSON.parse('{{ datas|escapejs }}');  // Same for the chart data
+    let datas = JSON.parse ('{{ datas|escapejs }}');  // Same for the chart data
 
     var ctxpendingTask = document.getElementById('pendingTask').getContext('2d');
     var pendingTask = new Chart(ctxpendingTask, {
