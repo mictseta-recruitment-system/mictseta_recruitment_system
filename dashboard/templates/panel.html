@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <style>
-  /* Reduce card size */
+  /* Adjust card size */
   .card {
     font-size: 0.9rem;
   }
@@ -30,252 +30,134 @@
     font-size: 1.5rem;
   }
 
-    .card-title {
-    font-size: 4.5rem; /* Increased font size for headings */
-    margin-bottom: 1rem; /* Space below the title */
-  }
-  .card-header {
-    background-color: #f8f9fa; /* Light background for card header */
-    border-bottom: 1px solid #dee2e6; /* Border for header */
-  }
-  .list-group-item {
-    padding: 0.75rem 1.25rem; /* Padding for list items */
-  }
-  .list-group-item .fw-bold {
-    font-size: 1rem; /* Font size for notification actions */
-  }
-  
-
   /* Chart Styles */
   canvas {
     border-radius: 0.2rem; /* Rounded corners for charts */
     background-color: #f0f0f0; /* Light background for canvas */
   }
 
-  
+  /* Layout for Left Side (Pending Tasks + Notifications) */
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Layout for Right Side (Charts) */
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Adjust width on larger screens */
+  @media (min-width: 992px) {
+    .col-md-6 {
+      width: 50%;
+    }
+  }
+
+  /* Adjust smaller screens */
+  @media (max-width: 992px) {
+    .col-md-6 {
+      width: 100%;
+    }
+  }
 </style>
 
-<!-- Info Cards Section -->
-<div class="row">
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #007bff;">
-      <div class="card-body text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Dashboard</h5>
-          </div>
-          <i class="fas fa-tachometer-alt fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #28a745;">
-      <div class="card-body text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Employees</h5>
-          </div>
-          <i class="fas fa-users fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #ffc107;">
-      <div class="card-body text-dark">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Recruitment</h5>
-          </div>
-          <i class="fas fa-briefcase fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #dc3545;">
-      <div class="card-body text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Leave</h5>
-          </div>
-          <i class="fas fa-calendar-alt fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #17a2b8;">
-      <div class="card-body text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Attendance</h5>
-          </div>
-          <i class="fas fa-clock fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #6c757d;">
-      <div class="card-body text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Task Manager</h5>
-          </div>
-          <i class="fas fa-tasks fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #343a40;">
-      <div class="card-body text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Notifications</h5>
-          </div>
-          <i class="fas fa-bell fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #f8f9fa; color: #343a40;">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Audit Log</h5>
-          </div>
-          <i class="fas fa-clipboard-list fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-2 col-md-4 col-sm-6 p-2 draggable">
-    <div class="card mb-4 shadow-sm border-0 rounded-lg" style="background-color: #6c757d;">
-      <div class="card-body text-white">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h5 class="card-title mb-0">Backup/Restore</h5>
-          </div>
-          <i class="fas fa-database fa-2x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<!-- Charts Section -->
 <div class="row mt-3">
-  <!-- Job vs Applicant Chart -->
-  <div class="col-lg-6 p-2">
-    <div class="card mb-4 border-0 shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title text-dark fw-bold">
-          <i class="fas fa-briefcase me-2 text-secondary"></i> <!-- Job icon -->
-          Job vs Applicant
-        </h5>
-        <canvas id="salesChart"></canvas>
-      </div>
-    </div>
-  </div>
-  
-  <!-- User Growth Chart -->
-  <div class="col-lg-6 p-2">
-    <div class="card mb-4 border-0 shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title text-dark fw-bold">
-          <i class="fas fa-users me-2 text-secondary"></i> <!-- User icon -->
-          User Growth Chart
-        </h5>
-        <canvas id="userGrowthChart"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Pending Tasks & Notifications Section -->
-<div class="row">
-  <!-- Pending Tasks Chart -->
-  <div class="col-lg-6 p-2">
-    <div class="card border-0 shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title text-dark fw-bold">
-          <i class="fas fa-tasks me-2 text-secondary"></i> <!-- Tasks icon -->
-          Pending Tasks
-        </h5>
-        <canvas id="pendingTask"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- Notifications Section -->
-  <div class="col-lg-6 p-2">
-    <div class="card shadow-lg rounded-2" style="max-height: 350px;">
-      <h5 class="card-header bg-light d-flex justify-content-between align-items-center">
-        <div>
-          <i class="fas fa-bell text-dark me-2"></i>
-          <span class="fw-bold text-dark">Notifications</span>
+  <!-- Left Side: Pending Tasks and Notifications -->
+  <div class="col-md-6">
+    <div class="left-column">
+      <!-- Pending Tasks -->
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-dark fw-bold">
+            <i class="fas fa-tasks me-2 text-secondary"></i> Pending Tasks
+          </h5>
+          <canvas id="pendingTask"></canvas>
         </div>
-        <a href="{% url 'dashboard.get_notifications' %}" class="btn btn-outline-info btn-sm">
-          View All
-        </a>
-      </h5>
-      <div class="card-body p-0" style="overflow-y: auto;">
-        <ul class="list-group list-group-flush">
-          {% if notifications %}
-            {% for notific in notifications %}
-              {% if notific.is_seen %}
-              {% else %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <div>
-                    <div class="fw-bold">
-                      {{ notific.action }}
-                      {% if notific.status == "Approved" or notific.status == "open" %}
-                        <span class="badge bg-success text-white mx-2 p-1">{{ notific.status }}</span>
-                      {% elif notific.status == "waiting" or notific.status == "Pending" %}
-                        <span class="badge bg-warning text-dark mx-2 p-1">{{ notific.status }}</span>
-                      {% else %}
-                        <span class="badge bg-danger text-white mx-2 p-1">{{ notific.status }}</span>
-                      {% endif %}
+      </div>
+
+      <!-- Notifications -->
+      <div class="card shadow-lg rounded-2 mb-3" style="max-height: 350px;">
+        <h5 class="card-header bg-light d-flex justify-content-between align-items-center">
+          <div>
+            <i class="fas fa-bell text-dark me-2"></i>
+            <span class="fw-bold text-dark">Notifications</span>
+          </div>
+          <a href="{% url 'dashboard.get_notifications' %}" class="btn btn-outline-info btn-sm">
+            View All
+          </a>
+        </h5>
+        <div class="card-body p-0" style="overflow-y: auto;">
+          <ul class="list-group list-group-flush">
+            {% if notifications %}
+              {% for notific in notifications %}
+                {% if not notific.is_seen %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <div class="fw-bold">
+                        {{ notific.action }}
+                        {% if notific.status == "Approved" %}
+                          <span class="badge bg-success text-white mx-2 p-1">{{ notific.status }}</span>
+                        {% elif notific.status == "Pending" %}
+                          <span class="badge bg-warning text-dark mx-2 p-1">{{ notific.status }}</span>
+                        {% else %}
+                          <span class="badge bg-danger text-white mx-2 p-1">{{ notific.status }}</span>
+                        {% endif %}
+                      </div>
+                      <small>{{ notific.job_title }}, {{ notific.timestamp }}</small>
                     </div>
-                    <small>{{ notific.job_title }}, {{ notific.timestamp }}</small>
-                  </div>
-                  <a href="{% url 'dashboard.delete_notifications' notific.id %}" class="text-danger">
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          {% else %}
-            <div class="text-center p-4">
-              <i class="fa fa-bell-slash fa-3x text-muted mb-3"></i>
-              <p>No Notifications yet</p>
-            </div>
-          {% endif %}
-        </ul>
+                    <a href="{% url 'dashboard.delete_notifications' notific.id %}" class="text-danger">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <div class="text-center p-4">
+                <i class="fa fa-bell-slash fa-3x text-muted mb-3"></i>
+                <p>No Notifications yet</p>
+              </div>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Charts -->
+  <div class="col-md-6">
+    <div class="right-column">
+      <!-- Job vs Applicant Chart -->
+      <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-dark fw-bold">
+            <i class="fas fa-briefcase me-2 text-secondary"></i> Job vs Applicant
+          </h5>
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+
+      <!-- User Growth Chart -->
+      <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title text-dark fw-bold">
+            <i class="fas fa-users me-2 text-secondary"></i> User Growth Chart
+          </h5>
+          <canvas id="userGrowthChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
 
 {% endblock %}
 
 {% block chart %}
 <script>
+  // User Growth Chart
   var ctxUserGrowth = document.getElementById('userGrowthChart').getContext('2d');
   var userGrowthChart = new Chart(ctxUserGrowth, {
     type: 'bar',
@@ -299,17 +181,15 @@
     }
   });
 
-  let category = JSON.parse('{{ cats|escapejs }}');
-  let datas = JSON.parse('{{ datas|escapejs }}');
-
+  // Pending Tasks Chart
   var ctxpendingTask = document.getElementById('pendingTask').getContext('2d');
   var pendingTask = new Chart(ctxpendingTask, {
     type: 'bar',
     data: {
-      labels: category,
+      labels: category, // Category data should be available from the view
       datasets: [{
-        label: 'Pending Task',
-        data: datas,
+        label: 'Pending Tasks',
+        data: datas, // Data should be available from the view
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1
@@ -325,5 +205,4 @@
     }
   });
 </script>
-
 {% endblock %}

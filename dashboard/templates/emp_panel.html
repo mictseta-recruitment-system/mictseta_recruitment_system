@@ -1,327 +1,261 @@
 {% extends 'dashboard_base.html' %}
 
-{% block title%}
+{% block title %}
 Employee Panel
 {% endblock %}
 
 {% block scripts %}
+<style>
+    .notif-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .notif-card-content {
+        font-size: 1rem;
+    }
+    .notif-status {
+        display: inline-block;
+        padding: 5px 10px;
+        margin-left: 10px;
+        font-size: 0.8rem;
+    }
+    .notif-completed {
+        background-color: #28a745;
+        color: white;
+    }
+    .notif-pending {
+        background-color: #ffc107;
+        color: white;
+    }
+    .notif-action-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+    .notif-action-btn:hover {
+        background-color: #0056b3;
+    }
 
-.row {
-    text-align: center;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-#countdownHeader {
-    color: #2c3e50;
-    margin-bottom: 20px;
-}
-
-.countdown {
-    display: flex;
-    justify-content: center;
-}
-
-.countdown-item {
-    margin: 0 10px;
-    text-align: center;
-}
-
-.countdown-value {
-    font-size: 2em;
-    color: #3498db; /* Light blue color */
-    background: #e6f7ff; /* Light blue background */
-    padding: 10px 20px;
-    border-radius: 5px;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-.countdown-label {
-    color: #34495e; /* Darker text color */
-    font-size: 0.8em;
-}
-#startShiftButton {
-    background-color: #3498db; /* Light blue color */
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#startShiftButton:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-}
-
-  
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .notif-container {
+            max-height: 300px; /* Adjust height for mobile */
+        }
+        .card {
+            max-height: 250px; /* Adjust height for mobile */
+        }
+        .notif-card-content {
+            font-size: 0.9rem; /* Smaller font size for mobile */
+        }
+        .notif-status {
+            font-size: 0.7rem; /* Smaller status font size */
+        }
+        .notif-action-btn {
+            padding: 6px 12px; /* Smaller button padding */
+            font-size: 0.8rem; /* Smaller button font size */
+        }
+    }
+</style>
 {% endblock %}
-
-
-
 
 {% load static %}
 
 {% block breadcrumbs %}
-      <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-     
-      
-     {% endblock %}
+  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+{% endblock %}
 
-{% block description %} on this page, view all stats and activities {% endblock %}
+{% block description %}
+ 
+{% endblock %}
 
 {% block content %}
-
-<!-- shift code -->
-<!-- <input type="text" name="{{start_time}}" value="{{start_time}}" id="shift_start" hidden>
-<input type="text" name="{{end_time}} " value="{{end_time}}" id="shift_end" hidden>
-<input type="text" name="{{status}}" value="{{status}}" id="status" hidden>
-<input type="text" name="link" value="{% url 'end_attendace' user.id %}" id="links" hidden> -->
-
 <div class="row mt-4">
-    <!-- <div class="col-12 col-lg-6 shadow-lg rounded p-3 ">
-        <div>
-            <h3 id="countdownHeader">Shift starts in</h3>
-            <div id="countdown" class="countdown">
-                <div class="countdown-item">
-                    <div class="countdown-value" id="hours">00</div>
-                    <div class="countdown-label">Hours</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-value" id="minutes">00</div>
-                    <div class="countdown-label">Minutes</div>
-                </div>
-                <div class="countdown-item">
-                    <div class="countdown-value" id="seconds">00</div>
-                    <div class="countdown-label">Seconds</div>
-                </div>
-            </div>
-            <button onclick="attend(`{% url 'mark_attendence' user.id %}`)" id="startShiftButton">Start Shift</button>
-            
-        </div>
-    </div> -->
-
-<div class="col-6">
+  <!-- Left Column for Notifications -->
+  <div class="col-md-6 col-sm-12">
     <div class="noti-body mx-2">
-        <div class="notif-container">
-
+        <div class="notif-container" style="max-height: 400px; overflow-y: auto;">
             {% for alert in alerts %}
-            {% if alert.vacancy.assigned_to == user and user.staffprofile.department == "HR" %}
-            <div class="notif-card">
-                <div class="notif-card-content">
-                    <h3>{{alert.vacancy}} 
-                        
-                        {% if user.staffprofile.department == "CEO" and alert.vacancy.req_ceo_approval %}
-                        <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_ceo_approval%}
-                            <span class="notif-status notif-pending">Pending</span>
+                {% if alert.vacancy.assigned_to == user and user.staffprofile.department == "HR" %}
+                    <div class="notif-card">
+                        <div class="notif-card-content">
+                            <h3>{{ alert.vacancy }}
+                                {% if user.staffprofile.department == "CEO" and alert.vacancy.req_ceo_approval %}
+                                    <span class="notif-status notif-completed">Completed</span>
+                                {% elif user.staffprofile.department == "CEO" and not alert.vacancy.req_ceo_approval %}
+                                    <span class="notif-status notif-pending">Pending</span>
+                                {% endif %}
+                                {% if user.staffprofile.department == "FINANCE" and alert.vacancy.req_finance_approval %}
+                                    <span class="notif-status notif-completed">Completed</span>
+                                {% elif user.staffprofile.department == "CEO" and not alert.vacancy.req_finance_approval %}
+                                    <span class="notif-status notif-pending">Pending</span>
+                                {% endif %}
+                                {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or alert.vacancy.status == "open" and alert.step < 4 or alert.step == 5 and alert.status == "approved" %}
+                                    <span class="notif-status notif-completed">Completed</span>
+                                {% elif user.staffprofile.department == "HR" and alert.vacancy.status == "waiting" or alert.vacancy.status == "open" and alert.step > 4 %}
+                                    <span class="notif-status notif-pending">Pending</span>
+                                {% endif %}
+                            </h3>  
+                            <p class="notif-note">{{ alert.note }}</p>
+                            <p class="notif-timestamp">timestamp: {{ alert.timestamp }}</p>
+                        </div>
+                        {% if alert.step == 5 or alert.step == 4 %}
+                            <a href="{% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
+                        {% else %}
+                            <a href="/dashboard/edit_job/{{ alert.vacancy.id }}" class="notif-action-btn">View</a>
                         {% endif %}
-
-                        {% if user.staffprofile.department == "FINANCE" and alert.vacancy.req_finance_approval %}
-                        <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_finance_approval%}
-                            <span class="notif-status notif-pending">Pending</span>
+                        {% if alert.step == 6 %}
+                            <a href="{% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
                         {% endif %}
-
-                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or alert.vacancy.status == "open" and alert.step < 4 or alert.step == 5 and alert.status == "approved"  %}
-                        <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "HR" and  alert.vacancy.status == "waiting" or alert.vacancy.status == "open" and alert.step > 4 %}
-                            <span class="notif-status notif-pending">Pending</span>
+                    </div>
+                {% elif user.staffprofile.department == "LINE" or user.staffprofile.department == "CEO" or user.staffprofile.department == "FINANCE" %}
+                    <div class="notif-card">
+                        <div class="notif-card-content">
+                            <h3>{{ alert.vacancy }}
+                                {% if user.staffprofile.department == "CEO" and alert.vacancy.req_ceo_approval %}
+                                    <span class="notif-status notif-completed">Completed</span>
+                                {% elif user.staffprofile.department == "CEO" and not alert.vacancy.req_ceo_approval %}
+                                    <span class="notif-status notif-pending">Pending</span>
+                                {% endif %}
+                                {% if user.staffprofile.department == "FINANCE" and alert.vacancy.req_finance_approval %}
+                                    <span class="notif-status notif-completed">Completed</span>
+                                {% elif user.staffprofile.department == "CEO" and not alert.vacancy.req_finance_approval %}
+                                    <span class="notif-status notif-pending">Pending</span>
+                                {% endif %}
+                                {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or user.staffprofile.department == "HR" and alert.vacancy.status == "open" or user.staffprofile.department == "HR" and alert.step < 5 and alert.status == "pending" %}
+                                    <span class="notif-status notif-completed">Completed</span>
+                                {% elif user.staffprofile.department == "HR" and alert.vacancy.status == "waiting" %}
+                                    <span class="notif-status notif-pending">Pending</span>
+                                {% endif %}
+                                {% if user.staffprofile.department == "LINE" and alert.status == "approved" %}
+                                    <span class="notif-status notif-completed">Completed</span>
+                                {% elif user.staffprofile.department == "LINE" and alert.status == "pending" %}
+                                    <span class="notif-status notif-pending">Pending</span>
+                                {% endif %}
+                            </h3>  
+                            <p class="notif-note">{{ alert.note }}</p>
+                            <p class="notif-timestamp">timestamp: {{ alert.timestamp }}</p>
+                        </div>
+                        {% if alert.step == 5 or alert.step == 4 %}
+                            <a href="{% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
+                        {% else %}
+                            <a href="/dashboard/edit_job/{{ alert.vacancy.id }}" class="notif-action-btn">View</a>
                         {% endif %}
-
-                      </h3>  
-                    <p class="notif-note">{{alert.note}}</p>
-                    <p class="notif-timestamp">timestamp: {{alert.timestamp}}</p>
-                </div>
-                {% if alert.step == 5  or alert.step == 4 %}
-                    <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
-
-                {% else %}
-
-                <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
+                    </div>
                 {% endif %}
-                {% if alert.step == 6 %}
-                    <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
-
-                {% endif %}
-            </div>
-            
-
-             {% elif  user.staffprofile.department == "LINE" or  user.staffprofile.department == "CEO" or user.staffprofile.department == "LINE" or  user.staffprofile.department == "FINANCE"  %}
-            <div class="notif-card">
-                <div class="notif-card-content">
-                    <h3>{{alert.vacancy}} 
-                        
-                        {% if user.staffprofile.department == "CEO" and alert.vacancy.req_ceo_approval %}
-                        <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_ceo_approval%}
-                            <span class="notif-status notif-pending">Pending</span>
-                        {% endif %}
-
-                        {% if user.staffprofile.department == "FINANCE" and alert.vacancy.req_finance_approval %}
-                        <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "CEO" and not alert.vacancy.req_finance_approval%}
-                            <span class="notif-status notif-pending">Pending</span>
-                        {% endif %}
-
-                        {% if user.staffprofile.department == "HR" and alert.vacancy.status == "pending" or user.staffprofile.department == "HR" and alert.vacancy.status == "open" or user.staffprofile.department == "HR" and alert.vacancy.step < 5 and alert.status == "pending" %}
-
-                        <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "HR" and  alert.vacancy.status == "waiting" %}
-                            <span class="notif-status notif-pending">Pending</span>
-                        {% endif %}
-
-                        {% if user.staffprofile.department == "LINE" and alert.status == "approved" %}
-                        <span class="notif-status notif-completed">Completed</span>
-                        {% elif  user.staffprofile.department == "LINE" and alert.status == "pending" %}
-                            <span class="notif-status notif-pending">Pending</span>
-                        {% endif %}
-
-                      </h3>  
-                    <p class="notif-note">{{alert.note}}</p>
-                    <p class="notif-timestamp">timestamp: {{alert.timestamp}}</p>
-                </div>
-                {% if alert.step == 5  or alert.step == 4 %}
-                    <a href=" {% url 'filter_job_application' alert.vacancy.id %}" class="notif-action-btn">View</a>
-
-                {% else %}
-                <a href=" /dashboard/edit_job/{{alert.vacancy.id}}" class="notif-action-btn">View</a>
-                {% endif %}
-            </div>
-           
-            {% endif %}
-
             {% endfor %}
-
-
-           
-            
-            
-            
         </div>
     </div>
-    
-</div>
-    
+  </div>
 
-<div class="col-6">
-    <div class="mb-3">
-            <div class="card" style="width:100%;height:100%;">
-              <div class="card-body shadow- rounded-2" style="width:100%;height:100%;">
-                <h5 class="card-title">Pending Tasks</h5>
-                <canvas id="pendingTask" style="width:100%;height:100%;"></canvas>
-              </div>
-            </div>
-          </div>
+  <!-- Right Column for Pending Tasks -->
+  <div class="col-md-6 col-sm-12">
 
-    
-    <div class="">
-        <div>
-            <div class="card shadow- rounded-2 " style="max-height:330px;">
-              <h5 class="card-header d-flex justify-content-between">
-                <span>
-                    <i class="fas fa-bell text-dark"  > 
-                    </i> Notifications
-                </span> 
-                <a href="{% url 'dashboard.get_notifications'%}" class="btn btn-outline-info p-0 px-1"> View All</a>
-            </h5>
-              <div class="card-body" style=" overflow-y: scroll;">
-                <ul class="list-group list-group-flush">
-                {% if notifications %}
-                     {% for notific in notifications %}
-                        {% if notific.is_seen %}
-                        {% elif user.is_superuser or user.id == notific.user.id %}
-                          <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                              <div class="fw-bold text-left">
-                                {{notific.action}} 
-                                {% if notific.status == "open" %}
-                                <button class="btn btn-success text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
+      <!-- Notification Container for Staff -->
+      <div class="card shadow rounded-2 mb-4" style="max-height:330px;">
+          <h5 class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+              <span>
+                  <i class="fas fa-bell text-white"></i> Notifications
+              </span>
+              <a href="{% url 'dashboard.get_notifications' %}" class="btn btn-outline-light p-0 px-2">View All</a>
+          </h5>
+          <div class="card-body" style="overflow-y: scroll;">
+              <ul class="list-group list-group-flush">
+                  {% if notifications %}
+                      {% for notific in notifications %}
+                          {% if notific.is_seen %}
+                          {% elif user.is_superuser or user.id == notific.user.id %}
+                              <li class="list-group-item d-flex justify-content-between align-items-start">
+                                  <div class="ms-2 me-auto">
+                                      <div class="fw-bold text-left">
+                                          {{ notific.action }} 
+                                          {% if notific.status == "open" %}
+                                              <button class="btn btn-success text-white p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
+                                          {% elif notific.status == "waiting" or notific.status == "pending" %}
+                                              <button class="btn btn-warning text-dark p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
+                                          {% else %}
+                                              <button class="btn btn-danger text-white p-0 mx-2" style="font-size: 10px">{{ notific.status }}</button>
+                                          {% endif %}
+                                      </div>
 
-                                {% elif notific.status == "waiting" or notific.status == "pending" %}
-                                <button class="btn btn-warning text-dark p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
-
-                                {% else %}
-                                <button class="btn btn-danger text-white p-0 mx-2" style="font-size: 10px">{{notific.status}}</button> 
-
-                                {% endif %}
-                              </div>
-
-                              {{notific.job_title}}, {{notific.timestamp}}
-                            </div>
-                             <a href="{% url 'dashboard.delete_notifications' notific.id %}">
-                                <span class="badge text-bg-danger rounded-pill">
-                                    <i class="fa fa-times " aria-hidden="true"></i>
-                                </span>
-                            </a>
-                          </li>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                   
-      
-                      <div class="d-flex justify-content-center ">
-                        
-                        <i class="fa fa-bell-slash fa-5x text-danger" aria-hidden="true"></i>
-                        
+                                      {{ notific.job_title }}, {{ notific.timestamp }}
+                                  </div>
+                                  <a href="{% url 'dashboard.delete_notifications' notific.id %}">
+                                      <span class="badge text-bg-danger rounded-pill">
+                                          <i class="fa fa-times" aria-hidden="true"></i>
+                                      </span>
+                                  </a>
+                              </li>
+                          {% endif %}
+                      {% endfor %}
+                  {% else %}
+                      <div class="d-flex justify-content-center">
+                          <i class="fa fa-bell-slash fa-5x text-danger" aria-hidden="true"></i>
                       </div>
                       <div class="d-flex justify-content-center mt-5">
-                        <h5><b>Oops</b>, You dont have <b class="text-danger">Notifications</b> yet </h5>
+                          <h5><b>Oops</b>, You don't have <b class="text-danger">Notifications</b> yet </h5>
                       </div>
-        
-                {% endif %}
-                </ul>
+                  {% endif %}
+              </ul>
+          </div>
+      </div>
+      
+      <!-- Pending Tasks Chart Below Notifications -->
+      <div class="mb-4">
+          <div class="card shadow rounded-2">
+              <h5 class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                  <span>
+                      <i class="fas fa-tasks text-white"></i> Pending Tasks
+                  </span>
+              </h5>
+              <div class="card-body shadow rounded-2" style="width:100%;height:100%;">
+                  <canvas id="pendingTask" style="width:100%;height:100%;"></canvas>
               </div>
-            </div>
-        </div>
+          </div>
+      </div>
 
-    </div>
-    
-
-</div>
-
+  </div>
 </div>
 
 {% endblock %}
 
 {% block countdown %}
 <!-- #### Shift Code ##### -->
- <!-- <script src="{% static 'dashboard/js/countdown.js' %}"></script> -->
+<!-- <script src="{% static 'dashboard/js/countdown.js' %}"></script> -->
 {% endblock %}
 
-
 {% block chart %}
-<script >
-    
+<script>
     let category = JSON.parse('{{ cats|escapejs }}');  // Parse the JSON data
-    let datas = JSON.parse('{{ datas|escapejs }}'); 
-
+    let datas = JSON.parse('{{ datas|escapejs }}');  // Same for the chart data
 
     var ctxpendingTask = document.getElementById('pendingTask').getContext('2d');
     var pendingTask = new Chart(ctxpendingTask, {
-      type: 'bar',
-      data: {
-        labels: category,
-        datasets: [{
-          label: 'pending task',
-          data: datas,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+        type: 'bar',
+        data: {
+            labels: category,
+            datasets: [{
+                label: 'Pending Tasks',
+                data: datas,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
-      }
     });
 </script>
 {% endblock %}
