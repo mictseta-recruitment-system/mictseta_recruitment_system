@@ -122,6 +122,13 @@ def job_application(request, jobID):
 		try:
 			feed_back = FeedBack(user=request.user,job=new_application.job,message="your application is being processed",status="pending")
 			feed_back.save()
+			send_mail(
+			        'Updated Application Status',
+			        'Dear Applicant. \n Your application was successfully moved to the <h1><b>Interview Stage </b></h1> \n kindly check your application tracking status to stay updated \n Best Regards \n MICT SETA',
+			        settings.DEFAULT_FROM_EMAIL,
+			        ['221649921@edu.vut.ac.za','sixskies25@gmail.com'],  
+			        fail_silently=False,
+			    )
 		except Exception as e:
 			print(e)
 		return JsonResponse({'message': 'Job Application submitted successfully', 'status': 'success'}, status=201)

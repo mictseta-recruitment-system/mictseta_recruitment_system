@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Job Offer from SixSkies</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .header img {
+            max-width: 150px;
+        }
+        .header h2 {
+            margin: 10px 0;
+            color: #004080;
+        }
+        .content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+        .details {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #004080;
+        }
+        .details p {
+            margin: 5px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .accept-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .accept-btn a {
+            background-color: #004080;
+            color: #ffffff;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .accept-btn a:hover {
+            background-color: #002d5f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{% static 'authenticate/images/logo2.png' %}" alt="Logo" class="logo">
+            <h2>Job Offer from Mictseta</h2>
+        </div>
+        
+        <div class="content">
+            <p>Dear <strong>{{ candidate_name }}</strong>,</p>
+            <p>We are pleased to offer you the position of <strong>{{ job_title }}</strong> at <strong>SixSkies</strong>. Below are the details of your employment offer:</p>
+
+            <div class="details">
+                <p><strong>Job Title:</strong> {{ job_title }}</p>
+                <p><strong>Start Date:</strong> {{ start_date }}</p>
+                <p><strong>Employment Type:</strong> {{ employment_type }}</p>
+                <p><strong>Salary:</strong> {{ salary }}</p>
+                <p><strong>Location:</strong> {{ location }}</p>
+                <p><strong>Working Hours:</strong> {{ working_hours }}</p>
+                <p><strong>Reporting To:</strong> {{ manager_name }}</p>
+                <p><strong>Offer Deadline:</strong> {{ offer_deadline }}</p>
+            </div>
+
+            <p>Please review the terms and conditions in the attached document. To accept this offer, kindly sign and return the attached offer letter before <strong>{{ offer_deadline }}</strong>.</p>
+
+            <div class="accept-btn">
+                <a href="mailto:hr@sixskies.co.za?subject=Accepting Offer Letter">Accept Offer</a>
+            </div>
+
+            <p>We are excited to have you join our team!</p>
+            
+            <div class="footer">
+                <p>Best Regards,</p>
+                <p><strong>Mictseta HR Team</strong></p>
+                <p>Email: setamict@gmail.com | Website: <a href="https://sixskies.co.za">sixskies.co.za</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

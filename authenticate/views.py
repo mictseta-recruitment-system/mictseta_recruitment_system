@@ -16,8 +16,9 @@ from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 
 from django.contrib.auth.hashers import make_password
-
-
+from django.core.mail import send_mail,EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
 #  Create your views here.
 # from django.core
 # .mail import send_mail
@@ -29,6 +30,33 @@ from django.contrib.auth.hashers import make_password
 #     recipient_list = [user_email]
     
 #     send_mail(subject, message, email_from, recipient_list)
+def send_offer_letter():
+	context = {
+        "candidate_name": 'Jeff Nengovhela',
+        "job_title": "Software Developer",
+        "start_date": "March 1, 2025",
+        "employment_type": "Full-Time",
+        "salary": "R50,000 per month",
+        "location": "Johannesburg, South Africa",
+        "working_hours": "Monday–Friday, 9 AM–5 PM",
+        "manager_name": "John Smith",
+        "offer_deadline": "February 25, 2025",
+    }
+
+	email_content = render_to_string("offer_letter.html", context)
+
+	email = EmailMessage(
+        subject="Your Offer Letter from MICTSETA",
+        body=email_content,
+        from_email="setamict@gmail.com",
+        to=['221649921@edu.vut.ac.za','sixskies25@gmail.com'],
+    )
+	email.content_subtype = "html"
+	email.send()
+	print("--------------------------------------------------------------")
+	print('email sent')
+
+
 @ensure_csrf_cookie
 def render_auth_page(request):
 	if request.user.is_authenticated:
@@ -64,6 +92,15 @@ def sign_in(request):
 			print(user)
 			if user is not None:
 				login(request, user)
+				send_offer_letter()
+				# send_mail(
+			    #     'Updated Application Status',
+			    #     'Dear Applicant. \n Your application was successfully moved to the <h1><b>Interview Stage </b></h1> \n kindly check your application tracking status to stay updated \n Best Regards \n MICT SETA',
+			    #     settings.DEFAULT_FROM_EMAIL,
+			    #     ['221649921@edu.vut.ac.za','sixskies25@gmail.com'],  
+			    #     fail_silently=False,
+			    # )
+
 				if user.is_staff:
 					return JsonResponse({'message':f'Welcome back {user.username}', 'status':'success', 'user_type':'staff', 'department':user.staffprofile.department}, status=200)
 					
