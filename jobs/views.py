@@ -14,8 +14,9 @@ from datetime import datetime
 from django.utils.timezone import now
 from django.utils import timezone
 from .custom_decorators import check_leave, change_application_status
-from django.core.mail import send_mail
+from django.core.mail import send_mail,EmailMessage
 from django.conf import settings
+from django.template.loader import render_to_string
 
 
 # Create your views here.
@@ -2187,3 +2188,56 @@ def approve_selected_list(request):
 			return JsonResponse({'errors': {'method':['Invalid request method']}, 'status': 'error'}, status=400)
 	else:
 		return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+
+def send_offer_letter(application):
+	context = {
+        "candidate_name": f'{application.user.first_name} {application.user.last_name}',
+        "job_title": application.job,
+        "start_date": "March 1, 2025",
+        "employment_type": application.job.job_type,
+        "salary": "R50,000 per month",
+        "location": f"{application.job.location}, South Africa",
+        "working_hours": "Monday–Friday, 9 AM–5 PM",
+        "manager_name": "John Smith",
+        "offer_deadline": "February 25, 2025",
+    }
+
+	email_content = render_to_string("offer_letter.html", context)
+
+	email = EmailMessage(
+        subject="Your Offer Letter from MICTSETA",
+        body=email_content,
+        from_email="setamict@gmail.com",
+        to=['221649921@edu.vut.ac.za','sixskies25@gmail.com'],
+    )
+	email.content_subtype = "html"
+	email.send()
+	print("--------------------------------------------------------------")
+	print('email sent')
+
+
+@csrf_protect
+def send_offer(request,application_id):
+	if not request.method == 'POST':
+		return JsonResponse({'errors': 'Forbidden 403', 'status':'error'}, status=400)
+	try:
+		json_data = json.loads(request.body)
+	except Exception :
+		return JsonResponse({'errors':'Supply a json oject: check documentation for more info ', 'status':'error'})
+
+	application = JobApplication.objects.filter(id=int(application_id)).first()
+	vacancy = JobPost.objects.filter(id=application.job.id).first()
+	if application:
+		application.status = "onboarding"
+		application.save() 
+		vacancy.current_step += 1
+		vacancy.previous_stage = "selected stage"
+		vacancy.current_stage = "onboarding stage"
+		vacancy.save()
+		send_offer_letter(application)
+		
+		return JsonResponse({'message': 'offer letter sent successfully', 'status': 'success'}, status=200)
+	return JsonResponse({'errors': {'authentication' : ['you are not logged in']}, 'status': 'error'}, status=400)
+
+		

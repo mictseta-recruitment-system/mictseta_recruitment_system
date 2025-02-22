@@ -1071,7 +1071,7 @@
                                 <a href="{% url 'interview_panel' application.job.id application.id %}" class="btn btn-primary p-1 mx-1" data-bs-placement="top" title="View profile"><i class="fa fa-eye"></i> view</a> 
                                 {% if application.job.current_step > 7 and application.job.is_selected_approved %}
 
-                                <a onclick="move_to_shortlist({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">Send offer</a>
+                                <a onclick="send_offer({{application.id}})" class="btn btn-warning p-1" data-bs-placement="top" title="Move to short list">Send offer</a>
                                 {% endif %}
 
                               </td>
@@ -1113,13 +1113,14 @@
                                     <th class="bg-dark text-white">C. stage</th>
                                     <th class="bg-dark text-white">Date</th>
                                     <th class="bg-dark text-white">App. status</th>
+                                    <th class="bg-dark text-white">Accepted Offer</th>
                                     <th class="bg-dark text-white">Action</th>
                               </tr>
                           </thead>
                           <tbody> 
                                
                           {% for application in applications %}
-                          {% if application.status == "approved" %}
+                          {% if application.status == "onboarding" %}
                            <tr class="text-dark">
 
                               <td>{{application.job.title}}</td>
@@ -1138,6 +1139,7 @@
                                 <td><button class="btn btn-warning p-0">{{application.status}}</button></td>
                                 {% else %}
                                 <td><button class="btn btn-outline-info p-0">{{application.status}}</button></td>
+                                <td>No</td>
                                 {% endif %}
                               <td> <a href="{% url 'dashboard.jobsekeer_details' application.user.profile.uuid application.job.id %}"><i class="fa fa-eye"></i></a> </td>
                           
