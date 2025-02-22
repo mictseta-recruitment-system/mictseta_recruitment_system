@@ -73,6 +73,9 @@ urlpatterns = [
     path('scoreboard/submit_scoreboard_interview/<int:scoreboard_id>/<int:application_id>/', views.submit_scoreboard_interview, name='submit_scoreboard_interview'),
     
    
+    path('send_offer/<int:application_id>', views.send_offer, name='send_offer'),
+
+   
     
 
 

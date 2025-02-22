@@ -2915,6 +2915,50 @@ function submit_short_list(jobID) {
     showFlashMessage(error.message, "danger");
   });
 }
+
+function send_offer(application_id) {
+  event.preventDefault();
+const url = 'http://127.0.0.1:8000/job/send_offer/'+application_id;
+const form = document.getElementById('scoreboardForm');
+
+// Example: Convert formData to JSON object if needed
+const jsonData = {
+  
+  jobID:application_id,
+  
+};
+
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-CSRFToken': getCookie('csrftoken')
+  },
+  body: JSON.stringify(jsonData),
+})
+.then(response => {
+  return response.json();
+})
+.then(data => {
+  if (data.status === "error") {
+    handleErrors(data.errors);
+   
+  } else if (data.status === "success") {
+ 
+    showFlashMessage(data.message, "success");
+ 
+  } else if (data.status === "warning") {
+    
+    showFlashMessage(data.message, "warning");
+   
+  }
+})
+.catch(error => {
+  console.error('Error:', error);
+  showFlashMessage(error.message, "danger");
+});
+}
 // Function to get CSRF token (if needed, adjust as per your Django setup)
 function getCookie(name) {
     let cookieValue = null;

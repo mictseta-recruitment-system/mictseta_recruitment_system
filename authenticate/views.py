@@ -92,7 +92,7 @@ def sign_in(request):
 			print(user)
 			if user is not None:
 				login(request, user)
-				send_offer_letter()
+				
 				# send_mail(
 			    #     'Updated Application Status',
 			    #     'Dear Applicant. \n Your application was successfully moved to the <h1><b>Interview Stage </b></h1> \n kindly check your application tracking status to stay updated \n Best Regards \n MICT SETA',
